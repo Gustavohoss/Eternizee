@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "gift-preview",
+      "description": "Netflix style digital gift preview",
+      "imageUrl": "https://picsum.photos/seed/love/400/800",
+      "imageHint": "couple love"
+    },
+    {
+      "id": "avatar-1",
+      "description": "User avatar",
+      "imageUrl": "https://picsum.photos/seed/11/100/100",
+      "imageHint": "person face"
+    },
+    {
+      "id": "avatar-2",
+      "description": "User avatar",
+      "imageUrl": "https://picsum.photos/seed/12/100/100",
+      "imageHint": "person face"
+    },
+    {
+      "id": "avatar-3",
+      "description": "User avatar",
+      "imageUrl": "https://picsum.photos/seed/13/100/100",
+      "imageHint": "person face"
+    }
+  ]
 }
