@@ -40,7 +40,8 @@ export function DeviceMockup({
     loop: true, 
     duration: 30,
     align: 'center',
-    containScroll: false
+    containScroll: false,
+    skipSnaps: false
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -55,16 +56,6 @@ export function DeviceMockup({
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
-
-  const scrollPrev = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
 
   const raindrops = useMemo(() => {
     return [...Array(20)].map((_, i) => ({
@@ -128,13 +119,11 @@ export function DeviceMockup({
               >
                 {/* Photo Display Area (Mascara) */}
                 <div 
-                  className={cn(
-                    "w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111]",
-                  )}
+                  className="w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111]"
                   style={photoEffect === 'coverflow' ? { perspective: '1000px' } : {}}
                 >
                   {uploadedPhotos.length > 0 ? (
-                    <div className={cn("w-full h-full", photoEffect === 'coverflow' ? "overflow-visible" : "")} ref={emblaRef}>
+                    <div className={cn("w-full h-full", photoEffect === 'coverflow' ? "overflow-visible" : "overflow-hidden")} ref={emblaRef}>
                       <div className="flex h-full">
                         {uploadedPhotos.map((photo, i) => {
                           const isActive = i === selectedIndex;
@@ -143,10 +132,9 @@ export function DeviceMockup({
                             <div 
                               key={i} 
                               className={cn(
-                                "relative min-w-0 h-full transition-all duration-500",
-                                photoEffect === 'coverflow' 
-                                  ? "flex-[0_0_calc(100%-60px)] mx-[5px]" 
-                                  : "flex-[0_0_100%]"
+                                "relative min-w-0 h-full",
+                                // A transição CSS só é aplicada no modo coverflow para evitar bugs de loop no modo slide
+                                photoEffect === 'coverflow' ? "transition-all duration-500 flex-[0_0_calc(100%-60px)] mx-[5px]" : "flex-[0_0_100%]"
                               )}
                               style={photoEffect === 'coverflow' ? {
                                 transform: isActive 
