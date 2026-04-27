@@ -50,7 +50,7 @@ const MOCK_CITIES = [
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
-  const [selectedBgColor, setSelectedBgColor] = useState<string>('#0c0c0c');
+  const [selectedBgColor, setSelectedBgColor] = useState<string>('#008ED4');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
@@ -927,7 +927,7 @@ export default function EternizeApp() {
 
                         {/* Step 3+ adds photo card */}
                         {step === 'page-title' && (
-                          <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0 animate-in fade-in zoom-in-95 duration-500">
+                          <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0 animate-in fade-in duration-500">
                             {pageTitle ? (
                               <div className="absolute inset-x-0 bottom-4 flex justify-center px-4">
                                 <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words text-center">
