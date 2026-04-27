@@ -178,7 +178,7 @@ export function DeviceMockup({
     switch (selectedCountStyle) {
       case 'simples':
         return (
-          <div className="w-full text-center space-y-1 animate-in fade-in slide-in-from-bottom-2">
+          <div className="w-full text-center space-y-1">
             <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Estamos juntos há</p>
             <p className="text-sm font-bold text-white/80 tabular-nums">
               {timeDiff.years > 0 && `${timeDiff.years}a `}
@@ -190,7 +190,7 @@ export function DeviceMockup({
 
       case 'classico':
         return (
-          <div className="w-full grid grid-cols-3 gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <div className="w-full grid grid-cols-3 gap-2">
             {units.map((u) => (
               <div key={u.label} className="bg-white/5 border border-white/10 rounded-xl p-2 text-center min-w-[70px]">
                 <p className="text-base font-black text-white tabular-nums">{u.value}</p>
@@ -202,7 +202,7 @@ export function DeviceMockup({
 
       case 'data-grande':
         return (
-          <div className="w-full text-center space-y-2 animate-in fade-in slide-in-from-bottom-2">
+          <div className="w-full text-center space-y-2">
             <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
               <CalendarIcon className="w-3 h-3 text-primary" />
               <span className="text-[10px] font-black text-primary uppercase">Desde</span>
@@ -216,7 +216,7 @@ export function DeviceMockup({
       case 'dias-grandes':
         const totalDays = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
         return (
-          <div className="w-full text-center space-y-1 animate-in fade-in slide-in-from-bottom-2">
+          <div className="w-full text-center space-y-1">
             <p className="text-[40px] font-black text-primary leading-none tracking-tighter tabular-nums">{totalDays > 0 ? totalDays : 0}</p>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Dias de puro amor</p>
           </div>
@@ -224,7 +224,7 @@ export function DeviceMockup({
 
       default: // padrao
         return (
-          <div className="w-full space-y-4 animate-in fade-in slide-in-from-bottom-2">
+          <div className="w-full space-y-4">
             <div className="flex items-center gap-2 justify-center">
               <div className="h-px bg-white/10 flex-1" />
               <Clock className="w-3 h-3 text-white/20" />
@@ -399,7 +399,9 @@ export function DeviceMockup({
                   {titlePosition === 'bottom' && <RenderTitle />}
                 </div>
 
-                <RenderCounter />
+                <div className="w-full animate-in fade-in slide-in-from-bottom-2 duration-700">
+                  <RenderCounter />
+                </div>
               </>
             )}
           </div>
