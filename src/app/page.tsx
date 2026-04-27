@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -60,7 +59,7 @@ const MOCK_CITIES = [
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
-  const [selectedBgColor, setSelectedBgColor] = useState<string>('#008ED4');
+  const [selectedBgColor, setSelectedBgColor] = useState<string>('#000000');
   const [selectedEffect, setSelectedEffect] = useState<string>('none');
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>(['❤️']);
   const [emojiSize, setEmojiSize] = useState<number>(20);

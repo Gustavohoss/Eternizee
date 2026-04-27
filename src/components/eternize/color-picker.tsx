@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -82,7 +81,8 @@ export function ColorPicker({ selectedBgColor, onChange }: ColorPickerProps) {
     
     // Initial position if not set
     if (cursorRef.current && !cursorRef.current.style.left) {
-      updateColorFromPos(canvas.width - 1, 30);
+      // Set to bottom (black) by default
+      updateColorFromPos(0, canvas.height - 1);
     } else if (cursorRef.current) {
       // Re-sync on hue change
       updateColorFromPos(parseFloat(cursorRef.current.style.left), parseFloat(cursorRef.current.style.top));
