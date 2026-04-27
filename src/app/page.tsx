@@ -32,7 +32,10 @@ import {
   Smile,
   Leaf,
   Dog,
-  PartyPopper
+  PartyPopper,
+  Image as ImageIcon,
+  Upload,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -50,7 +53,7 @@ import { cn } from '@/lib/utils';
 import { format, intervalToDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type' | 'customize-background' | 'data-location' | 'page-title';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'data-location' | 'page-title';
 
 const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
@@ -97,6 +100,7 @@ export default function EternizeApp() {
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   
@@ -141,6 +145,11 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNextToPhotos = () => {
+    setStep('photos');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNextToDataLocation = () => {
     setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -155,7 +164,8 @@ export default function EternizeApp() {
     if (step === 'theme-selection') setStep('landing');
     if (step === 'gift-type') setStep('theme-selection');
     if (step === 'customize-background') setStep('gift-type');
-    if (step === 'data-location') setStep('customize-background');
+    if (step === 'photos') setStep('customize-background');
+    if (step === 'data-location') setStep('photos');
     if (step === 'page-title') setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -170,6 +180,23 @@ export default function EternizeApp() {
         setSelectedEmojis([...selectedEmojis, emoji]);
       }
     }
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedPhotos(prev => [...prev, reader.result as string].slice(0, 4));
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removePhoto = (index: number) => {
+    setUploadedPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
   const filteredCities = locationQuery.length > 0 
@@ -337,7 +364,7 @@ export default function EternizeApp() {
 
       {step === 'landing' && (
         <>
-          <header className="relative z-20 container mx-auto px-4 py-2 mt-8 md:mt-10 flex items-center justify-between max-w-6xl">
+          <header className="relative z-20 container mx-auto px-4 py-1.5 md:py-2 mt-6 md:mt-8 flex items-center justify-between max-w-6xl">
             <div className="flex items-center gap-2">
               <div className="bg-primary p-1 rounded-full shadow-lg shadow-primary/20">
                 <Heart className="w-3.5 h-3.5 fill-white text-white" />
@@ -600,19 +627,20 @@ export default function EternizeApp() {
         </div>
       )}
 
-      {(step === 'customize-background' || step === 'data-location' || step === 'page-title') && (
+      {(step === 'customize-background' || step === 'photos' || step === 'data-location' || step === 'page-title') && (
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
           <div className="flex items-center justify-center mb-8 md:mb-10">
             <div className="w-full max-w-md text-center">
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div className={cn(
                   "h-full bg-primary transition-all duration-500", 
-                  step === 'customize-background' ? "w-[33.3%]" : 
-                  step === 'data-location' ? "w-[66.6%]" : "w-[100%]"
+                  step === 'customize-background' ? "w-[25%]" : 
+                  step === 'photos' ? "w-[50%]" : 
+                  step === 'data-location' ? "w-[75%]" : "w-[100%]"
                 )} />
               </div>
               <div className="mt-4 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
-                Passo {step === 'customize-background' ? '1' : step === 'data-location' ? '2' : '3'} de 3
+                Passo {step === 'customize-background' ? '1' : step === 'photos' ? '2' : step === 'data-location' ? '3' : '4'} de 4
               </div>
             </div>
           </div>
@@ -810,7 +838,72 @@ export default function EternizeApp() {
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
                   <Button 
+                    onClick={handleNextToPhotos}
+                    className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {step === 'photos' && (
+              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
+                <div className="space-y-3 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
+                    <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+                      <ImageIcon className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
+                    </div>
+                    <h2 className="text-2xl md:text-4xl font-black tracking-tight">As Fotos</h2>
+                  </div>
+                  <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
+                    Adicione até 4 fotos especiais para sua página.
+                  </p>
+                </div>
+
+                <div className="w-full max-w-md space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    {uploadedPhotos.map((photo, i) => (
+                      <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
+                        <Image src={photo} fill className="object-cover" alt={`Photo ${i + 1}`} />
+                        <button 
+                          onClick={() => removePhoto(i)}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {uploadedPhotos.length < 4 && (
+                      <label className="aspect-square rounded-2xl border-2 border-dashed border-white/10 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center justify-center gap-3 cursor-pointer group">
+                        <div className="bg-white/5 p-3 rounded-full group-hover:scale-110 transition-transform">
+                          <Upload className="w-6 h-6 text-white/40" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-white/30">Adicionar Foto</span>
+                        <input type="file" className="hidden" accept="image/*" multiple onChange={handlePhotoUpload} />
+                      </label>
+                    )}
+                  </div>
+
+                  <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
+                    <AlertCircle className="w-5 h-5 text-[#ff9900] mt-0.5 shrink-0" />
+                    <p className="text-[10px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
+                      Dica: Fotos no formato vertical (9:16) ficam melhores na página.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
+                  <Button 
+                    onClick={handleBack}
+                    variant="outline" 
+                    className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" /> Voltar
+                  </Button>
+                  <Button 
                     onClick={handleNextToDataLocation}
+                    disabled={uploadedPhotos.length === 0}
                     className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                   >
                     Próxima etapa <ChevronRight className="w-4 h-4" />
@@ -1048,6 +1141,7 @@ export default function EternizeApp() {
 
                       <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 md:gap-6 overflow-y-auto hide-scrollbar">
                         
+                        {/* Countdown Section */}
                         {(step === 'data-location' || step === 'page-title') && date && timeDiff && (
                           <div className="w-full animate-in fade-in duration-700">
                             {selectedCountStyle === 'simples' && (
@@ -1146,15 +1240,26 @@ export default function EternizeApp() {
                           </div>
                         )}
 
-                        {step === 'page-title' && (
+                        {/* Photos Card Section */}
+                        {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
                           <div className="w-full aspect-square bg-white rounded-[2rem] relative overflow-hidden shrink-0 animate-in fade-in duration-500 shadow-2xl z-20">
-                            <div className="absolute inset-0 flex flex-col items-center justify-end pb-6">
+                            {uploadedPhotos.length > 0 ? (
+                              <div className="absolute inset-0 flex transition-transform duration-500 h-[85%]">
+                                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Selected Photo" />
+                              </div>
+                            ) : (
+                              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-5">
+                                <ImageIcon className="w-12 h-12 text-black" />
+                                <span className="text-[8px] font-black uppercase tracking-widest text-black">Sua Foto Aqui</span>
+                              </div>
+                            )}
+                            <div className="absolute inset-x-0 bottom-0 h-[15%] flex flex-col items-center justify-center pb-1">
                               {pageTitle ? (
-                                <span className="text-black font-serif italic text-base md:text-lg leading-tight break-words text-center px-6">
+                                <span className="text-black font-serif italic text-[10px] md:text-xs leading-none break-words text-center px-4 truncate max-w-full">
                                   {pageTitle}
                                 </span>
                               ) : (
-                                <div className="w-12 h-1.5 bg-black/5 rounded-full" />
+                                <div className="w-10 h-1 bg-black/5 rounded-full" />
                               )}
                             </div>
                           </div>
@@ -1168,7 +1273,8 @@ export default function EternizeApp() {
                         )}
                       </div>
 
-                      {step === 'page-title' && (
+                      {/* Music Player Mockup */}
+                      {(step === 'page-title' || step === 'data-location' || step === 'photos') && (
                         <div 
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1233,9 +1339,11 @@ export default function EternizeApp() {
                       </Button>
                       <Button 
                         onClick={
-                          step === 'customize-background' ? handleNextToDataLocation :
+                          step === 'customize-background' ? handleNextToPhotos :
+                          step === 'photos' ? handleNextToDataLocation :
                           step === 'data-location' ? handleNextToPageTitle : undefined
                         }
+                        disabled={step === 'photos' && uploadedPhotos.length === 0}
                         className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-primary/20"
                       >
                         Próxima etapa <ChevronRight className="w-4 h-4" />
