@@ -39,8 +39,8 @@ export function DeviceMockup({
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     duration: 30,
-    align: photoEffect === 'coverflow' ? 'center' : 'start',
-    containScroll: photoEffect === 'coverflow' ? false : 'trimSnaps'
+    align: 'center',
+    containScroll: false
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -124,64 +124,64 @@ export function DeviceMockup({
             {/* Polaroid Frame Section */}
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
-                className="w-full bg-[#ffffff] p-[15px] pb-[40px] rounded-[4px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
+                className="w-full bg-[#ffffff] p-[15px] pb-[40px] rounded-[8px] shadow-[0_30px_60px_rgba(0,0,0,0.7)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
               >
+                {/* Photo Display Area (Mascara) */}
                 <div 
                   className={cn(
-                    "w-full aspect-[1/1.1] relative overflow-hidden rounded-[2px] group/photo",
-                    photoEffect === 'coverflow' ? "overflow-visible" : "bg-[#111]"
+                    "w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111]",
                   )}
                   style={photoEffect === 'coverflow' ? { perspective: '1000px' } : {}}
                 >
                   {uploadedPhotos.length > 0 ? (
-                    <div className="w-full h-full" ref={emblaRef}>
+                    <div className={cn("w-full h-full", photoEffect === 'coverflow' ? "overflow-visible" : "")} ref={emblaRef}>
                       <div className="flex h-full">
-                        {uploadedPhotos.map((photo, i) => (
-                          <div 
-                            key={i} 
-                            className={cn(
-                              "relative min-w-0 h-full transition-all duration-500",
-                              photoEffect === 'coverflow' ? "flex-[0_0_80%] mx-2" : "flex-[0_0_100%]"
-                            )}
-                            style={photoEffect === 'coverflow' ? {
-                              transform: i === selectedIndex ? 'scale(1) rotateY(0deg)' : i < selectedIndex ? 'scale(0.85) rotateY(30deg) translateZ(-100px)' : 'scale(0.85) rotateY(-30deg) translateZ(-100px)',
-                              opacity: i === selectedIndex ? 1 : 0.6,
-                              filter: i === selectedIndex ? 'grayscale(0)' : 'grayscale(0.4)'
-                            } : {}}
-                          >
-                            <Image 
-                              src={photo} 
-                              fill 
-                              className="object-cover" 
-                              alt={`Foto ${i + 1}`} 
-                            />
-                          </div>
-                        ))}
+                        {uploadedPhotos.map((photo, i) => {
+                          const isActive = i === selectedIndex;
+                          
+                          return (
+                            <div 
+                              key={i} 
+                              className={cn(
+                                "relative min-w-0 h-full transition-all duration-500",
+                                photoEffect === 'coverflow' 
+                                  ? "flex-[0_0_calc(100%-60px)] mx-[5px]" 
+                                  : "flex-[0_0_100%]"
+                              )}
+                              style={photoEffect === 'coverflow' ? {
+                                transform: isActive 
+                                  ? 'scale(1) rotateY(0deg) translateZ(0)' 
+                                  : i < selectedIndex 
+                                    ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
+                                    : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
+                                opacity: isActive ? 1 : 0.7,
+                                filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
+                                zIndex: isActive ? 10 : 0
+                              } : {}}
+                            >
+                              <Image 
+                                src={photo} 
+                                fill 
+                                className="object-cover block" 
+                                alt={`Foto ${i + 1}`} 
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                       
                       {uploadedPhotos.length > 1 && (
                         <>
-                          <button 
-                            onClick={scrollPrev}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all z-40"
-                          >
-                            <ChevronLeft className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={scrollNext}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all z-40"
-                          >
-                            <ChevronRight className="w-4 h-4" />
-                          </button>
-                          
                           {/* Pagination Dots */}
-                          <div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 flex gap-[5px] z-30">
+                          <div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 flex gap-[7px] z-30">
                             {uploadedPhotos.map((_, i) => (
                               <div 
                                 key={i} 
                                 className={cn(
-                                  "w-[7px] h-[7px] rounded-full transition-all duration-300",
-                                  i === selectedIndex ? "bg-[#ff0000] scale-[1.2] shadow-[0_0_10px_rgba(255,0,0,0.6)]" : "bg-[#bbb] opacity-60"
+                                  "w-[7px] h-[7px] rounded-full transition-all duration-400",
+                                  i === selectedIndex 
+                                    ? "bg-[#ff0000] scale-[1.4] shadow-[0_0_10px_rgba(255,0,0,0.6)]" 
+                                    : "bg-white/60"
                                 )}
                               />
                             ))}
@@ -197,10 +197,10 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                {/* Couple Name below photo - Dancing Script */}
-                <div className="mt-[20px] w-full text-center">
+                {/* Couple Name - Dancing Script */}
+                <div className="mt-[25px] w-full text-center">
                   <span 
-                    className="text-[#1a1a1a] font-['Dancing_Script'] text-[24px] leading-none break-words px-2 block truncate"
+                    className="text-[#111] font-['Dancing_Script'] text-[26px] leading-none break-words px-2 block truncate tracking-[1px]"
                   >
                     {pageTitle || "Seu Nome Aqui"}
                   </span>
