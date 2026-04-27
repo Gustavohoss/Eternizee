@@ -239,7 +239,7 @@ export default function EternizeApp() {
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-1 text-primary">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-2.5 h-2.5 md:w-3 md:h-3 fill-current" />
+                        <Star key={i} className="w-2.5 h-2.5 md:w-3 h-3 fill-current" />
                       ))}
                       <span className="text-white text-[8px] md:text-[10px] font-black ml-1 uppercase tracking-wider">Camila R.</span>
                     </div>
@@ -287,7 +287,7 @@ export default function EternizeApp() {
                       </p>
                       
                       <Button variant="secondary" size="sm" className="w-full h-7 md:h-8 bg-white text-black font-black text-[9px] md:text-[10px] gap-2 hover:bg-white/90 rounded-sm">
-                        <Play className="w-2.5 h-2.5 md:w-3 md:h-3 fill-current" /> Reproduzir
+                        <Play className="w-2.5 h-2.5 md:w-3 h-3 fill-current" /> Reproduzir
                       </Button>
 
                       <div className="flex items-center justify-around text-white/80 pt-1">
@@ -701,8 +701,8 @@ export default function EternizeApp() {
                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
                         
-                        {/* Skeleton lines for Data Grande (ABOVE counter) */}
-                        {selectedCountStyle === 'data-grande' && (
+                        {/* Skeleton lines for Data Grande and Dias Grandes (ABOVE counter) */}
+                        {(selectedCountStyle === 'data-grande' || selectedCountStyle === 'dias-grandes') && (
                           <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
                             <div className="h-1 w-3/4 bg-white/10 rounded-full" />
                             <div className="h-1 w-3/4 bg-white/10 rounded-full" />
@@ -774,6 +774,25 @@ export default function EternizeApp() {
                                     <span className="text-3xl font-serif font-bold leading-none">{timeDiff.days.toString().padStart(2, '0')}</span>
                                     <span className="text-[6px] font-bold text-white/30 mt-2 uppercase tracking-widest">DIAS</span>
                                   </div>
+                                </div>
+                                <div className="text-center">
+                                  <p className="text-[7px] md:text-[8px] font-bold text-white/30">
+                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {selectedCountStyle === 'dias-grandes' && (
+                              <div className="w-full space-y-4 pt-1">
+                                <div className="text-center">
+                                  <p className="text-[7px] md:text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
+                                </div>
+                                <div className="bg-white/5 border border-white/10 rounded-2xl py-8 px-4 flex flex-col items-center justify-center gap-2">
+                                  <span className="text-4xl font-serif font-bold leading-none tracking-tighter">
+                                    {Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24)).toLocaleString('pt-BR')}
+                                  </span>
+                                  <span className="text-[7px] font-bold text-white/30 uppercase tracking-[0.2em]">DIAS</span>
                                 </div>
                                 <div className="text-center">
                                   <p className="text-[7px] md:text-[8px] font-bold text-white/30">
