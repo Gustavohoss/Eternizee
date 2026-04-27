@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { 
   Heart, 
@@ -23,7 +23,9 @@ import {
   AlertCircle,
   Palette,
   Globe,
-  LogIn
+  LogIn,
+  Sparkles,
+  Ban
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +40,7 @@ import { cn } from '@/lib/utils';
 import { format, intervalToDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type' | 'background-color' | 'data-location' | 'page-title';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'background-color' | 'background-effects' | 'data-location' | 'page-title';
 
 const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
@@ -51,6 +53,7 @@ export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedBgColor, setSelectedBgColor] = useState<string>('#008ED4');
+  const [selectedEffect, setSelectedEffect] = useState<string>('none');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
@@ -97,6 +100,11 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNextToEffects = () => {
+    setStep('background-effects');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNextToDataLocation = () => {
     setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -111,7 +119,8 @@ export default function EternizeApp() {
     if (step === 'theme-selection') setStep('landing');
     if (step === 'gift-type') setStep('theme-selection');
     if (step === 'background-color') setStep('gift-type');
-    if (step === 'data-location') setStep('background-color');
+    if (step === 'background-effects') setStep('background-color');
+    if (step === 'data-location') setStep('background-effects');
     if (step === 'page-title') setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -219,7 +228,6 @@ export default function EternizeApp() {
 
     drawSpectrum();
     
-    // Initial position if first time
     if (cursorRef.current && !cursorRef.current.style.left) {
       updateColorFromPos(canvas.width - 1, 30);
     }
@@ -257,12 +265,21 @@ export default function EternizeApp() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const raindrops = useMemo(() => {
+    return [...Array(20)].map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      duration: `${Math.random() * 3 + 2}s`,
+      delay: `${Math.random() * 5}s`,
+      opacity: Math.random() * 0.5 + 0.3,
+      emoji: Math.random() > 0.5 ? '❤️' : '✨'
+    }));
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative overflow-x-hidden font-body">
-      {/* Background Glows */}
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
 
-      {/* Top Banner */}
       <div className="relative z-50 bg-[#3d0b17] border-b border-white/5 py-1.5 text-center text-[10px] sm:text-[11px] font-medium flex items-center justify-center gap-2">
         <div className="bg-white/10 px-1.5 py-0.5 rounded border border-white/20 text-[9px] font-black uppercase">50% OFF</div>
         <p className="tracking-tight">
@@ -273,7 +290,6 @@ export default function EternizeApp() {
 
       {step === 'landing' && (
         <>
-          {/* Header */}
           <header className="relative z-20 container mx-auto px-4 py-4 flex items-center justify-between max-w-6xl">
             <div className="flex items-center gap-2">
               <div className="bg-primary p-1.5 rounded-full shadow-lg shadow-primary/20">
@@ -309,7 +325,6 @@ export default function EternizeApp() {
             </div>
           </header>
 
-          {/* Main Content */}
           <main className="relative z-10 container mx-auto px-4 pt-4 md:pt-8 pb-12">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-5xl mx-auto">
               <div className="space-y-4 md:space-y-6">
@@ -538,19 +553,20 @@ export default function EternizeApp() {
         </div>
       )}
 
-      {(step === 'background-color' || step === 'data-location' || step === 'page-title') && (
+      {(step === 'background-color' || step === 'background-effects' || step === 'data-location' || step === 'page-title') && (
         <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
-          <div className="flex items-center justify-center md:justify-between mb-6 md:mb-8">
-            <div className="flex-1 max-w-xs text-center md:text-left">
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden mx-auto md:mx-0">
+          <div className="flex items-center justify-center mb-6 md:mb-8">
+            <div className="w-full max-w-xs text-center">
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className={cn(
                   "h-full bg-primary transition-all duration-500", 
                   step === 'background-color' ? "w-[12.5%]" : 
-                  step === 'data-location' ? "w-[25%]" : "w-[37.5%]"
+                  step === 'background-effects' ? "w-[25%]" :
+                  step === 'data-location' ? "w-[37.5%]" : "w-[50%]"
                 )} />
               </div>
               <div className="mt-2 text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">
-                Passo {step === 'background-color' ? '1' : step === 'data-location' ? '2' : '3'} de 8
+                Passo {step === 'background-color' ? '1' : step === 'background-effects' ? '2' : step === 'data-location' ? '3' : '4'} de 8
               </div>
             </div>
           </div>
@@ -570,13 +586,12 @@ export default function EternizeApp() {
                   </p>
                 </div>
 
-                {/* Advanced Color Picker */}
-                <div className="bg-[#141414] rounded-[24px] p-6 max-w-[320px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-[#222]">
+                <div className="bg-[#141414] rounded-[24px] p-6 w-full max-w-[320px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-[#222]">
                   <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-3 block">Escolha a cor</span>
                   
                   <div ref={containerRef} className="w-full h-[180px] rounded-[12px] relative cursor-crosshair overflow-hidden mb-6">
-                      <canvas ref={canvasRef} className="w-full h-full block" />
-                      <div ref={cursorRef} className="w-[14px] h-[14px] border-2 border-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_0_4px_rgba(0,0,0,0.5)] z-10" />
+                      <canvas ref={canvasRef} className="w-full h-full block spectrum-canvas" />
+                      <div ref={cursorRef} className="spectrum-cursor" />
                   </div>
 
                   <input 
@@ -605,6 +620,72 @@ export default function EternizeApp() {
                               />
                           </div>
                       </div>
+                  </div>
+                </div>
+
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                  <Button 
+                    onClick={handleBack}
+                    variant="outline" 
+                    className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" /> Voltar
+                  </Button>
+                  <Button 
+                    onClick={handleNextToEffects}
+                    className="w-full sm:flex-1 h-11 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {step === 'background-effects' && (
+              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
+                <div className="space-y-2 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
+                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Efeitos de fundo</h2>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/40 font-medium">
+                    Adicione efeitos especiais para dar vida à sua página.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md">
+                  <div 
+                    onClick={() => setSelectedEffect('none')}
+                    className={cn(
+                      "cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4",
+                      selectedEffect === 'none' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                    )}
+                  >
+                    <div className="bg-white/5 p-2 rounded-lg">
+                      <Ban className="w-5 h-5 text-white/40" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-black uppercase tracking-wider">Sem efeito</p>
+                      <p className="text-[10px] text-white/40">Fundo limpo e estático</p>
+                    </div>
+                  </div>
+
+                  <div 
+                    onClick={() => setSelectedEffect('emoji-rain')}
+                    className={cn(
+                      "cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4",
+                      selectedEffect === 'emoji-rain' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                    )}
+                  >
+                    <div className="bg-primary/10 p-2 rounded-lg">
+                      <Heart className="w-5 h-5 text-primary fill-primary" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-black uppercase tracking-wider">Chuva de Emojis</p>
+                      <p className="text-[10px] text-white/40">Emojis caindo suavemente</p>
+                    </div>
                   </div>
                 </div>
 
@@ -830,11 +911,30 @@ export default function EternizeApp() {
                   </div>
                   
                   <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
-                    {/* Mockup Content - Progression logic */}
                     <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedBgColor }}>
+                      
+                      {selectedEffect === 'emoji-rain' && (
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+                          {raindrops.map((drop) => (
+                            <div 
+                              key={drop.id}
+                              className="absolute animate-fall text-base"
+                              style={{
+                                left: drop.left,
+                                top: `-30px`,
+                                animationDuration: drop.duration,
+                                animationDelay: drop.delay,
+                                opacity: drop.opacity
+                              }}
+                            >
+                              {drop.emoji}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       <div className="absolute inset-0 flex flex-col items-center pt-8 px-6 gap-3 md:gap-4 overflow-y-auto hide-scrollbar">
                         
-                        {/* Step 2+ adds counter (only if date is picked) */}
                         {(step === 'data-location' || step === 'page-title') && date && timeDiff && (
                           <div className="w-full animate-in fade-in duration-700">
                             {selectedCountStyle === 'simples' && (
@@ -925,31 +1025,28 @@ export default function EternizeApp() {
                           </div>
                         )}
 
-                        {/* Step 3+ adds photo card */}
                         {step === 'page-title' && (
-                          <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0 animate-in fade-in duration-500">
-                            {pageTitle ? (
-                              <div className="absolute inset-x-0 bottom-4 flex justify-center px-4">
-                                <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words text-center">
+                          <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0 animate-in fade-in duration-500 shadow-xl z-20">
+                            <div className="absolute inset-0 flex flex-col items-center justify-end pb-4">
+                              {pageTitle ? (
+                                <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words text-center px-4">
                                   {pageTitle}
                                 </span>
-                              </div>
-                            ) : (
-                              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
-                            )}
+                              ) : (
+                                <div className="w-10 h-1.5 bg-black/5 rounded-full" />
+                              )}
+                            </div>
                           </div>
                         )}
 
-                        {/* Initial "Nothing" state or step-by-step skeleton */}
-                        {step === 'background-color' && (
+                        {(step === 'background-color' || step === 'background-effects') && (
                           <div className="flex-1 flex flex-col items-center justify-center space-y-4 opacity-20">
                             <Palette className="w-12 h-12 text-white/40" />
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Fundo Selecionado</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Design em construção</p>
                           </div>
                         )}
                       </div>
 
-                      {/* Music player could also be conditional, but let's keep it based on later steps if needed */}
                       {step === 'page-title' && (
                         <div 
                           onClick={(e) => {
@@ -1015,7 +1112,8 @@ export default function EternizeApp() {
                       </Button>
                       <Button 
                         onClick={
-                          step === 'background-color' ? handleNextToDataLocation :
+                          step === 'background-color' ? handleNextToEffects :
+                          step === 'background-effects' ? handleNextToDataLocation :
                           step === 'data-location' ? handleNextToPageTitle : undefined
                         }
                         className="w-full h-12 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
