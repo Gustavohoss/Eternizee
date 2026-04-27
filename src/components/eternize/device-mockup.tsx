@@ -6,8 +6,6 @@ import Image from 'next/image';
 import { 
   Heart, 
   ImageIcon, 
-  Music2, 
-  ChevronUp,
   Clock,
   Layout,
   Hash,
@@ -222,18 +220,6 @@ export function DeviceMockup({
               </div>
             )}
           </div>
-
-          {/* Music Player Mockup */}
-          {(step === 'page-title' || step === 'data-location' || step === 'photos') && (
-            <div className="absolute bottom-8 inset-x-5 bg-[#0e0e0e] border border-white/5 rounded-[24px] h-[64px] flex items-center justify-between p-3 z-50">
-              <div className="bg-[#1a1a1a] rounded-2xl w-10 h-10 flex items-center justify-center text-white/60">
-                <Music2 className="w-4 h-4" />
-              </div>
-              <div className="text-white/20">
-                <ChevronUp className="w-4 h-4" />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
