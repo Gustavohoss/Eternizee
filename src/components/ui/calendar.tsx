@@ -1,72 +1,136 @@
 "use client"
 
 import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
-import { ptBR } from "date-fns/locale"
-
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = {
+  selected?: Date
+  onSelect?: (date: Date) => void
+  className?: string
+}
 
-function Calendar({
-  className,
-  classNames,
-  showOutsideDays = true,
-  ...props
-}: CalendarProps) {
+const months = [
+  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+]
+
+function Calendar({ selected, onSelect, className }: CalendarProps) {
+  // Estado inicial baseado no que o usuário enviou ou na data selecionada
+  const initialDate = selected || new Date(2026, 3, 16)
+  const [currentMonth, setCurrentMonth] = React.useState(initialDate.getMonth())
+  const [currentYear, setCurrentYear] = React.useState(initialDate.getFullYear())
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(selected)
+
+  const years = React.useMemo(() => {
+    const arr = []
+    for (let i = 2026; i >= 1920; i--) arr.push(i)
+    return arr
+  }, [])
+
+  const days = React.useMemo(() => {
+    const result = []
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay()
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+    const prevLastDay = new Date(currentYear, currentMonth, 0).getDate()
+
+    // Dias do mês anterior
+    for (let i = firstDay; i > 0; i--) {
+      result.push({
+        day: prevLastDay - i + 1,
+        type: 'other-month',
+        date: new Date(currentYear, currentMonth - 1, prevLastDay - i + 1)
+      })
+    }
+
+    // Dias do mês atual
+    for (let i = 1; i <= daysInMonth; i++) {
+      result.push({
+        day: i,
+        type: 'current-month',
+        date: new Date(currentYear, currentMonth, i)
+      })
+    }
+
+    // Dias do próximo mês (preenchimento visual até 42 slots - 6 semanas)
+    const remaining = 42 - result.length
+    for (let i = 1; i <= remaining; i++) {
+      result.push({
+        day: i,
+        type: 'other-month',
+        date: new Date(currentYear, currentMonth + 1, i)
+      })
+    }
+
+    return result
+  }, [currentMonth, currentYear])
+
+  const handleDayClick = (date: Date) => {
+    setSelectedDate(date)
+    if (onSelect) onSelect(date)
+  }
+
+  const isSelected = (date: Date) => {
+    return selectedDate && 
+           date.getDate() === selectedDate.getDate() && 
+           date.getMonth() === selectedDate.getMonth() && 
+           date.getFullYear() === selectedDate.getFullYear()
+  }
+
   return (
-    <DayPicker
-      locale={ptBR}
-      showOutsideDays={showOutsideDays}
-      className={cn("p-6 bg-[#0c0c0c] border border-white/10 rounded-2xl shadow-2xl animate-calendar-fade", className)}
-      classNames={{
-        months: "flex flex-col space-y-4",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center gap-2",
-        caption_label: "hidden", // Escondemos o label padrão pois usaremos dropdowns
-        caption_dropdowns: "flex gap-2 w-full mb-4",
-        nav: "hidden", // Escondemos as setas padrão para focar nos dropdowns como na ref
-        table: "w-full border-collapse",
-        head_row: "flex justify-between mb-4",
-        head_cell: "text-white/30 rounded-md w-9 font-normal text-[13px] lowercase",
-        row: "flex w-full mt-1 justify-between",
-        cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-transparent",
-          "h-10 w-10"
-        ),
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-10 w-10 p-0 font-normal text-white/90 aria-selected:opacity-100 rounded-xl transition-all duration-300 hover:scale-110 hover:bg-white/5"
-        ),
-        day_range_end: "day-range-end",
-        day_selected:
-          "bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white animate-day-select shadow-[0_0_20px_rgba(225,29,72,0.4)] font-bold",
-        day_today: "text-primary font-bold",
-        day_outside:
-          "day-outside text-white/5 opacity-50 cursor-default",
-        day_disabled: "text-white/10 opacity-50",
-        day_hidden: "invisible",
-        // Dropdown styling
-        dropdown_container: "flex-1",
-        dropdown: "w-full bg-black text-white border-2 border-white/5 rounded-xl px-3 py-2.5 text-sm font-bold appearance-none cursor-pointer outline-none transition-all hover:border-primary/50 hover:shadow-[0_0_10px_rgba(225,29,72,0.2)]",
-        dropdown_icon: "hidden", // Escondemos o ícone do dropdown padrão do react-day-picker
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
-        ),
-      }}
-      captionLayout="dropdown"
-      {...props}
-    />
+    <div className={cn(
+      "bg-[#0c0c0c] border border-white/10 rounded-[16px] p-6 w-[340px] shadow-2xl animate-calendar-fade",
+      className
+    )}>
+      {/* Header com os Selects */}
+      <div className="flex gap-3 mb-6">
+        <select 
+          value={currentMonth}
+          onChange={(e) => setCurrentMonth(parseInt(e.target.value))}
+          className="bg-black text-white border-2 border-white/5 rounded-[10px] px-4 py-2.5 flex-1 cursor-pointer outline-none font-bold text-sm hover:border-primary transition-all appearance-none"
+        >
+          {months.map((m, i) => (
+            <option key={m} value={i}>{m}</option>
+          ))}
+        </select>
+        
+        <select 
+          value={currentYear}
+          onChange={(e) => setCurrentYear(parseInt(e.target.value))}
+          className="bg-black text-white border-2 border-white/5 rounded-[10px] px-4 py-2.5 flex-1 cursor-pointer outline-none font-bold text-sm hover:border-primary transition-all appearance-none"
+        >
+          {years.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Grid do Calendário */}
+      <div className="grid grid-cols-7 gap-1 text-center">
+        {['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'].map((d) => (
+          <div key={d} className="text-white/30 text-[13px] font-normal pb-4">{d}</div>
+        ))}
+
+        {days.map((item, idx) => {
+          const selected = isSelected(item.date) && item.type === 'current-month'
+          
+          return (
+            <div
+              key={idx}
+              onClick={() => item.type === 'current-month' && handleDayClick(item.date)}
+              className={cn(
+                "aspect-square flex items-center justify-center text-sm cursor-pointer rounded-[10px] transition-all duration-300 relative select-none",
+                item.type === 'other-month' && "text-white/5 cursor-default pointer-events-none",
+                item.type === 'current-month' && !selected && "hover:bg-white/5 hover:scale-110 z-10",
+                selected && "bg-primary text-white font-bold animate-day-select shadow-[0_0_20px_rgba(225,29,72,0.4)]"
+              )}
+            >
+              {item.day}
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }
-Calendar.displayName = "Calendar"
 
 export { Calendar }
