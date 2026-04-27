@@ -7,7 +7,6 @@ import {
   Heart, 
   ChevronRight, 
   Star, 
-  Play, 
   ArrowLeft, 
   Users, 
   Gift,
@@ -18,7 +17,6 @@ import {
   Hash,
   ChevronLeft,
   Search,
-  Volume2,
   AlertCircle,
   Palette,
   Globe,
@@ -30,7 +28,8 @@ import {
   X,
   ImageIcon,
   Upload,
-  Trash2
+  Trash2,
+  Layers
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,6 +64,7 @@ export default function EternizeApp() {
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>(['❤️']);
   const [emojiSize, setEmojiSize] = useState<number>(20);
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
+  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow'>('slide');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
@@ -308,6 +308,7 @@ export default function EternizeApp() {
                   uploadedPhotos={[]}
                   pageTitle=""
                   selectedCountStyle="padrao"
+                  photoEffect="slide"
                 />
               </div>
             </div>
@@ -578,11 +579,11 @@ export default function EternizeApp() {
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">As Fotos</h2>
                   </div>
                   <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
-                    Adicione até 4 fotos especiais para sua página.
+                    Adicione até 4 fotos especiais e escolha como elas serão exibidas.
                   </p>
                 </div>
 
-                <div className="w-full max-w-md space-y-6">
+                <div className="w-full max-w-md space-y-8">
                   <div className="grid grid-cols-2 gap-4">
                     {uploadedPhotos.map((photo, i) => (
                       <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
@@ -604,6 +605,40 @@ export default function EternizeApp() {
                         <input type="file" className="hidden" accept="image/*" multiple onChange={handlePhotoUpload} />
                       </label>
                     )}
+                  </div>
+
+                  <div className="space-y-5">
+                    <div className="flex items-center justify-center md:justify-start gap-2">
+                      <Layers className="w-5 h-5 text-primary" />
+                      <h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest text-white/60">Efeito de Passagem</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div 
+                        onClick={() => setPhotoEffect('slide')}
+                        className={cn(
+                          "cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center",
+                          photoEffect === 'slide' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                        )}
+                      >
+                        <Layout className={cn("w-6 h-6", photoEffect === 'slide' ? "text-primary" : "text-white/40")} />
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-wider">Slide Suave</p>
+                        </div>
+                      </div>
+
+                      <div 
+                        onClick={() => setPhotoEffect('coverflow')}
+                        className={cn(
+                          "cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center",
+                          photoEffect === 'coverflow' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                        )}
+                      >
+                        <Sparkles className={cn("w-6 h-6", photoEffect === 'coverflow' ? "text-primary" : "text-white/40")} />
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-wider">Coverflow 3D</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
@@ -794,6 +829,7 @@ export default function EternizeApp() {
                  date={date}
                  timeDiff={timeDiff}
                  selectedCountStyle={selectedCountStyle}
+                 photoEffect={photoEffect}
                />
 
                <div className="lg:hidden mt-10 space-y-5 w-full">

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -22,6 +23,7 @@ interface DeviceMockupProps {
   date?: Date;
   timeDiff?: any;
   selectedCountStyle: string;
+  photoEffect: 'slide' | 'coverflow';
 }
 
 export function DeviceMockup({
@@ -32,8 +34,14 @@ export function DeviceMockup({
   step,
   uploadedPhotos,
   pageTitle,
+  photoEffect = 'slide'
 }: DeviceMockupProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 30 });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    duration: 30,
+    align: photoEffect === 'coverflow' ? 'center' : 'start',
+    containScroll: photoEffect === 'coverflow' ? false : 'trimSnaps'
+  });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const onSelect = useCallback(() => {
@@ -113,19 +121,34 @@ export function DeviceMockup({
 
           <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 md:gap-6 overflow-y-auto hide-scrollbar">
             
-            {/* Polaroid Frame Section - Matches requested HTML exactly */}
+            {/* Polaroid Frame Section */}
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
                 className="w-full bg-[#ffffff] p-[15px] pb-[40px] rounded-[4px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
               >
                 <div 
-                  className="w-full aspect-[1/1.1] bg-[#111] relative overflow-hidden rounded-[2px] group/photo"
+                  className={cn(
+                    "w-full aspect-[1/1.1] relative overflow-hidden rounded-[2px] group/photo",
+                    photoEffect === 'coverflow' ? "overflow-visible" : "bg-[#111]"
+                  )}
+                  style={photoEffect === 'coverflow' ? { perspective: '1000px' } : {}}
                 >
                   {uploadedPhotos.length > 0 ? (
                     <div className="w-full h-full" ref={emblaRef}>
                       <div className="flex h-full">
                         {uploadedPhotos.map((photo, i) => (
-                          <div key={i} className="relative flex-[0_0_100%] min-w-0 h-full">
+                          <div 
+                            key={i} 
+                            className={cn(
+                              "relative min-w-0 h-full transition-all duration-500",
+                              photoEffect === 'coverflow' ? "flex-[0_0_80%] mx-2" : "flex-[0_0_100%]"
+                            )}
+                            style={photoEffect === 'coverflow' ? {
+                              transform: i === selectedIndex ? 'scale(1) rotateY(0deg)' : i < selectedIndex ? 'scale(0.85) rotateY(30deg) translateZ(-100px)' : 'scale(0.85) rotateY(-30deg) translateZ(-100px)',
+                              opacity: i === selectedIndex ? 1 : 0.6,
+                              filter: i === selectedIndex ? 'grayscale(0)' : 'grayscale(0.4)'
+                            } : {}}
+                          >
                             <Image 
                               src={photo} 
                               fill 
@@ -151,14 +174,14 @@ export function DeviceMockup({
                             <ChevronRight className="w-4 h-4" />
                           </button>
                           
-                          {/* Pagination Dots over the photo - Exact style match */}
-                          <div className="absolute bottom-[20px] left-1/2 -translate-x-1/2 flex gap-[5px] z-30">
+                          {/* Pagination Dots */}
+                          <div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 flex gap-[5px] z-30">
                             {uploadedPhotos.map((_, i) => (
                               <div 
                                 key={i} 
                                 className={cn(
-                                  "w-[8px] h-[8px] rounded-full transition-all duration-300",
-                                  i === selectedIndex ? "bg-[#ff0000] scale-[1.2]" : "bg-[#bbb]"
+                                  "w-[7px] h-[7px] rounded-full transition-all duration-300",
+                                  i === selectedIndex ? "bg-[#ff0000] scale-[1.2] shadow-[0_0_10px_rgba(255,0,0,0.6)]" : "bg-[#bbb] opacity-60"
                                 )}
                               />
                             ))}
