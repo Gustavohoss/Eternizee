@@ -180,7 +180,7 @@ export function DeviceMockup({
         return (
           <div className="w-full text-center space-y-1 animate-in fade-in slide-in-from-bottom-2">
             <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Estamos juntos há</p>
-            <p className="text-sm font-bold text-white/80">
+            <p className="text-sm font-bold text-white/80 tabular-nums">
               {timeDiff.years > 0 && `${timeDiff.years}a `}
               {timeDiff.months > 0 && `${timeDiff.months}m `}
               {timeDiff.days}d {timeDiff.hours}h {timeDiff.minutes}m {timeDiff.seconds}s
@@ -192,8 +192,8 @@ export function DeviceMockup({
         return (
           <div className="w-full grid grid-cols-3 gap-2 animate-in fade-in slide-in-from-bottom-2">
             {units.map((u) => (
-              <div key={u.label} className="bg-white/5 border border-white/10 rounded-xl p-2 text-center">
-                <p className="text-base font-black text-white">{u.value}</p>
+              <div key={u.label} className="bg-white/5 border border-white/10 rounded-xl p-2 text-center min-w-[70px]">
+                <p className="text-base font-black text-white tabular-nums">{u.value}</p>
                 <p className="text-[8px] font-bold uppercase tracking-tighter text-white/30">{u.label}</p>
               </div>
             ))}
@@ -207,7 +207,7 @@ export function DeviceMockup({
               <CalendarIcon className="w-3 h-3 text-primary" />
               <span className="text-[10px] font-black text-primary uppercase">Desde</span>
             </div>
-            <p className="text-2xl font-black tracking-tighter text-white">
+            <p className="text-2xl font-black tracking-tighter text-white tabular-nums">
               {date.toLocaleDateString('pt-BR')}
             </p>
           </div>
@@ -217,7 +217,7 @@ export function DeviceMockup({
         const totalDays = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
         return (
           <div className="w-full text-center space-y-1 animate-in fade-in slide-in-from-bottom-2">
-            <p className="text-[40px] font-black text-primary leading-none tracking-tighter">{totalDays > 0 ? totalDays : 0}</p>
+            <p className="text-[40px] font-black text-primary leading-none tracking-tighter tabular-nums">{totalDays > 0 ? totalDays : 0}</p>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Dias de puro amor</p>
           </div>
         );
@@ -232,16 +232,16 @@ export function DeviceMockup({
             </div>
             <div className="flex justify-center gap-3">
               {units.slice(0, 3).map((u) => (
-                <div key={u.label} className="text-center">
-                  <p className="text-lg font-black text-white leading-none">{u.value}</p>
+                <div key={u.label} className="text-center min-w-[40px]">
+                  <p className="text-lg font-black text-white leading-none tabular-nums">{u.value}</p>
                   <p className="text-[8px] font-bold uppercase text-white/30">{u.label}</p>
                 </div>
               ))}
             </div>
             <div className="flex justify-center gap-4 text-white/40">
               {units.slice(3).map((u) => (
-                <div key={u.label} className="flex items-baseline gap-0.5">
-                  <span className="text-xs font-bold">{u.value}</span>
+                <div key={u.label} className="flex items-baseline gap-0.5 min-w-[30px]">
+                  <span className="text-xs font-bold tabular-nums">{u.value}</span>
                   <span className="text-[7px] font-bold uppercase">{u.label}</span>
                 </div>
               ))}
