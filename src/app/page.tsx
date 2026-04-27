@@ -28,6 +28,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -485,19 +487,24 @@ export default function EternizeApp() {
                   <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
                     <Clock className="w-3 h-3" /> Quando essa história de amor começou? <span className="text-primary">*</span>
                   </Label>
-                  <div className="relative group">
-                    <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors z-10 pointer-events-none" />
-                    <Input 
-                      type="date"
-                      value={date ? format(date, "yyyy-MM-dd") : ""}
-                      onChange={(e) => {
-                        const newDate = e.target.value ? new Date(e.target.value + "T12:00:00") : undefined;
-                        setDate(newDate);
-                      }}
-                      className="bg-white/5 border-white/10 h-14 pl-12 pr-4 rounded-xl text-sm font-medium focus:border-primary/50 transition-all block w-full appearance-none"
-                      style={{ colorScheme: 'dark' }}
-                    />
-                  </div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="relative w-full text-left group">
+                        <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-hover:text-primary transition-colors z-10 pointer-events-none" />
+                        <div className="bg-white/5 border border-white/10 h-14 pl-12 pr-4 rounded-xl text-sm font-medium flex items-center group-hover:border-primary/50 transition-all">
+                          {date ? format(date, "PPP", { locale: ptBR }) : <span className="text-white/20">Selecione uma data</span>}
+                        </div>
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-none bg-transparent" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div className="space-y-3">
