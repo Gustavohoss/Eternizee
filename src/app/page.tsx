@@ -26,7 +26,13 @@ import {
   LogIn,
   Sparkles,
   Ban,
-  Type
+  Type,
+  Plus,
+  X,
+  Smile,
+  Leaf,
+  Dog,
+  PartyPopper
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,6 +43,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { format, intervalToDuration } from 'date-fns';
@@ -51,7 +59,33 @@ const MOCK_CITIES = [
   "Recife, PE", "Manaus, AM", "Goiânia, GO"
 ];
 
-const EMOJI_OPTIONS = ['❤️', '✨', '🌸', '🎈', '🥂', '🎂', '🧸', '💍', '☁️', '⭐', '🔥', '🦋'];
+const EMOJI_CATEGORIES = [
+  { 
+    id: 'smiles', 
+    icon: Smile, 
+    emojis: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠'] 
+  },
+  { 
+    id: 'love', 
+    icon: Heart, 
+    emojis: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '💍', '💎', '💌', '💒', '💏', '💑'] 
+  },
+  { 
+    id: 'nature', 
+    icon: Leaf, 
+    emojis: ['🌸', '🌼', '🌻', '🌹', '🌷', '🌿', '☘️', '🍀', '🍁', '🍂', '🍃', '🍄', '🌵', '🌴', '🌲', '🌳', '🌊', '☀️', '🌤️', '☁️', '🌦️', '🌧️', '⛈️', '🌩️', '❄️', '☃️', '⛄', '🌬️', '💨', '🔥', '💧', '🫧', '🌈', '⭐', '🌟', '✨', '🌙', '🌚'] 
+  },
+  { 
+    id: 'animals', 
+    icon: Dog, 
+    emojis: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🐤', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐿️', '🦔', '🐾', '🐉', '🐲'] 
+  },
+  { 
+    id: 'party', 
+    icon: PartyPopper, 
+    emojis: ['🎈', '🎆', '🎇', '🧨', '✨', '🎉', '🎊', '🎁', '🎂', '🍰', '🧁', '🍦', '🍪', '🍬', '🍭', '🍫', '🍩', '🍿', '🥤', '🧋', '🍻', '🥂', '🍷', '🍸', '🍹', '🥃', '🍾', '🍕', '🍔', '🍟', '🌭', '🌮', '🌯', '🍳', '🥘', '🍲', '🥣', '🥗', '🍿', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', '🍠', '🍢', '🍣', '🍤', '🍥', '🥮', '🍡', '🥟', '🥠', '🥡'] 
+  }
+];
 
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
@@ -64,6 +98,7 @@ export default function EternizeApp() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   
   // Real-time counter state
   const [timeDiff, setTimeDiff] = useState<{
@@ -302,17 +337,17 @@ export default function EternizeApp() {
 
       {step === 'landing' && (
         <>
-          <header className="relative z-20 container mx-auto px-4 py-3 mt-12 md:mt-14 flex items-center justify-between max-w-6xl">
+          <header className="relative z-20 container mx-auto px-4 py-2 mt-12 md:mt-14 flex items-center justify-between max-w-6xl">
             <div className="flex items-center gap-2">
-              <div className="bg-primary p-1.5 rounded-full shadow-lg shadow-primary/20">
-                <Heart className="w-4 h-4 fill-white text-white" />
+              <div className="bg-primary p-1 rounded-full shadow-lg shadow-primary/20">
+                <Heart className="w-3.5 h-3.5 fill-white text-white" />
               </div>
-              <span className="text-lg font-black tracking-tighter">
+              <span className="text-base font-black tracking-tighter">
                 Eternize<span className="text-primary">.</span>
               </span>
             </div>
 
-            <nav className="hidden md:flex items-center gap-6 text-[11px] font-bold text-white/50 uppercase tracking-wider">
+            <nav className="hidden md:flex items-center gap-6 text-[10px] font-bold text-white/50 uppercase tracking-wider">
               <a href="#" className="hover:text-white transition-colors">Início</a>
               <a href="#" className="hover:text-white transition-colors">Como funciona?</a>
               <a href="#" className="hover:text-white transition-colors">Planos</a>
@@ -320,17 +355,17 @@ export default function EternizeApp() {
             </nav>
 
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-4 text-[10px] font-bold text-white/50 uppercase">
-                <button className="flex items-center gap-1.5 hover:text-white transition-colors">
-                  <Globe className="w-3 h-3" /> BR PT
+              <div className="hidden sm:flex items-center gap-4 text-[9px] font-bold text-white/50 uppercase">
+                <button className="flex items-center gap-1 hover:text-white transition-colors">
+                  <Globe className="w-2.5 h-2.5" /> BR PT
                 </button>
-                <button className="flex items-center gap-1.5 hover:text-white transition-colors">
-                  <LogIn className="w-3 h-3" /> Login
+                <button className="flex items-center gap-1 hover:text-white transition-colors">
+                  <LogIn className="w-2.5 h-2.5" /> Login
                 </button>
               </div>
               <Button 
                 onClick={handleStart}
-                className="bg-primary hover:bg-primary/90 rounded-full px-5 h-8 text-[11px] font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
+                className="bg-primary hover:bg-primary/90 rounded-full px-4 h-7 text-[10px] font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
               >
                 Criar minha página
               </Button>
@@ -569,14 +604,14 @@ export default function EternizeApp() {
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
           <div className="flex items-center justify-center mb-8 md:mb-10">
             <div className="w-full max-w-md text-center">
-              <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div className={cn(
                   "h-full bg-primary transition-all duration-500", 
                   step === 'customize-background' ? "w-[12.5%]" : 
                   step === 'data-location' ? "w-[25%]" : "w-[37.5%]"
                 )} />
               </div>
-              <div className="mt-3 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
+              <div className="mt-3 text-[10px] md:text-xs font-black text-white/40 uppercase tracking-[0.2em]">
                 Passo {step === 'customize-background' ? '1' : step === 'data-location' ? '2' : '3'} de 8
               </div>
             </div>
@@ -587,12 +622,12 @@ export default function EternizeApp() {
               <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
                 <div className="space-y-3 text-center md:text-left">
                   <div className="flex flex-col md:flex-row items-center gap-4">
-                    <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
-                      <Palette className="w-6 h-6 md:w-7 md:h-7 text-white/80" />
+                    <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+                      <Palette className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
                     </div>
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">Personalizar Fundo</h2>
                   </div>
-                  <p className="text-sm md:text-base text-white/40 font-medium max-w-md">
+                  <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
                     Escolha a cor base e adicione efeitos especiais para sua página.
                   </p>
                 </div>
@@ -640,7 +675,7 @@ export default function EternizeApp() {
                   <div className="space-y-5">
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5 text-primary" />
-                      <h3 className="text-xs md:text-sm font-black uppercase tracking-widest text-white/60">Efeitos Especiais</h3>
+                      <h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest text-white/60">Efeitos Especiais</h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div 
@@ -671,7 +706,7 @@ export default function EternizeApp() {
                         </div>
                         <div>
                           <p className="text-[11px] font-black uppercase tracking-wider">Chuva de Emojis</p>
-                          <p className="text-[10px] text-white/40">Corações caindo</p>
+                          <p className="text-[10px] text-white/40">Emojis caindo</p>
                         </div>
                       </div>
                     </div>
@@ -680,25 +715,70 @@ export default function EternizeApp() {
                   {/* Emoji Configuration (Conditional) */}
                   {selectedEffect === 'emoji-rain' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
                           <Heart className="w-3.5 h-3.5" /> Escolha os emojis (Até 3)
                         </Label>
-                        <div className="flex flex-wrap gap-2">
-                          {EMOJI_OPTIONS.map((emoji) => (
-                            <button
+                        
+                        <div className="flex flex-wrap gap-2 items-center">
+                          {selectedEmojis.map((emoji) => (
+                            <div 
                               key={emoji}
-                              onClick={() => toggleEmoji(emoji)}
-                              className={cn(
-                                "w-10 h-10 rounded-xl border flex items-center justify-center text-lg transition-all",
-                                selectedEmojis.includes(emoji)
-                                  ? "border-primary bg-primary/20 scale-110"
-                                  : "border-white/5 bg-white/5 hover:border-white/20"
-                              )}
+                              className="group relative w-12 h-12 rounded-2xl border border-primary bg-primary/10 flex items-center justify-center text-xl shadow-lg animate-in zoom-in-50"
                             >
                               {emoji}
-                            </button>
+                              <button 
+                                onClick={() => toggleEmoji(emoji)}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center scale-0 group-hover:scale-100 transition-transform"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
                           ))}
+                          
+                          {selectedEmojis.length < 3 && (
+                            <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                              <PopoverTrigger asChild>
+                                <button className="w-12 h-12 rounded-2xl border border-dashed border-white/20 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 transition-colors">
+                                  <Plus className="w-5 h-5" />
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-[320px] p-0 border-white/10 bg-[#141414] shadow-2xl rounded-2xl overflow-hidden" align="start">
+                                <Tabs defaultValue="smiles" className="w-full">
+                                  <TabsList className="w-full grid grid-cols-5 bg-black/40 rounded-none h-10">
+                                    {EMOJI_CATEGORIES.map(cat => (
+                                      <TabsTrigger key={cat.id} value={cat.id} className="data-[state=active]:bg-white/5">
+                                        <cat.icon className="w-3.5 h-3.5" />
+                                      </TabsTrigger>
+                                    ))}
+                                  </TabsList>
+                                  {EMOJI_CATEGORIES.map(cat => (
+                                    <TabsContent key={cat.id} value={cat.id} className="mt-0">
+                                      <ScrollArea className="h-64 p-3">
+                                        <div className="grid grid-cols-6 gap-2">
+                                          {cat.emojis.map(emoji => (
+                                            <button
+                                              key={emoji}
+                                              onClick={() => {
+                                                toggleEmoji(emoji);
+                                                if (selectedEmojis.length === 2) setIsEmojiPickerOpen(false);
+                                              }}
+                                              className={cn(
+                                                "w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all hover:bg-white/10 active:scale-90",
+                                                selectedEmojis.includes(emoji) && "bg-primary/20 pointer-events-none opacity-50"
+                                              )}
+                                            >
+                                              {emoji}
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </ScrollArea>
+                                    </TabsContent>
+                                  ))}
+                                </Tabs>
+                              </PopoverContent>
+                            </Popover>
+                          )}
                         </div>
                       </div>
 
@@ -743,12 +823,12 @@ export default function EternizeApp() {
               <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
                 <div className="space-y-3 text-center md:text-left">
                   <div className="flex flex-col md:flex-row items-center gap-4">
-                    <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
-                      <CalendarIcon className="w-6 h-6 md:w-7 md:h-7 text-white/80" />
+                    <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+                      <CalendarIcon className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
                     </div>
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">Data e localização</h2>
                   </div>
-                  <p className="text-sm md:text-base text-white/40 font-medium max-w-md">
+                  <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
                     Informe quando e onde esse momento especial aconteceu.
                   </p>
                 </div>
@@ -876,12 +956,12 @@ export default function EternizeApp() {
               <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
                 <div className="space-y-3 text-center md:text-left">
                   <div className="flex flex-col md:flex-row items-center gap-4">
-                    <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
-                      <Heart className="w-6 h-6 md:w-7 md:h-7 text-white/80" />
+                    <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+                      <Heart className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
                     </div>
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">Título da página</h2>
                   </div>
-                  <p className="text-sm md:text-base text-white/40 font-medium max-w-md">
+                  <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
                     Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
                   </p>
                 </div>
@@ -899,9 +979,9 @@ export default function EternizeApp() {
                     />
                   </div>
 
-                  <div className="bg-[#1a1107] border border-[#452b12] p-5 rounded-2xl flex items-start gap-4">
+                  <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
                     <AlertCircle className="w-5 h-5 text-[#ff9900] mt-0.5 shrink-0" />
-                    <p className="text-[11px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
+                    <p className="text-[10px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
                       Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
                     </p>
                   </div>
@@ -918,7 +998,7 @@ export default function EternizeApp() {
                   <Button 
                     className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                   >
-                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                    Finalizar criação <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
@@ -927,18 +1007,18 @@ export default function EternizeApp() {
             <div className="lg:sticky lg:top-24 flex flex-col items-center mt-12 lg:mt-0">
                <div className="w-full max-w-[300px]">
                   <div className="mb-6 text-center">
-                    <p className="text-[11px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p>
+                    <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p>
                   </div>
 
-                  <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-3 flex items-center gap-3">
-                    <div className="flex gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-red-500/20" />
-                      <div className="w-2 h-2 rounded-full bg-yellow-500/20" />
-                      <div className="w-2 h-2 rounded-full bg-green-500/20" />
+                  <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500/20" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500/20" />
                     </div>
-                    <div className="flex-1 bg-black/40 rounded-full h-5 flex items-center px-4 gap-3">
-                      <div className="w-2.5 h-2.5 text-white/20 text-[7px]">🔒</div>
-                      <div className="text-[8px] font-medium text-white/40 truncate">heartzzu.com/...</div>
+                    <div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2">
+                      <div className="w-2 h-2 text-white/20 text-[6px]">🔒</div>
+                      <div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/...</div>
                     </div>
                   </div>
                   
@@ -1022,8 +1102,8 @@ export default function EternizeApp() {
                               <div className="w-full space-y-6">
                                 <div className="text-center">
                                   <div className="w-full space-y-2 mb-4 opacity-20">
-                                    <div className="h-1 bg-white rounded-full w-[80%] mx-auto" />
-                                    <div className="h-1 bg-white rounded-full w-[60%] mx-auto" />
+                                    <div className="h-0.5 bg-white rounded-full w-[80%] mx-auto" />
+                                    <div className="h-0.5 bg-white rounded-full w-[60%] mx-auto" />
                                   </div>
                                   <p className="text-[8px] md:text-[10px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
                                 </div>
@@ -1050,8 +1130,8 @@ export default function EternizeApp() {
                               <div className="w-full space-y-6 pt-2">
                                 <div className="text-center">
                                   <div className="w-full space-y-2 mb-4 opacity-20">
-                                    <div className="h-1 bg-white rounded-full w-[80%] mx-auto" />
-                                    <div className="h-1 bg-white rounded-full w-[60%] mx-auto" />
+                                    <div className="h-0.5 bg-white rounded-full w-[80%] mx-auto" />
+                                    <div className="h-0.5 bg-white rounded-full w-[60%] mx-auto" />
                                   </div>
                                   <p className="text-[8px] md:text-[10px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
                                 </div>
@@ -1074,7 +1154,7 @@ export default function EternizeApp() {
                                   {pageTitle}
                                 </span>
                               ) : (
-                                <div className="w-12 h-2 bg-black/5 rounded-full" />
+                                <div className="w-12 h-1.5 bg-black/5 rounded-full" />
                               )}
                             </div>
                           </div>
@@ -1082,8 +1162,8 @@ export default function EternizeApp() {
 
                         {step === 'customize-background' && (
                           <div className="flex-1 flex flex-col items-center justify-center space-y-5 opacity-20">
-                            <Palette className="w-16 h-16 text-white/40" />
-                            <p className="text-[11px] font-black uppercase tracking-[0.4em]">Design em construção</p>
+                            <Palette className="w-12 h-12 text-white/40" />
+                            <p className="text-[10px] font-black uppercase tracking-[0.4em]">Design em construção</p>
                           </div>
                         )}
                       </div>
@@ -1147,7 +1227,7 @@ export default function EternizeApp() {
                       <Button 
                         onClick={handleBack}
                         variant="outline" 
-                        className="w-full h-14 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+                        className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-3"
                       >
                         <ChevronLeft className="w-4 h-4" /> Voltar
                       </Button>
@@ -1156,7 +1236,7 @@ export default function EternizeApp() {
                           step === 'customize-background' ? handleNextToDataLocation :
                           step === 'data-location' ? handleNextToPageTitle : undefined
                         }
-                        className="w-full h-14 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-primary/20"
+                        className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-primary/20"
                       >
                         Próxima etapa <ChevronRight className="w-4 h-4" />
                       </Button>
