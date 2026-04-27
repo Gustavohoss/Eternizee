@@ -701,7 +701,16 @@ export default function EternizeApp() {
                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
                         
-                        {/* Counter Section BELOW image for PADRAO and CLASSICO */}
+                        {/* Skeleton lines for Data Grande (ABOVE counter) */}
+                        {selectedCountStyle === 'data-grande' && (
+                          <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
+                            <div className="h-1 w-3/4 bg-white/10 rounded-full" />
+                            <div className="h-1 w-3/4 bg-white/10 rounded-full" />
+                            <div className="h-1 w-1/2 bg-white/5 rounded-full" />
+                          </div>
+                        )}
+
+                        {/* Counter Section */}
                         {date && timeDiff ? (
                           <div className="w-full space-y-3 md:space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-1">
                             {selectedCountStyle === 'classico' && (
@@ -745,11 +754,42 @@ export default function EternizeApp() {
                               </>
                             )}
 
-                            {/* Skeleton lines always visible below count/image */}
-                            <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
-                              <div className="h-1 w-3/4 bg-white/10 rounded-full" />
-                              <div className="h-1 w-1/2 bg-white/5 rounded-full" />
-                            </div>
+                            {selectedCountStyle === 'data-grande' && (
+                              <div className="w-full space-y-4">
+                                <div className="text-center">
+                                  <p className="text-[7px] md:text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
+                                </div>
+                                <div className="bg-white/5 border border-white/10 rounded-2xl py-6 px-4 flex items-center justify-around">
+                                  <div className="flex flex-col items-center">
+                                    <span className="text-3xl font-serif font-bold leading-none">{timeDiff.years.toString().padStart(2, '0')}</span>
+                                    <span className="text-[6px] font-bold text-white/30 mt-2 uppercase tracking-widest">ANOS</span>
+                                  </div>
+                                  <div className="w-px h-10 bg-white/10" />
+                                  <div className="flex flex-col items-center">
+                                    <span className="text-3xl font-serif font-bold leading-none">{timeDiff.months.toString().padStart(2, '0')}</span>
+                                    <span className="text-[6px] font-bold text-white/30 mt-2 uppercase tracking-widest">MESES</span>
+                                  </div>
+                                  <div className="w-px h-10 bg-white/10" />
+                                  <div className="flex flex-col items-center">
+                                    <span className="text-3xl font-serif font-bold leading-none">{timeDiff.days.toString().padStart(2, '0')}</span>
+                                    <span className="text-[6px] font-bold text-white/30 mt-2 uppercase tracking-widest">DIAS</span>
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <p className="text-[7px] md:text-[8px] font-bold text-white/30">
+                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Skeleton lines for styles that have them BELOW counter */}
+                            {(selectedCountStyle === 'padrao' || selectedCountStyle === 'classico') && (
+                              <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
+                                <div className="h-1 w-3/4 bg-white/10 rounded-full" />
+                                <div className="h-1 w-1/2 bg-white/5 rounded-full" />
+                              </div>
+                            )}
                           </div>
                         ) : (
                           <div className="w-full flex flex-col items-center gap-4">
