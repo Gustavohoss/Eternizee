@@ -657,6 +657,11 @@ export default function EternizeApp() {
                         )}
 
                         <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
+                           <div className="absolute bottom-4 left-0 right-0 text-center px-4">
+                              <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words">
+                                {pageTitle}
+                              </span>
+                           </div>
                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
                         
@@ -811,7 +816,7 @@ export default function EternizeApp() {
                         <ChevronLeft className="w-4 h-4" /> Voltar etapa
                       </Button>
                       <Button 
-                        onClick={handleNextToPageTitle}
+                        onClick={step === 'page-title' ? undefined : handleNextToPageTitle}
                         className="w-full h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
                       >
                         Próxima etapa <ChevronRight className="w-4 h-4" />
@@ -916,6 +921,11 @@ export default function EternizeApp() {
                     <div className="absolute inset-0 bg-[#0c0c0c]">
                       <div className="absolute inset-0 flex flex-col items-center pt-8 px-6 gap-3 md:gap-4 overflow-y-auto hide-scrollbar">
                         <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
+                           <div className="absolute bottom-4 left-0 right-0 text-center px-4">
+                              <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words">
+                                {pageTitle}
+                              </span>
+                           </div>
                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
                         
