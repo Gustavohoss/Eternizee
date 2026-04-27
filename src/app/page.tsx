@@ -292,8 +292,8 @@ export default function EternizeApp() {
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative overflow-x-hidden font-body">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
 
-      <div className="fixed inset-x-0 top-0 z-[100] bg-[#3d0b17] border-b border-white/5 py-4 md:py-5 text-center text-sm md:text-base font-medium flex items-center justify-center gap-4">
-        <div className="bg-white/10 px-3 py-1 rounded border border-white/20 text-[11px] md:text-xs font-black uppercase">50% OFF</div>
+      <div className="fixed inset-x-0 top-0 z-[100] bg-[#3d0b17] border-b border-white/5 py-2 md:py-3 text-center text-xs md:text-sm font-medium flex items-center justify-center gap-4">
+        <div className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-[10px] md:text-[11px] font-black uppercase">50% OFF</div>
         <p className="tracking-tight">
           ✨ Apenas hoje — Todos os planos com <span className="font-black">50% OFF</span> de desconto, aproveite!{' '}
           <span className="underline cursor-pointer hover:text-white/80 font-bold ml-1">Ver planos ›</span>
@@ -302,7 +302,7 @@ export default function EternizeApp() {
 
       {step === 'landing' && (
         <>
-          <header className="relative z-20 container mx-auto px-4 py-4 mt-16 md:mt-20 flex items-center justify-between max-w-6xl">
+          <header className="relative z-20 container mx-auto px-4 py-3 mt-12 md:mt-14 flex items-center justify-between max-w-6xl">
             <div className="flex items-center gap-2">
               <div className="bg-primary p-1.5 rounded-full shadow-lg shadow-primary/20">
                 <Heart className="w-4 h-4 fill-white text-white" />
@@ -337,7 +337,7 @@ export default function EternizeApp() {
             </div>
           </header>
 
-          <main className="relative z-10 container mx-auto px-4 pt-4 md:pt-8 pb-12">
+          <main className="relative z-10 container mx-auto px-4 pt-2 md:pt-4 pb-12">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-5xl mx-auto">
               <div className="space-y-4 md:space-y-6">
                 <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1 text-[10px] font-bold text-white/70 backdrop-blur-sm">
@@ -566,8 +566,8 @@ export default function EternizeApp() {
       )}
 
       {(step === 'customize-background' || step === 'data-location' || step === 'page-title') && (
-        <div className="relative z-10 container mx-auto px-4 pt-20 md:pt-24 pb-12 max-w-6xl">
-          <div className="flex items-center justify-center mb-10 md:mb-12">
+        <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
+          <div className="flex items-center justify-center mb-8 md:mb-10">
             <div className="w-full max-w-md text-center">
               <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                 <div className={cn(
@@ -576,7 +576,7 @@ export default function EternizeApp() {
                   step === 'data-location' ? "w-[25%]" : "w-[37.5%]"
                 )} />
               </div>
-              <div className="mt-4 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
+              <div className="mt-3 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
                 Passo {step === 'customize-background' ? '1' : step === 'data-location' ? '2' : '3'} de 8
               </div>
             </div>
