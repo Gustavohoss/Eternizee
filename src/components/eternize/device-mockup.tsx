@@ -129,7 +129,7 @@ export function DeviceMockup({
               <div 
                 className={cn(
                   "w-full bg-[#ffffff] rounded-[8px] shadow-[0_40px_100px_rgba(0,0,0,0.9)] z-20 animate-in fade-in duration-500 flex flex-col items-center",
-                  photoEffect === 'cards' ? "p-[12px] pb-[35px]" : "p-[15px] pb-[40px]"
+                  photoEffect === 'cards' ? "p-[12px] pb-[40px]" : "p-[15px] pb-[45px]"
                 )}
               >
                 <div 
@@ -223,9 +223,9 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                <div className={cn("w-full text-center", photoEffect === 'cards' ? "mt-[20px]" : "mt-[25px]")}>
+                <div className={cn("w-full text-center", photoEffect === 'cards' ? "mt-[15px]" : "mt-[20px]")}>
                   <span 
-                    className="text-[#111] font-['Dancing_Script'] text-[26px] leading-none break-words px-2 block truncate tracking-[1px]"
+                    className="text-[#111] font-['Dancing_Script'] text-[26px] block px-2 tracking-[1px] leading-relaxed"
                   >
                     {pageTitle || "Seu Nome Aqui"}
                   </span>
