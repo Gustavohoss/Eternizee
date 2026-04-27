@@ -681,46 +681,74 @@ export default function EternizeApp() {
                       {/* Fake Content Skeleton / Actual Content */}
                       <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 overflow-y-auto hide-scrollbar">
                         {/* Fake Image */}
-                        <div className="w-full aspect-square bg-white/5 rounded-2xl animate-pulse" />
-                        
-                        {/* Fake Text Lines */}
-                        <div className="space-y-2 w-full flex flex-col items-center">
-                          <div className="h-2 w-3/4 bg-white/10 rounded-full animate-pulse" />
-                          <div className="h-1.5 w-1/2 bg-white/5 rounded-full animate-pulse" />
+                        <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden">
+                           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
-
+                        
                         {/* Counter Section */}
                         {date && timeDiff ? (
-                          <div className="w-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-4">
-                            <div className="text-center">
-                              <p className="text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
-                            </div>
-                            
-                            <div className="grid grid-cols-3 gap-1.5">
-                              {[
-                                { val: timeDiff.years, label: 'ANOS' },
-                                { val: timeDiff.months, label: 'MESES' },
-                                { val: timeDiff.days, label: 'DIAS' },
-                                { val: timeDiff.hours, label: 'HORAS' },
-                                { val: timeDiff.minutes, label: 'MINUTOS' },
-                                { val: timeDiff.seconds, label: 'SEGUNDOS' },
-                              ].map((item, i) => (
-                                <div key={i} className="bg-white/5 border border-white/5 rounded-xl py-2.5 flex flex-col items-center justify-center">
-                                  <span className="text-base font-black leading-none">{item.val.toString().padStart(2, '0')}</span>
-                                  <span className="text-[5px] font-bold text-white/30 mt-1 uppercase tracking-wider">{item.label}</span>
+                          <div className="w-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-2">
+                            {selectedCountStyle === 'classico' ? (
+                              <div className="text-center space-y-4">
+                                <p className="text-[11px] font-bold leading-relaxed px-2 text-white">
+                                  Uau, estão juntos há {timeDiff.years.toString().padStart(2, '0')} anos {timeDiff.months.toString().padStart(2, '0')} meses {timeDiff.days.toString().padStart(2, '0')} dias {timeDiff.hours.toString().padStart(2, '0')} horas {timeDiff.minutes.toString().padStart(2, '0')} minutos {timeDiff.seconds.toString().padStart(2, '0')} segundos ❤️🔥
+                                </p>
+                                <p className="text-[9px] font-bold text-white/90">
+                                  Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                                </p>
+                                {/* Fake Text Lines below as per image */}
+                                <div className="space-y-2 w-full flex flex-col items-center pt-2">
+                                  <div className="h-1.5 w-3/4 bg-white/10 rounded-full" />
+                                  <div className="h-1.5 w-2/3 bg-white/5 rounded-full" />
+                                  <div className="h-1.5 w-1/2 bg-white/5 rounded-full" />
                                 </div>
-                              ))}
-                            </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="text-center">
+                                  <p className="text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
+                                </div>
+                                
+                                <div className="grid grid-cols-3 gap-1.5">
+                                  {[
+                                    { val: timeDiff.years, label: 'ANOS' },
+                                    { val: timeDiff.months, label: 'MESES' },
+                                    { val: timeDiff.days, label: 'DIAS' },
+                                    { val: timeDiff.hours, label: 'HORAS' },
+                                    { val: timeDiff.minutes, label: 'MINUTOS' },
+                                    { val: timeDiff.seconds, label: 'SEGUNDOS' },
+                                  ].map((item, i) => (
+                                    <div key={i} className="bg-white/5 border border-white/5 rounded-xl py-2.5 flex flex-col items-center justify-center">
+                                      <span className="text-base font-black leading-none">{item.val.toString().padStart(2, '0')}</span>
+                                      <span className="text-[5px] font-bold text-white/30 mt-1 uppercase tracking-wider">{item.label}</span>
+                                    </div>
+                                  ))}
+                                </div>
 
-                            <div className="text-center pt-2">
-                               <p className="text-[7px] font-medium text-white/40 italic">
-                                Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                              </p>
-                            </div>
+                                <div className="text-center pt-2">
+                                  <p className="text-[7px] font-medium text-white/40 italic">
+                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                                  </p>
+                                </div>
+
+                                {/* Fake Text Lines for Padrao */}
+                                <div className="space-y-2 w-full flex flex-col items-center pt-2">
+                                  <div className="h-1.5 w-3/4 bg-white/10 rounded-full animate-pulse" />
+                                  <div className="h-1.5 w-1/2 bg-white/5 rounded-full animate-pulse" />
+                                </div>
+                              </>
+                            )}
                           </div>
                         ) : (
-                          <div className="w-full h-32 bg-white/5 rounded-2xl animate-pulse mt-4 flex items-center justify-center">
-                             <p className="text-[8px] font-bold text-white/10 uppercase tracking-widest">Aguardando data...</p>
+                          <div className="w-full flex flex-col items-center gap-4">
+                            {/* Fake Text Lines when no date */}
+                            <div className="space-y-2 w-full flex flex-col items-center">
+                              <div className="h-2 w-3/4 bg-white/10 rounded-full animate-pulse" />
+                              <div className="h-1.5 w-1/2 bg-white/5 rounded-full animate-pulse" />
+                            </div>
+                            <div className="w-full h-32 bg-white/5 rounded-2xl animate-pulse mt-4 flex items-center justify-center">
+                               <p className="text-[8px] font-bold text-white/10 uppercase tracking-widest">Aguardando data...</p>
+                            </div>
                           </div>
                         )}
                       </div>
