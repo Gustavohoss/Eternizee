@@ -23,7 +23,7 @@ interface DeviceMockupProps {
   date?: Date;
   timeDiff?: any;
   selectedCountStyle: string;
-  photoEffect: 'slide' | 'coverflow';
+  photoEffect: 'slide' | 'coverflow' | 'cards';
 }
 
 export function DeviceMockup({
@@ -72,10 +72,13 @@ export function DeviceMockup({
     const total = uploadedPhotos.length;
     if (total === 0) return 'active';
     
-    const diff = (index - selectedIndex + total) % total;
+    // Diferença considerando o loop do Embla
+    let diff = index - selectedIndex;
+    if (diff > total / 2) diff -= total;
+    if (diff < -total / 2) diff += total;
     
     if (diff === 0) return 'active';
-    if (diff === 1 || (total === 2 && diff === 1)) return 'next';
+    if (diff > 0) return 'next';
     return 'prev';
   };
 
@@ -125,10 +128,13 @@ export function DeviceMockup({
             
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
-                className="w-full bg-[#ffffff] p-[15px] pb-[40px] rounded-[8px] shadow-[0_30px_60px_rgba(0,0,0,0.7)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
+                className="w-full bg-[#ffffff] p-[12px] pb-[35px] rounded-[8px] shadow-[0_30px_60px_rgba(0,0,0,0.7)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
               >
                 <div 
-                  className="w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111] photo-display-area"
+                  className={cn(
+                    "w-full aspect-[1/1.1] relative photo-display-area",
+                    photoEffect === 'cards' ? "overflow-visible h-[380px]" : "overflow-hidden rounded-[4px]"
+                  )}
                   style={{ perspective: '1000px' }}
                 >
                   {uploadedPhotos.length > 0 ? (
@@ -138,18 +144,35 @@ export function DeviceMockup({
                           const position = getSlidePosition(i);
                           const isActive = position === 'active';
                           
+                          // Calculando diferença absoluta para efeitos de pilha
+                          const total = uploadedPhotos.length;
+                          let diff = i - selectedIndex;
+                          if (diff > total / 2) diff -= total;
+                          if (diff < -total / 2) diff += total;
+                          const absDiff = Math.abs(diff);
+
                           return (
                             <div 
                               key={i} 
                               className={cn(
-                                "relative h-full flex-shrink-0 flex items-center justify-center",
-                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : "flex-[0_0_100%]"
+                                "relative h-full flex-shrink-0 flex items-center justify-center transition-opacity duration-300",
+                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : 
+                                photoEffect === 'cards' ? "flex-[0_0_100%] absolute inset-0" : "flex-[0_0_100%]"
                               )}
+                              style={photoEffect === 'cards' ? {
+                                zIndex: isActive ? 10 : 10 - absDiff,
+                                opacity: absDiff > 3 ? 0 : 1,
+                                pointerEvents: isActive ? 'auto' : 'none',
+                                transform: `translateY(${absDiff * 12}px) rotate(${absDiff * 2}deg) scale(${1 - absDiff * 0.05})`,
+                                transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease'
+                              } : {}}
                             >
                               <div 
                                 className={cn(
-                                  "w-full h-full relative transition-all duration-700 ease-out",
-                                  photoEffect === 'coverflow' && !isActive && "opacity-70"
+                                  "w-full h-full relative overflow-hidden",
+                                  photoEffect === 'slide' ? "" : "transition-all duration-700 ease-out",
+                                  photoEffect === 'coverflow' && !isActive && "opacity-70",
+                                  photoEffect === 'cards' && "rounded-[6px] shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
                                 )}
                                 style={photoEffect === 'coverflow' ? {
                                   transform: isActive 
@@ -183,8 +206,8 @@ export function DeviceMockup({
                               className={cn(
                                 "w-[7px] h-[7px] rounded-full transition-all duration-400",
                                 i === selectedIndex 
-                                  ? "bg-[#ff0000] scale-[1.4] shadow-[0_0_10px_rgba(255,0,0,0.6)]" 
-                                  : "bg-white/60"
+                                  ? "bg-[#ff0000] scale-[1.3] shadow-[0_0_10px_rgba(255,0,0,0.5)] opacity-1" 
+                                  : "bg-white/60 opacity-50"
                               )}
                             />
                           ))}

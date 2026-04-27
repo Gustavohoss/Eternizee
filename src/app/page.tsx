@@ -29,7 +29,8 @@ import {
   ImageIcon,
   Upload,
   Trash2,
-  Layers
+  Layers,
+  Copy
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -64,7 +65,7 @@ export default function EternizeApp() {
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>(['❤️']);
   const [emojiSize, setEmojiSize] = useState<number>(20);
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
-  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow'>('slide');
+  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow' | 'cards'>('slide');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
@@ -140,7 +141,7 @@ export default function EternizeApp() {
     Array.from(files).forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedPhotos(prev => [...prev, reader.result as string].slice(0, 4));
+        setUploadedPhotos(prev => [...prev, reader.result as string].slice(0, 8));
       };
       reader.readAsDataURL(file);
     });
@@ -579,12 +580,12 @@ export default function EternizeApp() {
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">As Fotos</h2>
                   </div>
                   <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
-                    Adicione até 4 fotos especiais e escolha como elas serão exibidas.
+                    Adicione até 8 fotos especiais e escolha como elas serão exibidas.
                   </p>
                 </div>
 
                 <div className="w-full max-w-md space-y-8">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {uploadedPhotos.map((photo, i) => (
                       <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
                         <Image src={photo} fill className="object-cover" alt={`Photo ${i + 1}`} />
@@ -596,12 +597,12 @@ export default function EternizeApp() {
                         </button>
                       </div>
                     ))}
-                    {uploadedPhotos.length < 4 && (
+                    {uploadedPhotos.length < 8 && (
                       <label className="aspect-square rounded-2xl border-2 border-dashed border-white/10 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center justify-center gap-3 cursor-pointer group">
                         <div className="bg-white/5 p-3 rounded-full group-hover:scale-110 transition-transform">
                           <Upload className="w-6 h-6 text-white/40" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-white/30">Adicionar Foto</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider text-white/30 text-center px-1">Adicionar Foto</span>
                         <input type="file" className="hidden" accept="image/*" multiple onChange={handlePhotoUpload} />
                       </label>
                     )}
@@ -612,7 +613,7 @@ export default function EternizeApp() {
                       <Layers className="w-5 h-5 text-primary" />
                       <h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest text-white/60">Efeito de Passagem</h3>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div 
                         onClick={() => setPhotoEffect('slide')}
                         className={cn(
@@ -636,6 +637,19 @@ export default function EternizeApp() {
                         <Sparkles className={cn("w-6 h-6", photoEffect === 'coverflow' ? "text-primary" : "text-white/40")} />
                         <div>
                           <p className="text-[10px] font-black uppercase tracking-wider">Coverflow 3D</p>
+                        </div>
+                      </div>
+
+                      <div 
+                        onClick={() => setPhotoEffect('cards')}
+                        className={cn(
+                          "cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center",
+                          photoEffect === 'cards' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                        )}
+                      >
+                        <Copy className={cn("w-6 h-6", photoEffect === 'cards' ? "text-primary" : "text-white/40")} />
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-wider">Cards Pilha</p>
                         </div>
                       </div>
                     </div>
@@ -764,7 +778,7 @@ export default function EternizeApp() {
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
-                  <Button onClick={handleNextToPageTitle} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
+                  <Button onClick={handleNextToPageTitle} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2" disabled={!date}>
                     Próxima etapa <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -843,7 +857,7 @@ export default function EternizeApp() {
                         else if (step === 'photos') handleNextToDataLocation();
                         else if (step === 'data-location') handleNextToPageTitle();
                      }}
-                     disabled={step === 'photos' && uploadedPhotos.length === 0}
+                     disabled={(step === 'photos' && uploadedPhotos.length === 0) || (step === 'data-location' && !date)}
                      className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm"
                    >
                      Próxima etapa <ChevronRight className="w-4 h-4" />
