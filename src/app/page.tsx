@@ -81,7 +81,7 @@ const EMOJI_CATEGORIES = [
   { 
     id: 'animals', 
     icon: Dog, 
-    emojis: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🐤', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐿️', '🦔', '🐾', '🐉', '🐲'] 
+    emojis: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🐤', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦗', '🕷️', '蠍', '🐢', '🐍', '🦎', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐿️', '🦔', '🐾', '🐉', '🐲'] 
   },
   { 
     id: 'party', 
@@ -101,7 +101,6 @@ export default function EternizeApp() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
-  const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   
   // Real-time counter state
@@ -1248,9 +1247,9 @@ export default function EternizeApp() {
                                 <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Selected Photo" />
                               </div>
                             ) : (
-                              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-5">
-                                <ImageIcon className="w-12 h-12 text-black" />
-                                <span className="text-[8px] font-black uppercase tracking-widest text-black">Sua Foto Aqui</span>
+                              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                                <ImageIcon className="w-12 h-12 text-black/10" />
+                                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto Aqui</span>
                               </div>
                             )}
                             <div className="absolute inset-x-0 bottom-0 h-[15%] flex flex-col items-center justify-center pb-1">
@@ -1275,53 +1274,12 @@ export default function EternizeApp() {
 
                       {/* Music Player Mockup */}
                       {(step === 'page-title' || step === 'data-location' || step === 'photos') && (
-                        <div 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsPlayerExpanded(!isPlayerExpanded);
-                          }}
-                          className={cn(
-                            "absolute bottom-8 inset-x-5 bg-[#0e0e0e] border border-white/5 rounded-[24px] transition-all duration-500 cursor-pointer overflow-hidden p-3 z-50",
-                            isPlayerExpanded ? "h-[200px] pb-6" : "h-[64px]"
-                          )}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className={cn(
-                              "bg-[#1a1a1a] rounded-2xl flex items-center justify-center text-white transition-all duration-500",
-                              isPlayerExpanded ? "w-12 h-12" : "w-10 h-10"
-                            )}>
-                              <Music2 className={isPlayerExpanded ? "w-6 h-6" : "w-4 h-4"} />
-                            </div>
-                            <div className={cn(
-                              "text-white/40 transition-transform duration-500",
-                              isPlayerExpanded && "rotate-180"
-                            )}>
-                              <ChevronUp className="w-4 h-4" />
-                            </div>
+                        <div className="absolute bottom-8 inset-x-5 bg-[#0e0e0e] border border-white/5 rounded-[24px] h-[64px] flex items-center justify-between p-3 z-50">
+                          <div className="bg-[#1a1a1a] rounded-2xl w-10 h-10 flex items-center justify-center text-white/60">
+                            <Music2 className="w-4 h-4" />
                           </div>
-
-                          <div className={cn(
-                            "mt-5 transition-all duration-500 space-y-5",
-                            isPlayerExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6 pointer-events-none"
-                          )}>
-                            <div className="space-y-3">
-                              <div className="w-full h-[3px] bg-[#222] relative overflow-hidden rounded-full">
-                                <div className="absolute left-0 top-0 h-full w-[30%] bg-white/30" />
-                              </div>
-                              <div className="flex justify-between text-[10px] font-bold text-white/20 uppercase tracking-widest">
-                                <span>0:00</span>
-                                <span>0:00</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center justify-between px-2">
-                              <div className="text-white/60">
-                                <Volume2 className="w-5 h-5" />
-                              </div>
-                              <div className="w-[45px] h-[45px] bg-primary rounded-full flex items-center justify-center text-white shadow-[0_10px_25px_rgba(0,0,0,0.6)] active:scale-95 transition-all">
-                                <Play className="w-5 h-5 fill-white ml-0.5" />
-                              </div>
-                              <div className="w-[22px]" />
-                            </div>
+                          <div className="text-white/20">
+                            <ChevronUp className="w-4 h-4" />
                           </div>
                         </div>
                       )}
