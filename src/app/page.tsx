@@ -24,7 +24,8 @@ import {
   Music2,
   ChevronUp,
   Volume2,
-  AlertCircle
+  AlertCircle,
+  Palette
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -39,7 +40,7 @@ import { cn } from '@/lib/utils';
 import { format, intervalToDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location' | 'page-title';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'background-color' | 'data-location' | 'page-title';
 
 const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
@@ -48,9 +49,19 @@ const MOCK_CITIES = [
   "Recife, PE", "Manaus, AM", "Goiânia, GO"
 ];
 
+const PRESET_COLORS = [
+  { name: 'Padrão', value: '#0c0c0c' },
+  { name: 'Amor', value: '#e11d48' },
+  { name: 'Roxo', value: '#4c1d95' },
+  { name: 'Azul', value: '#1e3a8a' },
+  { name: 'Vinho', value: '#450a0a' },
+  { name: 'Esmeralda', value: '#064e3b' },
+];
+
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
+  const [selectedBgColor, setSelectedBgColor] = useState<string>('#0c0c0c');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
@@ -85,6 +96,11 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNextToBgColor = () => {
+    setStep('background-color');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNextToDataLocation = () => {
     setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -98,7 +114,8 @@ export default function EternizeApp() {
   const handleBack = () => {
     if (step === 'theme-selection') setStep('landing');
     if (step === 'gift-type') setStep('theme-selection');
-    if (step === 'data-location') setStep('gift-type');
+    if (step === 'background-color') setStep('gift-type');
+    if (step === 'data-location') setStep('background-color');
     if (step === 'page-title') setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -289,31 +306,8 @@ export default function EternizeApp() {
                       <Button variant="secondary" size="sm" className="w-full h-7 md:h-8 bg-white text-black font-black text-[9px] md:text-[10px] gap-2 hover:bg-white/90 rounded-sm">
                         <Play className="w-2.5 h-2.5 md:w-3 h-3 fill-current" /> Reproduzir
                       </Button>
-                      <div className="flex items-center justify-around text-white/80 pt-1">
-                        <div className="flex flex-col items-center gap-1 group">
-                          <Plus className="w-3 h-3 md:w-4 md:h-4" />
-                          <span className="text-[6px] md:text-[7px] font-bold uppercase">Lista</span>
-                        </div>
-                        <div className="flex flex-col items-center gap-1 group">
-                          <ThumbsUp className="w-3 h-3 md:w-4 md:h-4" />
-                          <span className="text-[6px] md:text-[7px] font-bold uppercase">Classificar</span>
-                        </div>
-                        <div className="flex flex-col items-center gap-1 group">
-                          <Heart className="w-3 h-3 md:w-4 md:h-4" />
-                          <span className="text-[6px] md:text-[7px] font-bold uppercase">Favoritar</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 pt-2 border-t border-white/10">
-                        <div className="bg-[#e50914] text-[6px] md:text-[7px] font-black px-1 py-0.5 rounded-[1px] tracking-tight">NETFLIX</div>
-                        <div className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
-                          <div className="w-3/4 h-full bg-[#e50914] shadow-[0_0_8px_#e50914]" />
-                        </div>
-                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="mt-4 text-[7px] md:text-[8px] font-black text-white/20 tracking-[0.4em] uppercase">
-                  NETFLIX — ETERNIZE
                 </div>
               </div>
             </div>
@@ -359,17 +353,9 @@ export default function EternizeApp() {
                     </div>
                 </div>
               </div>
-              <div className="flex justify-center gap-2 mt-6">
-                <div className="w-6 h-1 rounded-full bg-primary" />
-                <div className="w-1.5 h-1 rounded-full bg-white/20" />
-                <div className="w-1.5 h-1 rounded-full bg-white/20" />
-              </div>
             </div>
           </div>
           <div className="mt-8 md:mt-10 flex flex-col items-center gap-4">
-            <div className="text-[10px] md:text-[11px] font-bold text-white/40">
-              Tema selecionado: <span className="text-white font-black uppercase">Default</span>
-            </div>
             <Button 
               onClick={handleNextToGiftType}
               className="w-full max-w-[220px] md:max-w-[260px] bg-primary hover:bg-primary/90 h-10 md:h-12 rounded-xl font-black text-xs md:text-sm shadow-2xl shadow-primary/20 active:scale-95 transition-all"
@@ -416,9 +402,6 @@ export default function EternizeApp() {
                     <Heart className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current" /> Presente de Amor
                   </div>
                   <p className="text-[10px] md:text-[11px] text-white/50 font-medium">Para namorado(a) ou cônjuge</p>
-                  <div className="inline-flex items-center gap-1 bg-white/5 text-[7px] md:text-[8px] font-bold px-1.5 py-0.5 rounded mt-2 uppercase text-white/60 border border-white/5">
-                    + Módulo Adicional
-                  </div>
                 </div>
               </div>
             </div>
@@ -434,9 +417,6 @@ export default function EternizeApp() {
                   <Users className="w-3.5 h-3.5 md:w-4 md:h-4" /> Presente para Bestie
                 </div>
                 <p className="text-[10px] md:text-[11px] text-white/50 font-medium">Surpreenda sua bestie</p>
-                <div className="inline-flex items-center gap-1 bg-white/5 text-[7px] md:text-[8px] font-bold px-1.5 py-0.5 rounded mt-2 uppercase text-white/60 border border-white/5">
-                  + Módulo Adicional
-                </div>
               </div>
             </div>
             <div 
@@ -457,22 +437,9 @@ export default function EternizeApp() {
               </div>
             </div>
           </div>
-          <div className="mt-8 md:mt-12 space-y-4 w-full max-w-2xl text-center px-4">
-            <p className="text-[8px] md:text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Ou homenageie diretamente:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['Mãe ♡', 'Pai', 'Vovó', 'Vovô', 'Titia', 'Titio', 'Mana', 'Mano', 'Filhinha', 'Filhinho', 'Dinda', 'Padrinho', 'Sogra', 'Professora', 'Chefona'].map((tag) => (
-                <button 
-                  key={tag}
-                  className="px-3 md:px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] md:text-[11px] font-bold text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
           <div className="mt-10 md:mt-12 w-full max-w-2xl flex justify-center">
             <Button 
-              onClick={handleNextToDataLocation}
+              onClick={handleNextToBgColor}
               className="w-full max-w-[220px] md:max-w-[260px] bg-primary hover:bg-primary/90 h-11 md:h-12 rounded-xl font-black text-xs md:text-sm shadow-2xl shadow-primary/20 active:scale-95 transition-all"
             >
               Próximo
@@ -481,21 +448,85 @@ export default function EternizeApp() {
         </div>
       )}
 
-      {(step === 'data-location' || step === 'page-title') && (
+      {(step === 'background-color' || step === 'data-location' || step === 'page-title') && (
         <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
           <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex-1 max-w-xs">
               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                <div className={cn("h-full bg-primary transition-all duration-500", step === 'data-location' ? "w-[12.5%]" : "w-[25%]")} />
+                <div className={cn(
+                  "h-full bg-primary transition-all duration-500", 
+                  step === 'background-color' ? "w-[12.5%]" : 
+                  step === 'data-location' ? "w-[25%]" : "w-[37.5%]"
+                )} />
               </div>
               <div className="mt-2 text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">
-                Passo {step === 'data-location' ? '1' : '2'} de 8
+                Passo {step === 'background-color' ? '1' : step === 'data-location' ? '2' : '3'} de 8
               </div>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
-            {step === 'data-location' ? (
+            {step === 'background-color' && (
+              <div className="space-y-8 md:space-y-10">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <Palette className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Cor de fundo</h2>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/40 font-medium">
+                    Escolha a cor que será a base de toda a sua página.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+                  {PRESET_COLORS.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setSelectedBgColor(color.value)}
+                      className={cn(
+                        "group relative aspect-square rounded-2xl border transition-all duration-300 overflow-hidden",
+                        selectedBgColor === color.value 
+                          ? "border-primary ring-2 ring-primary/20" 
+                          : "border-white/10 hover:border-white/20"
+                      )}
+                      style={{ backgroundColor: color.value }}
+                    >
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute bottom-3 left-3 right-3">
+                        <span className="text-[10px] md:text-xs font-black uppercase text-white drop-shadow-md">
+                          {color.name}
+                        </span>
+                      </div>
+                      {selectedBgColor === color.value && (
+                        <div className="absolute top-3 right-3 bg-white text-primary p-1 rounded-full">
+                          <Heart className="w-3 h-3 fill-current" />
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                  <Button 
+                    onClick={handleBack}
+                    variant="outline" 
+                    className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" /> Voltar
+                  </Button>
+                  <Button 
+                    onClick={handleNextToDataLocation}
+                    className="w-full sm:flex-1 h-11 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {step === 'data-location' && (
               <div className="space-y-8 md:space-y-10">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
@@ -626,7 +657,9 @@ export default function EternizeApp() {
                   </Button>
                 </div>
               </div>
-            ) : (
+            )}
+
+            {step === 'page-title' && (
               <div className="space-y-8 md:space-y-10">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
@@ -697,40 +730,24 @@ export default function EternizeApp() {
                   </div>
                   
                   <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
-                    <div className="absolute inset-0 bg-[#0c0c0c]">
+                    {/* Mockup Content - Progression logic */}
+                    <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedBgColor }}>
                       <div className="absolute inset-0 flex flex-col items-center pt-8 px-6 gap-3 md:gap-4 overflow-y-auto hide-scrollbar">
-                        {selectedCountStyle === 'simples' && date && timeDiff && (
-                          <div className="w-full text-center space-y-1.5 animate-in fade-in slide-in-from-top-4 duration-700 pb-2">
-                            <div className="text-base">⌛</div>
-                            <p className="text-[10px] md:text-[11px] font-bold leading-relaxed text-white">
-                              {timeDiff.years.toString().padStart(2, '0')} anos {timeDiff.months.toString().padStart(2, '0')} meses {timeDiff.days.toString().padStart(2, '0')} dias {timeDiff.hours.toString().padStart(2, '0')} horas {timeDiff.minutes.toString().padStart(2, '0')} minutos {timeDiff.seconds.toString().padStart(2, '0')} segundos {timeDiff.milliseconds.toString().padStart(3, '0')} milissegundos
-                            </p>
-                          </div>
-                        )}
-
-                        <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
-                          {pageTitle ? (
-                            <div className="absolute inset-x-0 bottom-4 flex justify-center px-4">
-                              <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words text-center animate-in fade-in zoom-in-95 duration-300">
-                                {pageTitle}
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
-                          )}
-                        </div>
                         
-                        <div className="w-full flex flex-col items-center pt-1 min-h-[40px] justify-center">
-                          <div className="space-y-1.5 w-full flex flex-col items-center">
-                            <div className="h-1 w-3/4 bg-white/10 rounded-full" />
-                            <div className="h-1 w-1/2 bg-white/5 rounded-full" />
-                          </div>
-                        </div>
+                        {/* Step 2+ adds counter (only if date is picked) */}
+                        {(step === 'data-location' || step === 'page-title') && date && timeDiff && (
+                          <div className="w-full animate-in fade-in duration-700">
+                            {selectedCountStyle === 'simples' && (
+                              <div className="w-full text-center space-y-1.5 pb-2">
+                                <div className="text-base">⌛</div>
+                                <p className="text-[10px] md:text-[11px] font-bold leading-relaxed text-white">
+                                  {timeDiff.years.toString().padStart(2, '0')} anos {timeDiff.months.toString().padStart(2, '0')} meses {timeDiff.days.toString().padStart(2, '0')} dias {timeDiff.hours.toString().padStart(2, '0')} horas {timeDiff.minutes.toString().padStart(2, '0')} minutos {timeDiff.seconds.toString().padStart(2, '0')} segundos {timeDiff.milliseconds.toString().padStart(3, '0')} milissegundos
+                                </p>
+                              </div>
+                            )}
 
-                        {date && timeDiff ? (
-                          <div className="w-full space-y-3 md:space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-1">
                             {selectedCountStyle === 'classico' && (
-                              <div className="text-center space-y-3">
+                              <div className="text-center space-y-3 pt-2">
                                 <p className="text-[10px] md:text-[11px] font-bold leading-relaxed px-2 text-white">
                                   Uau, estão juntos há {timeDiff.years.toString().padStart(2, '0')} anos {timeDiff.months.toString().padStart(2, '0')} meses {timeDiff.days.toString().padStart(2, '0')} dias {timeDiff.hours.toString().padStart(2, '0')} horas {timeDiff.minutes.toString().padStart(2, '0')} minutos {timeDiff.seconds.toString().padStart(2, '0')} segundos ❤️🔥
                                 </p>
@@ -739,9 +756,9 @@ export default function EternizeApp() {
                                 </p>
                               </div>
                             )}
-                            
+
                             {selectedCountStyle === 'padrao' && (
-                              <>
+                              <div className="w-full space-y-3">
                                 <div className="text-center">
                                   <p className="text-[7px] md:text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
                                 </div>
@@ -765,7 +782,7 @@ export default function EternizeApp() {
                                     Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                                   </p>
                                 </div>
-                              </>
+                              </div>
                             )}
 
                             {selectedCountStyle === 'data-grande' && (
@@ -806,58 +823,84 @@ export default function EternizeApp() {
                               </div>
                             )}
                           </div>
-                        ) : null}
-                      </div>
-
-                      <div 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsPlayerExpanded(!isPlayerExpanded);
-                        }}
-                        className={cn(
-                          "absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] transition-all duration-500 cursor-pointer overflow-hidden p-2.5 z-50",
-                          isPlayerExpanded ? "h-[185px] pb-5" : "h-[58px]"
                         )}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className={cn(
-                            "bg-[#1a1a1a] rounded-xl flex items-center justify-center text-white transition-all duration-500",
-                            isPlayerExpanded ? "w-11 h-11" : "w-8 h-8"
-                          )}>
-                            <Music2 className={isPlayerExpanded ? "w-5 h-5" : "w-3.5 h-3.5"} />
-                          </div>
-                          <div className={cn(
-                            "text-white/40 transition-transform duration-500",
-                            isPlayerExpanded && "rotate-180"
-                          )}>
-                            <ChevronUp className="w-3.5 h-3.5" />
-                          </div>
-                        </div>
 
-                        <div className={cn(
-                          "mt-4 transition-all duration-500 space-y-4",
-                          isPlayerExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-                        )}>
-                          <div className="space-y-2">
-                            <div className="w-full h-[2px] bg-[#222] relative overflow-hidden">
-                              <div className="absolute left-0 top-0 h-full w-[30%] bg-white/30" />
+                        {/* Step 3+ adds photo card */}
+                        {step === 'page-title' && (
+                          <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0 animate-in fade-in zoom-in-95 duration-500">
+                            {pageTitle ? (
+                              <div className="absolute inset-x-0 bottom-4 flex justify-center px-4">
+                                <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words text-center">
+                                  {pageTitle}
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
+                            )}
+                          </div>
+                        )}
+
+                        {/* Initial "Nothing" state or step-by-step skeleton */}
+                        {step === 'background-color' && (
+                          <div className="flex-1 flex flex-col items-center justify-center space-y-4 opacity-20">
+                            <Palette className="w-12 h-12 text-white/40" />
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Fundo Selecionado</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Music player could also be conditional, but let's keep it based on later steps if needed */}
+                      {step === 'page-title' && (
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsPlayerExpanded(!isPlayerExpanded);
+                          }}
+                          className={cn(
+                            "absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] transition-all duration-500 cursor-pointer overflow-hidden p-2.5 z-50",
+                            isPlayerExpanded ? "h-[185px] pb-5" : "h-[58px]"
+                          )}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className={cn(
+                              "bg-[#1a1a1a] rounded-xl flex items-center justify-center text-white transition-all duration-500",
+                              isPlayerExpanded ? "w-11 h-11" : "w-8 h-8"
+                            )}>
+                              <Music2 className={isPlayerExpanded ? "w-5 h-5" : "w-3.5 h-3.5"} />
                             </div>
-                            <div className="flex justify-between text-[8px] font-bold text-white/20 uppercase tracking-widest">
-                              <span>0:00</span>
-                              <span>0:00</span>
+                            <div className={cn(
+                              "text-white/40 transition-transform duration-500",
+                              isPlayerExpanded && "rotate-180"
+                            )}>
+                              <ChevronUp className="w-3.5 h-3.5" />
                             </div>
                           </div>
-                          <div className="flex items-center justify-between px-1">
-                            <div className="text-white/60">
-                              <Volume2 className="w-4 h-4" />
+
+                          <div className={cn(
+                            "mt-4 transition-all duration-500 space-y-4",
+                            isPlayerExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                          )}>
+                            <div className="space-y-2">
+                              <div className="w-full h-[2px] bg-[#222] relative overflow-hidden">
+                                <div className="absolute left-0 top-0 h-full w-[30%] bg-white/30" />
+                              </div>
+                              <div className="flex justify-between text-[8px] font-bold text-white/20 uppercase tracking-widest">
+                                <span>0:00</span>
+                                <span>0:00</span>
+                              </div>
                             </div>
-                            <div className="w-[45px] h-[45px] bg-primary rounded-full flex items-center justify-center text-white shadow-[0_4px_15px_rgba(0,0,0,0.4)] active:scale-95 transition-all">
-                              <Play className="w-5 h-5 fill-white ml-0.5" />
+                            <div className="flex items-center justify-between px-1">
+                              <div className="text-white/60">
+                                <Volume2 className="w-4 h-4" />
+                              </div>
+                              <div className="w-[45px] h-[45px] bg-primary rounded-full flex items-center justify-center text-white shadow-[0_4px_15px_rgba(0,0,0,0.4)] active:scale-95 transition-all">
+                                <Play className="w-5 h-5 fill-white ml-0.5" />
+                              </div>
+                              <div className="w-[18px]" />
                             </div>
-                            <div className="w-[18px]" />
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
 
@@ -868,10 +911,13 @@ export default function EternizeApp() {
                         variant="outline" 
                         className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                       >
-                        <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                        <ChevronLeft className="w-4 h-4" /> Voltar
                       </Button>
                       <Button 
-                        onClick={step === 'data-location' ? handleNextToPageTitle : undefined}
+                        onClick={
+                          step === 'background-color' ? handleNextToDataLocation :
+                          step === 'data-location' ? handleNextToPageTitle : undefined
+                        }
                         className="w-full h-12 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                       >
                         Próxima etapa <ChevronRight className="w-4 h-4" />
