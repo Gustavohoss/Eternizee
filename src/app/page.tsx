@@ -103,6 +103,7 @@ export default function EternizeApp() {
   const [titleFont, setTitleFont] = useState<string>('dancing-script');
   const [titleIsBold, setTitleIsBold] = useState<boolean>(false);
   const [titleHasNeon, setTitleHasNeon] = useState<boolean>(false);
+  const [titleNeonStrength, setTitleNeonStrength] = useState<number>(10);
   const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
   
   // Real-time counter state
@@ -764,7 +765,7 @@ export default function EternizeApp() {
                   </div>
                 </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
@@ -839,12 +840,29 @@ export default function EternizeApp() {
                       <Switch id="bold-toggle" checked={titleIsBold} onCheckedChange={setTitleIsBold} />
                     </div>
 
-                    <div className="flex items-center justify-between py-2 border-t border-white/5">
-                      <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-white/40" />
-                        <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="neon-toggle">Efeito Neon</Label>
+                    <div className="space-y-4 py-2 border-t border-white/5">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Zap className="w-4 h-4 text-white/40" />
+                          <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="neon-toggle">Efeito Neon</Label>
+                        </div>
+                        <Switch id="neon-toggle" checked={titleHasNeon} onCheckedChange={setTitleHasNeon} />
                       </div>
-                      <Switch id="neon-toggle" checked={titleHasNeon} onCheckedChange={setTitleHasNeon} />
+                      {titleHasNeon && (
+                        <div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-[9px] font-black uppercase tracking-wider text-white/40">Força do Neon</Label>
+                            <span className="text-[10px] font-black text-primary">{titleNeonStrength}</span>
+                          </div>
+                          <Slider 
+                            value={[titleNeonStrength]} 
+                            onValueChange={(val) => setTitleNeonStrength(val[0])}
+                            min={2} 
+                            max={30} 
+                            step={1}
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-white/5">
@@ -1036,6 +1054,7 @@ export default function EternizeApp() {
                  titleFont={titleFont}
                  titleIsBold={titleIsBold}
                  titleHasNeon={titleHasNeon}
+                 titleNeonStrength={titleNeonStrength}
                  cardColor={cardColor}
                  showCard={showCard}
                  titlePosition={titlePosition}

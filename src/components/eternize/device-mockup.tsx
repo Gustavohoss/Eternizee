@@ -27,6 +27,7 @@ interface DeviceMockupProps {
   titleFont?: string;
   titleIsBold?: boolean;
   titleHasNeon?: boolean;
+  titleNeonStrength?: number;
   // Card customization props
   cardColor?: string;
   showCard?: boolean;
@@ -46,6 +47,7 @@ export function DeviceMockup({
   titleFont = 'dancing-script',
   titleIsBold = false,
   titleHasNeon = false,
+  titleNeonStrength = 10,
   cardColor = '#ffffff',
   showCard = true,
   titlePosition = 'bottom'
@@ -104,21 +106,28 @@ export function DeviceMockup({
     }
   };
 
-  const RenderTitle = () => (
-    <div className={cn("w-full text-center", titlePosition === 'top' ? "mb-4" : "mt-4")}>
-      <span 
-        style={{ 
-          color: titleColor,
-          fontFamily: getFontFamily(titleFont),
-          fontWeight: titleIsBold ? 'bold' : 'normal',
-          textShadow: titleHasNeon ? `0 0 5px ${titleColor}, 0 0 10px ${titleColor}` : 'none'
-        }}
-        className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
-      >
-        {pageTitle || "Seu Nome Aqui"}
-      </span>
-    </div>
-  );
+  const RenderTitle = () => {
+    const shadowSize = titleNeonStrength;
+    const neonShadow = titleHasNeon 
+      ? `0 0 ${shadowSize/2}px ${titleColor}, 0 0 ${shadowSize}px ${titleColor}, 0 0 ${shadowSize*1.5}px ${titleColor}` 
+      : 'none';
+
+    return (
+      <div className={cn("w-full text-center", titlePosition === 'top' ? "mb-4" : "mt-4")}>
+        <span 
+          style={{ 
+            color: titleColor,
+            fontFamily: getFontFamily(titleFont),
+            fontWeight: titleIsBold ? '700' : '400',
+            textShadow: neonShadow
+          }}
+          className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
+        >
+          {pageTitle || "Seu Nome Aqui"}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div className="w-full max-w-[300px]">
