@@ -547,9 +547,14 @@ export default function EternizeApp() {
               </div>
             </div>
 
-            {/* Right Column: Preview */}
-            <div className="sticky top-12 hidden lg:flex flex-col items-center">
+            {/* Right Column: Preview (Referência) */}
+            {/* Agora visível no mobile também, aparecendo abaixo do formulário */}
+            <div className="lg:sticky lg:top-12 flex flex-col items-center mt-12 lg:mt-0">
                <div className="w-full max-w-[280px]">
+                  <div className="mb-4 lg:hidden text-center">
+                    <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Prévia em tempo real</p>
+                  </div>
+
                   {/* Browser-like Mockup */}
                   <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-2">
                     <div className="flex gap-1.5">
