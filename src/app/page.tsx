@@ -20,7 +20,10 @@ import {
   Layout,
   Hash,
   ChevronLeft,
-  Search
+  Search,
+  Music2,
+  ChevronUp,
+  Volume2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -49,6 +52,7 @@ export default function EternizeApp() {
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
   
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
@@ -498,10 +502,8 @@ export default function EternizeApp() {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 border-none bg-transparent" align="start">
                       <Calendar
-                        mode="single"
                         selected={date}
                         onSelect={setDate}
-                        initialFocus
                       />
                     </PopoverContent>
                   </Popover>
@@ -648,15 +650,62 @@ export default function EternizeApp() {
                         <div className="w-full h-10 bg-white/5 rounded-xl animate-pulse mt-4" />
                       </div>
 
-                      {/* Music Bar Mockup */}
-                      <div className="absolute bottom-6 inset-x-4 bg-black/60 backdrop-blur-md border border-white/10 h-10 rounded-full flex items-center px-4 justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
-                            <Play className="w-3 h-3 text-primary fill-primary" />
+                      {/* Music Player Mockup Expansível */}
+                      <div 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsPlayerExpanded(!isPlayerExpanded);
+                        }}
+                        className={cn(
+                          "absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] transition-all duration-500 cursor-pointer overflow-hidden p-3",
+                          isPlayerExpanded ? "h-[145px]" : "h-[62px]"
+                        )}
+                      >
+                        {/* Header Sempre Visível */}
+                        <div className="flex items-center justify-between">
+                          <div className={cn(
+                            "bg-[#1a1a1a] rounded-xl flex items-center justify-center text-white transition-all duration-500",
+                            isPlayerExpanded ? "w-12 h-12" : "w-9 h-9"
+                          )}>
+                            <Music2 className={isPlayerExpanded ? "w-5 h-5" : "w-4 h-4"} />
                           </div>
-                          <div className="h-2 w-20 bg-white/20 rounded-full" />
+                          <div className={cn(
+                            "text-white/40 transition-transform duration-500",
+                            isPlayerExpanded && "rotate-180"
+                          )}>
+                            <ChevronUp className="w-4 h-4" />
+                          </div>
                         </div>
-                        <div className="w-4 h-4 text-white/40">♪</div>
+
+                        {/* Conteúdo Expansível */}
+                        <div className={cn(
+                          "mt-4 transition-all duration-500 space-y-4",
+                          isPlayerExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                        )}>
+                          {/* Progress Bar */}
+                          <div className="space-y-2">
+                            <div className="w-full h-[2px] bg-[#222] relative overflow-hidden">
+                              <div className="absolute left-0 top-0 h-full w-[30%] bg-white/30" />
+                            </div>
+                            <div className="flex justify-between text-[8px] font-bold text-white/20 uppercase tracking-widest">
+                              <span>0:00</span>
+                              <span>0:00</span>
+                            </div>
+                          </div>
+
+                          {/* Bottom Controls */}
+                          <div className="flex items-center justify-between px-1">
+                            <div className="text-white/60">
+                              <Volume2 className="w-4 h-4" />
+                            </div>
+                            
+                            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/20 active:scale-90 transition-transform">
+                              <Play className="w-5 h-5 fill-white ml-0.5" />
+                            </div>
+
+                            <div className="w-4" /> {/* Spacer */}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
