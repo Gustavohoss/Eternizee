@@ -127,12 +127,15 @@ export function DeviceMockup({
             
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
-                className="w-full bg-[#ffffff] p-[12px] pb-[35px] rounded-[8px] shadow-[0_30px_60px_rgba(0,0,0,0.7)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
+                className={cn(
+                  "w-full bg-[#ffffff] rounded-[8px] shadow-[0_40px_100px_rgba(0,0,0,0.9)] z-20 animate-in fade-in duration-500 flex flex-col items-center",
+                  photoEffect === 'cards' ? "p-[12px] pb-[35px]" : "p-[15px] pb-[40px]"
+                )}
               >
                 <div 
                   className={cn(
                     "w-full aspect-square relative photo-display-area",
-                    photoEffect === 'cards' ? "overflow-visible h-[380px]" : "overflow-hidden rounded-[4px]"
+                    photoEffect === 'slide' ? "overflow-hidden rounded-[4px]" : "overflow-visible"
                   )}
                   style={{ perspective: '1000px' }}
                 >
@@ -153,13 +156,13 @@ export function DeviceMockup({
                             <div 
                               key={i} 
                               className={cn(
-                                "relative h-full flex-shrink-0 flex items-center justify-center",
-                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-40px)]" : 
+                                "relative aspect-square flex-shrink-0 flex items-center justify-center",
+                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : 
                                 photoEffect === 'cards' ? "flex-[0_0_100%] absolute inset-0" : "flex-[0_0_100%]"
                               )}
                               style={photoEffect === 'cards' ? {
                                 zIndex: isActive ? 10 : 10 - absDiff,
-                                opacity: absDiff > 3 ? 0 : 1,
+                                opacity: absDiff > 4 ? 0 : 1,
                                 pointerEvents: isActive ? 'auto' : 'none',
                                 transform: `translateY(${absDiff * 12}px) rotate(${absDiff * 2}deg) scale(${1 - absDiff * 0.05})`,
                                 transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease'
@@ -167,17 +170,17 @@ export function DeviceMockup({
                             >
                               <div 
                                 className={cn(
-                                  "w-full h-full relative overflow-hidden",
+                                  "w-full h-full relative overflow-hidden rounded-[4px]",
                                   photoEffect === 'slide' ? "transition-none" : "transition-all duration-700 ease-out",
                                   photoEffect === 'coverflow' && !isActive && "opacity-70",
-                                  photoEffect === 'cards' && "rounded-[6px] shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
+                                  photoEffect === 'cards' && "shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
                                 )}
                                 style={photoEffect === 'coverflow' ? {
                                   transform: isActive 
                                     ? 'scale(1) rotateY(0deg) translateZ(0)' 
                                     : position === 'prev' 
-                                      ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(20px)' 
-                                      : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-20px)',
+                                      ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
+                                      : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
                                   filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
                                   zIndex: isActive ? 10 : 0
                                 } : {}}
@@ -213,14 +216,14 @@ export function DeviceMockup({
                       )}
                     </div>
                   ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5]">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]">
                       <ImageIcon className="w-12 h-12 text-black/10" />
                       <span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto Aqui</span>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-[25px] w-full text-center">
+                <div className={cn("w-full text-center", photoEffect === 'cards' ? "mt-[20px]" : "mt-[25px]")}>
                   <span 
                     className="text-[#111] font-['Dancing_Script'] text-[26px] leading-none break-words px-2 block truncate tracking-[1px]"
                   >
