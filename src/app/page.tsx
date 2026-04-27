@@ -16,7 +16,6 @@ import {
   Hash,
   ChevronLeft,
   Search,
-  AlertCircle,
   Palette,
   Globe,
   LogIn,
@@ -68,6 +67,18 @@ const FONT_OPTIONS = [
   { id: 'inter', name: 'Inter Sans', class: 'font-["Inter"]' },
 ];
 
+function getContrastColor(hexColor: string) {
+  let color = hexColor.replace('#', '');
+  if (color.length === 3) {
+    color = color.split('').map(char => char + char).join('');
+  }
+  const r = parseInt(color.substring(0, 2), 16);
+  const g = parseInt(color.substring(2, 4), 16);
+  const b = parseInt(color.substring(4, 6), 16);
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+  return (yiq >= 128) ? '#111111' : '#ffffff';
+}
+
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
@@ -92,6 +103,7 @@ export default function EternizeApp() {
   const [titleFont, setTitleFont] = useState<string>('dancing-script');
   const [titleIsBold, setTitleIsBold] = useState<boolean>(false);
   const [titleHasNeon, setTitleHasNeon] = useState<boolean>(false);
+  const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
   
   // Real-time counter state
   const [timeDiff, setTimeDiff] = useState<any>(null);
@@ -208,6 +220,14 @@ export default function EternizeApp() {
     const interval = setInterval(updateCounter, 50);
     return () => clearInterval(interval);
   }, [date]);
+
+  // Auto-contrast logic for title color
+  useEffect(() => {
+    if (!userHasManuallyChangedTitleColor) {
+      const surfaceColor = showCard ? cardColor : selectedBgColor;
+      setTitleColor(getContrastColor(surfaceColor));
+    }
+  }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -846,7 +866,13 @@ export default function EternizeApp() {
                             </button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
-                            <ColorPicker selectedBgColor={titleColor} onChange={setTitleColor} />
+                            <ColorPicker 
+                              selectedBgColor={titleColor} 
+                              onChange={(color) => {
+                                setTitleColor(color);
+                                setUserHasManuallyChangedTitleColor(true);
+                              }} 
+                            />
                           </PopoverContent>
                         </Popover>
 
@@ -854,7 +880,10 @@ export default function EternizeApp() {
                           {['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (
                             <button
                               key={color}
-                              onClick={() => setTitleColor(color)}
+                              onClick={() => {
+                                setTitleColor(color);
+                                setUserHasManuallyChangedTitleColor(true);
+                              }}
                               className={cn(
                                 "w-6 h-6 rounded-full border transition-transform active:scale-90",
                                 titleColor === color ? "border-white scale-110" : "border-white/10"
@@ -868,7 +897,7 @@ export default function EternizeApp() {
                   </div>
                 </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
@@ -979,7 +1008,7 @@ export default function EternizeApp() {
                   </RadioGroup>
                 </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
