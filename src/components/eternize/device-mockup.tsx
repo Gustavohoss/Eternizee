@@ -68,7 +68,7 @@ export function DeviceMockup({
     }));
   }, [selectedEmojis]);
 
-  // Lógica para determinar a posição relativa no loop
+  // Lógica para determinar a posição relativa no loop para o efeito 3D
   const getSlidePosition = (index: number) => {
     const total = uploadedPhotos.length;
     if (total === 0) return 'active';
@@ -137,7 +137,7 @@ export function DeviceMockup({
                 >
                   {uploadedPhotos.length > 0 ? (
                     <div className="w-full h-full overflow-visible" ref={emblaRef}>
-                      <div className="flex h-full">
+                      <div className="flex h-full items-stretch">
                         {uploadedPhotos.map((photo, i) => {
                           const position = getSlidePosition(i);
                           const isActive = position === 'active';
@@ -147,14 +147,14 @@ export function DeviceMockup({
                               key={i} 
                               className={cn(
                                 "relative min-w-0 h-full flex-shrink-0",
-                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)] mx-[5px]" : "flex-[0_0_100%]"
+                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : "flex-[0_0_100%]"
                               )}
                             >
-                              {/* Inner wrapper para transformações 3D sem quebrar o loop do carrossel */}
+                              {/* Inner wrapper para transformações 3D */}
                               <div 
                                 className={cn(
-                                  "w-full h-full relative transition-all duration-500 ease-out",
-                                  photoEffect === 'coverflow' ? "opacity-70 grayscale-[20%]" : "opacity-100 grayscale-0"
+                                  "w-full h-full relative transition-all duration-700 ease-out",
+                                  photoEffect === 'coverflow' ? "opacity-70" : "opacity-100"
                                 )}
                                 style={photoEffect === 'coverflow' ? {
                                   transform: isActive 
@@ -172,6 +172,7 @@ export function DeviceMockup({
                                   fill 
                                   className="object-cover block" 
                                   alt={`Foto ${i + 1}`} 
+                                  sizes="260px"
                                 />
                               </div>
                             </div>
@@ -180,22 +181,19 @@ export function DeviceMockup({
                       </div>
                       
                       {uploadedPhotos.length > 1 && (
-                        <>
-                          {/* Pagination Dots */}
-                          <div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 flex gap-[7px] z-30">
-                            {uploadedPhotos.map((_, i) => (
-                              <div 
-                                key={i} 
-                                className={cn(
-                                  "w-[7px] h-[7px] rounded-full transition-all duration-400",
-                                  i === selectedIndex 
-                                    ? "bg-[#ff0000] scale-[1.4] shadow-[0_0_10px_rgba(255,0,0,0.6)]" 
-                                    : "bg-white/60"
-                                )}
-                              />
-                            ))}
-                          </div>
-                        </>
+                        <div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 flex gap-[7px] z-30 pointer-events-none">
+                          {uploadedPhotos.map((_, i) => (
+                            <div 
+                              key={i} 
+                              className={cn(
+                                "w-[7px] h-[7px] rounded-full transition-all duration-400",
+                                i === selectedIndex 
+                                  ? "bg-[#ff0000] scale-[1.4] shadow-[0_0_10px_rgba(255,0,0,0.6)]" 
+                                  : "bg-white/60"
+                              )}
+                            />
+                          ))}
+                        </div>
                       )}
                     </div>
                   ) : (
