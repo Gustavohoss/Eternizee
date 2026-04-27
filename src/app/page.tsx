@@ -540,9 +540,9 @@ export default function EternizeApp() {
 
       {(step === 'background-color' || step === 'data-location' || step === 'page-title') && (
         <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
-          <div className="flex items-center justify-between mb-6 md:mb-8">
-            <div className="flex-1 max-w-xs">
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+          <div className="flex items-center justify-center md:justify-between mb-6 md:mb-8">
+            <div className="flex-1 max-w-xs text-center md:text-left">
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden mx-auto md:mx-0">
                 <div className={cn(
                   "h-full bg-primary transition-all duration-500", 
                   step === 'background-color' ? "w-[12.5%]" : 
@@ -557,9 +557,9 @@ export default function EternizeApp() {
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
             {step === 'background-color' && (
-              <div className="space-y-8 md:space-y-10">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
+              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
+                <div className="space-y-2 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
                     <div className="bg-white/5 p-2 rounded-xl border border-white/10">
                       <Palette className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
                     </div>
@@ -627,9 +627,9 @@ export default function EternizeApp() {
             )}
 
             {step === 'data-location' && (
-              <div className="space-y-8 md:space-y-10">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
+              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
+                <div className="space-y-2 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
                     <div className="bg-white/5 p-2 rounded-xl border border-white/10">
                       <CalendarIcon className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
                     </div>
@@ -640,9 +640,9 @@ export default function EternizeApp() {
                   </p>
                 </div>
 
-                <div className="space-y-5 md:space-y-6">
+                <div className="space-y-5 md:space-y-6 w-full max-w-md">
                   <div className="space-y-3">
-                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center justify-center md:justify-start gap-2">
                       <Clock className="w-3 h-3" /> Quando essa história de amor começou? <span className="text-primary">*</span>
                     </Label>
                     <Popover>
@@ -664,7 +664,7 @@ export default function EternizeApp() {
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center justify-center md:justify-start gap-2">
                       <MapPin className="w-3 h-3" /> Onde foi? <span className="text-white/30 font-medium">(opcional)</span>
                     </Label>
                     <div className="relative group" ref={suggestionsRef}>
@@ -700,8 +700,8 @@ export default function EternizeApp() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="space-y-1">
+                <div className="space-y-4 w-full max-w-md">
+                  <div className="space-y-1 text-center md:text-left">
                     <h3 className="text-xs md:text-sm font-black tracking-tight">Como mostrar a contagem</h3>
                     <p className="text-[10px] md:text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p>
                   </div>
@@ -760,9 +760,9 @@ export default function EternizeApp() {
             )}
 
             {step === 'page-title' && (
-              <div className="space-y-8 md:space-y-10">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
+              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
+                <div className="space-y-2 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
                     <div className="bg-white/5 p-2 rounded-xl border border-white/10">
                       <Heart className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
                     </div>
@@ -773,9 +773,9 @@ export default function EternizeApp() {
                   </p>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-6 w-full max-w-md">
                   <div className="space-y-3">
-                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60">
+                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
                       Como vai se chamar a história de vocês?
                     </Label>
                     <Input 
