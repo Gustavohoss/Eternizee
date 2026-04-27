@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { 
   Heart, 
@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 
 interface DeviceMockupProps {
@@ -32,14 +33,30 @@ export function DeviceMockup({
   uploadedPhotos,
   pageTitle,
 }: DeviceMockupProps) {
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 30 });
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Reset index when photos change
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
   useEffect(() => {
-    if (currentPhotoIndex >= uploadedPhotos.length) {
-      setCurrentPhotoIndex(Math.max(0, uploadedPhotos.length - 1));
-    }
-  }, [uploadedPhotos.length, currentPhotoIndex]);
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
+
+  const scrollPrev = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   const raindrops = useMemo(() => {
     return [...Array(20)].map((_, i) => ({
@@ -51,16 +68,6 @@ export function DeviceMockup({
       emoji: selectedEmojis[Math.floor(Math.random() * selectedEmojis.length)]
     }));
   }, [selectedEmojis]);
-
-  const nextPhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentPhotoIndex((prev) => (prev + 1) % uploadedPhotos.length);
-  };
-
-  const prevPhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentPhotoIndex((prev) => (prev - 1 + uploadedPhotos.length) % uploadedPhotos.length);
-  };
 
   return (
     <div className="w-full max-w-[300px]">
@@ -106,7 +113,7 @@ export function DeviceMockup({
 
           <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 md:gap-6 overflow-y-auto hide-scrollbar">
             
-            {/* Polaroid Frame Section - Exact Match to HTML Template */}
+            {/* Polaroid Frame Section - Matches requested HTML exactly */}
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
                 className="w-full bg-[#ffffff] p-[15px] pb-[40px] rounded-[4px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
@@ -115,44 +122,50 @@ export function DeviceMockup({
                   className="w-full aspect-[1/1.1] bg-[#111] relative overflow-hidden rounded-[2px] group/photo"
                 >
                   {uploadedPhotos.length > 0 ? (
-                    <>
-                      <Image 
-                        src={uploadedPhotos[currentPhotoIndex]} 
-                        fill 
-                        className="object-cover" 
-                        alt={`Foto ${currentPhotoIndex + 1}`} 
-                      />
+                    <div className="w-full h-full" ref={emblaRef}>
+                      <div className="flex h-full">
+                        {uploadedPhotos.map((photo, i) => (
+                          <div key={i} className="relative flex-[0_0_100%] min-w-0 h-full">
+                            <Image 
+                              src={photo} 
+                              fill 
+                              className="object-cover" 
+                              alt={`Foto ${i + 1}`} 
+                            />
+                          </div>
+                        ))}
+                      </div>
                       
                       {uploadedPhotos.length > 1 && (
                         <>
                           <button 
-                            onClick={prevPhoto}
+                            onClick={scrollPrev}
                             className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all z-40"
                           >
                             <ChevronLeft className="w-4 h-4" />
                           </button>
                           <button 
-                            onClick={nextPhoto}
+                            onClick={scrollNext}
                             className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all z-40"
                           >
                             <ChevronRight className="w-4 h-4" />
                           </button>
                           
-                          {/* Pagination Dots over the photo */}
+                          {/* Pagination Dots over the photo - Exact style match */}
                           <div className="absolute bottom-[20px] left-1/2 -translate-x-1/2 flex gap-[5px] z-30">
                             {uploadedPhotos.map((_, i) => (
                               <div 
                                 key={i} 
                                 className={cn(
                                   "w-[8px] h-[8px] rounded-full transition-all duration-300",
-                                  i === currentPhotoIndex ? "bg-[#ff0000] scale-[1.2]" : "bg-[#bbb]"
+                                  i === selectedIndex ? "bg-[#ff0000] scale-[1.2]" : "bg-[#bbb]"
                                 )}
                               />
                             ))}
                           </div>
                         </>
                       )}
-                    </>
+                    </div>
                   ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5]">
                       <ImageIcon className="w-12 h-12 text-black/10" />
@@ -161,7 +174,7 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                {/* Couple Name below photo */}
+                {/* Couple Name below photo - Dancing Script */}
                 <div className="mt-[20px] w-full text-center">
                   <span 
                     className="text-[#1a1a1a] font-['Dancing_Script'] text-[24px] leading-none break-words px-2 block truncate"
