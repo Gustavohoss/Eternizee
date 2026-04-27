@@ -48,7 +48,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { intervalToDuration } from 'date-fns';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'data-location' | 'page-title';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'data-location';
 
 const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
@@ -102,13 +102,13 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleNextToDataLocation = () => {
-    setStep('data-location');
+  const handleNextToPageTitle = () => {
+    setStep('page-title');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleNextToPageTitle = () => {
-    setStep('page-title');
+  const handleNextToDataLocation = () => {
+    setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -117,8 +117,8 @@ export default function EternizeApp() {
     if (step === 'gift-type') setStep('theme-selection');
     if (step === 'customize-background') setStep('gift-type');
     if (step === 'photos') setStep('customize-background');
-    if (step === 'data-location') setStep('photos');
-    if (step === 'page-title') setStep('data-location');
+    if (step === 'page-title') setStep('photos');
+    if (step === 'data-location') setStep('page-title');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -450,7 +450,7 @@ export default function EternizeApp() {
         </div>
       )}
 
-      {(step === 'customize-background' || step === 'photos' || step === 'data-location' || step === 'page-title') && (
+      {(step === 'customize-background' || step === 'photos' || step === 'page-title' || step === 'data-location') && (
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
           <div className="flex items-center justify-center mb-8 md:mb-10">
             <div className="w-full max-w-md text-center">
@@ -459,11 +459,11 @@ export default function EternizeApp() {
                   "h-full bg-primary transition-all duration-500", 
                   step === 'customize-background' ? "w-[25%]" : 
                   step === 'photos' ? "w-[50%]" : 
-                  step === 'data-location' ? "w-[75%]" : "w-[100%]"
+                  step === 'page-title' ? "w-[75%]" : "w-[100%]"
                 )} />
               </div>
               <div className="mt-4 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
-                Passo {step === 'customize-background' ? '1' : step === 'photos' ? '2' : step === 'data-location' ? '3' : '4'} de 4
+                Passo {step === 'customize-background' ? '1' : step === 'photos' ? '2' : step === 'page-title' ? '3' : '4'} de 4
               </div>
             </div>
           </div>
@@ -535,8 +535,8 @@ export default function EternizeApp() {
                         <EmojiPicker 
                           selectedEmojis={selectedEmojis} 
                           onToggle={toggleEmoji} 
-                          open={isEmojiPickerOpen} 
                           onOpenChange={setIsEmojiPickerOpen} 
+                          open={isEmojiPickerOpen}
                         />
                       </div>
 
@@ -668,8 +668,58 @@ export default function EternizeApp() {
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
                   <Button 
-                    onClick={handleNextToDataLocation} 
+                    onClick={handleNextToPageTitle} 
                     disabled={uploadedPhotos.length === 0}
+                    className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {step === 'page-title' && (
+              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
+                <div className="space-y-3 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
+                    <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+                      <Heart className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
+                    </div>
+                    <h2 className="text-2xl md:text-4xl font-black tracking-tight">Título da página</h2>
+                  </div>
+                  <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
+                    Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
+                  </p>
+                </div>
+
+                <div className="space-y-8 w-full max-w-md">
+                  <div className="space-y-4">
+                    <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
+                      Como vai se chamar a história de vocês?
+                    </Label>
+                    <Input 
+                      value={pageTitle}
+                      onChange={(e) => setPageTitle(e.target.value)}
+                      placeholder="Ex: João & Maria ou Nossa Historinha" 
+                      className="bg-white/5 border-white/10 h-14 md:h-16 rounded-xl text-sm md:text-base font-medium focus:border-primary/50 transition-all shadow-inner"
+                    />
+                  </div>
+
+                  <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
+                    <AlertCircle className="w-5 h-5 text-[#ff9900] mt-0.5 shrink-0" />
+                    <p className="text-[10px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
+                      Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
+                  <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
+                    <ChevronLeft className="w-4 h-4" /> Voltar
+                  </Button>
+                  <Button 
+                    onClick={handleNextToDataLocation} 
+                    disabled={!pageTitle.trim()}
                     className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                   >
                     Próxima etapa <ChevronRight className="w-4 h-4" />
@@ -778,53 +828,7 @@ export default function EternizeApp() {
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
-                  <Button onClick={handleNextToPageTitle} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2" disabled={!date}>
-                    Próxima etapa <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {step === 'page-title' && (
-              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
-                <div className="space-y-3 text-center md:text-left">
-                  <div className="flex flex-col md:flex-row items-center gap-4">
-                    <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
-                      <Heart className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
-                    </div>
-                    <h2 className="text-2xl md:text-4xl font-black tracking-tight">Título da página</h2>
-                  </div>
-                  <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
-                    Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
-                  </p>
-                </div>
-
-                <div className="space-y-8 w-full max-w-md">
-                  <div className="space-y-4">
-                    <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
-                      Como vai se chamar a história de vocês?
-                    </Label>
-                    <Input 
-                      value={pageTitle}
-                      onChange={(e) => setPageTitle(e.target.value)}
-                      placeholder="Ex: João & Maria ou Nossa Historinha" 
-                      className="bg-white/5 border-white/10 h-14 md:h-16 rounded-xl text-sm md:text-base font-medium focus:border-primary/50 transition-all shadow-inner"
-                    />
-                  </div>
-
-                  <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
-                    <AlertCircle className="w-5 h-5 text-[#ff9900] mt-0.5 shrink-0" />
-                    <p className="text-[10px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
-                      Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
-                  <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
-                    <ChevronLeft className="w-4 h-4" /> Voltar
-                  </Button>
-                  <Button className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
+                  <Button className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2" disabled={!date}>
                     Finalizar criação <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -854,13 +858,13 @@ export default function EternizeApp() {
                    <Button 
                      onClick={() => {
                         if (step === 'customize-background') handleNextToPhotos();
-                        else if (step === 'photos') handleNextToDataLocation();
-                        else if (step === 'data-location') handleNextToPageTitle();
+                        else if (step === 'photos') handleNextToPageTitle();
+                        else if (step === 'page-title') handleNextToDataLocation();
                      }}
-                     disabled={(step === 'photos' && uploadedPhotos.length === 0) || (step === 'data-location' && !date)}
+                     disabled={(step === 'photos' && uploadedPhotos.length === 0) || (step === 'page-title' && !pageTitle.trim())}
                      className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm"
                    >
-                     Próxima etapa <ChevronRight className="w-4 h-4" />
+                     {step === 'data-location' ? 'Finalizar criação' : 'Próxima etapa'} <ChevronRight className="w-4 h-4" />
                    </Button>
                  </div>
                  <div className="flex justify-center pb-6">
