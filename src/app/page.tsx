@@ -27,9 +27,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Progress } from '@/components/ui/progress';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location';
 
@@ -37,6 +44,7 @@ export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   const giftPreview = PlaceHolderImages.find(img => img.id === 'gift-preview');
   const avatars = PlaceHolderImages.filter(img => img.id.startsWith('avatar-'));
@@ -455,13 +463,31 @@ export default function EternizeApp() {
                   <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
                     <Clock className="w-3 h-3" /> Quando essa história de amor começou? <span className="text-primary">*</span>
                   </Label>
-                  <div className="relative group">
-                    <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors" />
-                    <Input 
-                      placeholder="Selecione uma data" 
-                      className="bg-white/5 border-white/10 h-14 pl-12 rounded-xl text-sm font-medium focus:border-primary/50 transition-all"
-                    />
-                  </div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <div className="relative group cursor-pointer">
+                        <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-hover:text-primary transition-colors z-10" />
+                        <Input 
+                          readOnly
+                          value={date ? format(date, "PPP", { locale: ptBR }) : ""}
+                          placeholder="Selecione uma data" 
+                          className="bg-white/5 border-white/10 h-14 pl-12 rounded-xl text-sm font-medium focus:border-primary/50 transition-all cursor-pointer"
+                        />
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 bg-[#0c0c0c] border-white/10 shadow-2xl" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        locale={ptBR}
+                        captionLayout="dropdown"
+                        fromYear={1900}
+                        toYear={new Date().getFullYear() + 5}
+                        className="rounded-xl border-none p-4"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div className="space-y-3">
@@ -548,7 +574,6 @@ export default function EternizeApp() {
             </div>
 
             {/* Right Column: Preview (Referência) */}
-            {/* Agora visível no mobile também, aparecendo abaixo do formulário */}
             <div className="lg:sticky lg:top-12 flex flex-col items-center mt-12 lg:mt-0">
                <div className="w-full max-w-[280px]">
                   <div className="mb-4 lg:hidden text-center">
