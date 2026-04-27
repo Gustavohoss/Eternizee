@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { 
   Heart, 
@@ -19,7 +19,8 @@ import {
   Clock,
   Layout,
   Hash,
-  ChevronLeft
+  ChevronLeft,
+  Search
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,11 +35,23 @@ import { ptBR } from 'date-fns/locale';
 
 type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location';
 
+const MOCK_CITIES = [
+  "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
+  "Curitiba, PR", "Florianópolis, SC", "Salvador, BA", 
+  "Fortaleza, CE", "Brasília, DF", "Porto Alegre, RS", 
+  "Recife, PE", "Manaus, AM", "Goiânia, GO"
+];
+
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
+  
+  // Location States
+  const [locationQuery, setLocationQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const giftPreview = PlaceHolderImages.find(img => img.id === 'gift-preview');
   const avatars = PlaceHolderImages.filter(img => img.id.startsWith('avatar-'));
@@ -64,6 +77,21 @@ export default function EternizeApp() {
     if (step === 'data-location') setStep('gift-type');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const filteredCities = locationQuery.length > 0 
+    ? MOCK_CITIES.filter(city => city.toLowerCase().includes(locationQuery.toLowerCase()))
+    : [];
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative overflow-x-hidden font-body">
@@ -476,12 +504,37 @@ export default function EternizeApp() {
                   <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
                     <MapPin className="w-3 h-3" /> Onde foi? <span className="text-white/30 font-medium">(opcional)</span>
                   </Label>
-                  <div className="relative group">
+                  <div className="relative group" ref={suggestionsRef}>
                     <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors" />
                     <Input 
+                      value={locationQuery}
+                      onChange={(e) => {
+                        setLocationQuery(e.target.value);
+                        setShowSuggestions(true);
+                      }}
+                      onFocus={() => setShowSuggestions(true)}
                       placeholder="Pesquisar cidade ou lugar..." 
                       className="bg-white/5 border-white/10 h-14 pl-12 rounded-xl text-sm font-medium focus:border-primary/50 transition-all"
                     />
+                    
+                    {/* Suggestions Dropdown */}
+                    {showSuggestions && filteredCities.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl overflow-hidden z-[100] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+                        {filteredCities.map((city) => (
+                          <button
+                            key={city}
+                            onClick={() => {
+                              setLocationQuery(city);
+                              setShowSuggestions(false);
+                            }}
+                            className="w-full text-left px-4 py-3.5 text-xs font-bold hover:bg-primary/10 hover:text-primary transition-all border-b border-white/5 last:border-0 flex items-center gap-3 group/item"
+                          >
+                            <Search className="w-3 h-3 text-white/20 group-hover/item:text-primary transition-colors" />
+                            {city}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <p className="text-[10px] font-bold text-white/20 flex items-center gap-1.5 px-1">
                     <Plus className="w-3 h-3" /> Usado no Mapa Astral e Curiosidades
