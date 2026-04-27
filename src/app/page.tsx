@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -36,7 +35,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, intervalToDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location';
@@ -55,6 +54,16 @@ export default function EternizeApp() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
   
+  // Real-time counter state
+  const [timeDiff, setTimeDiff] = useState<{
+    years: number;
+    months: number;
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
+
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -88,6 +97,35 @@ export default function EternizeApp() {
   const filteredCities = locationQuery.length > 0 
     ? MOCK_CITIES.filter(city => city.toLowerCase().includes(locationQuery.toLowerCase()))
     : [];
+
+  // Counter logic
+  useEffect(() => {
+    if (!date) {
+      setTimeDiff(null);
+      return;
+    }
+
+    const updateCounter = () => {
+      const now = new Date();
+      if (now < date) {
+        setTimeDiff({ years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      const duration = intervalToDuration({ start: date, end: now });
+      setTimeDiff({
+        years: duration.years || 0,
+        months: duration.months || 0,
+        days: duration.days || 0,
+        hours: duration.hours || 0,
+        minutes: duration.minutes || 0,
+        seconds: duration.seconds || 0,
+      });
+    };
+
+    updateCounter();
+    const interval = setInterval(updateCounter, 1000);
+    return () => clearInterval(interval);
+  }, [date]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -634,21 +672,57 @@ export default function EternizeApp() {
                     </div>
                     <div className="flex-1 bg-black/40 rounded-full h-5 flex items-center px-3 gap-2">
                       <div className="w-2 h-2 text-white/20">🔒</div>
-                      <div className="text-[8px] font-medium text-white/40 truncate">eternize.app/seu-momento</div>
+                      <div className="text-[8px] font-medium text-white/40 truncate">heartzzu.com/...</div>
                     </div>
                   </div>
                   
                   <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
                     <div className="absolute inset-0 bg-[#0c0c0c]">
-                      {/* Fake Content Skeleton */}
-                      <div className="absolute inset-0 flex flex-col items-center pt-20 px-6 gap-6">
+                      {/* Fake Content Skeleton / Actual Content */}
+                      <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 overflow-y-auto hide-scrollbar">
+                        {/* Fake Image */}
                         <div className="w-full aspect-square bg-white/5 rounded-2xl animate-pulse" />
-                        <div className="space-y-3 w-full">
-                          <div className="h-4 w-3/4 bg-white/10 rounded-full animate-pulse" />
-                          <div className="h-2 w-1/2 bg-white/5 rounded-full animate-pulse" />
-                          <div className="h-2 w-full bg-white/5 rounded-full animate-pulse" />
+                        
+                        {/* Fake Text Lines */}
+                        <div className="space-y-2 w-full flex flex-col items-center">
+                          <div className="h-2 w-3/4 bg-white/10 rounded-full animate-pulse" />
+                          <div className="h-1.5 w-1/2 bg-white/5 rounded-full animate-pulse" />
                         </div>
-                        <div className="w-full h-10 bg-white/5 rounded-xl animate-pulse mt-4" />
+
+                        {/* Counter Section */}
+                        {date && timeDiff ? (
+                          <div className="w-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-4">
+                            <div className="text-center">
+                              <p className="text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
+                            </div>
+                            
+                            <div className="grid grid-cols-3 gap-1.5">
+                              {[
+                                { val: timeDiff.years, label: 'ANOS' },
+                                { val: timeDiff.months, label: 'MESES' },
+                                { val: timeDiff.days, label: 'DIAS' },
+                                { val: timeDiff.hours, label: 'HORAS' },
+                                { val: timeDiff.minutes, label: 'MINUTOS' },
+                                { val: timeDiff.seconds, label: 'SEGUNDOS' },
+                              ].map((item, i) => (
+                                <div key={i} className="bg-white/5 border border-white/5 rounded-xl py-2.5 flex flex-col items-center justify-center">
+                                  <span className="text-base font-black leading-none">{item.val.toString().padStart(2, '0')}</span>
+                                  <span className="text-[5px] font-bold text-white/30 mt-1 uppercase tracking-wider">{item.label}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div className="text-center pt-2">
+                               <p className="text-[7px] font-medium text-white/40 italic">
+                                Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-full h-32 bg-white/5 rounded-2xl animate-pulse mt-4 flex items-center justify-center">
+                             <p className="text-[8px] font-bold text-white/10 uppercase tracking-widest">Aguardando data...</p>
+                          </div>
+                        )}
                       </div>
 
                       {/* Music Player Mockup Expansível */}
