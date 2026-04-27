@@ -31,7 +31,9 @@ import {
   Layers,
   Copy,
   Bold,
-  Zap
+  Zap,
+  AlignVerticalJustifyStart,
+  AlignVerticalJustifyEnd
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -79,6 +81,11 @@ export default function EternizeApp() {
   const [pageTitle, setPageTitle] = useState<string>('');
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  
+  // Card customization state
+  const [cardColor, setCardColor] = useState<string>('#ffffff');
+  const [showCard, setShowCard] = useState<boolean>(true);
+  const [titlePosition, setTitlePosition] = useState<'top' | 'bottom'>('bottom');
   
   // Title customization state
   const [titleColor, setTitleColor] = useState<string>('#111111');
@@ -595,7 +602,7 @@ export default function EternizeApp() {
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">As Fotos</h2>
                   </div>
                   <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
-                    Adicione até 8 fotos especiais e escolha como elas serão exibidas.
+                    Adicione até 8 fotos especiais e personalize a moldura.
                   </p>
                 </div>
 
@@ -621,6 +628,72 @@ export default function EternizeApp() {
                         <input type="file" className="hidden" accept="image/*" multiple onChange={handlePhotoUpload} />
                       </label>
                     )}
+                  </div>
+
+                  <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Layout className="w-4 h-4 text-primary" />
+                      <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Estilo da Polaroid</h3>
+                    </div>
+
+                    <div className="flex items-center justify-between py-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-white border border-white/20 rounded-sm" />
+                        <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="show-card">Mostrar Moldura</Label>
+                      </div>
+                      <Switch id="show-card" checked={showCard} onCheckedChange={setShowCard} />
+                    </div>
+
+                    {showCard && (
+                      <div className="space-y-4 pt-4 border-t border-white/5 animate-in fade-in duration-300">
+                        <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Moldura</Label>
+                        <div className="flex items-center gap-4">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all">
+                                <div className="w-8 h-8 rounded-lg border border-white/10" style={{ backgroundColor: cardColor }} />
+                                <div className="text-left pr-2">
+                                  <p className="text-[9px] font-black uppercase text-white/30">Cor do Card</p>
+                                  <p className="text-[10px] font-mono font-bold">{cardColor}</p>
+                                </div>
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0 border-none bg-transparent" align="start">
+                              <ColorPicker selectedBgColor={cardColor} onChange={setCardColor} />
+                            </PopoverContent>
+                          </Popover>
+                          <div className="flex flex-wrap gap-1.5">
+                            {['#ffffff', '#fdfdfd', '#f4f4f5', '#111111', '#000000'].map((color) => (
+                              <button
+                                key={color}
+                                onClick={() => setCardColor(color)}
+                                className={cn(
+                                  "w-6 h-6 rounded-full border transition-all",
+                                  cardColor === color ? "border-primary scale-110" : "border-white/10"
+                                )}
+                                style={{ backgroundColor: color }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-4 pt-4 border-t border-white/5">
+                      <Label className="text-[11px] font-bold text-white/50 uppercase">Posição do Nome</Label>
+                      <RadioGroup value={titlePosition} onValueChange={(v: any) => setTitlePosition(v)} className="grid grid-cols-2 gap-2">
+                        <Label className={cn("flex items-center justify-center gap-2 p-3 rounded-xl border cursor-pointer transition-all", titlePosition === 'top' ? "border-primary bg-primary/10 text-primary" : "border-white/10 bg-black/20 text-white/40")}>
+                          <RadioGroupItem value="top" className="sr-only" />
+                          <AlignVerticalJustifyStart className="w-4 h-4" />
+                          <span className="text-[10px] font-black uppercase">Topo</span>
+                        </Label>
+                        <Label className={cn("flex items-center justify-center gap-2 p-3 rounded-xl border cursor-pointer transition-all", titlePosition === 'bottom' ? "border-primary bg-primary/10 text-primary" : "border-white/10 bg-black/20 text-white/40")}>
+                          <RadioGroupItem value="bottom" className="sr-only" />
+                          <AlignVerticalJustifyEnd className="w-4 h-4" />
+                          <span className="text-[10px] font-black uppercase">Base</span>
+                        </Label>
+                      </RadioGroup>
+                    </div>
                   </div>
 
                   <div className="space-y-5">
@@ -668,13 +741,6 @@ export default function EternizeApp() {
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
-                    <AlertCircle className="w-5 h-5 text-[#ff9900] mt-0.5 shrink-0" />
-                    <p className="text-[10px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
-                      Dica: Fotos no formato vertical (9:16) ficam melhores na página.
-                    </p>
                   </div>
                 </div>
 
@@ -941,6 +1007,9 @@ export default function EternizeApp() {
                  titleFont={titleFont}
                  titleIsBold={titleIsBold}
                  titleHasNeon={titleHasNeon}
+                 cardColor={cardColor}
+                 showCard={showCard}
+                 titlePosition={titlePosition}
                />
 
                <div className="lg:hidden mt-10 space-y-5 w-full">

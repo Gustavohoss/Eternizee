@@ -23,11 +23,14 @@ interface DeviceMockupProps {
   timeDiff?: any;
   selectedCountStyle: string;
   photoEffect: 'slide' | 'coverflow' | 'cards';
-  // Novas props de personalização do título
   titleColor?: string;
   titleFont?: string;
   titleIsBold?: boolean;
   titleHasNeon?: boolean;
+  // Card customization props
+  cardColor?: string;
+  showCard?: boolean;
+  titlePosition?: 'top' | 'bottom';
 }
 
 export function DeviceMockup({
@@ -42,7 +45,10 @@ export function DeviceMockup({
   titleColor = '#111111',
   titleFont = 'dancing-script',
   titleIsBold = false,
-  titleHasNeon = false
+  titleHasNeon = false,
+  cardColor = '#ffffff',
+  showCard = true,
+  titlePosition = 'bottom'
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -98,6 +104,22 @@ export function DeviceMockup({
     }
   };
 
+  const RenderTitle = () => (
+    <div className={cn("w-full text-center", titlePosition === 'top' ? "mb-4" : "mt-4")}>
+      <span 
+        style={{ 
+          color: titleColor,
+          fontFamily: getFontFamily(titleFont),
+          fontWeight: titleIsBold ? 'bold' : 'normal',
+          textShadow: titleHasNeon ? `0 0 5px ${titleColor}, 0 0 10px ${titleColor}` : 'none'
+        }}
+        className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
+      >
+        {pageTitle || "Seu Nome Aqui"}
+      </span>
+    </div>
+  );
+
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center">
@@ -144,11 +166,15 @@ export function DeviceMockup({
             
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
+                style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }}
                 className={cn(
-                  "w-full bg-[#ffffff] rounded-[8px] shadow-[0_40px_100px_rgba(0,0,0,0.9)] z-20 animate-in fade-in duration-500 flex flex-col items-center",
-                  photoEffect === 'cards' ? "p-[12px] pb-[40px]" : "p-[12px] pb-[35px]"
+                  "w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center",
+                  showCard ? "shadow-[0_40px_100px_rgba(0,0,0,0.9)] p-[12px]" : "p-0",
+                  showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]")
                 )}
               >
+                {titlePosition === 'top' && <RenderTitle />}
+
                 <div 
                   className={cn(
                     "w-full aspect-square relative photo-display-area",
@@ -238,19 +264,7 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                <div className="w-full text-center mt-[15px]">
-                  <span 
-                    style={{ 
-                      color: titleColor,
-                      fontFamily: getFontFamily(titleFont),
-                      fontWeight: titleIsBold ? 'bold' : 'normal',
-                      textShadow: titleHasNeon ? `0 0 5px ${titleColor}, 0 0 10px ${titleColor}` : 'none'
-                    }}
-                    className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
-                  >
-                    {pageTitle || "Seu Nome Aqui"}
-                  </span>
-                </div>
+                {titlePosition === 'bottom' && <RenderTitle />}
               </div>
             )}
           </div>
