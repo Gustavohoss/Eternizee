@@ -68,6 +68,19 @@ export function DeviceMockup({
     }));
   }, [selectedEmojis]);
 
+  // Lógica para determinar a posição relativa no loop
+  const getSlidePosition = (index: number) => {
+    const total = uploadedPhotos.length;
+    if (total === 0) return 'active';
+    
+    // Distância normalizada para o loop
+    const diff = (index - selectedIndex + total) % total;
+    
+    if (diff === 0) return 'active';
+    if (diff === 1 || (total === 2 && diff === 1)) return 'next';
+    return 'prev';
+  };
+
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center">
@@ -119,40 +132,48 @@ export function DeviceMockup({
               >
                 {/* Photo Display Area (Mascara) */}
                 <div 
-                  className="w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111]"
-                  style={photoEffect === 'coverflow' ? { perspective: '1000px' } : {}}
+                  className="w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111] photo-display-area"
+                  style={{ perspective: '1000px' }}
                 >
                   {uploadedPhotos.length > 0 ? (
-                    <div className={cn("w-full h-full", photoEffect === 'coverflow' ? "overflow-visible" : "overflow-hidden")} ref={emblaRef}>
+                    <div className="w-full h-full overflow-visible" ref={emblaRef}>
                       <div className="flex h-full">
                         {uploadedPhotos.map((photo, i) => {
-                          const isActive = i === selectedIndex;
+                          const position = getSlidePosition(i);
+                          const isActive = position === 'active';
                           
                           return (
                             <div 
                               key={i} 
                               className={cn(
-                                "relative min-w-0 h-full",
-                                // A transição CSS só é aplicada no modo coverflow para evitar bugs de loop no modo slide
-                                photoEffect === 'coverflow' ? "transition-all duration-500 flex-[0_0_calc(100%-60px)] mx-[5px]" : "flex-[0_0_100%]"
+                                "relative min-w-0 h-full flex-shrink-0",
+                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)] mx-[5px]" : "flex-[0_0_100%]"
                               )}
-                              style={photoEffect === 'coverflow' ? {
-                                transform: isActive 
-                                  ? 'scale(1) rotateY(0deg) translateZ(0)' 
-                                  : i < selectedIndex 
-                                    ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
-                                    : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
-                                opacity: isActive ? 1 : 0.7,
-                                filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
-                                zIndex: isActive ? 10 : 0
-                              } : {}}
                             >
-                              <Image 
-                                src={photo} 
-                                fill 
-                                className="object-cover block" 
-                                alt={`Foto ${i + 1}`} 
-                              />
+                              {/* Inner wrapper para transformações 3D sem quebrar o loop do carrossel */}
+                              <div 
+                                className={cn(
+                                  "w-full h-full relative transition-all duration-500 ease-out",
+                                  photoEffect === 'coverflow' ? "opacity-70 grayscale-[20%]" : "opacity-100 grayscale-0"
+                                )}
+                                style={photoEffect === 'coverflow' ? {
+                                  transform: isActive 
+                                    ? 'scale(1) rotateY(0deg) translateZ(0)' 
+                                    : position === 'prev' 
+                                      ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
+                                      : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
+                                  opacity: isActive ? 1 : 0.7,
+                                  filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
+                                  zIndex: isActive ? 10 : 0
+                                } : {}}
+                              >
+                                <Image 
+                                  src={photo} 
+                                  fill 
+                                  className="object-cover block" 
+                                  alt={`Foto ${i + 1}`} 
+                                />
+                              </div>
                             </div>
                           );
                         })}
