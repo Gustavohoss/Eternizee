@@ -444,7 +444,7 @@ export default function EternizeApp() {
           </div>
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start">
-            {/* Left Column: Form */}
+            {/* Left Column: Form Content */}
             <div className="space-y-10">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -550,8 +550,8 @@ export default function EternizeApp() {
                 </RadioGroup>
               </div>
 
-              {/* Footer Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+              {/* Footer Buttons - Desktop only here */}
+              <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
                 <Button 
                   onClick={handleBack}
                   variant="outline" 
@@ -566,7 +566,7 @@ export default function EternizeApp() {
                 </Button>
               </div>
 
-              <div className="flex justify-center">
+              <div className="hidden lg:flex justify-center">
                  <p className="text-[10px] font-medium text-white/20 italic">
                   ✏️ Você poderá editar isso após a compra
                 </p>
@@ -576,7 +576,7 @@ export default function EternizeApp() {
             {/* Right Column: Preview (Referência) */}
             <div className="lg:sticky lg:top-12 flex flex-col items-center mt-12 lg:mt-0">
                <div className="w-full max-w-[280px]">
-                  <div className="mb-4 lg:hidden text-center">
+                  <div className="mb-4 text-center">
                     <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Prévia em tempo real</p>
                   </div>
 
@@ -616,6 +616,30 @@ export default function EternizeApp() {
                         </div>
                         <div className="w-4 h-4 text-white/40">♪</div>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Navigation Buttons + Edit Notice - Mobile only here */}
+                  <div className="lg:hidden mt-8 space-y-6">
+                    <div className="flex flex-col gap-3">
+                      <Button 
+                        onClick={handleBack}
+                        variant="outline" 
+                        className="w-full h-14 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                      >
+                        <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                      </Button>
+                      <Button 
+                        className="w-full h-14 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-sm hover:bg-[#333] transition-all flex items-center justify-center gap-2"
+                      >
+                        Próxima etapa <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <div className="flex justify-center pb-4">
+                      <p className="text-[10px] font-medium text-white/20 italic flex items-center gap-1.5">
+                        <span className="not-italic">✏️</span> Você poderá editar isso após a compra
+                      </p>
                     </div>
                   </div>
                </div>
