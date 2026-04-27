@@ -709,20 +709,22 @@ export default function EternizeApp() {
                         )}
 
                         <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
-                           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
+                          {pageTitle ? (
+                            <div className="absolute inset-x-0 bottom-4 flex justify-center px-4">
+                              <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words text-center animate-in fade-in zoom-in-95 duration-300">
+                                {pageTitle}
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
+                          )}
                         </div>
                         
                         <div className="w-full flex flex-col items-center pt-1 min-h-[40px] justify-center">
-                          {pageTitle ? (
-                            <span className="text-white font-serif italic text-lg md:text-xl leading-tight break-words text-center animate-in fade-in zoom-in-95 duration-300">
-                              {pageTitle}
-                            </span>
-                          ) : (
-                            <div className="space-y-1.5 w-full flex flex-col items-center">
-                              <div className="h-1 w-3/4 bg-white/10 rounded-full" />
-                              <div className="h-1 w-1/2 bg-white/5 rounded-full" />
-                            </div>
-                          )}
+                          <div className="space-y-1.5 w-full flex flex-col items-center">
+                            <div className="h-1 w-3/4 bg-white/10 rounded-full" />
+                            <div className="h-1 w-1/2 bg-white/5 rounded-full" />
+                          </div>
                         </div>
 
                         {date && timeDiff ? (
