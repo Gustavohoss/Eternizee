@@ -763,18 +763,40 @@ export default function EternizeApp() {
 
                     <div className="space-y-4 pt-4 border-t border-white/5">
                       <Label className="text-[11px] font-bold text-white/50 uppercase">Cor do Texto</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {['#111111', '#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#059669', '#d97706'].map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => setTitleColor(color)}
-                            className={cn(
-                              "w-8 h-8 rounded-full border-2 transition-transform active:scale-90",
-                              titleColor === color ? "border-white scale-110" : "border-transparent"
-                            )}
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
+                      <div className="flex items-center gap-4">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button 
+                              className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"
+                            >
+                              <div 
+                                className="w-10 h-10 rounded-lg shadow-inner border border-white/10"
+                                style={{ backgroundColor: titleColor }}
+                              />
+                              <div className="text-left pr-4">
+                                <p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p>
+                                <p className="text-xs font-mono font-bold">{titleColor}</p>
+                              </div>
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                            <ColorPicker selectedBgColor={titleColor} onChange={setTitleColor} />
+                          </PopoverContent>
+                        </Popover>
+
+                        <div className="flex flex-wrap gap-1.5">
+                          {['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (
+                            <button
+                              key={color}
+                              onClick={() => setTitleColor(color)}
+                              className={cn(
+                                "w-6 h-6 rounded-full border transition-transform active:scale-90",
+                                titleColor === color ? "border-white scale-110" : "border-white/10"
+                              )}
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
