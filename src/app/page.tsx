@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -658,7 +659,7 @@ export default function EternizeApp() {
                         }}
                         className={cn(
                           "absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] transition-all duration-500 cursor-pointer overflow-hidden p-3",
-                          isPlayerExpanded ? "h-[145px]" : "h-[62px]"
+                          isPlayerExpanded ? "h-[185px] pb-5" : "h-[62px]"
                         )}
                       >
                         {/* Header Sempre Visível */}
@@ -699,7 +700,7 @@ export default function EternizeApp() {
                               <Volume2 className="w-4 h-4" />
                             </div>
                             
-                            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/20 active:scale-90 transition-transform">
+                            <div className="w-11 h-11 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/20 active:scale-90 transition-transform">
                               <Play className="w-5 h-5 fill-white ml-0.5" />
                             </div>
 
