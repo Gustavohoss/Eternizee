@@ -68,12 +68,10 @@ export function DeviceMockup({
     }));
   }, [selectedEmojis]);
 
-  // Lógica para determinar a posição relativa no loop para o efeito 3D
   const getSlidePosition = (index: number) => {
     const total = uploadedPhotos.length;
     if (total === 0) return 'active';
     
-    // Distância normalizada para o loop
     const diff = (index - selectedIndex + total) % total;
     
     if (diff === 0) return 'active';
@@ -125,19 +123,17 @@ export function DeviceMockup({
 
           <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 md:gap-6 overflow-y-auto hide-scrollbar">
             
-            {/* Polaroid Frame Section */}
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
               <div 
                 className="w-full bg-[#ffffff] p-[15px] pb-[40px] rounded-[8px] shadow-[0_30px_60px_rgba(0,0,0,0.7)] z-20 animate-in fade-in duration-500 flex flex-col items-center"
               >
-                {/* Photo Display Area (Mascara) */}
                 <div 
                   className="w-full aspect-[1/1.1] relative overflow-hidden rounded-[4px] bg-[#111] photo-display-area"
                   style={{ perspective: '1000px' }}
                 >
                   {uploadedPhotos.length > 0 ? (
                     <div className="w-full h-full overflow-visible" ref={emblaRef}>
-                      <div className="flex h-full items-stretch">
+                      <div className="flex h-full items-center">
                         {uploadedPhotos.map((photo, i) => {
                           const position = getSlidePosition(i);
                           const isActive = position === 'active';
@@ -146,15 +142,14 @@ export function DeviceMockup({
                             <div 
                               key={i} 
                               className={cn(
-                                "relative min-w-0 h-full flex-shrink-0",
+                                "relative h-full flex-shrink-0 flex items-center justify-center",
                                 photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : "flex-[0_0_100%]"
                               )}
                             >
-                              {/* Inner wrapper para transformações 3D */}
                               <div 
                                 className={cn(
                                   "w-full h-full relative transition-all duration-700 ease-out",
-                                  photoEffect === 'coverflow' ? "opacity-70" : "opacity-100"
+                                  photoEffect === 'coverflow' && !isActive && "opacity-70"
                                 )}
                                 style={photoEffect === 'coverflow' ? {
                                   transform: isActive 
@@ -162,7 +157,6 @@ export function DeviceMockup({
                                     : position === 'prev' 
                                       ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
                                       : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
-                                  opacity: isActive ? 1 : 0.7,
                                   filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
                                   zIndex: isActive ? 10 : 0
                                 } : {}}
@@ -172,7 +166,8 @@ export function DeviceMockup({
                                   fill 
                                   className="object-cover block" 
                                   alt={`Foto ${i + 1}`} 
-                                  sizes="260px"
+                                  sizes="300px"
+                                  priority
                                 />
                               </div>
                             </div>
@@ -204,7 +199,6 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                {/* Couple Name - Dancing Script */}
                 <div className="mt-[25px] w-full text-center">
                   <span 
                     className="text-[#111] font-['Dancing_Script'] text-[26px] leading-none break-words px-2 block truncate tracking-[1px]"
