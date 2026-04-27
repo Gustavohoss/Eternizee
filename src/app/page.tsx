@@ -29,7 +29,9 @@ import {
   Upload,
   Trash2,
   Layers,
-  Copy
+  Copy,
+  Bold,
+  Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,6 +42,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 import { ColorPicker } from '@/components/eternize/color-picker';
 import { EmojiPicker } from '@/components/eternize/emoji-picker';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
@@ -56,6 +59,13 @@ const MOCK_CITIES = [
   "Recife, PE", "Manaus, AM", "Goiânia, GO"
 ];
 
+const FONT_OPTIONS = [
+  { id: 'dancing-script', name: 'Dancing Script', class: 'font-["Dancing_Script"]' },
+  { id: 'pacifico', name: 'Pacifico', class: 'font-["Pacifico"]' },
+  { id: 'playfair', name: 'Playfair Display', class: 'font-["Playfair_Display"]' },
+  { id: 'inter', name: 'Inter Sans', class: 'font-["Inter"]' },
+];
+
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
@@ -69,6 +79,12 @@ export default function EternizeApp() {
   const [pageTitle, setPageTitle] = useState<string>('');
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  
+  // Title customization state
+  const [titleColor, setTitleColor] = useState<string>('#111111');
+  const [titleFont, setTitleFont] = useState<string>('dancing-script');
+  const [titleIsBold, setTitleIsBold] = useState<boolean>(false);
+  const [titleHasNeon, setTitleHasNeon] = useState<boolean>(false);
   
   // Real-time counter state
   const [timeDiff, setTimeDiff] = useState<any>(null);
@@ -687,7 +703,7 @@ export default function EternizeApp() {
                     <h2 className="text-2xl md:text-4xl font-black tracking-tight">Título da página</h2>
                   </div>
                   <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
-                    Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
+                    Escreva o título dedicatório e personalize o estilo para sua página.
                   </p>
                 </div>
 
@@ -704,11 +720,63 @@ export default function EternizeApp() {
                     />
                   </div>
 
-                  <div className="bg-[#1a1107] border border-[#452b12] p-4 rounded-2xl flex items-start gap-4">
-                    <AlertCircle className="w-5 h-5 text-[#ff9900] mt-0.5 shrink-0" />
-                    <p className="text-[10px] md:text-xs text-[#ff9900] font-bold leading-relaxed">
-                      Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
-                    </p>
+                  <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Palette className="w-4 h-4 text-primary" />
+                      <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Texto</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                       <Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Título</Label>
+                       <div className="grid grid-cols-2 gap-2">
+                         {FONT_OPTIONS.map((f) => (
+                           <button
+                             key={f.id}
+                             onClick={() => setTitleFont(f.id)}
+                             className={cn(
+                               "px-4 py-3 rounded-xl border text-xs transition-all",
+                               titleFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20",
+                               f.class
+                             )}
+                           >
+                             {f.name}
+                           </button>
+                         ))}
+                       </div>
+                    </div>
+
+                    <div className="flex items-center justify-between py-2 border-t border-white/5">
+                      <div className="flex items-center gap-2">
+                        <Bold className="w-4 h-4 text-white/40" />
+                        <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="bold-toggle">Negrito</Label>
+                      </div>
+                      <Switch id="bold-toggle" checked={titleIsBold} onCheckedChange={setTitleIsBold} />
+                    </div>
+
+                    <div className="flex items-center justify-between py-2 border-t border-white/5">
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-white/40" />
+                        <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="neon-toggle">Efeito Neon</Label>
+                      </div>
+                      <Switch id="neon-toggle" checked={titleHasNeon} onCheckedChange={setTitleHasNeon} />
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t border-white/5">
+                      <Label className="text-[11px] font-bold text-white/50 uppercase">Cor do Texto</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {['#111111', '#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#059669', '#d97706'].map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => setTitleColor(color)}
+                            className={cn(
+                              "w-8 h-8 rounded-full border-2 transition-transform active:scale-90",
+                              titleColor === color ? "border-white scale-110" : "border-transparent"
+                            )}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -847,6 +915,10 @@ export default function EternizeApp() {
                  timeDiff={timeDiff}
                  selectedCountStyle={selectedCountStyle}
                  photoEffect={photoEffect}
+                 titleColor={titleColor}
+                 titleFont={titleFont}
+                 titleIsBold={titleIsBold}
+                 titleHasNeon={titleHasNeon}
                />
 
                <div className="lg:hidden mt-10 space-y-5 w-full">

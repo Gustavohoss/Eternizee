@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -24,6 +23,11 @@ interface DeviceMockupProps {
   timeDiff?: any;
   selectedCountStyle: string;
   photoEffect: 'slide' | 'coverflow' | 'cards';
+  // Novas props de personalização do título
+  titleColor?: string;
+  titleFont?: string;
+  titleIsBold?: boolean;
+  titleHasNeon?: boolean;
 }
 
 export function DeviceMockup({
@@ -34,7 +38,11 @@ export function DeviceMockup({
   step,
   uploadedPhotos,
   pageTitle,
-  photoEffect = 'slide'
+  photoEffect = 'slide',
+  titleColor = '#111111',
+  titleFont = 'dancing-script',
+  titleIsBold = false,
+  titleHasNeon = false
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -81,6 +89,15 @@ export function DeviceMockup({
     return 'prev';
   };
 
+  const getFontFamily = (font: string) => {
+    switch (font) {
+      case 'pacifico': return "'Pacifico', cursive";
+      case 'playfair': return "'Playfair Display', serif";
+      case 'inter': return "'Inter', sans-serif";
+      default: return "'Dancing Script', cursive";
+    }
+  };
+
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center">
@@ -95,7 +112,7 @@ export function DeviceMockup({
         </div>
         <div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2">
           <div className="w-2 h-2 text-white/20 text-[6px]">🔒</div>
-          <div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/...</div>
+          <div className="text-[7px] font-medium text-white/40 truncate">eternize.com/...</div>
         </div>
       </div>
       
@@ -129,7 +146,7 @@ export function DeviceMockup({
               <div 
                 className={cn(
                   "w-full bg-[#ffffff] rounded-[8px] shadow-[0_40px_100px_rgba(0,0,0,0.9)] z-20 animate-in fade-in duration-500 flex flex-col items-center",
-                  photoEffect === 'cards' ? "p-[12px] pb-[40px]" : "p-[15px] pb-[45px]"
+                  photoEffect === 'cards' ? "p-[12px] pb-[40px]" : "p-[12px] pb-[35px]"
                 )}
               >
                 <div 
@@ -157,7 +174,7 @@ export function DeviceMockup({
                               key={i} 
                               className={cn(
                                 "relative aspect-square flex-shrink-0 flex items-center justify-center",
-                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : 
+                                photoEffect === 'coverflow' ? "flex-[0_0_100%] absolute inset-0" : 
                                 photoEffect === 'cards' ? "flex-[0_0_100%] absolute inset-0" : "flex-[0_0_100%]"
                               )}
                               style={photoEffect === 'cards' ? {
@@ -166,24 +183,22 @@ export function DeviceMockup({
                                 pointerEvents: isActive ? 'auto' : 'none',
                                 transform: `translateY(${absDiff * 12}px) rotate(${absDiff * 2}deg) scale(${1 - absDiff * 0.05})`,
                                 transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease'
+                              } : photoEffect === 'coverflow' ? {
+                                zIndex: isActive ? 10 : 5,
+                                transform: isActive 
+                                  ? 'scale(1) rotateY(0deg) translateZ(0)' 
+                                  : position === 'prev' 
+                                    ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
+                                    : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
+                                transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease'
                               } : {}}
                             >
                               <div 
                                 className={cn(
                                   "w-full h-full relative overflow-hidden rounded-[4px]",
-                                  photoEffect === 'slide' ? "transition-none" : "transition-all duration-700 ease-out",
-                                  photoEffect === 'coverflow' && !isActive && "opacity-70",
+                                  photoEffect === 'coverflow' && !isActive && "opacity-70 grayscale-[20%]",
                                   photoEffect === 'cards' && "shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
                                 )}
-                                style={photoEffect === 'coverflow' ? {
-                                  transform: isActive 
-                                    ? 'scale(1) rotateY(0deg) translateZ(0)' 
-                                    : position === 'prev' 
-                                      ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
-                                      : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
-                                  filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
-                                  zIndex: isActive ? 10 : 0
-                                } : {}}
                               >
                                 <Image 
                                   src={photo} 
@@ -223,9 +238,15 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                <div className={cn("w-full text-center", photoEffect === 'cards' ? "mt-[15px]" : "mt-[20px]")}>
+                <div className="w-full text-center mt-[15px]">
                   <span 
-                    className="text-[#111] font-['Dancing_Script'] text-[26px] block px-2 tracking-[1px] leading-relaxed"
+                    style={{ 
+                      color: titleColor,
+                      fontFamily: getFontFamily(titleFont),
+                      fontWeight: titleIsBold ? 'bold' : 'normal',
+                      textShadow: titleHasNeon ? `0 0 5px ${titleColor}, 0 0 10px ${titleColor}` : 'none'
+                    }}
+                    className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
                   >
                     {pageTitle || "Seu Nome Aqui"}
                   </span>
