@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
+import { intervalToDuration } from 'date-fns';
 
 interface DeviceMockupProps {
   selectedBgColor: string;
@@ -22,7 +23,6 @@ interface DeviceMockupProps {
   uploadedPhotos: string[];
   pageTitle: string;
   date?: Date;
-  timeDiff?: any;
   selectedCountStyle: string;
   photoEffect: 'slide' | 'coverflow' | 'cards';
   titleColor?: string;
@@ -44,7 +44,6 @@ export function DeviceMockup({
   uploadedPhotos,
   pageTitle,
   date,
-  timeDiff,
   selectedCountStyle,
   photoEffect = 'slide',
   titleColor = '#111111',
@@ -64,6 +63,37 @@ export function DeviceMockup({
     skipSnaps: false
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [timeDiff, setTimeDiff] = useState<any>(null);
+
+  // Counter internal ticker logic to avoid parent re-renders and flickering
+  useEffect(() => {
+    if (!date) {
+      setTimeDiff(null);
+      return;
+    }
+
+    const updateCounter = () => {
+      const now = new Date();
+      if (now < date) {
+        setTimeDiff({ years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      const duration = intervalToDuration({ start: date, end: now });
+      
+      setTimeDiff({
+        years: duration.years || 0,
+        months: duration.months || 0,
+        days: duration.days || 0,
+        hours: duration.hours || 0,
+        minutes: duration.minutes || 0,
+        seconds: duration.seconds || 0,
+      });
+    };
+
+    updateCounter();
+    const interval = setInterval(updateCounter, 1000);
+    return () => clearInterval(interval);
+  }, [date]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -187,7 +217,7 @@ export function DeviceMockup({
         const totalDays = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
         return (
           <div className="w-full text-center space-y-1 animate-in fade-in slide-in-from-bottom-2">
-            <p className="text-[40px] font-black text-primary leading-none tracking-tighter">{totalDays}</p>
+            <p className="text-[40px] font-black text-primary leading-none tracking-tighter">{totalDays > 0 ? totalDays : 0}</p>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Dias de puro amor</p>
           </div>
         );

@@ -49,7 +49,6 @@ import { EmojiPicker } from '@/components/eternize/emoji-picker';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
-import { intervalToDuration } from 'date-fns';
 
 type Step = 'landing' | 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'data-location';
 
@@ -106,9 +105,6 @@ export default function EternizeApp() {
   const [titleNeonStrength, setTitleNeonStrength] = useState<number>(10);
   const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
   
-  // Real-time counter state
-  const [timeDiff, setTimeDiff] = useState<any>(null);
-
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -189,38 +185,6 @@ export default function EternizeApp() {
   const filteredCities = locationQuery.length > 0 
     ? MOCK_CITIES.filter(city => city.toLowerCase().includes(locationQuery.toLowerCase()))
     : [];
-
-  // Counter logic
-  useEffect(() => {
-    if (!date) {
-      setTimeDiff(null);
-      return;
-    }
-
-    const updateCounter = () => {
-      const now = new Date();
-      if (now < date) {
-        setTimeDiff({ years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
-        return;
-      }
-      const duration = intervalToDuration({ start: date, end: now });
-      const msTotal = now.getTime() - date.getTime();
-      
-      setTimeDiff({
-        years: duration.years || 0,
-        months: duration.months || 0,
-        days: duration.days || 0,
-        hours: duration.hours || 0,
-        minutes: duration.minutes || 0,
-        seconds: duration.seconds || 0,
-        milliseconds: msTotal % 1000,
-      });
-    };
-
-    updateCounter();
-    const interval = setInterval(updateCounter, 50);
-    return () => clearInterval(interval);
-  }, [date]);
 
   // Auto-contrast logic for title color
   useEffect(() => {
@@ -1047,7 +1011,6 @@ export default function EternizeApp() {
                  uploadedPhotos={uploadedPhotos}
                  pageTitle={pageTitle}
                  date={date}
-                 timeDiff={timeDiff}
                  selectedCountStyle={selectedCountStyle}
                  photoEffect={photoEffect}
                  titleColor={titleColor}
