@@ -167,7 +167,7 @@ export function DeviceMockup({
                             >
                               <div 
                                 className={cn(
-                                  "w-full h-full relative overflow-hidden",
+                                  "w-full aspect-square relative overflow-hidden",
                                   photoEffect === 'slide' ? "transition-none" : "transition-all duration-700 ease-out",
                                   photoEffect === 'coverflow' && !isActive && "opacity-70",
                                   photoEffect === 'cards' && "rounded-[6px] shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
