@@ -40,7 +40,7 @@ import { cn } from '@/lib/utils';
 import { format, intervalToDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type' | 'background-color' | 'background-effects' | 'data-location' | 'page-title';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'customize-background' | 'data-location' | 'page-title';
 
 const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
@@ -95,13 +95,8 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleNextToBgColor = () => {
-    setStep('background-color');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleNextToEffects = () => {
-    setStep('background-effects');
+  const handleNextToCustomizeBackground = () => {
+    setStep('customize-background');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -118,9 +113,8 @@ export default function EternizeApp() {
   const handleBack = () => {
     if (step === 'theme-selection') setStep('landing');
     if (step === 'gift-type') setStep('theme-selection');
-    if (step === 'background-color') setStep('gift-type');
-    if (step === 'background-effects') setStep('background-color');
-    if (step === 'data-location') setStep('background-effects');
+    if (step === 'customize-background') setStep('gift-type');
+    if (step === 'data-location') setStep('customize-background');
     if (step === 'page-title') setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -163,7 +157,7 @@ export default function EternizeApp() {
 
   // Color Picker Logic
   useEffect(() => {
-    if (step !== 'background-color') return;
+    if (step !== 'customize-background') return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -280,8 +274,8 @@ export default function EternizeApp() {
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative overflow-x-hidden font-body">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
 
-      <div className="relative z-50 bg-[#3d0b17] border-b border-white/5 py-1.5 text-center text-[10px] sm:text-[11px] font-medium flex items-center justify-center gap-2">
-        <div className="bg-white/10 px-1.5 py-0.5 rounded border border-white/20 text-[9px] font-black uppercase">50% OFF</div>
+      <div className="fixed inset-x-0 top-0 z-[100] bg-[#3d0b17] border-b border-white/5 py-2 md:py-3 text-center text-xs md:text-sm font-medium flex items-center justify-center gap-3">
+        <div className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-[10px] md:text-xs font-black uppercase">50% OFF</div>
         <p className="tracking-tight">
           ✨ Apenas hoje — Todos os planos com <span className="font-black">50% OFF</span> de desconto, aproveite!{' '}
           <span className="underline cursor-pointer hover:text-white/80 font-bold ml-1">Ver planos ›</span>
@@ -290,7 +284,7 @@ export default function EternizeApp() {
 
       {step === 'landing' && (
         <>
-          <header className="relative z-20 container mx-auto px-4 py-4 flex items-center justify-between max-w-6xl">
+          <header className="relative z-20 container mx-auto px-4 py-4 mt-10 md:mt-14 flex items-center justify-between max-w-6xl">
             <div className="flex items-center gap-2">
               <div className="bg-primary p-1.5 rounded-full shadow-lg shadow-primary/20">
                 <Heart className="w-4 h-4 fill-white text-white" />
@@ -421,7 +415,7 @@ export default function EternizeApp() {
       )}
 
       {step === 'theme-selection' && (
-        <div className="relative z-10 container mx-auto px-4 pt-8 md:pt-12 pb-16 max-w-3xl min-h-[calc(100vh-80px)] flex flex-col justify-center">
+        <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-16 max-w-3xl min-h-[calc(100vh-80px)] flex flex-col justify-center">
           <button 
             onClick={handleBack}
             className="group flex items-center gap-2 text-white/40 hover:text-white transition-colors text-[10px] md:text-[11px] font-bold mb-6 md:mb-8 w-fit"
@@ -472,7 +466,7 @@ export default function EternizeApp() {
       )}
 
       {step === 'gift-type' && (
-        <div className="relative z-10 container mx-auto px-4 pt-8 md:pt-12 pb-16 max-w-4xl min-h-[calc(100vh-80px)] flex flex-col items-center">
+        <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-16 max-w-4xl min-h-[calc(100vh-80px)] flex flex-col items-center">
           <div className="w-full max-w-2xl">
              <button 
               onClick={handleBack}
@@ -544,7 +538,7 @@ export default function EternizeApp() {
           </div>
           <div className="mt-10 md:mt-12 w-full max-w-2xl flex justify-center">
             <Button 
-              onClick={handleNextToBgColor}
+              onClick={handleNextToCustomizeBackground}
               className="w-full max-w-[220px] md:max-w-[260px] bg-primary hover:bg-primary/90 h-11 md:h-12 rounded-xl font-black text-xs md:text-sm shadow-2xl shadow-primary/20 active:scale-95 transition-all"
             >
               Próximo
@@ -553,143 +547,120 @@ export default function EternizeApp() {
         </div>
       )}
 
-      {(step === 'background-color' || step === 'background-effects' || step === 'data-location' || step === 'page-title') && (
-        <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
-          <div className="flex items-center justify-center mb-6 md:mb-8">
-            <div className="w-full max-w-xs text-center">
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+      {(step === 'customize-background' || step === 'data-location' || step === 'page-title') && (
+        <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
+          <div className="flex items-center justify-center mb-8 md:mb-10">
+            <div className="w-full max-w-sm text-center">
+              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div className={cn(
                   "h-full bg-primary transition-all duration-500", 
-                  step === 'background-color' ? "w-[12.5%]" : 
-                  step === 'background-effects' ? "w-[25%]" :
-                  step === 'data-location' ? "w-[37.5%]" : "w-[50%]"
+                  step === 'customize-background' ? "w-[33%]" : 
+                  step === 'data-location' ? "w-[66%]" : "w-[100%]"
                 )} />
               </div>
-              <div className="mt-2 text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">
-                Passo {step === 'background-color' ? '1' : step === 'background-effects' ? '2' : step === 'data-location' ? '3' : '4'} de 8
+              <div className="mt-3 text-[10px] md:text-xs font-black text-white/40 uppercase tracking-[0.2em]">
+                Passo {step === 'customize-background' ? '1' : step === 'data-location' ? '2' : '3'} de 8
               </div>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
-            {step === 'background-color' && (
+            {step === 'customize-background' && (
               <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
                 <div className="space-y-2 text-center md:text-left">
                   <div className="flex flex-col md:flex-row items-center gap-3">
-                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                      <Palette className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    <div className="bg-white/5 p-2.5 rounded-xl border border-white/10">
+                      <Palette className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Cor de fundo</h2>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Personalizar Fundo</h2>
                   </div>
                   <p className="text-xs md:text-sm text-white/40 font-medium">
-                    Escolha a cor que será a base de toda a sua página.
+                    Escolha a cor base e adicione efeitos especiais para sua página.
                   </p>
                 </div>
 
-                <div className="bg-[#141414] rounded-[24px] p-6 w-full max-w-[320px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-[#222]">
-                  <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-3 block">Escolha a cor</span>
-                  
-                  <div ref={containerRef} className="w-full h-[180px] rounded-[12px] relative cursor-crosshair overflow-hidden mb-6">
-                      <canvas ref={canvasRef} className="w-full h-full block spectrum-canvas" />
-                      <div ref={cursorRef} className="spectrum-cursor" />
+                <div className="w-full max-w-md space-y-8">
+                  {/* Color Picker Section */}
+                  <div className="bg-[#141414] rounded-[24px] p-6 w-full shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-[#222]">
+                    <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-3 block">Escolha a cor</span>
+                    
+                    <div ref={containerRef} className="w-full h-[180px] rounded-[12px] relative cursor-crosshair overflow-hidden mb-6">
+                        <canvas ref={canvasRef} className="w-full h-full block spectrum-canvas" />
+                        <div ref={cursorRef} className="spectrum-cursor" />
+                    </div>
+
+                    <input 
+                      type="range" 
+                      className="hue-slider w-full h-4 rounded-full outline-none mb-8 cursor-pointer appearance-none" 
+                      min="0" 
+                      max="360" 
+                      value={hue}
+                      onChange={(e) => setHue(parseInt(e.target.value))}
+                      style={{ background: 'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)' }}
+                    />
+
+                    <div className="flex items-end gap-3">
+                        <div 
+                          className="w-[50px] h-[50px] rounded-[12px] border border-[#222] shrink-0" 
+                          style={{ backgroundColor: selectedBgColor }}
+                        />
+                        <div className="grow min-w-0">
+                            <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-1.5 block">Hex Code</span>
+                            <div className="bg-black border border-[#222] rounded-[12px] flex items-center h-[45px] overflow-hidden">
+                                <input 
+                                  type="text" 
+                                  className="w-full bg-transparent border-none text-white font-mono text-base px-4 outline-none" 
+                                  value={selectedBgColor} 
+                                  readOnly 
+                                />
+                            </div>
+                        </div>
+                    </div>
                   </div>
 
-                  <input 
-                    type="range" 
-                    className="hue-slider w-full h-4 rounded-full outline-none mb-8 cursor-pointer appearance-none" 
-                    min="0" 
-                    max="360" 
-                    value={hue}
-                    onChange={(e) => setHue(parseInt(e.target.value))}
-                    style={{ background: 'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)' }}
-                  />
-
-                  <div className="flex items-end gap-3">
+                  {/* Effects Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      <h3 className="text-xs md:text-sm font-black uppercase tracking-widest text-white/60">Efeitos Especiais</h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div 
-                        className="w-[50px] h-[50px] rounded-[12px] border border-[#222] shrink-0" 
-                        style={{ backgroundColor: selectedBgColor }}
-                      />
-                      <div className="grow min-w-0">
-                          <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-1.5 block">Hex Code</span>
-                          <div className="bg-black border border-[#222] rounded-[12px] flex items-center h-[45px] overflow-hidden">
-                              <input 
-                                type="text" 
-                                className="w-full bg-transparent border-none text-white font-mono text-base px-4 outline-none" 
-                                value={selectedBgColor} 
-                                readOnly 
-                              />
-                          </div>
+                        onClick={() => setSelectedEffect('none')}
+                        className={cn(
+                          "cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex items-center gap-3",
+                          selectedEffect === 'none' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                        )}
+                      >
+                        <div className="bg-white/5 p-2 rounded-lg">
+                          <Ban className="w-4 h-4 text-white/40" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-wider">Sem efeito</p>
+                          <p className="text-[9px] text-white/40">Fundo estático</p>
+                        </div>
                       </div>
-                  </div>
-                </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
-                  <Button 
-                    onClick={handleBack}
-                    variant="outline" 
-                    className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
-                  >
-                    <ChevronLeft className="w-4 h-4" /> Voltar
-                  </Button>
-                  <Button 
-                    onClick={handleNextToEffects}
-                    className="w-full sm:flex-1 h-11 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-                  >
-                    Próxima etapa <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {step === 'background-effects' && (
-              <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
-                <div className="space-y-2 text-center md:text-left">
-                  <div className="flex flex-col md:flex-row items-center gap-3">
-                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Efeitos de fundo</h2>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/40 font-medium">
-                    Adicione efeitos especiais para dar vida à sua página.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md">
-                  <div 
-                    onClick={() => setSelectedEffect('none')}
-                    className={cn(
-                      "cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4",
-                      selectedEffect === 'none' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
-                    )}
-                  >
-                    <div className="bg-white/5 p-2 rounded-lg">
-                      <Ban className="w-5 h-5 text-white/40" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-black uppercase tracking-wider">Sem efeito</p>
-                      <p className="text-[10px] text-white/40">Fundo limpo e estático</p>
-                    </div>
-                  </div>
-
-                  <div 
-                    onClick={() => setSelectedEffect('emoji-rain')}
-                    className={cn(
-                      "cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4",
-                      selectedEffect === 'emoji-rain' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
-                    )}
-                  >
-                    <div className="bg-primary/10 p-2 rounded-lg">
-                      <Heart className="w-5 h-5 text-primary fill-primary" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-black uppercase tracking-wider">Chuva de Emojis</p>
-                      <p className="text-[10px] text-white/40">Emojis caindo suavemente</p>
+                      <div 
+                        onClick={() => setSelectedEffect('emoji-rain')}
+                        className={cn(
+                          "cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex items-center gap-3",
+                          selectedEffect === 'emoji-rain' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20"
+                        )}
+                      >
+                        <div className="bg-primary/10 p-2 rounded-lg">
+                          <Heart className="w-4 h-4 text-primary fill-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-wider">Chuva de Emojis</p>
+                          <p className="text-[9px] text-white/40">Corações caindo</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5 w-full max-w-md">
                   <Button 
                     onClick={handleBack}
                     variant="outline" 
@@ -711,8 +682,8 @@ export default function EternizeApp() {
               <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
                 <div className="space-y-2 text-center md:text-left">
                   <div className="flex flex-col md:flex-row items-center gap-3">
-                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                      <CalendarIcon className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    <div className="bg-white/5 p-2.5 rounded-xl border border-white/10">
+                      <CalendarIcon className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
                     </div>
                     <h2 className="text-2xl md:text-3xl font-black tracking-tight">Data e localização</h2>
                   </div>
@@ -822,7 +793,7 @@ export default function EternizeApp() {
                   </RadioGroup>
                 </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5 w-full max-w-md">
                   <Button 
                     onClick={handleBack}
                     variant="outline" 
@@ -844,8 +815,8 @@ export default function EternizeApp() {
               <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
                 <div className="space-y-2 text-center md:text-left">
                   <div className="flex flex-col md:flex-row items-center gap-3">
-                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                      <Heart className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    <div className="bg-white/5 p-2.5 rounded-xl border border-white/10">
+                      <Heart className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
                     </div>
                     <h2 className="text-2xl md:text-3xl font-black tracking-tight">Título da página</h2>
                   </div>
@@ -875,7 +846,7 @@ export default function EternizeApp() {
                   </div>
                 </div>
 
-                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5 w-full max-w-md">
                   <Button 
                     onClick={handleBack}
                     variant="outline" 
@@ -892,10 +863,10 @@ export default function EternizeApp() {
               </div>
             )}
 
-            <div className="lg:sticky lg:top-8 flex flex-col items-center mt-8 lg:mt-0">
+            <div className="lg:sticky lg:top-16 flex flex-col items-center mt-8 lg:mt-0">
                <div className="w-full max-w-[280px]">
                   <div className="mb-4 text-center">
-                    <p className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest">Prévia em tempo real</p>
+                    <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Prévia em tempo real</p>
                   </div>
 
                   <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-2">
@@ -1039,7 +1010,7 @@ export default function EternizeApp() {
                           </div>
                         )}
 
-                        {(step === 'background-color' || step === 'background-effects') && (
+                        {step === 'customize-background' && (
                           <div className="flex-1 flex flex-col items-center justify-center space-y-4 opacity-20">
                             <Palette className="w-12 h-12 text-white/40" />
                             <p className="text-[10px] font-black uppercase tracking-[0.3em]">Design em construção</p>
@@ -1112,8 +1083,7 @@ export default function EternizeApp() {
                       </Button>
                       <Button 
                         onClick={
-                          step === 'background-color' ? handleNextToEffects :
-                          step === 'background-effects' ? handleNextToDataLocation :
+                          step === 'customize-background' ? handleNextToDataLocation :
                           step === 'data-location' ? handleNextToPageTitle : undefined
                         }
                         className="w-full h-12 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
