@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect } from 'react';
@@ -107,63 +106,65 @@ export function DeviceMockup({
 
           <div className="absolute inset-0 flex flex-col items-center pt-10 px-6 gap-4 md:gap-6 overflow-y-auto hide-scrollbar">
             
-            {/* Photos Card Section */}
+            {/* Polaroid Frame Section */}
             {(step === 'photos' || step === 'data-location' || step === 'page-title') && (
-              <div className="w-full aspect-square bg-white rounded-[2rem] relative overflow-hidden shrink-0 animate-in fade-in duration-500 shadow-2xl z-20 group/photo">
-                {uploadedPhotos.length > 0 ? (
-                  <>
-                    <div className="absolute inset-0 flex transition-transform duration-500 h-[85%]">
+              <div className="w-full bg-white p-[15px] pb-[40px] rounded-sm shadow-2xl z-20 animate-in fade-in duration-500 flex flex-col items-center">
+                <div className="w-full aspect-[1/1.1] bg-neutral-100 relative overflow-hidden rounded-[2px] group/photo">
+                  {uploadedPhotos.length > 0 ? (
+                    <>
                       <Image 
                         src={uploadedPhotos[currentPhotoIndex]} 
                         fill 
                         className="object-cover" 
                         alt={`Photo ${currentPhotoIndex + 1}`} 
                       />
+                      
+                      {uploadedPhotos.length > 1 && (
+                        <>
+                          <button 
+                            onClick={prevPhoto}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={nextPhoto}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                          
+                          {/* Pagination Dots on Photo */}
+                          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
+                            {uploadedPhotos.map((_, i) => (
+                              <div 
+                                key={i} 
+                                className={cn(
+                                  "w-2 h-2 rounded-full transition-all duration-300",
+                                  i === currentPhotoIndex ? "bg-[#ff0000] scale-125 shadow-sm" : "bg-[#bbb]"
+                                )}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                      <ImageIcon className="w-12 h-12 text-black/10" />
+                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto Aqui</span>
                     </div>
-                    
-                    {uploadedPhotos.length > 1 && (
-                      <>
-                        <button 
-                          onClick={prevPhoto}
-                          className="absolute left-2 top-[42.5%] -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={nextPhoto}
-                          className="absolute right-2 top-[42.5%] -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-1 rounded-full backdrop-blur-sm transition-all"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-                        
-                        {/* Indicators */}
-                        <div className="absolute bottom-[18%] left-1/2 -translate-x-1/2 flex gap-1 z-30">
-                          {uploadedPhotos.map((_, i) => (
-                            <div 
-                              key={i} 
-                              className={cn(
-                                "w-1 h-1 rounded-full transition-all",
-                                i === currentPhotoIndex ? "bg-white w-2" : "bg-white/40"
-                              )}
-                            />
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                    <ImageIcon className="w-12 h-12 text-black/10" />
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto Aqui</span>
-                  </div>
-                )}
-                <div className="absolute inset-x-0 bottom-0 h-[15%] flex flex-col items-center justify-center pb-1">
+                  )}
+                </div>
+
+                {/* Text below photo */}
+                <div className="mt-5 w-full text-center">
                   {pageTitle ? (
-                    <span className="text-black font-serif italic text-[10px] md:text-xs leading-none break-words text-center px-4 truncate max-w-full">
+                    <span className="text-[#1a1a1a] font-['Dancing_Script'] font-bold text-2xl leading-none break-words px-2 block truncate">
                       {pageTitle}
                     </span>
                   ) : (
-                    <div className="w-10 h-1 bg-black/5 rounded-full" />
+                    <div className="w-20 h-2 bg-neutral-100 rounded-full mx-auto" />
                   )}
                 </div>
               </div>
