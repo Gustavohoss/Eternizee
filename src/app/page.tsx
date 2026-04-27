@@ -7,10 +7,6 @@ import {
   ChevronRight, 
   Star, 
   Play, 
-  Plus, 
-  ThumbsUp, 
-  Globe, 
-  LogIn, 
   ArrowLeft, 
   Users, 
   Gift,
@@ -25,7 +21,9 @@ import {
   ChevronUp,
   Volume2,
   AlertCircle,
-  Palette
+  Palette,
+  Globe,
+  LogIn
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -47,15 +45,6 @@ const MOCK_CITIES = [
   "Curitiba, PR", "Florianópolis, SC", "Salvador, BA", 
   "Fortaleza, CE", "Brasília, DF", "Porto Alegre, RS", 
   "Recife, PE", "Manaus, AM", "Goiânia, GO"
-];
-
-const PRESET_COLORS = [
-  { name: 'Padrão', value: '#0c0c0c' },
-  { name: 'Amor', value: '#e11d48' },
-  { name: 'Roxo', value: '#4c1d95' },
-  { name: 'Azul', value: '#1e3a8a' },
-  { name: 'Vinho', value: '#450a0a' },
-  { name: 'Esmeralda', value: '#064e3b' },
 ];
 
 export default function EternizeApp() {
@@ -82,6 +71,13 @@ export default function EternizeApp() {
   const [locationQuery, setLocationQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Canvas Color Picker Refs
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const [hue, setHue] = useState(200);
+  const isDragging = useRef(false);
 
   const giftPreview = PlaceHolderImages.find(img => img.id === 'gift-preview');
   const avatars = PlaceHolderImages.filter(img => img.id.startsWith('avatar-'));
@@ -155,6 +151,100 @@ export default function EternizeApp() {
     const interval = setInterval(updateCounter, 50);
     return () => clearInterval(interval);
   }, [date]);
+
+  // Color Picker Logic
+  useEffect(() => {
+    if (step !== 'background-color') return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return;
+
+    const drawSpectrum = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      
+      ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const whiteGrad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      whiteGrad.addColorStop(0, 'rgba(255,255,255,1)');
+      whiteGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = whiteGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const blackGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      blackGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      blackGrad.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.fillStyle = blackGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+
+    const updateColorFromPos = (x: number, y: number) => {
+      const canvasX = Math.max(0, Math.min(x, canvas.width - 1));
+      const canvasY = Math.max(0, Math.min(y, canvas.height - 1));
+
+      if (cursorRef.current) {
+        cursorRef.current.style.left = canvasX + 'px';
+        cursorRef.current.style.top = canvasY + 'px';
+      }
+
+      const pixel = ctx.getImageData(canvasX, canvasY, 1, 1).data;
+      const r = pixel[0];
+      const g = pixel[1];
+      const b = pixel[2];
+      const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      setSelectedBgColor(hex.toUpperCase());
+    };
+
+    const handleMove = (e: MouseEvent | TouchEvent) => {
+      if (!isDragging.current) return;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      updateColorFromPos(x, y);
+    };
+
+    const handleDown = (e: MouseEvent | TouchEvent) => {
+      isDragging.current = true;
+      handleMove(e);
+    };
+
+    const handleUp = () => {
+      isDragging.current = false;
+    };
+
+    drawSpectrum();
+    
+    // Initial position if first time
+    if (cursorRef.current && !cursorRef.current.style.left) {
+      updateColorFromPos(canvas.width - 1, 30);
+    }
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('mousedown', handleDown as any);
+      container.addEventListener('touchstart', handleDown as any);
+    }
+    window.addEventListener('mousemove', handleMove as any);
+    window.addEventListener('touchmove', handleMove as any);
+    window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchend', handleUp);
+
+    return () => {
+      if (container) {
+        container.removeEventListener('mousedown', handleDown as any);
+        container.removeEventListener('touchstart', handleDown as any);
+      }
+      window.removeEventListener('mousemove', handleMove as any);
+      window.removeEventListener('touchmove', handleMove as any);
+      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchend', handleUp);
+    };
+  }, [step, hue]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -480,32 +570,42 @@ export default function EternizeApp() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-                  {PRESET_COLORS.map((color) => (
-                    <button
-                      key={color.value}
-                      onClick={() => setSelectedBgColor(color.value)}
-                      className={cn(
-                        "group relative aspect-square rounded-2xl border transition-all duration-300 overflow-hidden",
-                        selectedBgColor === color.value 
-                          ? "border-primary ring-2 ring-primary/20" 
-                          : "border-white/10 hover:border-white/20"
-                      )}
-                      style={{ backgroundColor: color.value }}
-                    >
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute bottom-3 left-3 right-3">
-                        <span className="text-[10px] md:text-xs font-black uppercase text-white drop-shadow-md">
-                          {color.name}
-                        </span>
+                {/* Advanced Color Picker */}
+                <div className="bg-[#141414] rounded-[24px] p-6 max-w-[320px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-[#222]">
+                  <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-3 block">Escolha a cor</span>
+                  
+                  <div ref={containerRef} className="w-full h-[180px] rounded-[12px] relative cursor-crosshair overflow-hidden mb-6">
+                      <canvas ref={canvasRef} className="w-full h-full block" />
+                      <div ref={cursorRef} className="w-[14px] h-[14px] border-2 border-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_0_4px_rgba(0,0,0,0.5)] z-10" />
+                  </div>
+
+                  <input 
+                    type="range" 
+                    className="hue-slider w-full h-4 rounded-full outline-none mb-8 cursor-pointer appearance-none" 
+                    min="0" 
+                    max="360" 
+                    value={hue}
+                    onChange={(e) => setHue(parseInt(e.target.value))}
+                    style={{ background: 'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)' }}
+                  />
+
+                  <div className="flex items-end gap-3">
+                      <div 
+                        className="w-[50px] h-[50px] rounded-[12px] border border-[#222] shrink-0" 
+                        style={{ backgroundColor: selectedBgColor }}
+                      />
+                      <div className="grow min-w-0">
+                          <span className="text-[11px] text-[#555] uppercase tracking-[1.5px] font-bold mb-1.5 block">Hex Code</span>
+                          <div className="bg-black border border-[#222] rounded-[12px] flex items-center h-[45px] overflow-hidden">
+                              <input 
+                                type="text" 
+                                className="w-full bg-transparent border-none text-white font-mono text-base px-4 outline-none" 
+                                value={selectedBgColor} 
+                                readOnly 
+                              />
+                          </div>
                       </div>
-                      {selectedBgColor === color.value && (
-                        <div className="absolute top-3 right-3 bg-white text-primary p-1 rounded-full">
-                          <Heart className="w-3 h-3 fill-current" />
-                        </div>
-                      )}
-                    </button>
-                  ))}
+                  </div>
                 </div>
 
                 <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
