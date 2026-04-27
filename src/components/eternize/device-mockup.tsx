@@ -154,7 +154,7 @@ export function DeviceMockup({
                               key={i} 
                               className={cn(
                                 "relative h-full flex-shrink-0 flex items-center justify-center",
-                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-60px)]" : 
+                                photoEffect === 'coverflow' ? "flex-[0_0_calc(100%-40px)]" : 
                                 photoEffect === 'cards' ? "flex-[0_0_100%] absolute inset-0" : "flex-[0_0_100%]"
                               )}
                               style={photoEffect === 'cards' ? {
@@ -167,7 +167,7 @@ export function DeviceMockup({
                             >
                               <div 
                                 className={cn(
-                                  "w-full aspect-square relative overflow-hidden",
+                                  "w-full h-full relative overflow-hidden",
                                   photoEffect === 'slide' ? "transition-none" : "transition-all duration-700 ease-out",
                                   photoEffect === 'coverflow' && !isActive && "opacity-70",
                                   photoEffect === 'cards' && "rounded-[6px] shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
@@ -176,8 +176,8 @@ export function DeviceMockup({
                                   transform: isActive 
                                     ? 'scale(1) rotateY(0deg) translateZ(0)' 
                                     : position === 'prev' 
-                                      ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' 
-                                      : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)',
+                                      ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(20px)' 
+                                      : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-20px)',
                                   filter: isActive ? 'grayscale(0)' : 'grayscale(20%)',
                                   zIndex: isActive ? 10 : 0
                                 } : {}}
