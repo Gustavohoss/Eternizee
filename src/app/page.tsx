@@ -481,150 +481,202 @@ export default function EternizeApp() {
         </div>
       )}
 
-      {step === 'data-location' && (
+      {(step === 'data-location' || step === 'page-title') && (
         <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
           <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex-1 max-w-xs">
               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                <div className="w-[12.5%] h-full bg-primary" />
+                <div className={cn("h-full bg-primary transition-all duration-500", step === 'data-location' ? "w-[12.5%]" : "w-[25%]")} />
               </div>
               <div className="mt-2 text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">
-                Passo 1 de 8
+                Passo {step === 'data-location' ? '1' : '2'} de 8
               </div>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
-            <div className="space-y-8 md:space-y-10">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <CalendarIcon className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+            {step === 'data-location' ? (
+              <div className="space-y-8 md:space-y-10">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <CalendarIcon className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Data e localização</h2>
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tight">Data e localização</h2>
-                </div>
-                <p className="text-xs md:text-sm text-white/40 font-medium">
-                  Informe quando e onde esse momento especial aconteceu.
-                </p>
-              </div>
-
-              <div className="space-y-5 md:space-y-6">
-                <div className="space-y-3">
-                  <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
-                    <Clock className="w-3 h-3" /> Quando essa história de amor começou? <span className="text-primary">*</span>
-                  </Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className="relative w-full text-left group">
-                        <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-hover:text-primary transition-colors z-10 pointer-events-none" />
-                        <div className="bg-white/5 border border-white/10 h-12 md:h-14 pl-12 pr-4 rounded-xl text-xs md:text-sm font-medium flex items-center group-hover:border-primary/50 transition-all">
-                          {date ? format(date, "PPP", { locale: ptBR }) : <span className="text-white/20">Selecione uma data</span>}
-                        </div>
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
-                      <Calendar
-                        selected={date}
-                        onSelect={setDate}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <p className="text-xs md:text-sm text-white/40 font-medium">
+                    Informe quando e onde esse momento especial aconteceu.
+                  </p>
                 </div>
 
-                <div className="space-y-3">
-                  <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
-                    <MapPin className="w-3 h-3" /> Onde foi? <span className="text-white/30 font-medium">(opcional)</span>
-                  </Label>
-                  <div className="relative group" ref={suggestionsRef}>
-                    <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors" />
-                    <Input 
-                      value={locationQuery}
-                      onChange={(e) => {
-                        setLocationQuery(e.target.value);
-                        setShowSuggestions(true);
-                      }}
-                      onFocus={() => setShowSuggestions(true)}
-                      placeholder="Pesquisar cidade ou lugar..." 
-                      className="bg-white/5 border-white/10 h-12 md:h-14 pl-12 rounded-xl text-xs md:text-sm font-medium focus:border-primary/50 transition-all"
-                    />
-                    {showSuggestions && filteredCities.length > 0 && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl overflow-hidden z-[100] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-                        {filteredCities.map((city) => (
-                          <button
-                            key={city}
-                            onClick={() => {
-                              setLocationQuery(city);
-                              setShowSuggestions(false);
-                            }}
-                            className="w-full text-left px-4 py-3 text-[10px] md:text-xs font-bold hover:bg-primary/10 hover:text-primary transition-all border-b border-white/5 last:border-0 flex items-center gap-3 group/item"
-                          >
-                            <Search className="w-3 h-3 text-white/20 group-hover/item:text-primary transition-colors" />
-                            {city}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <h3 className="text-xs md:text-sm font-black tracking-tight">Como mostrar a contagem</h3>
-                  <p className="text-[10px] md:text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p>
-                </div>
-                <RadioGroup 
-                  defaultValue="padrao" 
-                  value={selectedCountStyle}
-                  onValueChange={setSelectedCountStyle}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3"
-                >
-                  {[
-                    { id: 'padrao', label: 'Padrão', icon: Clock },
-                    { id: 'classico', label: 'Clássico', icon: Layout },
-                    { id: 'simples', label: 'Simples', icon: Hash },
-                    { id: 'data-grande', label: 'Data Grande', icon: CalendarIcon },
-                    { id: 'dias-grandes', label: 'Dias Grandes', icon: Hash },
-                  ].map((style) => (
-                    <Label
-                      key={style.id}
-                      className={cn(
-                        "relative flex items-center gap-3 p-3 md:p-4 rounded-xl border cursor-pointer transition-all duration-300",
-                        selectedCountStyle === style.id 
-                          ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
-                          : "border-white/5 bg-white/5 hover:border-white/10"
-                      )}
-                    >
-                      <RadioGroupItem value={style.id} className="sr-only" />
-                      <div className={cn(
-                        "w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border flex items-center justify-center transition-colors",
-                        selectedCountStyle === style.id ? "border-primary bg-primary" : "border-white/20 bg-transparent"
-                      )}>
-                        {selectedCountStyle === style.id && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                      </div>
-                      <style.icon className={cn("w-3.5 h-3.5 md:w-4 md:h-4", selectedCountStyle === style.id ? "text-primary" : "text-white/40")} />
-                      <span className="text-[10px] md:text-xs font-black">{style.label}</span>
+                <div className="space-y-5 md:space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                      <Clock className="w-3 h-3" /> Quando essa história de amor começou? <span className="text-primary">*</span>
                     </Label>
-                  ))}
-                </RadioGroup>
-              </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button className="relative w-full text-left group">
+                          <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-hover:text-primary transition-colors z-10 pointer-events-none" />
+                          <div className="bg-white/5 border border-white/10 h-12 md:h-14 pl-12 pr-4 rounded-xl text-xs md:text-sm font-medium flex items-center group-hover:border-primary/50 transition-all">
+                            {date ? format(date, "PPP", { locale: ptBR }) : <span className="text-white/20">Selecione uma data</span>}
+                          </div>
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                        <Calendar
+                          selected={date}
+                          onSelect={setDate}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
 
-              <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
-                <Button 
-                  onClick={handleBack}
-                  variant="outline" 
-                  className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
-                >
-                  <ChevronLeft className="w-4 h-4" /> Voltar etapa
-                </Button>
-                <Button 
-                  onClick={handleNextToPageTitle}
-                  className="w-full sm:flex-1 h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
-                >
-                  Próxima etapa <ChevronRight className="w-4 h-4" />
-                </Button>
+                  <div className="space-y-3">
+                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                      <MapPin className="w-3 h-3" /> Onde foi? <span className="text-white/30 font-medium">(opcional)</span>
+                    </Label>
+                    <div className="relative group" ref={suggestionsRef}>
+                      <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors" />
+                      <Input 
+                        value={locationQuery}
+                        onChange={(e) => {
+                          setLocationQuery(e.target.value);
+                          setShowSuggestions(true);
+                        }}
+                        onFocus={() => setShowSuggestions(true)}
+                        placeholder="Pesquisar cidade ou lugar..." 
+                        className="bg-white/5 border-white/10 h-12 md:h-14 pl-12 rounded-xl text-xs md:text-sm font-medium focus:border-primary/50 transition-all"
+                      />
+                      {showSuggestions && filteredCities.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl overflow-hidden z-[100] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+                          {filteredCities.map((city) => (
+                            <button
+                              key={city}
+                              onClick={() => {
+                                setLocationQuery(city);
+                                setShowSuggestions(false);
+                              }}
+                              className="w-full text-left px-4 py-3 text-[10px] md:text-xs font-bold hover:bg-primary/10 hover:text-primary transition-all border-b border-white/5 last:border-0 flex items-center gap-3 group/item"
+                            >
+                              <Search className="w-3 h-3 text-white/20 group-hover/item:text-primary transition-colors" />
+                              {city}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-xs md:text-sm font-black tracking-tight">Como mostrar a contagem</h3>
+                    <p className="text-[10px] md:text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p>
+                  </div>
+                  <RadioGroup 
+                    defaultValue="padrao" 
+                    value={selectedCountStyle}
+                    onValueChange={setSelectedCountStyle}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3"
+                  >
+                    {[
+                      { id: 'padrao', label: 'Padrão', icon: Clock },
+                      { id: 'classico', label: 'Clássico', icon: Layout },
+                      { id: 'simples', label: 'Simples', icon: Hash },
+                      { id: 'data-grande', label: 'Data Grande', icon: CalendarIcon },
+                      { id: 'dias-grandes', label: 'Dias Grandes', icon: Hash },
+                    ].map((style) => (
+                      <Label
+                        key={style.id}
+                        className={cn(
+                          "relative flex items-center gap-3 p-3 md:p-4 rounded-xl border cursor-pointer transition-all duration-300",
+                          selectedCountStyle === style.id 
+                            ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
+                            : "border-white/5 bg-white/5 hover:border-white/10"
+                        )}
+                      >
+                        <RadioGroupItem value={style.id} className="sr-only" />
+                        <div className={cn(
+                          "w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border flex items-center justify-center transition-colors",
+                          selectedCountStyle === style.id ? "border-primary bg-primary" : "border-white/20 bg-transparent"
+                        )}>
+                          {selectedCountStyle === style.id && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </div>
+                        <style.icon className={cn("w-3.5 h-3.5 md:w-4 md:h-4", selectedCountStyle === style.id ? "text-primary" : "text-white/40")} />
+                        <span className="text-[10px] md:text-xs font-black">{style.label}</span>
+                      </Label>
+                    ))}
+                  </RadioGroup>
+                </div>
+
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                  <Button 
+                    onClick={handleBack}
+                    variant="outline" 
+                    className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                  </Button>
+                  <Button 
+                    onClick={handleNextToPageTitle}
+                    className="w-full sm:flex-1 h-11 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-8 md:space-y-10">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <Heart className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Título da página</h2>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/40 font-medium">
+                    Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60">
+                      Como vai se chamar a história de vocês?
+                    </Label>
+                    <Input 
+                      value={pageTitle}
+                      onChange={(e) => setPageTitle(e.target.value)}
+                      placeholder="Ex: João & Maria ou Nossa Historinha" 
+                      className="bg-white/5 border-white/10 h-12 md:h-14 rounded-xl text-xs md:text-sm font-medium focus:border-primary/50 transition-all"
+                    />
+                  </div>
+
+                  <div className="bg-[#1a1107] border border-[#452b12] p-3 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="w-4 h-4 text-[#ff9900] mt-0.5 shrink-0" />
+                    <p className="text-[10px] md:text-[11px] text-[#ff9900] font-bold leading-tight">
+                      Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                  <Button 
+                    onClick={handleBack}
+                    variant="outline" 
+                    className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                  </Button>
+                  <Button 
+                    className="w-full sm:flex-1 h-11 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    Próxima etapa <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
 
             <div className="lg:sticky lg:top-8 flex flex-col items-center mt-8 lg:mt-0">
                <div className="w-full max-w-[280px]">
@@ -657,20 +709,21 @@ export default function EternizeApp() {
                         )}
 
                         <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
-                           <div className="absolute bottom-4 left-0 right-0 text-center px-4">
-                              <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words">
-                                {pageTitle}
-                              </span>
-                           </div>
                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
                         
-                        {(selectedCountStyle === 'data-grande' || selectedCountStyle === 'dias-grandes' || selectedCountStyle === 'padrao' || selectedCountStyle === 'classico') && (
-                          <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
-                            <div className="h-1 w-3/4 bg-white/10 rounded-full" />
-                            <div className="h-1 w-1/2 bg-white/5 rounded-full" />
-                          </div>
-                        )}
+                        <div className="w-full flex flex-col items-center pt-1 min-h-[40px] justify-center">
+                          {pageTitle ? (
+                            <span className="text-white font-serif italic text-lg md:text-xl leading-tight break-words text-center animate-in fade-in zoom-in-95 duration-300">
+                              {pageTitle}
+                            </span>
+                          ) : (
+                            <div className="space-y-1.5 w-full flex flex-col items-center">
+                              <div className="h-1 w-3/4 bg-white/10 rounded-full" />
+                              <div className="h-1 w-1/2 bg-white/5 rounded-full" />
+                            </div>
+                          )}
+                        </div>
 
                         {date && timeDiff ? (
                           <div className="w-full space-y-3 md:space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-1">
@@ -760,7 +813,7 @@ export default function EternizeApp() {
                           setIsPlayerExpanded(!isPlayerExpanded);
                         }}
                         className={cn(
-                          "absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] transition-all duration-500 cursor-pointer overflow-hidden p-2.5",
+                          "absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] transition-all duration-500 cursor-pointer overflow-hidden p-2.5 z-50",
                           isPlayerExpanded ? "h-[185px] pb-5" : "h-[58px]"
                         )}
                       >
@@ -796,10 +849,10 @@ export default function EternizeApp() {
                             <div className="text-white/60">
                               <Volume2 className="w-4 h-4" />
                             </div>
-                            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/20 active:scale-90 transition-transform">
-                              <Play className="w-4 h-4 fill-white ml-0.5" />
+                            <div className="w-[45px] h-[45px] bg-primary rounded-full flex items-center justify-center text-white shadow-[0_4px_15px_rgba(0,0,0,0.4)] active:scale-95 transition-all">
+                              <Play className="w-5 h-5 fill-white ml-0.5" />
                             </div>
-                            <div className="w-4" />
+                            <div className="w-[18px]" />
                           </div>
                         </div>
                       </div>
@@ -811,186 +864,13 @@ export default function EternizeApp() {
                       <Button 
                         onClick={handleBack}
                         variant="outline" 
-                        className="w-full h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                        className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                       >
                         <ChevronLeft className="w-4 h-4" /> Voltar etapa
                       </Button>
                       <Button 
-                        onClick={step === 'page-title' ? undefined : handleNextToPageTitle}
-                        className="w-full h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
-                      >
-                        Próxima etapa <ChevronRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-
-                    <div className="flex justify-center pb-4">
-                      <p className="text-[9px] font-medium text-white/20 italic flex items-center gap-1.5">
-                        <span className="not-italic">✏️</span> Você poderá editar isso após a compra
-                      </p>
-                    </div>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {step === 'page-title' && (
-        <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
-          <div className="flex items-center justify-between mb-6 md:mb-8">
-            <div className="flex-1 max-w-xs">
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                <div className="w-[25%] h-full bg-primary" />
-              </div>
-              <div className="mt-2 text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">
-                2/8
-              </div>
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
-            <div className="space-y-8 md:space-y-10">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <Heart className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tight">Título da página</h2>
-                </div>
-                <p className="text-xs md:text-sm text-white/40 font-medium">
-                  Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60">
-                    Como vai se chamar a história de vocês?
-                  </Label>
-                  <Input 
-                    value={pageTitle}
-                    onChange={(e) => setPageTitle(e.target.value)}
-                    placeholder="Ex: João & Maria ou Nossa Historinha" 
-                    className="bg-white/5 border-white/10 h-12 md:h-14 rounded-xl text-xs md:text-sm font-medium focus:border-primary/50 transition-all"
-                  />
-                </div>
-
-                <div className="bg-[#1a1107] border border-[#452b12] p-3 rounded-lg flex items-start gap-3">
-                  <AlertCircle className="w-4 h-4 text-[#ff9900] mt-0.5 shrink-0" />
-                  <p className="text-[10px] md:text-[11px] text-[#ff9900] font-bold leading-tight">
-                    Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
-                  </p>
-                </div>
-              </div>
-
-              <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
-                <Button 
-                  onClick={handleBack}
-                  variant="outline" 
-                  className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
-                >
-                  <ChevronLeft className="w-4 h-4" /> Voltar etapa
-                </Button>
-                <Button 
-                  className="w-full sm:flex-1 h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
-                >
-                  Próxima etapa <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="lg:sticky lg:top-8 flex flex-col items-center mt-8 lg:mt-0">
-               <div className="w-full max-w-[280px]">
-                  <div className="mb-4 text-center">
-                    <p className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest">Prévia em tempo real</p>
-                  </div>
-
-                  <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-500/20" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-500/20" />
-                    </div>
-                    <div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2">
-                      <div className="w-2 h-2 text-white/20 text-[6px]">🔒</div>
-                      <div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/...</div>
-                    </div>
-                  </div>
-                  
-                  <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
-                    <div className="absolute inset-0 bg-[#0c0c0c]">
-                      <div className="absolute inset-0 flex flex-col items-center pt-8 px-6 gap-3 md:gap-4 overflow-y-auto hide-scrollbar">
-                        <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
-                           <div className="absolute bottom-4 left-0 right-0 text-center px-4">
-                              <span className="text-black font-serif italic text-sm md:text-base leading-tight break-words">
-                                {pageTitle}
-                              </span>
-                           </div>
-                           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
-                        </div>
-                        
-                        <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
-                          <div className="h-1 w-3/4 bg-white/10 rounded-full" />
-                          <div className="h-1 w-1/2 bg-white/5 rounded-full" />
-                        </div>
-
-                        {date && timeDiff ? (
-                          <div className="w-full space-y-3 md:space-y-4 pt-1">
-                            {selectedCountStyle === 'padrao' && (
-                              <>
-                                <div className="text-center">
-                                  <p className="text-[7px] md:text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
-                                </div>
-                                <div className="grid grid-cols-3 gap-1 md:gap-1.5">
-                                  {[
-                                    { val: timeDiff.years, label: 'ANOS' },
-                                    { val: timeDiff.months, label: 'MESES' },
-                                    { val: timeDiff.days, label: 'DIAS' },
-                                    { val: timeDiff.hours, label: 'HORAS' },
-                                    { val: timeDiff.minutes, label: 'MINUTOS' },
-                                    { val: timeDiff.seconds, label: 'SEGUNDOS' },
-                                  ].map((item, i) => (
-                                    <div key={i} className="bg-white/5 border border-white/5 rounded-xl py-2 flex flex-col items-center justify-center">
-                                      <span className="text-sm md:text-base font-black leading-none">{item.val.toString().padStart(2, '0')}</span>
-                                      <span className="text-[5px] font-bold text-white/30 mt-1 uppercase tracking-wider">{item.label}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                                <div className="text-center pt-1">
-                                  <p className="text-[6px] md:text-[7px] font-medium text-white/40 italic">
-                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                                  </p>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        ) : null}
-                      </div>
-
-                      <div className="absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] h-[58px] p-2.5">
-                        <div className="flex items-center justify-between">
-                          <div className="bg-[#1a1a1a] w-8 h-8 rounded-xl flex items-center justify-center text-white">
-                            <Music2 className="w-3.5 h-3.5" />
-                          </div>
-                          <div className="text-white/40">
-                            <ChevronUp className="w-3.5 h-3.5" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="lg:hidden mt-6 space-y-4">
-                    <div className="flex flex-col gap-2.5">
-                      <Button 
-                        onClick={handleBack}
-                        variant="outline" 
-                        className="w-full h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-                      >
-                        <ChevronLeft className="w-4 h-4" /> Voltar etapa
-                      </Button>
-                      <Button 
-                        className="w-full h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
+                        onClick={step === 'data-location' ? handleNextToPageTitle : undefined}
+                        className="w-full h-12 rounded-xl bg-primary text-white font-black text-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                       >
                         Próxima etapa <ChevronRight className="w-4 h-4" />
                       </Button>
