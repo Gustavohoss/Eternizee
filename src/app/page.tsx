@@ -2,18 +2,41 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Heart, ChevronRight, Star, Play, Plus, ThumbsUp, Globe, LogIn, ArrowLeft, Users, Gift } from 'lucide-react';
+import { 
+  Heart, 
+  ChevronRight, 
+  Star, 
+  Play, 
+  Plus, 
+  ThumbsUp, 
+  Globe, 
+  LogIn, 
+  ArrowLeft, 
+  Users, 
+  Gift,
+  Calendar as CalendarIcon,
+  MapPin,
+  Clock,
+  Layout,
+  Hash,
+  ChevronLeft
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Progress } from '@/components/ui/progress';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location';
 
 export default function EternizeApp() {
   const [step, setStep] = useState<Step>('landing');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
+  const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
 
   const giftPreview = PlaceHolderImages.find(img => img.id === 'gift-preview');
   const avatars = PlaceHolderImages.filter(img => img.id.startsWith('avatar-'));
@@ -28,9 +51,15 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNextToDataLocation = () => {
+    setStep('data-location');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleBack = () => {
     if (step === 'theme-selection') setStep('landing');
     if (step === 'gift-type') setStep('theme-selection');
+    if (step === 'data-location') setStep('gift-type');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -383,10 +412,184 @@ export default function EternizeApp() {
 
           <div className="mt-12 w-full max-w-2xl flex justify-center">
             <Button 
+              onClick={handleNextToDataLocation}
               className="w-full max-w-[260px] bg-primary hover:bg-primary/90 h-12 rounded-xl font-black text-sm shadow-2xl shadow-primary/20 active:scale-95 transition-all"
             >
               Próximo
             </Button>
+          </div>
+        </div>
+      )}
+
+      {step === 'data-location' && (
+        <div className="relative z-10 container mx-auto px-4 pt-6 pb-12 max-w-6xl">
+          {/* Header Step / Progress */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex-1 max-w-xs">
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="w-[12.5%] h-full bg-primary" />
+              </div>
+              <div className="mt-2 text-[10px] font-black text-white/40 uppercase tracking-widest">
+                Passo 1 de 8
+              </div>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start">
+            {/* Left Column: Form */}
+            <div className="space-y-10">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/5 p-2.5 rounded-xl border border-white/10">
+                    <CalendarIcon className="w-5 h-5 text-white/80" />
+                  </div>
+                  <h2 className="text-3xl font-black tracking-tight">Data e localização</h2>
+                </div>
+                <p className="text-sm text-white/40 font-medium">
+                  Informe quando e onde esse momento especial aconteceu.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                    <Clock className="w-3 h-3" /> Quando essa história de amor começou? <span className="text-primary">*</span>
+                  </Label>
+                  <div className="relative group">
+                    <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors" />
+                    <Input 
+                      placeholder="Selecione uma data" 
+                      className="bg-white/5 border-white/10 h-14 pl-12 rounded-xl text-sm font-medium focus:border-primary/50 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                    <MapPin className="w-3 h-3" /> Onde foi? <span className="text-white/30 font-medium">(opcional)</span>
+                  </Label>
+                  <div className="relative group">
+                    <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-primary transition-colors" />
+                    <Input 
+                      placeholder="Pesquisar cidade ou lugar..." 
+                      className="bg-white/5 border-white/10 h-14 pl-12 rounded-xl text-sm font-medium focus:border-primary/50 transition-all"
+                    />
+                  </div>
+                  <p className="text-[10px] font-bold text-white/20 flex items-center gap-1.5 px-1">
+                    <Plus className="w-3 h-3" /> Usado no Mapa Astral e Curiosidades
+                  </p>
+                </div>
+              </div>
+
+              {/* Contagem Style Selection */}
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-black tracking-tight">Como mostrar a contagem</h3>
+                  <p className="text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p>
+                </div>
+
+                <RadioGroup 
+                  defaultValue="padrao" 
+                  value={selectedCountStyle}
+                  onValueChange={setSelectedCountStyle}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                >
+                  {[
+                    { id: 'padrao', label: 'Padrão', icon: Clock },
+                    { id: 'classico', label: 'Clássico', icon: Layout },
+                    { id: 'simples', label: 'Simples', icon: Hash },
+                    { id: 'data-grande', label: 'Data Grande', icon: CalendarIcon },
+                    { id: 'dias-grandes', label: 'Dias Grandes', icon: Hash },
+                  ].map((style) => (
+                    <Label
+                      key={style.id}
+                      className={cn(
+                        "relative flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all duration-300",
+                        selectedCountStyle === style.id 
+                          ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
+                          : "border-white/5 bg-white/5 hover:border-white/10"
+                      )}
+                    >
+                      <RadioGroupItem value={style.id} className="sr-only" />
+                      <div className={cn(
+                        "w-4 h-4 rounded-full border flex items-center justify-center transition-colors",
+                        selectedCountStyle === style.id ? "border-primary bg-primary" : "border-white/20 bg-transparent"
+                      )}>
+                        {selectedCountStyle === style.id && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      </div>
+                      <style.icon className={cn("w-4 h-4", selectedCountStyle === style.id ? "text-primary" : "text-white/40")} />
+                      <span className="text-xs font-black">{style.label}</span>
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                <Button 
+                  onClick={handleBack}
+                  variant="outline" 
+                  className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"
+                >
+                  <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                </Button>
+                <Button 
+                  className="w-full sm:flex-1 h-12 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-sm hover:bg-[#333] transition-all flex items-center justify-center gap-2"
+                >
+                  Próxima etapa <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+
+              <div className="flex justify-center">
+                 <p className="text-[10px] font-medium text-white/20 italic">
+                  ✏️ Você poderá editar isso após a compra
+                </p>
+              </div>
+            </div>
+
+            {/* Right Column: Preview */}
+            <div className="sticky top-12 hidden lg:flex flex-col items-center">
+               <div className="w-full max-w-[280px]">
+                  {/* Browser-like Mockup */}
+                  <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-red-500/20" />
+                      <div className="w-2 h-2 rounded-full bg-yellow-500/20" />
+                      <div className="w-2 h-2 rounded-full bg-green-500/20" />
+                    </div>
+                    <div className="flex-1 bg-black/40 rounded-full h-5 flex items-center px-3 gap-2">
+                      <div className="w-2 h-2 text-white/20">🔒</div>
+                      <div className="text-[8px] font-medium text-white/40 truncate">eternize.app/seu-momento</div>
+                    </div>
+                  </div>
+                  
+                  <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
+                    <div className="absolute inset-0 bg-[#0c0c0c]">
+                      {/* Fake Content Skeleton */}
+                      <div className="absolute inset-0 flex flex-col items-center pt-20 px-6 gap-6">
+                        <div className="w-full aspect-square bg-white/5 rounded-2xl animate-pulse" />
+                        <div className="space-y-3 w-full">
+                          <div className="h-4 w-3/4 bg-white/10 rounded-full animate-pulse" />
+                          <div className="h-2 w-1/2 bg-white/5 rounded-full animate-pulse" />
+                          <div className="h-2 w-full bg-white/5 rounded-full animate-pulse" />
+                        </div>
+                        <div className="w-full h-10 bg-white/5 rounded-xl animate-pulse mt-4" />
+                      </div>
+
+                      {/* Music Bar Mockup */}
+                      <div className="absolute bottom-6 inset-x-4 bg-black/60 backdrop-blur-md border border-white/10 h-10 rounded-full flex items-center px-4 justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                            <Play className="w-3 h-3 text-primary fill-primary" />
+                          </div>
+                          <div className="h-2 w-20 bg-white/20 rounded-full" />
+                        </div>
+                        <div className="w-4 h-4 text-white/40">♪</div>
+                      </div>
+                    </div>
+                  </div>
+               </div>
+            </div>
           </div>
         </div>
       )}
