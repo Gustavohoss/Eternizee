@@ -23,7 +23,8 @@ import {
   Search,
   Music2,
   ChevronUp,
-  Volume2
+  Volume2,
+  AlertCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +39,7 @@ import { cn } from '@/lib/utils';
 import { format, intervalToDuration } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location';
+type Step = 'landing' | 'theme-selection' | 'gift-type' | 'data-location' | 'page-title';
 
 const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
@@ -52,6 +53,7 @@ export default function EternizeApp() {
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [pageTitle, setPageTitle] = useState<string>('');
   const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
   
   // Real-time counter state
@@ -88,10 +90,16 @@ export default function EternizeApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNextToPageTitle = () => {
+    setStep('page-title');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleBack = () => {
     if (step === 'theme-selection') setStep('landing');
     if (step === 'gift-type') setStep('theme-selection');
     if (step === 'data-location') setStep('gift-type');
+    if (step === 'page-title') setStep('data-location');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -127,7 +135,6 @@ export default function EternizeApp() {
     };
 
     updateCounter();
-    // Shorter interval for milliseconds in 'simples' mode
     const interval = setInterval(updateCounter, 50);
     return () => clearInterval(interval);
   }, [date]);
@@ -198,7 +205,6 @@ export default function EternizeApp() {
           {/* Main Content */}
           <main className="relative z-10 container mx-auto px-4 pt-4 md:pt-8 pb-12">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-5xl mx-auto">
-              {/* Hero Text */}
               <div className="space-y-4 md:space-y-6">
                 <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1 text-[10px] font-bold text-white/70 backdrop-blur-sm">
                   <span className="text-primary text-sm">✨</span> Crie em 5 minutos
@@ -226,7 +232,6 @@ export default function EternizeApp() {
                   </Button>
                 </div>
 
-                {/* Social Proof */}
                 <div className="flex items-center gap-4 pt-4 md:pt-6 border-t border-white/5">
                   <div className="flex -space-x-2">
                     {avatars.map((avatar, i) => (
@@ -250,7 +255,6 @@ export default function EternizeApp() {
                 </div>
               </div>
 
-              {/* Phone Mockup */}
               <div className="flex flex-col items-center justify-center relative">
                 <div className="relative w-full max-w-[180px] md:max-w-[240px]">
                   <div className="relative aspect-[9/19] rounded-[2rem] md:rounded-[2.5rem] border-[4px] md:border-[6px] border-[#1a1a1a] bg-black overflow-hidden shadow-2xl ring-1 ring-white/10">
@@ -270,26 +274,21 @@ export default function EternizeApp() {
                         <Heart className="w-2 h-2 text-primary fill-primary" />
                         ETERNIZE ORIGINAL
                       </div>
-                      
                       <h2 className="text-lg md:text-xl font-black leading-none uppercase italic tracking-tighter">
                         Eu te amo<br />para sempre!
                       </h2>
-
                       <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black">
                         <span className="text-[#46d369]">99% compatível</span>
                         <span className="text-white/60">2024</span>
                         <span className="border border-white/40 px-1 rounded-[2px] text-[6px] md:text-[7px]">L</span>
                         <span className="text-white/60 tracking-tighter uppercase">HD</span>
                       </div>
-
                       <p className="text-[8px] md:text-[9px] text-white/50 font-medium leading-tight line-clamp-2">
                         Hoje não é nenhuma data especial, mas eu só queria dizer o quanto você é importante na minha vida...
                       </p>
-                      
                       <Button variant="secondary" size="sm" className="w-full h-7 md:h-8 bg-white text-black font-black text-[9px] md:text-[10px] gap-2 hover:bg-white/90 rounded-sm">
                         <Play className="w-2.5 h-2.5 md:w-3 h-3 fill-current" /> Reproduzir
                       </Button>
-
                       <div className="flex items-center justify-around text-white/80 pt-1">
                         <div className="flex flex-col items-center gap-1 group">
                           <Plus className="w-3 h-3 md:w-4 md:h-4" />
@@ -304,7 +303,6 @@ export default function EternizeApp() {
                           <span className="text-[6px] md:text-[7px] font-bold uppercase">Favoritar</span>
                         </div>
                       </div>
-
                       <div className="flex items-center gap-2 pt-2 border-t border-white/10">
                         <div className="bg-[#e50914] text-[6px] md:text-[7px] font-black px-1 py-0.5 rounded-[1px] tracking-tight">NETFLIX</div>
                         <div className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
@@ -314,7 +312,6 @@ export default function EternizeApp() {
                     </div>
                   </div>
                 </div>
-                
                 <div className="mt-4 text-[7px] md:text-[8px] font-black text-white/20 tracking-[0.4em] uppercase">
                   NETFLIX — ETERNIZE
                 </div>
@@ -333,7 +330,6 @@ export default function EternizeApp() {
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             Voltar
           </button>
-
           <div className="space-y-2 mb-8 md:mb-10 text-center">
             <h2 className="text-2xl md:text-3xl font-black tracking-tight">
               Qual tema você quer usar?
@@ -342,11 +338,9 @@ export default function EternizeApp() {
               Escolha o estilo da página e personalizamos tudo para você.
             </p>
           </div>
-
           <div className="flex-1 flex flex-col items-center justify-center">
             <div className="relative w-full max-w-[220px] md:max-w-[260px] group cursor-pointer" onClick={handleNextToGiftType}>
               <div className="absolute -inset-4 bg-primary/20 blur-3xl opacity-20 group-hover:opacity-40 transition-opacity" />
-              
               <div className="relative bg-[#0c0c0c] border border-white/10 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-white/5 transition-transform hover:scale-[1.02]">
                 <div className="aspect-[3.5/5] relative bg-black">
                    <Image 
@@ -357,7 +351,6 @@ export default function EternizeApp() {
                       data-ai-hint="romantic gift"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent" />
-                    
                     <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
                       <div className="text-lg md:text-xl font-black tracking-tighter italic">Default</div>
                       <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/20 text-[8px] md:text-[9px] uppercase font-black px-2 py-1 leading-none">
@@ -366,7 +359,6 @@ export default function EternizeApp() {
                     </div>
                 </div>
               </div>
-
               <div className="flex justify-center gap-2 mt-6">
                 <div className="w-6 h-1 rounded-full bg-primary" />
                 <div className="w-1.5 h-1 rounded-full bg-white/20" />
@@ -374,12 +366,10 @@ export default function EternizeApp() {
               </div>
             </div>
           </div>
-
           <div className="mt-8 md:mt-10 flex flex-col items-center gap-4">
             <div className="text-[10px] md:text-[11px] font-bold text-white/40">
               Tema selecionado: <span className="text-white font-black uppercase">Default</span>
             </div>
-
             <Button 
               onClick={handleNextToGiftType}
               className="w-full max-w-[220px] md:max-w-[260px] bg-primary hover:bg-primary/90 h-10 md:h-12 rounded-xl font-black text-xs md:text-sm shadow-2xl shadow-primary/20 active:scale-95 transition-all"
@@ -400,7 +390,6 @@ export default function EternizeApp() {
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
               Voltar
             </button>
-
             <div className="space-y-2 mb-8 md:mb-10 text-center md:text-left">
               <h2 className="text-2xl md:text-3xl font-black tracking-tight">
                 Que tipo de presente vamos criar?
@@ -410,9 +399,7 @@ export default function EternizeApp() {
               </p>
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 w-full max-w-2xl">
-            {/* Presente de Amor */}
             <div 
               onClick={() => setSelectedGiftType('amor')}
               className={cn(
@@ -435,8 +422,6 @@ export default function EternizeApp() {
                 </div>
               </div>
             </div>
-
-            {/* Presente para Bestie */}
             <div 
                onClick={() => setSelectedGiftType('bestie')}
                className={cn(
@@ -454,8 +439,6 @@ export default function EternizeApp() {
                 </div>
               </div>
             </div>
-
-            {/* Dia das Mães */}
             <div 
                onClick={() => setSelectedGiftType('maes')}
                className={cn(
@@ -474,8 +457,6 @@ export default function EternizeApp() {
               </div>
             </div>
           </div>
-
-          {/* Nuvem de Tags */}
           <div className="mt-8 md:mt-12 space-y-4 w-full max-w-2xl text-center px-4">
             <p className="text-[8px] md:text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Ou homenageie diretamente:</p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -489,7 +470,6 @@ export default function EternizeApp() {
               ))}
             </div>
           </div>
-
           <div className="mt-10 md:mt-12 w-full max-w-2xl flex justify-center">
             <Button 
               onClick={handleNextToDataLocation}
@@ -503,7 +483,6 @@ export default function EternizeApp() {
 
       {step === 'data-location' && (
         <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
-          {/* Header Step / Progress */}
           <div className="flex items-center justify-between mb-6 md:mb-8">
             <div className="flex-1 max-w-xs">
               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
@@ -516,7 +495,6 @@ export default function EternizeApp() {
           </div>
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
-            {/* Left Column: Form Content */}
             <div className="space-y-8 md:space-y-10">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -544,7 +522,7 @@ export default function EternizeApp() {
                         </div>
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-none bg-transparent" align="start">
+                    <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
                       <Calendar
                         selected={date}
                         onSelect={setDate}
@@ -569,8 +547,6 @@ export default function EternizeApp() {
                       placeholder="Pesquisar cidade ou lugar..." 
                       className="bg-white/5 border-white/10 h-12 md:h-14 pl-12 rounded-xl text-xs md:text-sm font-medium focus:border-primary/50 transition-all"
                     />
-                    
-                    {/* Suggestions Dropdown */}
                     {showSuggestions && filteredCities.length > 0 && (
                       <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl overflow-hidden z-[100] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl">
                         {filteredCities.map((city) => (
@@ -589,19 +565,14 @@ export default function EternizeApp() {
                       </div>
                     )}
                   </div>
-                  <p className="text-[9px] md:text-[10px] font-bold text-white/20 flex items-center gap-1.5 px-1">
-                    <Plus className="w-3 h-3" /> Usado no Mapa Astral e Curiosidades
-                  </p>
                 </div>
               </div>
 
-              {/* Contagem Style Selection */}
               <div className="space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-xs md:text-sm font-black tracking-tight">Como mostrar a contagem</h3>
                   <p className="text-[10px] md:text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p>
                 </div>
-
                 <RadioGroup 
                   defaultValue="padrao" 
                   value={selectedCountStyle}
@@ -638,7 +609,6 @@ export default function EternizeApp() {
                 </RadioGroup>
               </div>
 
-              {/* Footer Buttons - Desktop only here */}
               <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
                 <Button 
                   onClick={handleBack}
@@ -648,27 +618,20 @@ export default function EternizeApp() {
                   <ChevronLeft className="w-4 h-4" /> Voltar etapa
                 </Button>
                 <Button 
+                  onClick={handleNextToPageTitle}
                   className="w-full sm:flex-1 h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
                 >
                   Próxima etapa <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
-
-              <div className="hidden lg:flex justify-center">
-                 <p className="text-[10px] font-medium text-white/20 italic">
-                  ✏️ Você poderá editar isso após a compra
-                </p>
-              </div>
             </div>
 
-            {/* Right Column: Preview (Referência) */}
             <div className="lg:sticky lg:top-8 flex flex-col items-center mt-8 lg:mt-0">
                <div className="w-full max-w-[280px]">
                   <div className="mb-4 text-center">
                     <p className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest">Prévia em tempo real</p>
                   </div>
 
-                  {/* Browser-like Mockup */}
                   <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-2">
                     <div className="flex gap-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-red-500/20" />
@@ -683,10 +646,7 @@ export default function EternizeApp() {
                   
                   <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
                     <div className="absolute inset-0 bg-[#0c0c0c]">
-                      {/* Fake Content Skeleton / Actual Content */}
                       <div className="absolute inset-0 flex flex-col items-center pt-8 px-6 gap-3 md:gap-4 overflow-y-auto hide-scrollbar">
-                        
-                        {/* SIMPLES: Counter ABOVE image */}
                         {selectedCountStyle === 'simples' && date && timeDiff && (
                           <div className="w-full text-center space-y-1.5 animate-in fade-in slide-in-from-top-4 duration-700 pb-2">
                             <div className="text-base">⌛</div>
@@ -696,21 +656,17 @@ export default function EternizeApp() {
                           </div>
                         )}
 
-                        {/* Image Placeholder with bar */}
                         <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
                         </div>
                         
-                        {/* Skeleton lines for Data Grande and Dias Grandes (ABOVE counter) */}
-                        {(selectedCountStyle === 'data-grande' || selectedCountStyle === 'dias-grandes') && (
+                        {(selectedCountStyle === 'data-grande' || selectedCountStyle === 'dias-grandes' || selectedCountStyle === 'padrao' || selectedCountStyle === 'classico') && (
                           <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
-                            <div className="h-1 w-3/4 bg-white/10 rounded-full" />
                             <div className="h-1 w-3/4 bg-white/10 rounded-full" />
                             <div className="h-1 w-1/2 bg-white/5 rounded-full" />
                           </div>
                         )}
 
-                        {/* Counter Section */}
                         {date && timeDiff ? (
                           <div className="w-full space-y-3 md:space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 pt-1">
                             {selectedCountStyle === 'classico' && (
@@ -729,7 +685,6 @@ export default function EternizeApp() {
                                 <div className="text-center">
                                   <p className="text-[7px] md:text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
                                 </div>
-                                
                                 <div className="grid grid-cols-3 gap-1 md:gap-1.5">
                                   {[
                                     { val: timeDiff.years, label: 'ANOS' },
@@ -745,7 +700,6 @@ export default function EternizeApp() {
                                     </div>
                                   ))}
                                 </div>
-
                                 <div className="text-center pt-1">
                                   <p className="text-[6px] md:text-[7px] font-medium text-white/40 italic">
                                     Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
@@ -775,11 +729,6 @@ export default function EternizeApp() {
                                     <span className="text-[6px] font-bold text-white/30 mt-2 uppercase tracking-widest">DIAS</span>
                                   </div>
                                 </div>
-                                <div className="text-center">
-                                  <p className="text-[7px] md:text-[8px] font-bold text-white/30">
-                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                                  </p>
-                                </div>
                               </div>
                             )}
 
@@ -794,37 +743,12 @@ export default function EternizeApp() {
                                   </span>
                                   <span className="text-[7px] font-bold text-white/30 uppercase tracking-[0.2em]">DIAS</span>
                                 </div>
-                                <div className="text-center">
-                                  <p className="text-[7px] md:text-[8px] font-bold text-white/30">
-                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                                  </p>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Skeleton lines for styles that have them BELOW counter */}
-                            {(selectedCountStyle === 'padrao' || selectedCountStyle === 'classico') && (
-                              <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
-                                <div className="h-1 w-3/4 bg-white/10 rounded-full" />
-                                <div className="h-1 w-1/2 bg-white/5 rounded-full" />
                               </div>
                             )}
                           </div>
-                        ) : (
-                          <div className="w-full flex flex-col items-center gap-4">
-                            {/* Fake Text Lines when no date */}
-                            <div className="space-y-1.5 w-full flex flex-col items-center">
-                              <div className="h-1.5 w-3/4 bg-white/10 rounded-full animate-pulse" />
-                              <div className="h-1 w-1/2 bg-white/5 rounded-full animate-pulse" />
-                            </div>
-                            <div className="w-full h-24 md:h-32 bg-white/5 rounded-2xl animate-pulse mt-2 flex items-center justify-center">
-                               <p className="text-[7px] md:text-[8px] font-bold text-white/10 uppercase tracking-widest">Aguardando data...</p>
-                            </div>
-                          </div>
-                        )}
+                        ) : null}
                       </div>
 
-                      {/* Music Player Mockup Expansível */}
                       <div 
                         onClick={(e) => {
                           e.stopPropagation();
@@ -835,7 +759,6 @@ export default function EternizeApp() {
                           isPlayerExpanded ? "h-[185px] pb-5" : "h-[58px]"
                         )}
                       >
-                        {/* Header Sempre Visível */}
                         <div className="flex items-center justify-between">
                           <div className={cn(
                             "bg-[#1a1a1a] rounded-xl flex items-center justify-center text-white transition-all duration-500",
@@ -851,12 +774,10 @@ export default function EternizeApp() {
                           </div>
                         </div>
 
-                        {/* Conteúdo Expansível */}
                         <div className={cn(
                           "mt-4 transition-all duration-500 space-y-4",
                           isPlayerExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
                         )}>
-                          {/* Progress Bar */}
                           <div className="space-y-2">
                             <div className="w-full h-[2px] bg-[#222] relative overflow-hidden">
                               <div className="absolute left-0 top-0 h-full w-[30%] bg-white/30" />
@@ -866,25 +787,189 @@ export default function EternizeApp() {
                               <span>0:00</span>
                             </div>
                           </div>
-
-                          {/* Bottom Controls */}
                           <div className="flex items-center justify-between px-1">
                             <div className="text-white/60">
                               <Volume2 className="w-4 h-4" />
                             </div>
-                            
                             <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/20 active:scale-90 transition-transform">
                               <Play className="w-4 h-4 fill-white ml-0.5" />
                             </div>
-
-                            <div className="w-4" /> {/* Spacer */}
+                            <div className="w-4" />
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Navigation Buttons + Edit Notice - Mobile only here */}
+                  <div className="lg:hidden mt-6 space-y-4">
+                    <div className="flex flex-col gap-2.5">
+                      <Button 
+                        onClick={handleBack}
+                        variant="outline" 
+                        className="w-full h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                      >
+                        <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                      </Button>
+                      <Button 
+                        onClick={handleNextToPageTitle}
+                        className="w-full h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
+                      >
+                        Próxima etapa <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <div className="flex justify-center pb-4">
+                      <p className="text-[9px] font-medium text-white/20 italic flex items-center gap-1.5">
+                        <span className="not-italic">✏️</span> Você poderá editar isso após a compra
+                      </p>
+                    </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === 'page-title' && (
+        <div className="relative z-10 container mx-auto px-4 pt-4 md:pt-6 pb-12 max-w-6xl">
+          <div className="flex items-center justify-between mb-6 md:mb-8">
+            <div className="flex-1 max-w-xs">
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="w-[25%] h-full bg-primary" />
+              </div>
+              <div className="mt-2 text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">
+                2/8
+              </div>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
+            <div className="space-y-8 md:space-y-10">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <Heart className="w-4 h-4 md:w-5 md:h-5 text-white/80" />
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tight">Título da página</h2>
+                </div>
+                <p className="text-xs md:text-sm text-white/40 font-medium">
+                  Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-[10px] md:text-[11px] font-black uppercase tracking-wider text-white/60">
+                    Como vai se chamar a história de vocês?
+                  </Label>
+                  <Input 
+                    value={pageTitle}
+                    onChange={(e) => setPageTitle(e.target.value)}
+                    placeholder="Ex: João & Maria ou Nossa Historinha" 
+                    className="bg-white/5 border-white/10 h-12 md:h-14 rounded-xl text-xs md:text-sm font-medium focus:border-primary/50 transition-all"
+                  />
+                </div>
+
+                <div className="bg-[#1a1107] border border-[#452b12] p-3 rounded-lg flex items-start gap-3">
+                  <AlertCircle className="w-4 h-4 text-[#ff9900] mt-0.5 shrink-0" />
+                  <p className="text-[10px] md:text-[11px] text-[#ff9900] font-bold leading-tight">
+                    Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
+                  </p>
+                </div>
+              </div>
+
+              <div className="hidden lg:flex flex-col sm:flex-row items-center gap-4 pt-8 border-t border-white/5">
+                <Button 
+                  onClick={handleBack}
+                  variant="outline" 
+                  className="w-full sm:w-auto px-6 h-11 rounded-xl border-white/10 bg-white/5 font-black text-xs hover:bg-white/10 transition-all flex items-center gap-2"
+                >
+                  <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                </Button>
+                <Button 
+                  className="w-full sm:flex-1 h-11 rounded-xl bg-[#2a2a2a] text-white/90 font-black text-xs hover:bg-[#333] transition-all flex items-center justify-center gap-2"
+                >
+                  Próxima etapa <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="lg:sticky lg:top-8 flex flex-col items-center mt-8 lg:mt-0">
+               <div className="w-full max-w-[280px]">
+                  <div className="mb-4 text-center">
+                    <p className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest">Prévia em tempo real</p>
+                  </div>
+
+                  <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500/20" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500/20" />
+                    </div>
+                    <div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2">
+                      <div className="w-2 h-2 text-white/20 text-[6px]">🔒</div>
+                      <div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/...</div>
+                    </div>
+                  </div>
+                  
+                  <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2rem] overflow-hidden shadow-2xl">
+                    <div className="absolute inset-0 bg-[#0c0c0c]">
+                      <div className="absolute inset-0 flex flex-col items-center pt-8 px-6 gap-3 md:gap-4 overflow-y-auto hide-scrollbar">
+                        <div className="w-full aspect-square bg-white rounded-2xl relative overflow-hidden shrink-0">
+                           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-black/5 rounded-full" />
+                        </div>
+                        
+                        <div className="space-y-1.5 w-full flex flex-col items-center pt-1">
+                          <div className="h-1 w-3/4 bg-white/10 rounded-full" />
+                          <div className="h-1 w-1/2 bg-white/5 rounded-full" />
+                        </div>
+
+                        {date && timeDiff ? (
+                          <div className="w-full space-y-3 md:space-y-4 pt-1">
+                            {selectedCountStyle === 'padrao' && (
+                              <>
+                                <div className="text-center">
+                                  <p className="text-[7px] md:text-[8px] font-black text-white/30 tracking-[0.2em] uppercase">UAU, ESTÃO JUNTOS HÁ</p>
+                                </div>
+                                <div className="grid grid-cols-3 gap-1 md:gap-1.5">
+                                  {[
+                                    { val: timeDiff.years, label: 'ANOS' },
+                                    { val: timeDiff.months, label: 'MESES' },
+                                    { val: timeDiff.days, label: 'DIAS' },
+                                    { val: timeDiff.hours, label: 'HORAS' },
+                                    { val: timeDiff.minutes, label: 'MINUTOS' },
+                                    { val: timeDiff.seconds, label: 'SEGUNDOS' },
+                                  ].map((item, i) => (
+                                    <div key={i} className="bg-white/5 border border-white/5 rounded-xl py-2 flex flex-col items-center justify-center">
+                                      <span className="text-sm md:text-base font-black leading-none">{item.val.toString().padStart(2, '0')}</span>
+                                      <span className="text-[5px] font-bold text-white/30 mt-1 uppercase tracking-wider">{item.label}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div className="text-center pt-1">
+                                  <p className="text-[6px] md:text-[7px] font-medium text-white/40 italic">
+                                    Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                                  </p>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <div className="absolute bottom-6 inset-x-4 bg-[#0e0e0e] border border-white/5 rounded-[20px] h-[58px] p-2.5">
+                        <div className="flex items-center justify-between">
+                          <div className="bg-[#1a1a1a] w-8 h-8 rounded-xl flex items-center justify-center text-white">
+                            <Music2 className="w-3.5 h-3.5" />
+                          </div>
+                          <div className="text-white/40">
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="lg:hidden mt-6 space-y-4">
                     <div className="flex flex-col gap-2.5">
                       <Button 
