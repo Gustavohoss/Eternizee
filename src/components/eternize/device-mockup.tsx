@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -5,15 +6,13 @@ import Image from 'next/image';
 import { 
   Heart, 
   ImageIcon, 
-  ChevronLeft,
-  ChevronRight,
   Clock,
-  Calendar as CalendarIcon,
-  Music
+  Calendar as CalendarIcon
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 import { intervalToDuration } from 'date-fns';
+import { MusicPlayer } from './music-player';
 
 interface DeviceMockupProps {
   selectedBgColor: string;
@@ -152,19 +151,6 @@ export function DeviceMockup({
       default: return "'Dancing Script', cursive";
     }
   };
-
-  const getSpotifyEmbedUrl = (url?: string) => {
-    if (!url) return null;
-    try {
-      const match = url.match(/track\/([a-zA-Z0-9]+)/);
-      if (match && match[1]) {
-        return `https://open.spotify.com/embed/track/${match[1]}?utm_source=generator&theme=0`;
-      }
-    } catch (e) {}
-    return null;
-  };
-
-  const spotifyEmbedUrl = useMemo(() => getSpotifyEmbedUrl(spotifyUrl), [spotifyUrl]);
 
   const RenderTitle = () => {
     const shadowSize = titleNeonStrength;
@@ -317,19 +303,9 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                {spotifyEmbedUrl && (
-                  <div className="w-full animate-in zoom-in-95 duration-500">
-                    <iframe 
-                      src={spotifyEmbedUrl} 
-                      width="100%" 
-                      height="80" 
-                      frameBorder="0" 
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                      loading="lazy"
-                      className="rounded-xl shadow-lg"
-                    />
-                  </div>
-                )}
+                <div className="w-full animate-in zoom-in-95 duration-500">
+                  <MusicPlayer spotifyUrl={spotifyUrl} />
+                </div>
 
                 <div className="w-full">
                   <RenderCounter />
