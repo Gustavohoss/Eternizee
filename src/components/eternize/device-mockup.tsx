@@ -225,17 +225,20 @@ export function DeviceMockup({
   const slugifiedTitle = pageTitle.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   return (
-    <div className={cn("w-full transition-all duration-500", isFullscreen ? "max-w-[450px]" : "max-w-[380px]")}>
+    <div className={cn(
+      "w-full transition-all duration-500 flex flex-col", 
+      isFullscreen ? "h-full max-w-none" : "max-w-[380px]"
+    )}>
       {!isFullscreen && (
         <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       )}
       
       {/* Browser Address Bar */}
       <div className={cn(
-        "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center transition-all",
+        "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center shrink-0",
         isFullscreen ? "rounded-none" : "rounded-t-2xl"
       )}>
-        <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200">
+        <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200 max-w-[400px]">
           <Lock className="w-3 h-3 text-neutral-400" />
           <div className="text-[11px] text-neutral-600 font-medium truncate">
             eternize.com/{slugifiedTitle || 'seu-nome'}
@@ -244,8 +247,8 @@ export function DeviceMockup({
       </div>
 
       <div className={cn(
-        "relative aspect-[9/19] bg-black border-x border-b border-white/10 overflow-hidden shadow-2xl",
-        isFullscreen ? "rounded-none h-[calc(90vh-90px)]" : "rounded-b-[2.5rem]"
+        "relative bg-black border-x border-b border-white/10 overflow-hidden shadow-2xl flex-1",
+        isFullscreen ? "rounded-none h-full" : "rounded-b-[2.5rem] aspect-[9/19]"
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#141414' : selectedBgColor }}>
           {selectedEffect === 'sparkles' && selectedTheme !== 'netflix' && (
