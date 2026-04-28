@@ -22,6 +22,7 @@ interface MusicPlayerProps {
   musicTextColor?: string;
   musicHasNeon?: boolean;
   musicNeonStrength?: number;
+  isAutoPlay?: boolean;
 }
 
 export function MusicPlayer({ 
@@ -29,7 +30,8 @@ export function MusicPlayer({
   musicBoxColor = '#0e0e0e',
   musicTextColor = '#ffffff',
   musicHasNeon = false,
-  musicNeonStrength = 15
+  musicNeonStrength = 15,
+  isAutoPlay = true
 }: MusicPlayerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -54,13 +56,14 @@ export function MusicPlayer({
           width: '1',
           videoId: musicData?.id || '',
           playerVars: {
-            autoplay: 0,
+            autoplay: isAutoPlay ? 1 : 0,
             controls: 0,
             disablekb: 1,
             fs: 0,
             rel: 0,
             enablejsapi: 1,
-            origin: window.location.origin
+            origin: window.location.origin,
+            mute: isAutoPlay ? 1 : 0 // Browsers often require muted for autoplay
           },
           events: {
             onStateChange: (event: any) => {
@@ -76,6 +79,9 @@ export function MusicPlayer({
             onReady: (event: any) => {
               if (musicData?.id) {
                 event.target.cueVideoById(musicData.id);
+                if (isAutoPlay) {
+                  event.target.playVideo();
+                }
               }
             }
           }
@@ -104,8 +110,13 @@ export function MusicPlayer({
       setIsPlaying(false);
       setCurrentTime(0);
       if (!isExpanded) setIsExpanded(true);
+      
+      // If autoplay is on, ensure it plays and handles mute/unmute correctly
+      if (isAutoPlay) {
+        playerRef.current.playVideo();
+      }
     }
-  }, [musicData?.id]);
+  }, [musicData?.id, isAutoPlay]);
 
   const startTimer = () => {
     stopTimer();
@@ -124,7 +135,7 @@ export function MusicPlayer({
     e.stopPropagation();
     if (!playerRef.current) return;
     
-    // FORÇA O DESMUDO E VOLUME NO CLIQUE
+    // FORÇA O DESMUDO E VOLUME NO CLIQUE (Crucial for audio to come out)
     playerRef.current.unMute();
     playerRef.current.setVolume(100);
 

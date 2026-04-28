@@ -66,6 +66,7 @@ export default function CriadorApp() {
   const [musicTextColor, setMusicTextColor] = useState<string>('#ffffff');
   const [musicHasNeon, setMusicHasNeon] = useState<boolean>(false);
   const [musicNeonStrength, setMusicNeonStrength] = useState<number>(15);
+  const [isMusicAutoPlay, setIsMusicAutoPlay] = useState<boolean>(true);
 
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
@@ -258,6 +259,8 @@ export default function CriadorApp() {
                 onMusicHasNeonChange={setMusicHasNeon}
                 musicNeonStrength={musicNeonStrength}
                 onMusicNeonStrengthChange={setMusicNeonStrength}
+                isAutoPlay={isMusicAutoPlay}
+                onAutoPlayChange={setIsMusicAutoPlay}
                 onBack={handleBack}
                 onNext={handleNext}
               />
@@ -322,6 +325,7 @@ export default function CriadorApp() {
                  musicTextColor={musicTextColor}
                  musicHasNeon={musicHasNeon}
                  musicNeonStrength={musicNeonStrength}
+                 isAutoPlay={isMusicAutoPlay}
                />
                <div className="lg:hidden mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">

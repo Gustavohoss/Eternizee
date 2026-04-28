@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Music, Search, ChevronLeft, ChevronRight, X, Play, Palette, Zap } from 'lucide-react';
+import { Music, Search, ChevronLeft, ChevronRight, X, Play, Palette, Zap, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,8 @@ interface StepMusicProps {
   onMusicHasNeonChange: (has: boolean) => void;
   musicNeonStrength: number;
   onMusicNeonStrengthChange: (strength: number) => void;
+  isAutoPlay: boolean;
+  onAutoPlayChange: (autoPlay: boolean) => void;
   onBack: () => void;
   onNext: () => void;
 }
@@ -46,6 +48,8 @@ export function StepMusic({
   onMusicHasNeonChange,
   musicNeonStrength,
   onMusicNeonStrengthChange,
+  isAutoPlay,
+  onAutoPlayChange,
   onBack,
   onNext
 }: StepMusicProps) {
@@ -175,6 +179,19 @@ export function StepMusic({
                 <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Caixa de Música</h3></div>
                 
                 <div className="space-y-4">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <Play className="w-4 h-4 text-white/40" />
+                        <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="music-autoplay-toggle">Auto Play</Label>
+                      </div>
+                      <p className="text-[9px] text-white/30 italic flex items-center gap-1"><Info className="w-2.5 h-2.5" /> A música iniciará sozinha quando a página abrir.</p>
+                    </div>
+                    <Switch id="music-autoplay-toggle" checked={isAutoPlay} onCheckedChange={onAutoPlayChange} />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-white/5">
                   <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Caixa</Label>
                   <div className="flex items-center gap-4">
                     <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: musicBoxColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30">Fundo</p><p className="text-xs font-mono font-bold">{musicBoxColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={musicBoxColor} onChange={onMusicBoxColorChange} /></PopoverContent></Popover>

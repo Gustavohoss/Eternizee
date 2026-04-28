@@ -50,6 +50,7 @@ interface DeviceMockupProps {
   musicTextColor?: string;
   musicHasNeon?: boolean;
   musicNeonStrength?: number;
+  isAutoPlay?: boolean;
 }
 
 export function DeviceMockup({
@@ -83,7 +84,8 @@ export function DeviceMockup({
   musicBoxColor = '#0e0e0e',
   musicTextColor = '#ffffff',
   musicHasNeon = false,
-  musicNeonStrength = 15
+  musicNeonStrength = 15,
+  isAutoPlay = true
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -322,6 +324,7 @@ export function DeviceMockup({
                     musicTextColor={musicTextColor}
                     musicHasNeon={musicHasNeon}
                     musicNeonStrength={musicNeonStrength}
+                    isAutoPlay={isAutoPlay}
                   />
                 </div>
 
