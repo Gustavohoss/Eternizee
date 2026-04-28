@@ -12,11 +12,13 @@ import {
   ThumbsUp,
   ChevronDown,
   Lock,
-  Music2
+  Music2,
+  Hash
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
-import { intervalToDuration } from 'date-fns';
+import { intervalToDuration, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { MusicPlayer } from './music-player';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { SmokeBackground } from '@/components/ui/spooky-smoke-animation';
@@ -194,7 +196,8 @@ export function DeviceMockup({
       case 'pacifico': return "'Pacifico', cursive";
       case 'playfair': return "'Playfair Display', serif";
       case 'inter': return "'Inter', sans-serif";
-      default: return "'Dancing Script', cursive";
+      case 'dancing-script': return "'Dancing Script', cursive";
+      default: return "'Inter', sans-serif";
     }
   };
 
@@ -468,9 +471,77 @@ export function DeviceMockup({
                   )}
                 </div>
 
+                {/* Date Counter Block */}
+                {date && (
+                  <div className="w-full py-4 flex flex-col items-center gap-4">
+                    {selectedCountStyle === 'padrao' && (
+                      <div className="flex gap-4">
+                        <div className="text-center">
+                          <p style={dateStyle} className="text-3xl">{timeDiff?.years || 0}</p>
+                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Anos</p>
+                        </div>
+                        <div className="text-center">
+                          <p style={dateStyle} className="text-3xl">{timeDiff?.months || 0}</p>
+                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Meses</p>
+                        </div>
+                        <div className="text-center">
+                          <p style={dateStyle} className="text-3xl">{timeDiff?.days || 0}</p>
+                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Dias</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedCountStyle === 'classico' && (
+                      <div className="grid grid-cols-4 gap-3">
+                        <div className="text-center bg-white/5 p-2 rounded-lg border border-white/5">
+                          <p style={dateStyle} className="text-xl">{timeDiff?.years || 0}</p>
+                          <p className="text-[8px] uppercase font-black opacity-40">Anos</p>
+                        </div>
+                        <div className="text-center bg-white/5 p-2 rounded-lg border border-white/5">
+                          <p style={dateStyle} className="text-xl">{timeDiff?.months || 0}</p>
+                          <p className="text-[8px] uppercase font-black opacity-40">Meses</p>
+                        </div>
+                        <div className="text-center bg-white/5 p-2 rounded-lg border border-white/5">
+                          <p style={dateStyle} className="text-xl">{timeDiff?.days || 0}</p>
+                          <p className="text-[8px] uppercase font-black opacity-40">Dias</p>
+                        </div>
+                        <div className="text-center bg-white/5 p-2 rounded-lg border border-white/5">
+                          <p style={dateStyle} className="text-xl">{timeDiff?.hours || 0}</p>
+                          <p className="text-[8px] uppercase font-black opacity-40">Horas</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedCountStyle === 'simples' && (
+                      <div className="text-center">
+                        <p style={dateStyle} className="text-base">Desde {date.toLocaleDateString('pt-BR')}</p>
+                      </div>
+                    )}
+
+                    {selectedCountStyle === 'data-grande' && (
+                      <div className="text-center px-4">
+                        <p style={dateStyle} className="text-2xl leading-tight">
+                          {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-[0.2em] font-black opacity-30 mt-1">O dia que tudo começou</p>
+                      </div>
+                    )}
+
+                    {selectedCountStyle === 'dias-grandes' && (
+                      <div className="text-center">
+                        <div className="flex items-center gap-2">
+                           <Hash className="w-5 h-5 opacity-20" style={{ color: dateColor }} />
+                           <p style={dateStyle} className="text-5xl font-black">{totalDays}</p>
+                        </div>
+                        <p className="text-[10px] uppercase tracking-[0.3em] font-black opacity-40 mt-1">Dias de Felicidade</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Message Block */}
                 {message && (
-                  <div className="w-full px-2">
+                  <div className="w-full px-2 mt-2">
                     <div 
                       style={{ color: messageColor, fontFamily: getFontFamily(messageFont) }} 
                       className="text-center text-sm leading-relaxed" 
@@ -481,7 +552,7 @@ export function DeviceMockup({
 
                 {/* Music Player */}
                 {musicData && (
-                  <div className="w-full px-1">
+                  <div className="w-full px-1 mt-4">
                     <MusicPlayer 
                       musicData={musicData}
                       musicBoxColor={musicBoxColor}
@@ -490,39 +561,6 @@ export function DeviceMockup({
                       musicNeonStrength={musicNeonStrength}
                       isAutoPlay={isAutoPlay}
                     />
-                  </div>
-                )}
-
-                {/* Date Counter Block */}
-                {date && (
-                  <div className="w-full py-4 flex flex-col items-center gap-2">
-                    {selectedCountStyle === 'padrao' && (
-                      <div className="flex gap-4">
-                        <div className="text-center">
-                          <p style={dateStyle} className="text-3xl font-bold">{timeDiff?.years || 0}</p>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Anos</p>
-                        </div>
-                        <div className="text-center">
-                          <p style={dateStyle} className="text-3xl font-bold">{timeDiff?.months || 0}</p>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Meses</p>
-                        </div>
-                        <div className="text-center">
-                          <p style={dateStyle} className="text-3xl font-bold">{timeDiff?.days || 0}</p>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Dias</p>
-                        </div>
-                      </div>
-                    )}
-                    {selectedCountStyle === 'simples' && (
-                      <div className="text-center">
-                        <p style={dateStyle} className="text-sm font-bold opacity-60">Desde {date.toLocaleDateString('pt-BR')}</p>
-                      </div>
-                    )}
-                    {selectedCountStyle === 'dias-grandes' && (
-                      <div className="text-center">
-                        <p style={dateStyle} className="text-4xl font-black">{totalDays}</p>
-                        <p className="text-[10px] uppercase tracking-[0.2em] font-black opacity-40">Dias Juntos</p>
-                      </div>
-                    )}
                   </div>
                 )}
                 
