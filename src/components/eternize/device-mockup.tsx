@@ -129,6 +129,7 @@ export function DeviceMockup({
     skipSnaps: false
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
   useEffect(() => {
@@ -279,9 +280,9 @@ export function DeviceMockup({
 
                     {/* Hero Section */}
                     <section className="relative min-h-[65vh] flex flex-col justify-end -mt-16">
-                      <div className="absolute inset-0 z-0 bg-cover bg-top" style={{ background: 'linear-gradient(135deg, rgb(35, 10, 10) 0%, rgb(15, 15, 15) 100%)' }}>
+                      <div className="absolute inset-0 z-0 bg-cover bg-top transition-all duration-700" style={{ background: 'linear-gradient(135deg, rgb(35, 10, 10) 0%, rgb(15, 15, 15) 100%)' }}>
                         {uploadedPhotos.length > 0 && (
-                          <Image src={uploadedPhotos[0]} fill className="object-cover opacity-60" alt="Hero" />
+                          <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover opacity-60" alt="Hero" priority />
                         )}
                       </div>
                       <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#141414] via-[#141414]/40 to-transparent"></div>
@@ -380,13 +381,28 @@ export function DeviceMockup({
                       <div className="space-y-6 pb-10">
                         {uploadedPhotos.length > 0 ? (
                           uploadedPhotos.map((photo, i) => (
-                            <div key={i} className="flex gap-3 items-center">
+                            <div 
+                              key={i} 
+                              className={cn(
+                                "flex gap-3 items-center cursor-pointer group/ep transition-all",
+                                activeHeroIndex === i ? "opacity-100" : "opacity-60 hover:opacity-100"
+                              )}
+                              onClick={() => setActiveHeroIndex(i)}
+                            >
                               <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0 relative overflow-hidden">
                                 <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
+                                <div className="absolute inset-0 bg-black/20 group-hover/ep:bg-black/0 transition-all flex items-center justify-center">
+                                  {activeHeroIndex === i && (
+                                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                      <Play className="w-4 h-4 text-white fill-white" />
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="absolute bottom-1 right-1 bg-black/60 px-1 rounded-sm text-[7px] font-black border border-white/20">HD</div>
                               </div>
-                              <div className="flex-1 space-y-2">
-                                <div className="h-3 bg-[#2a2a2a] w-3/4 rounded-full"></div>
-                                <div className="h-2 bg-[#2a2a2a] w-full rounded-full"></div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p>
+                                <p className="text-[10px] text-neutral-500 leading-tight font-medium">Reviva este capítulo especial da nossa história.</p>
                               </div>
                             </div>
                           ))
