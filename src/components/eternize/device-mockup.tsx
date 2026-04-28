@@ -33,6 +33,11 @@ interface DeviceMockupProps {
   cardColor?: string;
   showCard?: boolean;
   titlePosition?: 'top' | 'bottom';
+  dateColor?: string;
+  dateFont?: string;
+  dateIsBold?: boolean;
+  dateHasNeon?: boolean;
+  dateNeonStrength?: number;
 }
 
 export function DeviceMockup({
@@ -53,7 +58,12 @@ export function DeviceMockup({
   titleNeonStrength = 10,
   cardColor = '#ffffff',
   showCard = true,
-  titlePosition = 'bottom'
+  titlePosition = 'bottom',
+  dateColor = '#ffffff',
+  dateFont = 'inter',
+  dateIsBold = true,
+  dateHasNeon = false,
+  dateNeonStrength = 10
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -65,7 +75,7 @@ export function DeviceMockup({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
-  // Counter internal ticker logic to avoid parent re-renders and flickering
+  // Counter internal ticker logic
   useEffect(() => {
     if (!date) {
       setTimeDiff(null);
@@ -175,12 +185,24 @@ export function DeviceMockup({
       { label: 'seg', value: timeDiff.seconds },
     ];
 
+    const shadowSize = dateNeonStrength;
+    const neonShadow = dateHasNeon 
+      ? `0 0 ${shadowSize/2}px ${dateColor}, 0 0 ${shadowSize}px ${dateColor}, 0 0 ${shadowSize*1.5}px ${dateColor}` 
+      : 'none';
+
+    const dateStyle: React.CSSProperties = {
+      color: dateColor,
+      fontFamily: getFontFamily(dateFont),
+      fontWeight: dateIsBold ? '700' : '400',
+      textShadow: neonShadow
+    };
+
     switch (selectedCountStyle) {
       case 'simples':
         return (
           <div className="w-full text-center space-y-1">
             <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Estamos juntos há</p>
-            <p className="text-sm font-bold text-white/80 tabular-nums">
+            <p style={dateStyle} className="text-sm tabular-nums">
               {timeDiff.years > 0 && `${timeDiff.years}a `}
               {timeDiff.months > 0 && `${timeDiff.months}m `}
               {timeDiff.days}d {timeDiff.hours}h {timeDiff.minutes}m {timeDiff.seconds}s
@@ -193,7 +215,7 @@ export function DeviceMockup({
           <div className="w-full grid grid-cols-3 gap-2">
             {units.map((u) => (
               <div key={u.label} className="bg-white/5 border border-white/10 rounded-xl p-2 text-center min-w-[70px]">
-                <p className="text-base font-black text-white tabular-nums">{u.value}</p>
+                <p style={dateStyle} className="text-base tabular-nums">{u.value}</p>
                 <p className="text-[8px] font-bold uppercase tracking-tighter text-white/30">{u.label}</p>
               </div>
             ))}
@@ -207,7 +229,7 @@ export function DeviceMockup({
               <CalendarIcon className="w-3 h-3 text-primary" />
               <span className="text-[10px] font-black text-primary uppercase">Desde</span>
             </div>
-            <p className="text-2xl font-black tracking-tighter text-white tabular-nums">
+            <p style={dateStyle} className="text-2xl tracking-tighter tabular-nums">
               {date.toLocaleDateString('pt-BR')}
             </p>
           </div>
@@ -217,7 +239,7 @@ export function DeviceMockup({
         const totalDays = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
         return (
           <div className="w-full text-center space-y-1">
-            <p className="text-[40px] font-black text-primary leading-none tracking-tighter tabular-nums">{totalDays > 0 ? totalDays : 0}</p>
+            <p style={dateStyle} className="text-[40px] leading-none tracking-tighter tabular-nums">{totalDays > 0 ? totalDays : 0}</p>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Dias de puro amor</p>
           </div>
         );
@@ -233,7 +255,7 @@ export function DeviceMockup({
             <div className="flex justify-center gap-3">
               {units.slice(0, 3).map((u) => (
                 <div key={u.label} className="text-center min-w-[40px]">
-                  <p className="text-lg font-black text-white leading-none tabular-nums">{u.value}</p>
+                  <p style={dateStyle} className="text-lg leading-none tabular-nums">{u.value}</p>
                   <p className="text-[8px] font-bold uppercase text-white/30">{u.label}</p>
                 </div>
               ))}
@@ -241,7 +263,7 @@ export function DeviceMockup({
             <div className="flex justify-center gap-4 text-white/40">
               {units.slice(3).map((u) => (
                 <div key={u.label} className="flex items-baseline gap-0.5 min-w-[30px]">
-                  <span className="text-xs font-bold tabular-nums">{u.value}</span>
+                  <span style={dateStyle} className="text-xs tabular-nums">{u.value}</span>
                   <span className="text-[7px] font-bold uppercase">{u.label}</span>
                 </div>
               ))}

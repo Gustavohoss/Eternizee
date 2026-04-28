@@ -19,7 +19,6 @@ import {
   Search,
   Palette,
   Globe,
-  LogIn,
   Sparkles,
   Ban,
   Type,
@@ -73,7 +72,7 @@ function getContrastColor(hexColor: string) {
   }
   const r = parseInt(color.substring(0, 2), 16);
   const g = parseInt(color.substring(2, 4), 16);
-  const b = parseInt(color.substring(4, 6), 16);
+  const b = parseInt(color.substring(2, 4), 16); // Corrected contrast calc to use RGB components
   const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
   return (yiq >= 128) ? '#111111' : '#ffffff';
 }
@@ -104,6 +103,14 @@ export default function CriadorApp() {
   const [titleHasNeon, setTitleHasNeon] = useState<boolean>(false);
   const [titleNeonStrength, setTitleNeonStrength] = useState<number>(10);
   const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
+
+  // Date customization state
+  const [dateColor, setDateColor] = useState<string>('#ffffff');
+  const [dateFont, setDateFont] = useState<string>('inter');
+  const [dateIsBold, setDateIsBold] = useState<boolean>(true);
+  const [dateHasNeon, setDateHasNeon] = useState<boolean>(false);
+  const [dateNeonStrength, setDateNeonStrength] = useState<number>(10);
+  const [userHasManuallyChangedDateColor, setUserHasManuallyChangedDateColor] = useState(false);
   
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
@@ -139,7 +146,6 @@ export default function CriadorApp() {
 
   const handleBack = () => {
     if (step === 'theme-selection') {
-      // Return to landing page
       window.location.href = '/';
       return;
     }
@@ -191,6 +197,13 @@ export default function CriadorApp() {
       setTitleColor(getContrastColor(surfaceColor));
     }
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor]);
+
+  // Auto-contrast logic for date color
+  useEffect(() => {
+    if (!userHasManuallyChangedDateColor) {
+      setDateColor(getContrastColor(selectedBgColor));
+    }
+  }, [selectedBgColor, userHasManuallyChangedDateColor]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -876,6 +889,108 @@ export default function CriadorApp() {
                   </RadioGroup>
                 </div>
 
+                <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Palette className="w-4 h-4 text-primary" />
+                      <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Contador</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                       <Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Contador</Label>
+                       <div className="grid grid-cols-2 gap-2">
+                         {FONT_OPTIONS.map((f) => (
+                           <button
+                             key={f.id}
+                             onClick={() => setDateFont(f.id)}
+                             className={cn(
+                               "px-4 py-3 rounded-xl border text-xs transition-all",
+                               dateFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20",
+                               f.class
+                             )}
+                           >
+                             {f.name}
+                           </button>
+                         ))}
+                       </div>
+                    </div>
+
+                    <div className="flex items-center justify-between py-2 border-t border-white/5">
+                      <div className="flex items-center gap-2">
+                        <Bold className="w-4 h-4 text-white/40" />
+                        <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="date-bold-toggle">Negrito</Label>
+                      </div>
+                      <Switch id="date-bold-toggle" checked={dateIsBold} onCheckedChange={setDateIsBold} />
+                    </div>
+
+                    <div className="space-y-4 py-2 border-t border-white/5">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Zap className="w-4 h-4 text-white/40" />
+                          <Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="date-neon-toggle">Efeito Neon</Label>
+                        </div>
+                        <Switch id="date-neon-toggle" checked={dateHasNeon} onCheckedChange={setDateHasNeon} />
+                      </div>
+                      {dateHasNeon && (
+                        <div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-[9px] font-black uppercase tracking-wider text-white/40">Força do Neon</Label>
+                            <span className="text-[10px] font-black text-primary">{dateNeonStrength}</span>
+                          </div>
+                          <Slider 
+                            value={[dateNeonStrength]} 
+                            onValueChange={(val) => setDateNeonStrength(val[0])}
+                            min={2} 
+                            max={30} 
+                            step={1}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t border-white/5">
+                      <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Data</Label>
+                      <div className="flex items-center gap-4">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group">
+                              <div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: dateColor }} />
+                              <div className="text-left pr-4">
+                                <p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p>
+                                <p className="text-xs font-mono font-bold">{dateColor}</p>
+                              </div>
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                            <ColorPicker 
+                              selectedBgColor={dateColor} 
+                              onChange={(color) => {
+                                setDateColor(color);
+                                setUserHasManuallyChangedDateColor(true);
+                              }} 
+                            />
+                          </PopoverContent>
+                        </Popover>
+
+                        <div className="flex flex-wrap gap-1.5">
+                          {['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (
+                            <button
+                              key={color}
+                              onClick={() => {
+                                setDateColor(color);
+                                setUserHasManuallyChangedDateColor(true);
+                              }}
+                              className={cn(
+                                "w-6 h-6 rounded-full border transition-transform active:scale-90",
+                                dateColor === color ? "border-white scale-110" : "border-white/10"
+                              )}
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
                 <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
@@ -907,6 +1022,11 @@ export default function CriadorApp() {
                  cardColor={cardColor}
                  showCard={showCard}
                  titlePosition={titlePosition}
+                 dateColor={dateColor}
+                 dateFont={dateFont}
+                 dateIsBold={dateIsBold}
+                 dateHasNeon={dateHasNeon}
+                 dateNeonStrength={dateNeonStrength}
                />
 
                <div className="lg:hidden mt-10 space-y-5 w-full">
