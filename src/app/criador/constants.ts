@@ -13,4 +13,23 @@ export const FONT_OPTIONS = [
   { id: 'inter', name: 'Inter Sans', class: 'font-["Inter"]' },
 ];
 
+export const THEME_OPTIONS = [
+  { 
+    id: 'classic', 
+    name: 'Clássico', 
+    description: 'O estilo romântico e atemporal. Perfeito para declarações tradicionais.', 
+    badge: 'Clássico',
+    image: 'https://picsum.photos/seed/classic-theme/400/600'
+  },
+  { 
+    id: 'netflix', 
+    name: 'Netflix', 
+    description: 'Estilo cinematográfico inspirado na Netflix. Transforme sua história em uma série épica.', 
+    badge: 'Série',
+    image: 'https://picsum.photos/seed/netflix-theme/400/600'
+  },
+];
+
+export type ThemeId = 'classic' | 'netflix';
+
 export type Step = 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'message' | 'music' | 'data-location';

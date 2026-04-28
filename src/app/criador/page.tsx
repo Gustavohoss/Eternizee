@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
 import { cn } from '@/lib/utils';
 import { getContrastColor } from '@/lib/color-utils';
-import { Step, MOCK_CITIES } from './constants';
+import { Step, MOCK_CITIES, ThemeId } from './constants';
 
 // Step Components
 import { StepThemeSelection } from '@/components/eternize/creator-steps/step-theme-selection';
@@ -21,6 +21,7 @@ import { StepDataLocation } from '@/components/eternize/creator-steps/step-data-
 
 export default function CriadorApp() {
   const [step, setStep] = useState<Step>('theme-selection');
+  const [selectedTheme, setSelectedTheme] = useState<ThemeId>('classic');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedBgColor, setSelectedBgColor] = useState<string>('#000000');
   const [selectedEffect, setSelectedEffect] = useState<string>('none');
@@ -160,7 +161,11 @@ export default function CriadorApp() {
       </div>
 
       {step === 'theme-selection' && (
-        <StepThemeSelection onNext={handleNext} />
+        <StepThemeSelection 
+          selectedTheme={selectedTheme} 
+          onThemeSelect={setSelectedTheme} 
+          onNext={handleNext} 
+        />
       )}
 
       {step === 'gift-type' && (
@@ -335,6 +340,7 @@ export default function CriadorApp() {
             {/* Sticky Preview Column */}
             <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center">
                <DeviceMockup 
+                 selectedTheme={selectedTheme}
                  selectedBgColor={selectedBgColor}
                  selectedEffect={selectedEffect}
                  isEmojiRainEnabled={isEmojiRainEnabled}
@@ -383,6 +389,7 @@ export default function CriadorApp() {
             {/* Mobile View Only - At the bottom of the form on small screens */}
             <div className="lg:hidden flex flex-col items-center mt-12 w-full">
                <DeviceMockup 
+                 selectedTheme={selectedTheme}
                  selectedBgColor={selectedBgColor}
                  selectedEffect={selectedEffect}
                  isEmojiRainEnabled={isEmojiRainEnabled}
