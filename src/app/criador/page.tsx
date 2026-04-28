@@ -150,9 +150,10 @@ export default function CriadorApp() {
   const isInitialSteps = step === 'theme-selection' || step === 'gift-type';
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative overflow-x-hidden font-body">
+    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative font-body">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
 
+      {/* Header Banner */}
       <div className="fixed inset-x-0 top-0 z-[100] bg-[#3d0b17] border-b border-white/5 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium flex items-center justify-center gap-4">
         <div className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-[9px] md:text-[10px] font-black uppercase">Criador</div>
         <p className="tracking-tight">Personalizando seu presente digital</p>
@@ -173,6 +174,7 @@ export default function CriadorApp() {
 
       {!isInitialSteps && (
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
+          {/* Progress Bar */}
           <div className="flex items-center justify-center mb-8 md:mb-10">
             <div className="w-full max-w-md text-center">
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -193,142 +195,145 @@ export default function CriadorApp() {
 
           <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
             
-            {step === 'customize-background' && (
-              <StepCustomizeBackground 
-                selectedBgColor={selectedBgColor}
-                onBgColorChange={setSelectedBgColor}
-                selectedEffect={selectedEffect}
-                onEffectChange={setSelectedEffect}
-                isEmojiRainEnabled={isEmojiRainEnabled}
-                onEmojiRainToggle={setIsEmojiRainEnabled}
-                selectedEmojis={selectedEmojis}
-                onToggleEmoji={toggleEmoji}
-                emojiSize={emojiSize}
-                onEmojiSizeChange={setEmojiSize}
-                isEmojiPickerOpen={isEmojiPickerOpen}
-                onEmojiPickerOpenChange={setIsEmojiPickerOpen}
-                
-                // Specific effect states
-                sparklesDensity={sparklesDensity}
-                onSparklesDensityChange={setSparklesDensity}
-                sparklesSpeed={sparklesSpeed}
-                onSparklesSpeedChange={setSparklesSpeed}
-                sparklesColor={sparklesColor}
-                onSparklesColorChange={setSparklesColor}
-                
-                smokeIntensity={smokeIntensity}
-                onSmokeIntensityChange={setSmokeIntensity}
-                smokeColor={smokeColor}
-                onSmokeColorChange={setSmokeColor}
-                
-                patternDuration={patternDuration}
-                onPatternDurationChange={setPatternDuration}
-                patternDensity={patternDensity}
-                onPatternDensityChange={setPatternDensity}
-                patternColor={patternColor}
-                onPatternColorChange={setPatternColor}
+            {/* Form Column */}
+            <div className="w-full min-w-0">
+              {step === 'customize-background' && (
+                <StepCustomizeBackground 
+                  selectedBgColor={selectedBgColor}
+                  onBgColorChange={setSelectedBgColor}
+                  selectedEffect={selectedEffect}
+                  onEffectChange={setSelectedEffect}
+                  isEmojiRainEnabled={isEmojiRainEnabled}
+                  onEmojiRainToggle={setIsEmojiRainEnabled}
+                  selectedEmojis={selectedEmojis}
+                  onToggleEmoji={toggleEmoji}
+                  emojiSize={emojiSize}
+                  onEmojiSizeChange={setEmojiSize}
+                  isEmojiPickerOpen={isEmojiPickerOpen}
+                  onEmojiPickerOpenChange={setIsEmojiPickerOpen}
+                  
+                  sparklesDensity={sparklesDensity}
+                  onSparklesDensityChange={setSparklesDensity}
+                  sparklesSpeed={sparklesSpeed}
+                  onSparklesSpeedChange={setSparklesSpeed}
+                  sparklesColor={sparklesColor}
+                  onSparklesColorChange={setSparklesColor}
+                  
+                  smokeIntensity={smokeIntensity}
+                  onSmokeIntensityChange={setSmokeIntensity}
+                  smokeColor={smokeColor}
+                  onSmokeColorChange={setSmokeColor}
+                  
+                  patternDuration={patternDuration}
+                  onPatternDurationChange={setPatternDuration}
+                  patternDensity={patternDensity}
+                  onPatternDensityChange={setPatternDensity}
+                  patternColor={patternColor}
+                  onPatternColorChange={setPatternColor}
 
-                onBack={handleBack}
-                onNext={handleNext}
-              />
-            )}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                />
+              )}
 
-            {step === 'photos' && (
-              <StepPhotos 
-                uploadedPhotos={uploadedPhotos}
-                onPhotoUpload={handlePhotoUpload}
-                onRemovePhoto={removePhoto}
-                showCard={showCard}
-                onShowCardChange={setShowCard}
-                cardColor={cardColor}
-                onCardColorChange={setCardColor}
-                titlePosition={titlePosition}
-                onTitlePositionChange={setTitlePosition}
-                photoEffect={photoEffect}
-                onPhotoEffectChange={setPhotoEffect}
-                onBack={handleBack}
-                onNext={handleNext}
-              />
-            )}
+              {step === 'photos' && (
+                <StepPhotos 
+                  uploadedPhotos={uploadedPhotos}
+                  onPhotoUpload={handlePhotoUpload}
+                  onRemovePhoto={removePhoto}
+                  showCard={showCard}
+                  onShowCardChange={setShowCard}
+                  cardColor={cardColor}
+                  onCardColorChange={setCardColor}
+                  titlePosition={titlePosition}
+                  onTitlePositionChange={setTitlePosition}
+                  photoEffect={photoEffect}
+                  onPhotoEffectChange={setPhotoEffect}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                />
+              )}
 
-            {step === 'page-title' && (
-              <StepPageTitle 
-                pageTitle={pageTitle}
-                onPageTitleChange={setPageTitle}
-                titleFont={titleFont}
-                onTitleFontChange={setTitleFont}
-                titleIsBold={titleIsBold}
-                onTitleIsBoldChange={setTitleIsBold}
-                titleHasNeon={titleHasNeon}
-                onTitleHasNeonChange={setTitleHasNeon}
-                titleNeonStrength={titleNeonStrength}
-                onTitleNeonStrengthChange={setTitleNeonStrength}
-                titleColor={titleColor}
-                onTitleColorChange={(c) => { setTitleColor(c); setUserHasManuallyChangedTitleColor(true); }}
-                onBack={handleBack}
-                onNext={handleNext}
-              />
-            )}
+              {step === 'page-title' && (
+                <StepPageTitle 
+                  pageTitle={pageTitle}
+                  onPageTitleChange={setPageTitle}
+                  titleFont={titleFont}
+                  onTitleFontChange={setTitleFont}
+                  titleIsBold={titleIsBold}
+                  onTitleIsBoldChange={setTitleIsBold}
+                  titleHasNeon={titleHasNeon}
+                  onTitleHasNeonChange={setTitleHasNeon}
+                  titleNeonStrength={titleNeonStrength}
+                  onTitleNeonStrengthChange={setTitleNeonStrength}
+                  titleColor={titleColor}
+                  onTitleColorChange={(c) => { setTitleColor(c); setUserHasManuallyChangedTitleColor(true); }}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                />
+              )}
 
-            {step === 'message' && (
-              <StepMessage 
-                message={message}
-                onMessageChange={setMessage}
-                messageFont={messageFont}
-                onMessageFontChange={setMessageFont}
-                messageColor={messageColor}
-                onMessageColorChange={(c) => { setMessageColor(c); setUserHasManuallyChangedMessageColor(true); }}
-                onBack={handleBack}
-                onNext={handleNext}
-              />
-            )}
+              {step === 'message' && (
+                <StepMessage 
+                  message={message}
+                  onMessageChange={setMessage}
+                  messageFont={messageFont}
+                  onMessageFontChange={setMessageFont}
+                  messageColor={messageColor}
+                  onMessageColorChange={(c) => { setMessageColor(c); setUserHasManuallyChangedMessageColor(true); }}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                />
+              )}
 
-            {step === 'music' && (
-              <StepMusic 
-                musicData={musicData}
-                onMusicSelect={setMusicData}
-                musicBoxColor={musicBoxColor}
-                onMusicBoxColorChange={setMusicBoxColor}
-                musicTextColor={musicTextColor}
-                onMusicTextColorChange={setMusicTextColor}
-                musicHasNeon={musicHasNeon}
-                onMusicHasNeonChange={setMusicHasNeon}
-                musicNeonStrength={musicNeonStrength}
-                onMusicNeonStrengthChange={setMusicNeonStrength}
-                isAutoPlay={isMusicAutoPlay}
-                onAutoPlayChange={setIsMusicAutoPlay}
-                onBack={handleBack}
-                onNext={handleNext}
-              />
-            )}
+              {step === 'music' && (
+                <StepMusic 
+                  musicData={musicData}
+                  onMusicSelect={setMusicData}
+                  musicBoxColor={musicBoxColor}
+                  onMusicBoxColorChange={setMusicBoxColor}
+                  musicTextColor={musicTextColor}
+                  onMusicTextColorChange={setMusicTextColor}
+                  musicHasNeon={musicHasNeon}
+                  onMusicHasNeonChange={setMusicHasNeon}
+                  musicNeonStrength={musicNeonStrength}
+                  onMusicNeonStrengthChange={setMusicNeonStrength}
+                  isAutoPlay={isMusicAutoPlay}
+                  onAutoPlayChange={setIsMusicAutoPlay}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                />
+              )}
 
-            {step === 'data-location' && (
-              <StepDataLocation 
-                date={date}
-                onDateSelect={setDate}
-                locationQuery={locationQuery}
-                onLocationQueryChange={setLocationQuery}
-                showSuggestions={showSuggestions}
-                onShowSuggestionsChange={setShowSuggestions}
-                filteredCities={filteredCities}
-                selectedCountStyle={selectedCountStyle}
-                onCountStyleChange={setSelectedCountStyle}
-                dateFont={dateFont}
-                onDateFontChange={setDateFont}
-                dateIsBold={dateIsBold}
-                onDateIsBoldChange={setDateIsBold}
-                dateHasNeon={dateHasNeon}
-                onDateHasNeonChange={setDateHasNeon}
-                dateNeonStrength={dateNeonStrength}
-                onDateNeonStrengthChange={setDateNeonStrength}
-                dateColor={dateColor}
-                onDateColorChange={(c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }}
-                onBack={handleBack}
-                onFinish={() => { console.log('Finish Creation'); }}
-              />
-            )}
+              {step === 'data-location' && (
+                <StepDataLocation 
+                  date={date}
+                  onDateSelect={setDate}
+                  locationQuery={locationQuery}
+                  onLocationQueryChange={setLocationQuery}
+                  showSuggestions={showSuggestions}
+                  onShowSuggestionsChange={setShowSuggestions}
+                  filteredCities={filteredCities}
+                  selectedCountStyle={selectedCountStyle}
+                  onCountStyleChange={setSelectedCountStyle}
+                  dateFont={dateFont}
+                  onDateFontChange={setDateFont}
+                  dateIsBold={dateIsBold}
+                  onDateIsBoldChange={setDateIsBold}
+                  dateHasNeon={dateHasNeon}
+                  onDateHasNeonChange={setDateHasNeon}
+                  dateNeonStrength={dateNeonStrength}
+                  onDateNeonStrengthChange={setDateNeonStrength}
+                  dateColor={dateColor}
+                  onDateColorChange={(c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }}
+                  onBack={handleBack}
+                  onFinish={() => { console.log('Finish Creation'); }}
+                />
+              )}
+            </div>
 
-            <div className="lg:sticky lg:top-24 flex flex-col items-center mt-12 lg:mt-0">
+            {/* Sticky Preview Column */}
+            <div className="lg:sticky lg:top-32 flex flex-col items-center mt-12 lg:mt-0 self-start">
                <DeviceMockup 
                  selectedBgColor={selectedBgColor}
                  selectedEffect={selectedEffect}
@@ -364,7 +369,6 @@ export default function CriadorApp() {
                  musicNeonStrength={musicNeonStrength}
                  isAutoPlay={isMusicAutoPlay}
 
-                 // Effect specific props
                  sparklesDensity={sparklesDensity}
                  sparklesSpeed={sparklesSpeed}
                  sparklesColor={sparklesColor}
@@ -374,6 +378,8 @@ export default function CriadorApp() {
                  patternDensity={patternDensity}
                  patternColor={patternColor}
                />
+
+               {/* Mobile Controls Only */}
                <div className="lg:hidden mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">
                    <Button onClick={handleBack} variant="outline" className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
