@@ -170,7 +170,7 @@ export function DeviceMockup({
   const raindrops = useMemo(() => {
     return [...Array(20)].map((_, i) => ({
       id: i,
-      left: `${(i * 7) % 100}%`, // Deterministico para evitar piscar
+      left: `${(i * 7) % 100}%`,
       duration: `${(i % 3) + 2}s`,
       delay: `${(i % 5)}s`,
       opacity: 0.6,
@@ -228,27 +228,28 @@ export function DeviceMockup({
     );
   };
 
+  const shadowSize = dateNeonStrength;
+  const neonShadow = dateHasNeon 
+    ? `0 0 ${shadowSize/2}px ${dateColor}, 0 0 ${shadowSize}px ${dateColor}, 0 0 ${shadowSize*1.5}px ${dateColor}` 
+    : 'none';
+    
+  const dateStyle: React.CSSProperties = {
+    color: dateColor,
+    fontFamily: getFontFamily(dateFont),
+    fontWeight: dateIsBold ? '700' : '400',
+    textShadow: neonShadow
+  };
+
   const RenderCounter = () => {
     if (!date || !timeDiff) return null;
     const units = [
-      { label: 'anos', value: timeDiff.years, netflixLabel: 'ANOS JUNTOS' },
-      { label: 'meses', value: timeDiff.months, netflixLabel: 'MESES' },
-      { label: 'dias', value: timeDiff.days, netflixLabel: 'DIAS' },
-      { label: 'horas', value: timeDiff.hours, netflixLabel: 'HORAS' },
-      { label: 'min', value: timeDiff.minutes, netflixLabel: 'MIN' },
-      { label: 'seg', value: timeDiff.seconds, netflixLabel: 'SEG' },
+      { label: 'anos', value: timeDiff.years },
+      { label: 'meses', value: timeDiff.months },
+      { label: 'dias', value: timeDiff.days },
+      { label: 'horas', value: timeDiff.hours },
+      { label: 'min', value: timeDiff.minutes },
+      { label: 'seg', value: timeDiff.seconds },
     ];
-
-    const shadowSize = dateNeonStrength;
-    const neonShadow = dateHasNeon 
-      ? `0 0 ${shadowSize/2}px ${dateColor}, 0 0 ${shadowSize}px ${dateColor}, 0 0 ${shadowSize*1.5}px ${dateColor}` 
-      : 'none';
-    const dateStyle: React.CSSProperties = {
-      color: dateColor,
-      fontFamily: getFontFamily(dateFont),
-      fontWeight: dateIsBold ? '700' : '400',
-      textShadow: neonShadow
-    };
 
     switch (selectedCountStyle) {
       case 'simples':
@@ -330,7 +331,6 @@ export function DeviceMockup({
             {(step !== 'theme-selection' && step !== 'gift-type') && (
               <>
                 {selectedTheme === 'netflix' ? (
-                  /* NETFLIX THEME LAYOUT */
                   <div className="w-full min-h-full flex flex-col bg-black" style={{ background: 'linear-gradient(180deg, #1a0505 0%, #000000 20%)' }}>
                     <header className="flex justify-between items-center px-5 py-4">
                       <div className="text-[#e50914] font-black tracking-tighter text-xl">HEARTZZU</div>
@@ -387,18 +387,18 @@ export function DeviceMockup({
                         <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">♡</button>
                       </div>
 
-                      {/* Stat Cards */}
+                      {/* Stat Cards Customizados */}
                       <div className="grid grid-cols-3 gap-2 mt-4">
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div className="text-[#e50914] text-xl font-black">{timeDiff?.years || 0}</div>
+                          <div style={dateStyle} className="text-xl">{timeDiff?.years || 0}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Anos Juntos</div>
                         </div>
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div className="text-[#e50914] text-xl font-black">{totalDays || 0}</div>
+                          <div style={dateStyle} className="text-xl">{totalDays || 0}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
                         </div>
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div className="text-[#e50914] text-xl font-black">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
+                          <div style={dateStyle} className="text-xl">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
                         </div>
                       </div>
@@ -445,7 +445,6 @@ export function DeviceMockup({
                     </div>
                   </div>
                 ) : (
-                  /* CLASSIC THEME LAYOUT */
                   <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
                     <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
                       {titlePosition === 'top' && <RenderTitle />}
