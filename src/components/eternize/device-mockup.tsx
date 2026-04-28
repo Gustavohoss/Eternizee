@@ -170,11 +170,11 @@ export function DeviceMockup({
   const raindrops = useMemo(() => {
     return [...Array(20)].map((_, i) => ({
       id: i,
-      left: `${Math.random() * 100}%`,
-      duration: `${Math.random() * 3 + 2}s`,
-      delay: `${Math.random() * 5}s`,
-      opacity: Math.random() * 0.5 + 0.3,
-      emoji: selectedEmojis[Math.floor(Math.random() * selectedEmojis.length)]
+      left: `${(i * 7) % 100}%`, // Deterministico para evitar piscar
+      duration: `${(i % 3) + 2}s`,
+      delay: `${(i % 5)}s`,
+      opacity: 0.6,
+      emoji: selectedEmojis[i % selectedEmojis.length]
     }));
   }, [selectedEmojis]);
 
@@ -301,124 +301,6 @@ export function DeviceMockup({
     }
   };
 
-  const NetflixLayout = () => {
-    return (
-      <div className="w-full min-h-full flex flex-col animate-in fade-in duration-700 bg-black" style={{ background: 'linear-gradient(180deg, #1a0505 0%, #000000 20%)' }}>
-        <header className="flex justify-between items-center px-5 py-4">
-          <div className="text-[#e50914] font-black tracking-tighter text-xl">HEARTZZU</div>
-          <div className="bg-[#e50914] text-white px-2 py-1 rounded text-xs font-bold">HZ</div>
-        </header>
-
-        <div className="px-5 space-y-4">
-          <div className="w-full aspect-video bg-[#2f2f2f] rounded-lg overflow-hidden relative">
-            {uploadedPhotos.length > 0 ? (
-              <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Hero" />
-            ) : null}
-          </div>
-
-          <div className="flex items-center gap-1 text-[#e50914] text-[10px] font-extrabold uppercase">
-            <span className="text-xs">❤</span> HEARTZZU ORIGINAL
-          </div>
-
-          <div className="text-2xl font-black leading-tight uppercase tracking-tighter">
-            {pageTitle || "Nosso Romance"}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-[#00a651] text-[10px] font-bold">98% compatível</span>
-            <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2024'}</span>
-            <span className="text-white/60 text-[10px]">1 Temporada</span>
-            <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">L</div>
-            <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
-          </div>
-
-          <div className="space-y-2">
-            {message ? (
-              <div 
-                className="text-[10px] text-white/80 leading-relaxed line-clamp-4 italic"
-                dangerouslySetInnerHTML={{ __html: message }}
-              />
-            ) : (
-              <>
-                <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
-                <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
-                <div className="w-4/5 h-2.5 bg-[#2f2f2f] rounded-sm" />
-              </>
-            )}
-          </div>
-
-          <button className="w-full bg-white text-black font-black py-2.5 rounded flex items-center justify-center gap-2 text-sm mt-5">
-            <span className="text-base">▶</span> Reproduzir
-          </button>
-
-          <div className="flex gap-2">
-            <button className="flex-1 bg-[#2f2f2f] text-white font-bold py-2.5 rounded flex items-center justify-center gap-2 text-sm">
-              <span className="text-base">+</span> Minha lista
-            </button>
-            <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">👍</button>
-            <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">♡</button>
-          </div>
-
-          {/* Stat Cards - Conforme imagem enviada */}
-          <div className="grid grid-cols-3 gap-2 mt-4">
-            <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-              <div className="text-[#e50914] text-xl font-black">{timeDiff?.years || 0}</div>
-              <div className="text-[8px] text-white/40 font-bold uppercase">Anos Juntos</div>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-              <div className="text-[#e50914] text-xl font-black">{totalDays || 0}</div>
-              <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-              <div className="text-[#e50914] text-xl font-black">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
-              <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
-            </div>
-          </div>
-
-          <div className="flex gap-5 border-b border-[#333] pt-4">
-            <div className="pb-2 text-sm font-bold text-white border-b-[3px] border-white">Episódios</div>
-            <div className="pb-2 text-sm font-bold text-[#808080]">Detalhes</div>
-          </div>
-
-          <div className="flex justify-between items-center mt-5">
-            <div className="font-bold flex items-center gap-1.5 text-sm text-white">
-              Temporada 1 <small className="text-[8px]">▼</small>
-            </div>
-            <div className="text-[#808080] text-xs">{uploadedPhotos.length || 8} episódios</div>
-          </div>
-
-          <div className="space-y-5 pb-10">
-            {uploadedPhotos.length > 0 ? (
-              uploadedPhotos.map((photo, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
-                    <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
-                  </div>
-                  <div className="flex-1 flex flex-col justify-center gap-2">
-                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
-                  </div>
-                </div>
-              ))
-            ) : (
-              [1, 2, 3].map((i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0" />
-                  <div className="flex-1 flex flex-col justify-center gap-2">
-                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
@@ -448,7 +330,120 @@ export function DeviceMockup({
             {(step !== 'theme-selection' && step !== 'gift-type') && (
               <>
                 {selectedTheme === 'netflix' ? (
-                  <NetflixLayout />
+                  /* NETFLIX THEME LAYOUT */
+                  <div className="w-full min-h-full flex flex-col bg-black" style={{ background: 'linear-gradient(180deg, #1a0505 0%, #000000 20%)' }}>
+                    <header className="flex justify-between items-center px-5 py-4">
+                      <div className="text-[#e50914] font-black tracking-tighter text-xl">HEARTZZU</div>
+                      <div className="bg-[#e50914] text-white px-2 py-1 rounded text-xs font-bold">HZ</div>
+                    </header>
+
+                    <div className="px-5 space-y-4">
+                      <div className="w-full aspect-video bg-[#2f2f2f] rounded-lg overflow-hidden relative">
+                        {uploadedPhotos.length > 0 ? (
+                          <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Hero" />
+                        ) : null}
+                      </div>
+
+                      <div className="flex items-center gap-1 text-[#e50914] text-[10px] font-extrabold uppercase">
+                        <span className="text-xs">❤</span> HEARTZZU ORIGINAL
+                      </div>
+
+                      <div className="text-2xl font-black leading-tight uppercase tracking-tighter">
+                        {pageTitle || "Nosso Romance"}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-[#00a651] text-[10px] font-bold">98% compatível</span>
+                        <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2024'}</span>
+                        <span className="text-white/60 text-[10px]">1 Temporada</span>
+                        <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">L</div>
+                        <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
+                      </div>
+
+                      <div className="space-y-2">
+                        {message ? (
+                          <div 
+                            className="text-[10px] text-white/80 leading-relaxed line-clamp-4 italic"
+                            dangerouslySetInnerHTML={{ __html: message }}
+                          />
+                        ) : (
+                          <>
+                            <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
+                            <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
+                            <div className="w-4/5 h-2.5 bg-[#2f2f2f] rounded-sm" />
+                          </>
+                        )}
+                      </div>
+
+                      <button className="w-full bg-white text-black font-black py-2.5 rounded flex items-center justify-center gap-2 text-sm mt-5">
+                        <span className="text-base">▶</span> Reproduzir
+                      </button>
+
+                      <div className="action-row flex gap-2">
+                        <button className="flex-1 bg-[#2f2f2f] text-white font-bold py-2.5 rounded flex items-center justify-center gap-2 text-sm">
+                          <span className="text-base">+</span> Minha lista
+                        </button>
+                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">👍</button>
+                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">♡</button>
+                      </div>
+
+                      {/* Stat Cards */}
+                      <div className="grid grid-cols-3 gap-2 mt-4">
+                        <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+                          <div className="text-[#e50914] text-xl font-black">{timeDiff?.years || 0}</div>
+                          <div className="text-[8px] text-white/40 font-bold uppercase">Anos Juntos</div>
+                        </div>
+                        <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+                          <div className="text-[#e50914] text-xl font-black">{totalDays || 0}</div>
+                          <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
+                        </div>
+                        <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+                          <div className="text-[#e50914] text-xl font-black">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
+                          <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-5 border-b border-[#333] pt-4">
+                        <div className="pb-2 text-sm font-bold text-white border-b-[3px] border-white">Episódios</div>
+                        <div className="pb-2 text-sm font-bold text-[#808080]">Detalhes</div>
+                      </div>
+
+                      <div className="flex justify-between items-center mt-5">
+                        <div className="font-bold flex items-center gap-1.5 text-sm text-white">
+                          Temporada 1 <small className="text-[10px]">▼</small>
+                        </div>
+                        <div className="text-[#808080] text-xs">{uploadedPhotos.length || 8} episódios</div>
+                      </div>
+
+                      <div className="space-y-5 pb-10">
+                        {uploadedPhotos.length > 0 ? (
+                          uploadedPhotos.map((photo, i) => (
+                            <div key={i} className="flex gap-4">
+                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
+                                <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
+                              </div>
+                              <div className="flex-1 flex flex-col justify-center gap-2">
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          [1, 2, 3].map((i) => (
+                            <div key={i} className="flex gap-4">
+                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0" />
+                              <div className="flex-1 flex flex-col justify-center gap-2">
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   /* CLASSIC THEME LAYOUT */
                   <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
