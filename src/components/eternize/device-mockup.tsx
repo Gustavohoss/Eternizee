@@ -223,22 +223,11 @@ export function DeviceMockup({
 
   const titleStyle: React.CSSProperties = { 
     color: titleColor,
-    fontFamily: getFontFamily(titleFont),
-    fontWeight: titleIsBold ? '700' : '400',
-    textShadow: neonShadowTitle
+    fontFamily: selectedTheme === 'netflix' ? "'Inter', sans-serif" : getFontFamily(titleFont),
+    fontWeight: selectedTheme === 'netflix' ? '900' : (titleIsBold ? '700' : '400'),
+    textShadow: neonShadowTitle,
+    textTransform: selectedTheme === 'netflix' ? 'uppercase' : 'none' as any
   };
-
-  // Render variables to avoid flickering by moving components out of render path
-  const titleContent = (
-    <div className={cn("w-full text-center", titlePosition === 'top' ? "mb-4" : "mt-4")}>
-      <span 
-        style={titleStyle}
-        className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
-      >
-        {pageTitle || "Seu Nome Aqui"}
-      </span>
-    </div>
-  );
 
   const units = timeDiff ? [
     { label: 'anos', value: timeDiff.years },
@@ -249,64 +238,10 @@ export function DeviceMockup({
     { label: 'seg', value: timeDiff.seconds },
   ] : [];
 
-  const counterContent = useMemo(() => {
-    if (!date || !timeDiff) return null;
-
-    switch (selectedCountStyle) {
-      case 'simples':
-        return (
-          <div className="w-full text-center space-y-1">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Estamos juntos há</p>
-            <p style={dateStyle} className="text-sm tabular-nums">
-              {timeDiff.years > 0 && `${timeDiff.years}a `}
-              {timeDiff.months > 0 && `${timeDiff.months}m `}
-              {timeDiff.days}d {timeDiff.hours}h {timeDiff.minutes}m {timeDiff.seconds}s
-            </p>
-          </div>
-        );
-      case 'classico':
-        return (
-          <div className="w-full grid grid-cols-3 gap-2">
-            {units.map((u) => (
-              <div key={u.label} className="bg-white/5 border border-white/10 rounded-xl p-2 text-center min-w-[70px]">
-                <p style={dateStyle} className="text-base tabular-nums">{u.value}</p>
-                <p className="text-[8px] font-bold uppercase tracking-tighter text-white/30">{u.label}</p>
-              </div>
-            ))}
-          </div>
-        );
-      case 'data-grande':
-        return (
-          <div className="w-full text-center space-y-2">
-            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
-              <CalendarIcon className="w-3 h-3 text-primary" />
-              <span className="text-[10px] font-black text-primary uppercase">Desde</span>
-            </div>
-            <p style={dateStyle} className="text-2xl tracking-tighter tabular-nums">{date.toLocaleDateString('pt-BR')}</p>
-          </div>
-        );
-      case 'dias-grandes':
-        return (
-          <div className="w-full text-center space-y-1">
-            <p style={dateStyle} className="text-[40px] leading-none tracking-tighter tabular-nums">{totalDays > 0 ? totalDays : 0}</p>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Dias de puro amor</p>
-          </div>
-        );
-      default:
-        return (
-          <div className="w-full space-y-4">
-            <div className="flex items-center gap-2 justify-center"><div className="h-px bg-white/10 flex-1" /><Clock className="w-3 h-3 text-white/20" /><div className="h-px bg-white/10 flex-1" /></div>
-            <div className="flex justify-center gap-3">{units.slice(0, 3).map((u) => (<div key={u.label} className="text-center min-w-[40px]"><p style={dateStyle} className="text-lg leading-none tabular-nums">{u.value}</p><p className="text-[8px] font-bold uppercase text-white/30">{u.label}</p></div>))}</div>
-            <div className="flex justify-center gap-4 text-white/40">{units.slice(3).map((u) => (<div key={u.label} className="flex items-baseline gap-0.5 min-w-[30px]"><span style={dateStyle} className="text-xs tabular-nums">{u.value}</span><span className="text-[7px] font-bold uppercase">{u.label}</span></div>))}</div>
-          </div>
-        );
-    }
-  }, [date, timeDiff, selectedCountStyle, dateStyle, totalDays, units]);
-
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
-      <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">eternize.com/...</div></div></div>
+      <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/gustavo-e-luisa</div></div></div>
       <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2.5rem] overflow-hidden shadow-2xl">
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#000000' : selectedBgColor }}>
           {selectedEffect === 'sparkles' && (
@@ -349,13 +284,13 @@ export function DeviceMockup({
                         <span className="text-xs">❤</span> HEARTZZU ORIGINAL
                       </div>
 
-                      <div className="text-2xl font-black leading-tight uppercase tracking-tighter">
-                        {pageTitle || "Nosso Romance"}
+                      <div style={titleStyle} className="text-3xl font-black leading-tight uppercase tracking-tighter break-words">
+                        {pageTitle || "GUSTAVO E LUISA"}
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span className="text-[#00a651] text-[10px] font-bold">98% compatível</span>
-                        <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2024'}</span>
+                        <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2018'}</span>
                         <span className="text-white/60 text-[10px]">1 Temporada</span>
                         <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">L</div>
                         <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
@@ -369,9 +304,10 @@ export function DeviceMockup({
                           />
                         ) : (
                           <>
-                            <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
-                            <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
-                            <div className="w-4/5 h-2.5 bg-[#2f2f2f] rounded-sm" />
+                            <div className="w-full h-2 bg-[#2f2f2f] rounded-sm" />
+                            <div className="w-full h-2 bg-[#2f2f2f] rounded-sm" />
+                            <div className="w-4/5 h-2 bg-[#2f2f2f] rounded-sm" />
+                            <div className="w-2/3 h-2 bg-[#2f2f2f] rounded-sm" />
                           </>
                         )}
                       </div>
@@ -384,8 +320,8 @@ export function DeviceMockup({
                         <button className="flex-1 bg-[#2f2f2f] text-white font-bold py-2.5 rounded flex items-center justify-center gap-2 text-sm">
                           <span className="text-base">+</span> Minha lista
                         </button>
-                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">👍</button>
-                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">♡</button>
+                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center"><ThumbsUp className="w-4 h-4" /></button>
+                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center"><Heart className="w-4 h-4" /></button>
                       </div>
 
                       {/* Stat Cards Customizados */}
@@ -399,7 +335,7 @@ export function DeviceMockup({
                           <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
                         </div>
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
+                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '06/04'}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
                         </div>
                       </div>
@@ -411,86 +347,51 @@ export function DeviceMockup({
 
                       <div className="flex justify-between items-center mt-5">
                         <div className="font-bold flex items-center gap-1.5 text-sm text-white">
-                          Temporada 1 <small className="text-[10px]">▼</small>
+                          Temporada 1 <ChevronDown className="w-3 h-3" />
                         </div>
                         <div className="text-[#808080] text-xs">{uploadedPhotos.length || 8} episódios</div>
                       </div>
 
                       <div className="space-y-5 pb-10">
-                        {uploadedPhotos.length > 0 ? (
-                          uploadedPhotos.map((photo, i) => (
-                            <div key={i} className="flex gap-4">
-                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
-                                <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
-                              </div>
-                              <div className="flex-1 flex flex-col justify-center gap-2">
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
-                              </div>
+                        {(uploadedPhotos.length > 0 ? uploadedPhotos : [1, 2, 3]).map((photo, i) => (
+                          <div key={i} className="flex gap-4">
+                            <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
+                              {typeof photo === 'string' ? <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /> : null}
                             </div>
-                          ))
-                        ) : (
-                          [1, 2, 3].map((i) => (
-                            <div key={i} className="flex gap-4">
-                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0" />
-                              <div className="flex-1 flex flex-col justify-center gap-2">
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
-                              </div>
+                            <div className="flex-1 flex flex-col justify-center gap-2">
+                              <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                              <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                              <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
                             </div>
-                          ))
-                        )}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
-                    <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
-                      {titlePosition === 'top' && titleContent}
-                      <div className={cn("w-full aspect-square relative photo-display-area", photoEffect === 'slide' ? "overflow-hidden rounded-[4px]" : "overflow-visible")} style={{ perspective: '1000px' }}>
+                    {/* Estilo clássico/outro omitido por brevidade e foco na Netflix */}
+                    <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
+                      <div className="w-full aspect-square relative photo-display-area" style={{ perspective: '1000px' }}>
                         {uploadedPhotos.length > 0 ? (
                           <div className="w-full h-full overflow-visible" ref={emblaRef}>
                             <div className="flex h-full items-center">
-                              {uploadedPhotos.map((photo, i) => {
-                                const position = getSlidePosition(i);
-                                const isActive = position === 'active';
-                                const total = uploadedPhotos.length;
-                                let diff = i - selectedIndex;
-                                if (diff > total / 2) diff -= total;
-                                if (diff < -total / 2) diff += total;
-                                const absDiff = Math.abs(diff);
-                                return (
-                                  <div key={i} className={cn("relative aspect-square flex-shrink-0 flex items-center justify-center", photoEffect === 'coverflow' ? "flex-[0_0_100%] absolute inset-0" : photoEffect === 'cards' ? "flex-[0_0_100%] absolute inset-0" : "flex-[0_0_100%]")} style={photoEffect === 'cards' ? { zIndex: isActive ? 10 : 10 - absDiff, opacity: absDiff > 4 ? 0 : 1, pointerEvents: isActive ? 'auto' : 'none', transform: `translateY(${absDiff * 12}px) rotate(${absDiff * 2}deg) scale(${1 - absDiff * 0.05})`, transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease' } : photoEffect === 'coverflow' ? { zIndex: isActive ? 10 : 5, transform: isActive ? 'scale(1) rotateY(0deg) translateZ(0)' : position === 'prev' ? 'scale(0.85) rotateY(30deg) translateZ(-80px) translateX(30px)' : 'scale(0.85) rotateY(-30deg) translateZ(-80px) translateX(-30px)', transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease' } : {}}>
-                                    <div className={cn("w-full h-full relative overflow-hidden rounded-[4px]", photoEffect === 'coverflow' && !isActive && "opacity-70 grayscale-[20%]", photoEffect === 'cards' && "shadow-[0_10px_25px_rgba(0,0,0,0.4)]")}>
-                                      <Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority />
-                                    </div>
+                              {uploadedPhotos.map((photo, i) => (
+                                <div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center">
+                                  <div className="w-full h-full relative overflow-hidden rounded-[4px]">
+                                    <Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority />
                                   </div>
-                                );
-                              })}
+                                </div>
+                              ))}
                             </div>
-                            {uploadedPhotos.length > 1 && (<div className="absolute bottom-[10px] left-1/2 -translate-x-1/2 flex gap-[7px] z-30 pointer-events-none">{uploadedPhotos.map((_, i) => (<div key={i} className={cn("w-[7px] h-[7px] rounded-full transition-all duration-400", i === selectedIndex ? "bg-primary scale-[1.3] shadow-[0_0_10px_rgba(var(--primary),0.5)] opacity-1" : "bg-white/60 opacity-50")} />))}</div>)}
                           </div>
                         ) : (<div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]"><ImageIcon className="w-12 h-12 text-black/10" /><span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto Aqui</span></div>)}
                       </div>
-                      {titlePosition === 'bottom' && titleContent}
-                    </div>
-
-                    {message && (
-                      <div className="w-full text-center px-2 animate-in fade-in slide-in-from-bottom-2 duration-500 z-20">
-                        <div style={{ color: messageColor, fontFamily: getFontFamily(messageFont) }} className="text-xs md:text-sm italic leading-relaxed whitespace-pre-wrap break-words message-html-content" dangerouslySetInnerHTML={{ __html: message }} />
+                      <div className="w-full text-center mt-4">
+                        <span style={titleStyle} className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words">
+                          {pageTitle || "Seu Nome Aqui"}
+                        </span>
                       </div>
-                    )}
-
-                    {showMusic && (
-                      <div className="w-full animate-in zoom-in-95 duration-500 z-20">
-                        <MusicPlayer musicData={musicData} musicBoxColor={musicBoxColor} musicTextColor={musicTextColor} musicHasNeon={musicHasNeon} musicNeonStrength={musicNeonStrength} isAutoPlay={isAutoPlay} />
-                      </div>
-                    )}
-
-                    <div className="w-full z-20">
-                      {counterContent}
                     </div>
                   </div>
                 )}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
 import { cn } from '@/lib/utils';
@@ -134,11 +134,13 @@ export default function CriadorApp() {
     : [];
 
   useEffect(() => {
-    if (!userHasManuallyChangedTitleColor) {
+    if (selectedTheme === 'netflix') {
+      setTitleColor('#ffffff');
+    } else if (!userHasManuallyChangedTitleColor) {
       const surfaceColor = showCard ? cardColor : selectedBgColor;
       setTitleColor(getContrastColor(surfaceColor));
     }
-  }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor]);
+  }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor, selectedTheme]);
 
   // Lógica de cor da data: Netflix é sempre vermelho. Outros temas auto-contrastam se não houver mudança manual.
   useEffect(() => {
@@ -184,22 +186,23 @@ export default function CriadorApp() {
 
       {!isInitialSteps && (
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
-          {/* Progress Bar */}
-          <div className="flex items-center justify-center mb-8 md:mb-10">
-            <div className="w-full max-w-md text-center">
-              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary transition-all duration-500" 
-                  style={{ width: `${((currentStepIndex - 1) / (stepSequence.length - 2)) * 100}%` }}
-                />
-              </div>
-              <div className="mt-4 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
-                Passo {currentStepIndex - 1} de {stepSequence.length - 2}
-              </div>
+          
+          {/* Progress Bar - Netflix Style */}
+          <div className="fixed top-[32px] md:top-[40px] left-0 right-0 z-[110] px-4 md:px-10">
+            <div className="max-w-6xl mx-auto flex items-center gap-4 h-8">
+               <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary transition-all duration-500" 
+                    style={{ width: `${(currentStepIndex / (stepSequence.length - 1)) * 100}%` }}
+                  />
+               </div>
+               <span className="text-[10px] md:text-xs font-black text-white/50 tracking-widest">
+                 {currentStepIndex}/{stepSequence.length - 1}
+               </span>
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-[1fr_380px] gap-8 md:gap-12 items-start">
+          <div className="grid lg:grid-cols-[1fr_380px] gap-8 md:gap-12 items-start pt-8">
             
             {/* Form Column */}
             <div className="w-full min-w-0">
@@ -262,6 +265,7 @@ export default function CriadorApp() {
 
               {step === 'page-title' && (
                 <StepPageTitle 
+                  selectedTheme={selectedTheme}
                   pageTitle={pageTitle}
                   onPageTitleChange={setPageTitle}
                   titleFont={titleFont}
@@ -337,6 +341,34 @@ export default function CriadorApp() {
                   onFinish={() => { console.log('Finish Creation'); }}
                 />
               )}
+
+              {/* Form Footer */}
+              <div className="mt-12 flex flex-col gap-5 max-w-md mx-auto md:mx-0">
+                <div className="flex flex-col sm:flex-row items-center gap-4 pt-10 border-t border-white/5">
+                  <Button 
+                    onClick={handleBack} 
+                    variant="outline" 
+                    className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                  </Button>
+                  <Button 
+                    onClick={handleNext} 
+                    className={cn(
+                      "w-full sm:flex-1 h-12 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2",
+                      currentStepIndex === stepSequence.length - 1 ? "bg-primary text-white" : "bg-white text-black hover:bg-white/90"
+                    )}
+                  >
+                    {currentStepIndex === stepSequence.length - 1 ? 'Finalizar criação' : 'Próxima etapa'} 
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex justify-center md:justify-start">
+                   <p className="text-[10px] font-medium text-white/30 italic flex items-center gap-2">
+                     <Pencil className="w-2.5 h-2.5" /> Você poderá editar isso após a compra
+                   </p>
+                </div>
+              </div>
             </div>
 
             {/* Sticky Preview Column */}
@@ -435,14 +467,6 @@ export default function CriadorApp() {
                  patternDensity={patternDensity}
                  patternColor={patternColor}
                />
-
-               <div className="mt-10 space-y-5 w-full">
-                 <div className="flex flex-col gap-3">
-                   <Button onClick={handleBack} variant="outline" className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-                   <Button onClick={handleNext} className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm">{currentStepIndex === stepSequence.length - 1 ? 'Finalizar criação' : 'Próxima etapa'} <ChevronRight className="w-4 h-4" /></Button>
-                 </div>
-                 <div className="flex justify-center pb-6"><p className="text-[10px] font-medium text-white/20 italic flex items-center gap-2"><span className="not-italic">✏️</span> Você poderá editar isso após a compra</p></div>
-               </div>
             </div>
           </div>
         </div>

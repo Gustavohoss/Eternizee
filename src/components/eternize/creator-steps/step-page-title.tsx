@@ -1,8 +1,7 @@
-
 'use client';
 
 import React from 'react';
-import { Heart, Palette, Bold, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, Palette, Bold, Zap, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -10,10 +9,11 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ColorPicker } from '@/components/eternize/color-picker';
-import { FONT_OPTIONS } from '@/app/criador/constants';
+import { FONT_OPTIONS, ThemeId } from '@/app/criador/constants';
 import { cn } from '@/lib/utils';
 
 interface StepPageTitleProps {
+  selectedTheme: ThemeId;
   pageTitle: string;
   onPageTitleChange: (title: string) => void;
   titleFont: string;
@@ -31,6 +31,7 @@ interface StepPageTitleProps {
 }
 
 export function StepPageTitle({
+  selectedTheme,
   pageTitle,
   onPageTitleChange,
   titleFont,
@@ -46,31 +47,57 @@ export function StepPageTitle({
   onBack,
   onNext
 }: StepPageTitleProps) {
+  const isNetflix = selectedTheme === 'netflix';
+
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
       <div className="space-y-3 text-center md:text-left">
-        <div className="flex flex-col md:flex-row items-center gap-4"><div className="bg-white/5 p-2 rounded-2xl border border-white/10"><Heart className="w-5 h-5 md:w-6 md:h-6 text-white/80" /></div><h2 className="text-2xl md:text-4xl font-black tracking-tight">Título da página</h2></div>
-        <p className="text-xs md:text-base text-white/40 font-medium max-w-md">Escreva o título dedicatório e personalize o estilo para sua página.</p>
-      </div>
-      <div className="space-y-8 w-full max-w-md">
-        <div className="space-y-4"><Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">Como vai se chamar a história de vocês?</Label><Input value={pageTitle} onChange={(e) => onPageTitleChange(e.target.value)} placeholder="Ex: João & Maria ou Nossa Historinha" className="bg-white/5 border-white/10 h-14 md:h-16 rounded-xl text-sm md:text-base font-medium focus:border-primary/50 transition-all shadow-inner" /></div>
-        <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
-          <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Texto</h3></div>
-          <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Título</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onTitleFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", titleFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>
-          <div className="flex items-center justify-between py-2 border-t border-white/5"><div className="flex items-center gap-2"><Bold className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="bold-toggle">Negrito</Label></div><Switch id="bold-toggle" checked={titleIsBold} onCheckedChange={onTitleIsBoldChange} /></div>
-          <div className="space-y-4 py-2 border-t border-white/5">
-            <div className="flex items-center justify-between mb-2"><div className="flex items-center gap-2"><Zap className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="neon-toggle">Efeito Neon</Label></div><Switch id="neon-toggle" checked={titleHasNeon} onCheckedChange={onTitleHasNeonChange} /></div>
-            {titleHasNeon && (<div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2"><div className="flex items-center justify-between"><Label className="text-[9px] font-black uppercase tracking-wider text-white/40">Força do Neon</Label><span className="text-[10px] font-black text-primary">{titleNeonStrength}</span></div><Slider value={[titleNeonStrength]} onValueChange={(val) => onTitleNeonStrengthChange(val[0])} min={2} max={30} step={1} /></div>)}
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+            <Heart className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
           </div>
-          <div className="space-y-4 pt-4 border-t border-white/5"><Label className="text-[11px] font-bold text-white/50 uppercase">Cor do Texto</Label><div className="flex items-center gap-4">
-              <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: titleColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{titleColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={titleColor} onChange={onTitleColorChange} /></PopoverContent></Popover>
-              <div className="flex flex-wrap gap-1.5">{['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (<button key={color} onClick={() => onTitleColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", titleColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
-          </div></div>
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight">Título da página</h2>
         </div>
+        <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
+          Escreva o título dedicatório para a página. Ex: João & Maria ou Feliz Aniversário ou etc!
+        </p>
       </div>
-      <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
-        <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-        <Button onClick={onNext} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">Próxima etapa <ChevronRight className="w-4 h-4" /></Button>
+
+      <div className="space-y-8 w-full max-w-md">
+        <div className="space-y-4">
+          <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
+            Como vai se chamar a história de vocês?
+          </Label>
+          <Input 
+            value={pageTitle} 
+            onChange={(e) => onPageTitleChange(e.target.value)} 
+            placeholder="GUSTAVO E LUISA" 
+            className="bg-[#1a1a1a] border-white/10 h-14 md:h-16 rounded-xl text-sm md:text-base font-medium focus:border-primary/50 transition-all shadow-inner" 
+          />
+          
+          <div className="bg-[#1a0f02] border border-[#ff9b05]/30 p-4 rounded-xl flex items-start gap-3 mt-4">
+            <Info className="w-4 h-4 text-[#ff9b05] shrink-0 mt-0.5" />
+            <p className="text-[11px] text-[#ff9b05]/80 leading-tight font-medium">
+              Evite usar acentos ou caracteres especiais. Use apenas letras, números e espaços.
+            </p>
+          </div>
+        </div>
+
+        {!isNetflix && (
+          <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+            <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Texto</h3></div>
+            <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Título</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onTitleFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", titleFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>
+            <div className="flex items-center justify-between py-2 border-t border-white/5"><div className="flex items-center gap-2"><Bold className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="bold-toggle">Negrito</Label></div><Switch id="bold-toggle" checked={titleIsBold} onCheckedChange={onTitleIsBoldChange} /></div>
+            <div className="space-y-4 py-2 border-t border-white/5">
+              <div className="flex items-center justify-between mb-2"><div className="flex items-center gap-2"><Zap className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="neon-toggle">Efeito Neon</Label></div><Switch id="neon-toggle" checked={titleHasNeon} onCheckedChange={onTitleHasNeonChange} /></div>
+              {titleHasNeon && (<div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2"><div className="flex items-center justify-between"><Label className="text-[9px] font-black uppercase tracking-wider text-white/40">Força do Neon</Label><span className="text-[10px] font-black text-primary">{titleNeonStrength}</span></div><Slider value={[titleNeonStrength]} onValueChange={(val) => onTitleNeonStrengthChange(val[0])} min={2} max={30} step={1} /></div>)}
+            </div>
+            <div className="space-y-4 pt-4 border-t border-white/5"><Label className="text-[11px] font-bold text-white/50 uppercase">Cor do Texto</Label><div className="flex items-center gap-4">
+                <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: titleColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{titleColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={titleColor} onChange={onTitleColorChange} /></PopoverContent></Popover>
+                <div className="flex flex-wrap gap-1.5">{['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (<button key={color} onClick={() => onTitleColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", titleColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
+            </div></div>
+          </div>
+        )}
       </div>
     </div>
   );
