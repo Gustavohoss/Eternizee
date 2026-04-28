@@ -483,7 +483,7 @@ export default function CriadorApp() {
                         className="bg-white/5 border-white/10 h-14 md:h-16 rounded-xl text-sm md:text-base font-medium focus:border-primary/50 transition-all shadow-inner"
                       />
                     </div>
-                    <p className="text-[10px] text-white/30 italic">Abra o Spotify, clique nos '...' da música > Compartilhar > Copiar link.</p>
+                    <p className="text-[10px] text-white/30 italic">Abra o Spotify, clique nos '...' da música &gt; Compartilhar &gt; Copiar link.</p>
                   </div>
 
                   <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4">
