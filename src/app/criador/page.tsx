@@ -90,7 +90,6 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix') {
-      // Fluxo Netflix: Tema -> Tipo -> Data -> Título -> Descrição (Message) -> Fotos -> Música
       return [...base, 'data-location', 'page-title', 'message', 'photos', 'music'];
     }
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
@@ -146,7 +145,9 @@ export default function CriadorApp() {
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor, selectedTheme]);
 
   useEffect(() => {
-    if (selectedTheme !== 'netflix' && !userHasManuallyChangedDateColor) {
+    if (selectedTheme === 'netflix') {
+      setDateColor('#ff0000');
+    } else if (!userHasManuallyChangedDateColor) {
       setDateColor(getContrastColor(selectedBgColor));
     }
   }, [selectedBgColor, userHasManuallyChangedDateColor, selectedTheme]);
@@ -292,6 +293,7 @@ export default function CriadorApp() {
 
               {step === 'photos' && (
                 <StepPhotos 
+                  selectedTheme={selectedTheme}
                   uploadedPhotos={uploadedPhotos}
                   onPhotoUpload={handlePhotoUpload}
                   onRemovePhoto={removePhoto}
@@ -400,7 +402,6 @@ export default function CriadorApp() {
                      <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                      <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                      
-                     {/* Fullscreen Header based on image */}
                      <div className="bg-black px-4 py-3 flex items-center justify-between shrink-0">
                        <span className="text-white text-sm font-bold">Preview</span>
                        <DialogClose className="text-white/60 hover:text-white transition-colors">
@@ -458,7 +459,6 @@ export default function CriadorApp() {
                    <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                    <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                    
-                   {/* Fullscreen Header based on image */}
                    <div className="bg-black px-4 py-3 flex items-center justify-between shrink-0">
                      <span className="text-white text-sm font-bold">Preview</span>
                      <DialogClose className="text-white/60 hover:text-white transition-colors">
