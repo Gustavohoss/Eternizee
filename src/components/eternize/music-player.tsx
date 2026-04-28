@@ -38,6 +38,10 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
       firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
     }
 
+    window.onYouTubeIframeAPIReady = () => {
+      initPlayer();
+    };
+
     const initPlayer = () => {
       if (window.YT && window.YT.Player && !playerRef.current) {
         playerRef.current = new window.YT.Player(containerId.current, {
@@ -50,12 +54,12 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
             disablekb: 1,
             fs: 0,
             rel: 0,
-            origin: typeof window !== 'undefined' ? window.location.origin : '',
+            origin: window.location.origin,
             enablejsapi: 1
           },
           events: {
             onStateChange: (event: any) => {
-              // 1 = PLAYING (Tocando)
+              // 1 = PLAYING
               if (event.data === 1) {
                 setIsPlaying(true);
                 setDuration(event.target.getDuration());
@@ -75,15 +79,12 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
       }
     };
 
-    const checkYT = setInterval(() => {
-      if (window.YT && window.YT.Player) {
-        initPlayer();
-        clearInterval(checkYT);
-      }
-    }, 500);
+    // Tenta inicializar caso a API já esteja carregada
+    if (window.YT && window.YT.Player) {
+      initPlayer();
+    }
 
     return () => {
-      clearInterval(checkYT);
       stopTimer();
       if (playerRef.current && playerRef.current.destroy) {
         playerRef.current.destroy();
@@ -94,14 +95,11 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
 
   // Atualiza o vídeo quando o ID muda
   useEffect(() => {
-    if (playerRef.current && musicData?.id && playerRef.current.cueVideoById) {
-      playerRef.current.cueVideoById(musicData.id);
+    if (playerRef.current && musicData?.id && playerRef.current.loadVideoById) {
+      playerRef.current.loadVideoById(musicData.id);
       setIsPlaying(false);
       setCurrentTime(0);
-      // Expande automaticamente ao selecionar uma música nova
-      if (!isExpanded && musicData.id) {
-        setTimeout(() => setIsExpanded(true), 300);
-      }
+      if (!isExpanded) setIsExpanded(true);
     }
   }, [musicData?.id]);
 
@@ -122,12 +120,12 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     e.stopPropagation();
     if (!playerRef.current) return;
     
-    // Força ativação do som e volume em cada interação para garantir que saia áudio
+    // Força unMute e Volume no clique do usuário (necessário para navegadores liberarem som)
     playerRef.current.unMute();
     playerRef.current.setVolume(100);
 
     const state = playerRef.current.getPlayerState?.();
-    if (state === 1) { // 1 = Tocando
+    if (state === 1) {
       playerRef.current.pauseVideo();
     } else {
       playerRef.current.playVideo();
@@ -210,7 +208,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         </div>
       </div>
 
-      {/* Container do Player YouTube (Escondido) */}
+      {/* Player invisível mas presente para o navegador não bloquear o áudio */}
       <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
         <div id={containerId.current}></div>
       </div>

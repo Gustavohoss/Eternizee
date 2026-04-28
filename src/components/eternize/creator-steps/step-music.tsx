@@ -33,7 +33,6 @@ export function StepMusic({
   const [results, setResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [isPreviewing, setIsPreviewing] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -74,13 +73,6 @@ export function StepMusic({
     });
     setSearchQuery('');
     setShowResults(false);
-    setIsPreviewing(false);
-  };
-
-  const togglePreview = () => {
-    // Esta função poderia disparar um evento para o player no mockup 
-    // ou apenas alternar um estado local visual por enquanto.
-    setIsPreviewing(!isPreviewing);
   };
 
   return (
@@ -134,40 +126,25 @@ export function StepMusic({
               ))}
             </div>
           )}
-
-          <p className="text-[10px] text-white/30 italic">Digite o nome da música e selecione uma das opções acima.</p>
         </div>
 
         {musicData && (
           <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 animate-in zoom-in-95 group/card">
-            <div className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14 cursor-pointer" onClick={togglePreview}>
-              <img src={musicData.thumb} className="w-full h-full object-cover transition-transform group-hover/card:scale-110" alt="" />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity">
-                {isPreviewing ? <Pause className="w-6 h-6 text-white fill-white" /> : <Play className="w-6 h-6 text-white fill-white ml-1" />}
-              </div>
+            <div className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14">
+              <img src={musicData.thumb} className="w-full h-full object-cover" alt="" />
             </div>
             
             <div className="flex-1 min-w-0">
-              <div className="text-[10px] font-black uppercase text-primary tracking-widest mb-1 flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75", !isPreviewing && "hidden")}></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                </span>
-                Música Selecionada
-              </div>
+              <div className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">Música Selecionada</div>
               <div className="text-white text-xs font-bold truncate pr-2">{musicData.title}</div>
-              <p className="text-[10px] text-white/30 font-bold uppercase mt-1 tracking-tighter">YouTube Player pronto</p>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <button 
-                onClick={() => onMusicSelect(undefined)}
-                className="p-2 hover:bg-white/5 rounded-full text-white/30 hover:text-white transition-colors"
-                title="Remover música"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+            <button 
+              onClick={() => onMusicSelect(undefined)}
+              className="p-2 hover:bg-white/5 rounded-full text-white/30 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         )}
 
@@ -179,7 +156,7 @@ export function StepMusic({
             <h3 className="text-xs font-black uppercase tracking-wider">Como funciona?</h3>
           </div>
           <p className="text-[11px] text-white/50 leading-relaxed font-medium">
-            Integramos sua página diretamente com o YouTube. A música escolhida será exibida com um player personalizado na sua página, permitindo que quem receba o presente sinta toda a emoção do momento.
+            Integramos sua página diretamente com o YouTube. A música escolhida será exibida com um player personalizado na sua página.
           </p>
         </div>
       </div>
