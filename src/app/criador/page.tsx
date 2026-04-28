@@ -39,9 +39,14 @@ export default function CriadorApp() {
   // Customization states for specific effects
   const [sparklesDensity, setSparklesDensity] = useState<number>(100);
   const [sparklesSpeed, setSparklesSpeed] = useState<number>(0.5);
+  const [sparklesColor, setSparklesColor] = useState<string>('#ffffff');
+  
   const [smokeIntensity, setSmokeIntensity] = useState<number>(0.5);
+  const [smokeColor, setSmokeColor] = useState<string>('#ffffff');
+  
   const [patternDuration, setPatternDuration] = useState<number>(150);
   const [patternDensity, setPatternDensity] = useState<number>(1);
+  const [patternColor, setPatternColor] = useState<string>('#ffffff');
 
   // Card customization state
   const [cardColor, setCardColor] = useState<string>('#ffffff');
@@ -208,12 +213,20 @@ export default function CriadorApp() {
                 onSparklesDensityChange={setSparklesDensity}
                 sparklesSpeed={sparklesSpeed}
                 onSparklesSpeedChange={setSparklesSpeed}
+                sparklesColor={sparklesColor}
+                onSparklesColorChange={setSparklesColor}
+                
                 smokeIntensity={smokeIntensity}
                 onSmokeIntensityChange={setSmokeIntensity}
+                smokeColor={smokeColor}
+                onSmokeColorChange={setSmokeColor}
+                
                 patternDuration={patternDuration}
                 onPatternDurationChange={setPatternDuration}
                 patternDensity={patternDensity}
                 onPatternDensityChange={setPatternDensity}
+                patternColor={patternColor}
+                onPatternColorChange={setPatternColor}
 
                 onBack={handleBack}
                 onNext={handleNext}
@@ -354,9 +367,12 @@ export default function CriadorApp() {
                  // Effect specific props
                  sparklesDensity={sparklesDensity}
                  sparklesSpeed={sparklesSpeed}
+                 sparklesColor={sparklesColor}
                  smokeIntensity={smokeIntensity}
+                 smokeColor={smokeColor}
                  patternDuration={patternDuration}
                  patternDensity={patternDensity}
+                 patternColor={patternColor}
                />
                <div className="lg:hidden mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">

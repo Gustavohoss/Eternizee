@@ -59,9 +59,12 @@ interface DeviceMockupProps {
   // Specific effect customization
   sparklesDensity?: number;
   sparklesSpeed?: number;
+  sparklesColor?: string;
   smokeIntensity?: number;
+  smokeColor?: string;
   patternDuration?: number;
   patternDensity?: number;
+  patternColor?: string;
 }
 
 export function DeviceMockup({
@@ -101,9 +104,12 @@ export function DeviceMockup({
 
   sparklesDensity = 120,
   sparklesSpeed = 0.5,
+  sparklesColor = '#ffffff',
   smokeIntensity = 0.5,
+  smokeColor = '#ffffff',
   patternDuration = 150,
-  patternDensity = 1
+  patternDensity = 1,
+  patternColor = '#ffffff'
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -295,21 +301,21 @@ export function DeviceMockup({
                 maxSize={1.2}
                 particleDensity={sparklesDensity}
                 className="w-full h-full"
-                particleColor="#FFFFFF"
+                particleColor={sparklesColor}
                 speed={sparklesSpeed}
               />
             </div>
           )}
           {selectedEffect === 'smoke' && (
             <div className="absolute inset-0 pointer-events-none z-10">
-              <SmokeBackground smokeColor={selectedBgColor} intensity={smokeIntensity} />
+              <SmokeBackground smokeColor={smokeColor} intensity={smokeIntensity} />
             </div>
           )}
           {selectedEffect === 'pattern' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <FallingPattern 
                 backgroundColor={selectedBgColor}
-                color="rgba(255,255,255,0.15)"
+                color={patternColor}
                 blurIntensity="0px"
                 duration={patternDuration}
                 density={patternDensity}

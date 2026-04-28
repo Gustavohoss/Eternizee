@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ColorPicker } from '@/components/eternize/color-picker';
 import { EmojiPicker } from '@/components/eternize/emoji-picker';
 import { cn } from '@/lib/utils';
@@ -30,12 +31,20 @@ interface StepCustomizeBackgroundProps {
   onSparklesDensityChange: (val: number) => void;
   sparklesSpeed: number;
   onSparklesSpeedChange: (val: number) => void;
+  sparklesColor: string;
+  onSparklesColorChange: (val: string) => void;
+  
   smokeIntensity: number;
   onSmokeIntensityChange: (val: number) => void;
+  smokeColor: string;
+  onSmokeColorChange: (val: string) => void;
+  
   patternDuration: number;
   onPatternDurationChange: (val: number) => void;
   patternDensity: number;
   onPatternDensityChange: (val: number) => void;
+  patternColor: string;
+  onPatternColorChange: (val: string) => void;
 
   onBack: () => void;
   onNext: () => void;
@@ -59,12 +68,18 @@ export function StepCustomizeBackground({
   onSparklesDensityChange,
   sparklesSpeed,
   onSparklesSpeedChange,
+  sparklesColor,
+  onSparklesColorChange,
   smokeIntensity,
   onSmokeIntensityChange,
+  smokeColor,
+  onSmokeColorChange,
   patternDuration,
   onPatternDurationChange,
   patternDensity,
   onPatternDensityChange,
+  patternColor,
+  onPatternColorChange,
 
   onBack,
   onNext
@@ -98,6 +113,30 @@ export function StepCustomizeBackground({
               {selectedEffect === 'sparkles' && (
                 <>
                   <div className="space-y-4">
+                    <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Cor das Estrelas</Label>
+                    <div className="flex items-center gap-3">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group">
+                            <div className="w-8 h-8 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: sparklesColor }} />
+                            <div className="text-left pr-2">
+                              <p className="text-[9px] font-black uppercase text-white/30">Cor Estrelas</p>
+                              <p className="text-[10px] font-mono font-bold">{sparklesColor}</p>
+                            </div>
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                          <ColorPicker selectedBgColor={sparklesColor} onChange={onSparklesColorChange} />
+                        </PopoverContent>
+                      </Popover>
+                      <div className="flex flex-wrap gap-1">
+                        {['#ffffff', '#fff9c4', '#ffeb3b', '#e11d48', '#2563eb'].map((color) => (
+                          <button key={color} onClick={() => onSparklesColorChange(color)} className={cn("w-5 h-5 rounded-full border transition-transform active:scale-90", sparklesColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Densidade de Estrelas</Label>
                       <span className="text-[10px] font-black text-primary">{sparklesDensity}</span>
@@ -115,17 +154,67 @@ export function StepCustomizeBackground({
               )}
 
               {selectedEffect === 'smoke' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Intensidade da Fumaça</Label>
-                    <span className="text-[10px] font-black text-primary">{(smokeIntensity * 100).toFixed(0)}%</span>
+                <>
+                  <div className="space-y-4">
+                    <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Cor da Fumaça</Label>
+                    <div className="flex items-center gap-3">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group">
+                            <div className="w-8 h-8 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: smokeColor }} />
+                            <div className="text-left pr-2">
+                              <p className="text-[9px] font-black uppercase text-white/30">Cor Fumaça</p>
+                              <p className="text-[10px] font-mono font-bold">{smokeColor}</p>
+                            </div>
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                          <ColorPicker selectedBgColor={smokeColor} onChange={onSmokeColorChange} />
+                        </PopoverContent>
+                      </Popover>
+                      <div className="flex flex-wrap gap-1">
+                        {['#ffffff', '#808080', '#e11d48', '#7c3aed', '#2563eb'].map((color) => (
+                          <button key={color} onClick={() => onSmokeColorChange(color)} className={cn("w-5 h-5 rounded-full border transition-transform active:scale-90", smokeColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <Slider value={[smokeIntensity]} onValueChange={(val) => onSmokeIntensityChange(val[0])} min={0.1} max={1} step={0.05} />
-                </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Intensidade da Fumaça</Label>
+                      <span className="text-[10px] font-black text-primary">{(smokeIntensity * 100).toFixed(0)}%</span>
+                    </div>
+                    <Slider value={[smokeIntensity]} onValueChange={(val) => onSmokeIntensityChange(val[0])} min={0.1} max={1} step={0.05} />
+                  </div>
+                </>
               )}
 
               {selectedEffect === 'pattern' && (
                 <>
+                  <div className="space-y-4">
+                    <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Cor do Padrão</Label>
+                    <div className="flex items-center gap-3">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group">
+                            <div className="w-8 h-8 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: patternColor }} />
+                            <div className="text-left pr-2">
+                              <p className="text-[9px] font-black uppercase text-white/30">Cor Elementos</p>
+                              <p className="text-[10px] font-mono font-bold">{patternColor}</p>
+                            </div>
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                          <ColorPicker selectedBgColor={patternColor} onChange={onPatternColorChange} />
+                        </PopoverContent>
+                      </Popover>
+                      <div className="flex flex-wrap gap-1">
+                        {['#ffffff', '#ff4da6', '#e11d48', '#2563eb', '#111111'].map((color) => (
+                          <button key={color} onClick={() => onPatternColorChange(color)} className={cn("w-5 h-5 rounded-full border transition-transform active:scale-90", patternColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Velocidade da Queda</Label>
