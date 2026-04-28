@@ -1,9 +1,7 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Music, Search, ChevronLeft, ChevronRight, X, Play, Palette, Zap, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Music, Search, X, Play, Palette, Zap, Info } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -33,8 +31,6 @@ interface StepMusicProps {
   onMusicNeonStrengthChange: (strength: number) => void;
   isAutoPlay: boolean;
   onAutoPlayChange: (autoPlay: boolean) => void;
-  onBack: () => void;
-  onNext: () => void;
 }
 
 export function StepMusic({
@@ -50,8 +46,6 @@ export function StepMusic({
   onMusicNeonStrengthChange,
   isAutoPlay,
   onAutoPlayChange,
-  onBack,
-  onNext
 }: StepMusicProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
@@ -226,11 +220,6 @@ export function StepMusic({
             Integramos sua página diretamente com o YouTube. A música escolhida será exibida com um player personalizado na sua página.
           </p>
         </div>
-      </div>
-
-      <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
-        <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-        <Button onClick={onNext} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">Próxima etapa <ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
   );

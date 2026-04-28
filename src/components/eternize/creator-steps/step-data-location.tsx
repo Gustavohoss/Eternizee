@@ -11,11 +11,8 @@ import {
   Hash, 
   Palette, 
   Bold, 
-  Zap, 
-  ChevronLeft, 
-  ChevronRight 
+  Zap
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -48,8 +45,6 @@ interface StepDataLocationProps {
   onDateNeonStrengthChange: (strength: number) => void;
   dateColor: string;
   onDateColorChange: (color: string) => void;
-  onBack: () => void;
-  onFinish: () => void;
 }
 
 export function StepDataLocation({
@@ -73,8 +68,6 @@ export function StepDataLocation({
   onDateNeonStrengthChange,
   dateColor,
   onDateColorChange,
-  onBack,
-  onFinish
 }: StepDataLocationProps) {
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
@@ -133,10 +126,6 @@ export function StepDataLocation({
               <p className="text-[10px] text-white/40 leading-relaxed font-medium">No tema Netflix, a cor vermelha (#ff0000) é mantida para garantir a identidade visual cinematográfica.</p>
             </div>
           )}
-      </div>
-      <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
-        <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-        <Button onClick={onFinish} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">Finalizar criação <ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
   );

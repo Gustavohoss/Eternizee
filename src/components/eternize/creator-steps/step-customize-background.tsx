@@ -1,9 +1,7 @@
-
 'use client';
 
 import React from 'react';
-import { Palette, Sparkles, Ban, Heart, Type, ChevronLeft, ChevronRight, Star, Wind, Grid, Gauge, Activity } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Palette, Sparkles, Ban, Heart, Type, Star, Wind, Grid, Gauge } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
@@ -26,7 +24,6 @@ interface StepCustomizeBackgroundProps {
   isEmojiPickerOpen: boolean;
   onEmojiPickerOpenChange: (open: boolean) => void;
   
-  // Specific effect states
   sparklesDensity: number;
   onSparklesDensityChange: (val: number) => void;
   sparklesSpeed: number;
@@ -45,9 +42,6 @@ interface StepCustomizeBackgroundProps {
   onPatternDensityChange: (val: number) => void;
   patternColor: string;
   onPatternColorChange: (val: string) => void;
-
-  onBack: () => void;
-  onNext: () => void;
 }
 
 export function StepCustomizeBackground({
@@ -80,9 +74,6 @@ export function StepCustomizeBackground({
   onPatternDensityChange,
   patternColor,
   onPatternColorChange,
-
-  onBack,
-  onNext
 }: StepCustomizeBackgroundProps) {
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
@@ -105,7 +96,6 @@ export function StepCustomizeBackground({
             <div onClick={() => onEffectChange('pattern')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'pattern' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Grid className="w-5 h-5 text-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Padrão em Queda</p><p className="text-[10px] text-white/40">Elementos caindo</p></div></div>
           </div>
 
-          {/* Dynamic Customization Controls based on selected effect */}
           {selectedEffect !== 'none' && (
             <div className="bg-[#141414] rounded-2xl p-6 border border-[#222] space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
               <div className="flex items-center gap-2 mb-2"><Gauge className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Ajustes do Efeito</h3></div>
@@ -267,11 +257,6 @@ export function StepCustomizeBackground({
             </div>
           )}
         </div>
-      </div>
-
-      <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
-        <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-        <Button onClick={onNext} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">Próxima etapa <ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
   );

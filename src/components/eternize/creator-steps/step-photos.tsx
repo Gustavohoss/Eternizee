@@ -11,11 +11,8 @@ import {
   AlignVerticalJustifyEnd, 
   Layers, 
   Sparkles, 
-  Copy,
-  ChevronLeft,
-  ChevronRight
+  Copy
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -37,8 +34,6 @@ interface StepPhotosProps {
   onTitlePositionChange: (pos: 'top' | 'bottom') => void;
   photoEffect: 'slide' | 'coverflow' | 'cards';
   onPhotoEffectChange: (effect: 'slide' | 'coverflow' | 'cards') => void;
-  onBack: () => void;
-  onNext: () => void;
 }
 
 export function StepPhotos({
@@ -54,8 +49,6 @@ export function StepPhotos({
   onTitlePositionChange,
   photoEffect,
   onPhotoEffectChange,
-  onBack,
-  onNext
 }: StepPhotosProps) {
   const isNetflix = selectedTheme === 'netflix';
 
@@ -82,7 +75,6 @@ export function StepPhotos({
           )}
         </div>
 
-        {/* Customization only for non-netflix themes */}
         {!isNetflix && (
           <>
             <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
@@ -116,11 +108,6 @@ export function StepPhotos({
             </div>
           </>
         )}
-      </div>
-
-      <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-w-md">
-        <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-        <Button onClick={onNext} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">Próxima etapa <ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
   );

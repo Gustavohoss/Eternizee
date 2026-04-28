@@ -15,11 +15,8 @@ import {
   Link as LinkIcon, 
   Trash2,
   Palette,
-  ChevronLeft, 
-  ChevronRight,
   MessageSquare
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ColorPicker } from '@/components/eternize/color-picker';
@@ -34,8 +31,6 @@ interface StepMessageProps {
   onMessageFontChange: (font: string) => void;
   messageColor: string;
   onMessageColorChange: (color: string) => void;
-  onBack: () => void;
-  onNext: () => void;
 }
 
 export function StepMessage({
@@ -46,13 +41,10 @@ export function StepMessage({
   onMessageFontChange,
   messageColor,
   onMessageColorChange,
-  onBack,
-  onNext
 }: StepMessageProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const isNetflix = selectedTheme === 'netflix';
 
-  // Inicializa o conteúdo do editor se ele estiver vazio
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== message) {
       editorRef.current.innerHTML = message;
@@ -191,11 +183,6 @@ export function StepMessage({
             </div></div>
           </div>
         )}
-      </div>
-
-      <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
-        <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-        <Button onClick={onNext} className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">Próxima etapa <ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
   );

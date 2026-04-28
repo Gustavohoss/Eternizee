@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Heart, Palette, Bold, Zap, ChevronLeft, ChevronRight, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Heart, Palette, Bold, Zap, Info } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -26,8 +25,6 @@ interface StepPageTitleProps {
   onTitleNeonStrengthChange: (strength: number) => void;
   titleColor: string;
   onTitleColorChange: (color: string) => void;
-  onBack: () => void;
-  onNext: () => void;
 }
 
 export function StepPageTitle({
@@ -44,8 +41,6 @@ export function StepPageTitle({
   onTitleNeonStrengthChange,
   titleColor,
   onTitleColorChange,
-  onBack,
-  onNext
 }: StepPageTitleProps) {
   const isNetflix = selectedTheme === 'netflix';
 
