@@ -109,28 +109,30 @@ export function StepDataLocation({
         </div>
       )}
 
-      {isNetflixTheme && (
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 w-full max-w-md">
-          <div className="flex items-center gap-3 text-primary mb-2">
-            <Layout className="w-4 h-4" />
-            <span className="text-[11px] font-black uppercase tracking-widest">Estilo Netflix Ativo</span>
-          </div>
-          <p className="text-[10px] text-white/40 font-medium">Este tema utiliza um contador cinematográfico exclusivo que organiza automaticamente seus anos, dias e data em cards especiais.</p>
-        </div>
-      )}
-
       <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
-          <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Contador</h3></div>
+          <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Contador {isNetflixTheme && '(Visual Fixo)'}</h3></div>
           <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Contador</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onDateFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", dateFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>
           <div className="flex items-center justify-between py-2 border-t border-white/5"><div className="flex items-center gap-2"><Bold className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="date-bold-toggle">Negrito</Label></div><Switch id="date-bold-toggle" checked={dateIsBold} onCheckedChange={onDateIsBoldChange} /></div>
           <div className="space-y-4 py-2 border-t border-white/5">
             <div className="flex items-center justify-between mb-2"><div className="flex items-center gap-2"><Zap className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="date-neon-toggle">Efeito Neon</Label></div><Switch id="date-neon-toggle" checked={dateHasNeon} onCheckedChange={onDateHasNeonChange} /></div>
             {dateHasNeon && (<div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2"><div className="flex items-center justify-between"><Label className="text-[9px] font-black uppercase tracking-wider text-white/40">Força do Neon</Label><span className="text-[10px] font-black text-primary">{dateNeonStrength}</span></div><Slider value={[dateNeonStrength]} onValueChange={(val) => onDateNeonStrengthChange(val[0])} min={2} max={30} step={1} /></div>)}
           </div>
-          <div className="space-y-4 pt-4 border-t border-white/5"><Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Data</Label><div className="flex items-center gap-4">
-              <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: dateColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{dateColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={dateColor} onChange={onDateColorChange} /></PopoverContent></Popover>
-              <div className="flex flex-wrap gap-1.5">{['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (<button key={color} onClick={() => onDateColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", dateColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
-          </div></div>
+          
+          {!isNetflixTheme && (
+            <div className="space-y-4 pt-4 border-t border-white/5"><Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Data</Label><div className="flex items-center gap-4">
+                <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: dateColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{dateColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={dateColor} onChange={onDateColorChange} /></PopoverContent></Popover>
+                <div className="flex flex-wrap gap-1.5">{['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (<button key={color} onClick={() => onDateColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", dateColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
+            </div></div>
+          )}
+
+          {isNetflixTheme && (
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mt-2">
+              <p className="text-[10px] text-primary font-black uppercase tracking-widest mb-1 flex items-center gap-2">
+                <Palette className="w-3 h-3" /> Cor Fixa Ativa
+              </p>
+              <p className="text-[10px] text-white/40 leading-relaxed font-medium">No tema Netflix, a cor vermelha (#ff0000) é mantida para garantir a identidade visual cinematográfica.</p>
+            </div>
+          )}
       </div>
       <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
         <Button onClick={onBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar</Button>

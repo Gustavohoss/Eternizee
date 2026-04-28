@@ -140,9 +140,11 @@ export default function CriadorApp() {
     }
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor]);
 
-  // Apenas auto-contrasta a data se não for tema Netflix, pois Netflix tem fundo sempre escuro na prévia e o usuário quer vermelho por padrão
+  // Lógica de cor da data: Netflix é sempre vermelho. Outros temas auto-contrastam se não houver mudança manual.
   useEffect(() => {
-    if (!userHasManuallyChangedDateColor && selectedTheme !== 'netflix') {
+    if (selectedTheme === 'netflix') {
+      setDateColor('#ff0000');
+    } else if (!userHasManuallyChangedDateColor) {
       setDateColor(getContrastColor(selectedBgColor));
     }
   }, [selectedBgColor, userHasManuallyChangedDateColor, selectedTheme]);
