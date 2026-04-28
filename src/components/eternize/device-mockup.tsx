@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -14,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { intervalToDuration } from 'date-fns';
 import { MusicPlayer } from './music-player';
 import { SparklesCore } from '@/components/ui/sparkles';
+import { SmokeBackground } from '@/components/ui/spooky-smoke-animation';
 
 interface DeviceMockupProps {
   selectedBgColor: string;
@@ -283,6 +283,11 @@ export function DeviceMockup({
                 particleColor="#FFFFFF"
                 speed={0.5}
               />
+            </div>
+          )}
+          {selectedEffect === 'smoke' && (
+            <div className="absolute inset-0 pointer-events-none z-10">
+              <SmokeBackground smokeColor={selectedBgColor} />
             </div>
           )}
           {isEmojiRainEnabled && (

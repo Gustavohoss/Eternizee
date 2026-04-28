@@ -1,8 +1,7 @@
-
 'use client';
 
 import React from 'react';
-import { Palette, Sparkles, Ban, Heart, Type, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { Palette, Sparkles, Ban, Heart, Type, ChevronLeft, ChevronRight, Star, Wind } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -61,6 +60,7 @@ export function StepCustomizeBackground({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div onClick={() => onEffectChange('none')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'none' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/5 p-2.5 rounded-xl"><Ban className="w-5 h-5 text-white/40" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Sem efeito</p><p className="text-[10px] text-white/40">Fundo estático</p></div></div>
             <div onClick={() => onEffectChange('sparkles')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'sparkles' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Star className="w-5 h-5 text-white fill-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Fundo Estrelado</p><p className="text-[10px] text-white/40">Céu com estrelas</p></div></div>
+            <div onClick={() => onEffectChange('smoke')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'smoke' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Wind className="w-5 h-5 text-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Nuvem de Fumaça</p><p className="text-[10px] text-white/40">Fumaça animada</p></div></div>
           </div>
         </div>
 
