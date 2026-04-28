@@ -229,7 +229,7 @@ export function DeviceMockup({
         <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       )}
       
-      {/* Browser Address Bar - Based on image reference */}
+      {/* Browser Address Bar */}
       <div className={cn(
         "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center transition-all",
         isFullscreen ? "rounded-none" : "rounded-t-2xl"
@@ -287,7 +287,7 @@ export function DeviceMockup({
                       <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#141414] via-[#141414]/40 to-transparent"></div>
                       <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#141414] via-[#141414]/20 to-transparent"></div>
 
-                      <div className="relative z-20 px-4 pb-6 pt-24">
+                      <div className="relative z-20 px-4 pb-6 pt-32">
                         <div className="mb-1">
                           <span className="text-[#e50914] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-1">
                             <span className="text-xs">❤️</span> Heartzzu Original
