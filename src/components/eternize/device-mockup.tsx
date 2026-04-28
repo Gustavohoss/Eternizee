@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -127,7 +126,7 @@ export function DeviceMockup({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
-  const showMusic = step === 'music' || step === 'data-location' || step === 'landing';
+  const showMusic = step === 'music' || step === 'data-location' || step === 'landing' || step === 'message' || step === 'photos';
 
   useEffect(() => {
     if (!date) {
@@ -205,51 +204,53 @@ export function DeviceMockup({
     }
   };
 
-  const RenderTitle = () => {
-    const shadowSize = titleNeonStrength;
-    const neonShadow = titleHasNeon 
-      ? `0 0 ${shadowSize/2}px ${titleColor}, 0 0 ${shadowSize}px ${titleColor}, 0 0 ${shadowSize*1.5}px ${titleColor}` 
-      : 'none';
-
-    return (
-      <div className={cn("w-full text-center", titlePosition === 'top' ? "mb-4" : "mt-4")}>
-        <span 
-          style={{ 
-            color: titleColor,
-            fontFamily: getFontFamily(titleFont),
-            fontWeight: titleIsBold ? '700' : '400',
-            textShadow: neonShadow
-          }}
-          className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
-        >
-          {pageTitle || "Seu Nome Aqui"}
-        </span>
-      </div>
-    );
-  };
-
-  const shadowSize = dateNeonStrength;
-  const neonShadow = dateHasNeon 
-    ? `0 0 ${shadowSize/2}px ${dateColor}, 0 0 ${shadowSize}px ${dateColor}, 0 0 ${shadowSize*1.5}px ${dateColor}` 
+  const shadowSizeDate = dateNeonStrength;
+  const neonShadowDate = dateHasNeon 
+    ? `0 0 ${shadowSizeDate/2}px ${dateColor}, 0 0 ${shadowSizeDate}px ${dateColor}, 0 0 ${shadowSizeDate*1.5}px ${dateColor}` 
     : 'none';
     
   const dateStyle: React.CSSProperties = {
     color: dateColor,
     fontFamily: getFontFamily(dateFont),
     fontWeight: dateIsBold ? '700' : '400',
-    textShadow: neonShadow
+    textShadow: neonShadowDate
   };
 
-  const RenderCounter = () => {
+  const shadowSizeTitle = titleNeonStrength;
+  const neonShadowTitle = titleHasNeon 
+    ? `0 0 ${shadowSizeTitle/2}px ${titleColor}, 0 0 ${shadowSizeTitle}px ${titleColor}, 0 0 ${shadowSizeTitle*1.5}px ${titleColor}` 
+    : 'none';
+
+  const titleStyle: React.CSSProperties = { 
+    color: titleColor,
+    fontFamily: getFontFamily(titleFont),
+    fontWeight: titleIsBold ? '700' : '400',
+    textShadow: neonShadowTitle
+  };
+
+  // Render variables to avoid flickering by moving components out of render path
+  const titleContent = (
+    <div className={cn("w-full text-center", titlePosition === 'top' ? "mb-4" : "mt-4")}>
+      <span 
+        style={titleStyle}
+        className="text-[26px] block px-2 tracking-[1px] leading-relaxed break-words"
+      >
+        {pageTitle || "Seu Nome Aqui"}
+      </span>
+    </div>
+  );
+
+  const units = timeDiff ? [
+    { label: 'anos', value: timeDiff.years },
+    { label: 'meses', value: timeDiff.months },
+    { label: 'dias', value: timeDiff.days },
+    { label: 'horas', value: timeDiff.hours },
+    { label: 'min', value: timeDiff.minutes },
+    { label: 'seg', value: timeDiff.seconds },
+  ] : [];
+
+  const counterContent = useMemo(() => {
     if (!date || !timeDiff) return null;
-    const units = [
-      { label: 'anos', value: timeDiff.years },
-      { label: 'meses', value: timeDiff.months },
-      { label: 'dias', value: timeDiff.days },
-      { label: 'horas', value: timeDiff.hours },
-      { label: 'min', value: timeDiff.minutes },
-      { label: 'seg', value: timeDiff.seconds },
-    ];
 
     switch (selectedCountStyle) {
       case 'simples':
@@ -300,7 +301,7 @@ export function DeviceMockup({
           </div>
         );
     }
-  };
+  }, [date, timeDiff, selectedCountStyle, dateStyle, totalDays, units]);
 
   return (
     <div className="w-full max-w-[300px]">
@@ -390,15 +391,15 @@ export function DeviceMockup({
                       {/* Stat Cards Customizados */}
                       <div className="grid grid-cols-3 gap-2 mt-4">
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl">{timeDiff?.years || 0}</div>
+                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{timeDiff?.years || 0}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Anos Juntos</div>
                         </div>
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl">{totalDays || 0}</div>
+                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{totalDays || 0}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
                         </div>
                         <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
+                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
                           <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
                         </div>
                       </div>
@@ -447,7 +448,7 @@ export function DeviceMockup({
                 ) : (
                   <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
                     <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
-                      {titlePosition === 'top' && <RenderTitle />}
+                      {titlePosition === 'top' && titleContent}
                       <div className={cn("w-full aspect-square relative photo-display-area", photoEffect === 'slide' ? "overflow-hidden rounded-[4px]" : "overflow-visible")} style={{ perspective: '1000px' }}>
                         {uploadedPhotos.length > 0 ? (
                           <div className="w-full h-full overflow-visible" ref={emblaRef}>
@@ -473,7 +474,7 @@ export function DeviceMockup({
                           </div>
                         ) : (<div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]"><ImageIcon className="w-12 h-12 text-black/10" /><span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto Aqui</span></div>)}
                       </div>
-                      {titlePosition === 'bottom' && <RenderTitle />}
+                      {titlePosition === 'bottom' && titleContent}
                     </div>
 
                     {message && (
@@ -489,7 +490,7 @@ export function DeviceMockup({
                     )}
 
                     <div className="w-full z-20">
-                      {RenderCounter()}
+                      {counterContent}
                     </div>
                   </div>
                 )}

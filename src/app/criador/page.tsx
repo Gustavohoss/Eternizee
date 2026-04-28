@@ -62,7 +62,7 @@ export default function CriadorApp() {
   const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
 
   // Date customization state
-  const [dateColor, setDateColor] = useState<string>('#ffffff');
+  const [dateColor, setDateColor] = useState<string>('#ff0000');
   const [dateFont, setDateFont] = useState<string>('inter');
   const [dateIsBold, setDateIsBold] = useState<boolean>(true);
   const [dateHasNeon, setDateHasNeon] = useState<boolean>(false);
@@ -140,9 +140,12 @@ export default function CriadorApp() {
     }
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor]);
 
+  // Apenas auto-contrasta a data se não for tema Netflix, pois Netflix tem fundo sempre escuro na prévia e o usuário quer vermelho por padrão
   useEffect(() => {
-    if (!userHasManuallyChangedDateColor) setDateColor(getContrastColor(selectedBgColor));
-  }, [selectedBgColor, userHasManuallyChangedDateColor]);
+    if (!userHasManuallyChangedDateColor && selectedTheme !== 'netflix') {
+      setDateColor(getContrastColor(selectedBgColor));
+    }
+  }, [selectedBgColor, userHasManuallyChangedDateColor, selectedTheme]);
 
   useEffect(() => {
     if (!userHasManuallyChangedMessageColor) setMessageColor(getContrastColor(selectedBgColor));
