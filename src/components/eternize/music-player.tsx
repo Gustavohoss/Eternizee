@@ -26,12 +26,11 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const playerRef = useRef<any>(null);
-  // Unique ID for each player instance to avoid DOM conflicts
-  const containerId = useRef(`player-${Math.random().toString(36).substr(2, 9)}`);
+  const containerId = useRef(`yt-player-${Math.random().toString(36).substring(2, 11)}`);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Load YouTube IFrame API script if not already present
+    // Carrega o script da API do YouTube se não existir
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
@@ -39,62 +38,65 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
       firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
     }
 
-    // Poll until YT API is ready
-    const checkYT = setInterval(() => {
-      if (window.YT && window.YT.Player) {
-        clearInterval(checkYT);
-        if (!playerRef.current) {
-          playerRef.current = new window.YT.Player(containerId.current, {
-            height: '0',
-            width: '0',
-            videoId: musicData?.id || '',
-            playerVars: {
-              autoplay: 0,
-              controls: 0,
-              disablekb: 1,
-              fs: 0,
-              rel: 0,
-              origin: typeof window !== 'undefined' ? window.location.origin : '',
+    const initPlayer = () => {
+      if (window.YT && window.YT.Player && !playerRef.current) {
+        playerRef.current = new window.YT.Player(containerId.current, {
+          height: '1',
+          width: '1',
+          videoId: musicData?.id || '',
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            rel: 0,
+            origin: typeof window !== 'undefined' ? window.location.origin : '',
+            enablejsapi: 1
+          },
+          events: {
+            onStateChange: (event: any) => {
+              // 1 = PLAYING
+              if (event.data === 1) {
+                setIsPlaying(true);
+                setDuration(event.target.getDuration());
+                startTimer();
+              } else {
+                setIsPlaying(false);
+                stopTimer();
+              }
             },
-            events: {
-              onStateChange: (event: any) => {
-                // YT.PlayerState.PLAYING = 1
-                if (event.data === 1) {
-                  setIsPlaying(true);
-                  setDuration(event.target.getDuration());
-                  startTimer();
-                } else {
-                  setIsPlaying(false);
-                  stopTimer();
-                }
-              },
-              onReady: (event: any) => {
-                if (musicData?.id) {
-                  event.target.cueVideoById(musicData.id);
-                }
+            onReady: (event: any) => {
+              if (musicData?.id) {
+                event.target.cueVideoById(musicData.id);
               }
             }
-          });
-        }
+          }
+        });
       }
-    }, 200);
+    };
+
+    const checkYT = setInterval(() => {
+      if (window.YT && window.YT.Player) {
+        initPlayer();
+        clearInterval(checkYT);
+      }
+    }, 500);
 
     return () => {
       clearInterval(checkYT);
       stopTimer();
       if (playerRef.current && playerRef.current.destroy) {
         playerRef.current.destroy();
+        playerRef.current = null;
       }
     };
   }, []);
 
-  // Update video when musicData changes
   useEffect(() => {
     if (playerRef.current && musicData?.id && playerRef.current.cueVideoById) {
       playerRef.current.cueVideoById(musicData.id);
       setIsPlaying(false);
       setCurrentTime(0);
-      // Auto-expand when a music is first selected
       if (!isExpanded && musicData.id) setIsExpanded(true);
     }
   }, [musicData?.id]);
@@ -105,7 +107,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
       if (playerRef.current && playerRef.current.getCurrentTime) {
         setCurrentTime(playerRef.current.getCurrentTime());
       }
-    }, 1000);
+    }, 500);
   };
 
   const stopTimer = () => {
@@ -114,13 +116,13 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!playerRef.current || !playerRef.current.playVideo) return;
+    if (!playerRef.current) return;
     
     const state = playerRef.current.getPlayerState?.();
-    if (state === 1) { // Currently playing
+    if (state === 1) { // Tocando
       playerRef.current.pauseVideo();
     } else {
-      // Ensure audio is unmuted and volume is set on user interaction
+      // Força ativação do som e volume no gesto do usuário
       playerRef.current.unMute();
       playerRef.current.setVolume(100);
       playerRef.current.playVideo();
@@ -203,8 +205,10 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         </div>
       </div>
 
-      {/* Hidden YouTube player container */}
-      <div id={containerId.current} className="hidden"></div>
+      {/* Player invisível mas presente para evitar bloqueios de visibilidade */}
+      <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
+        <div id={containerId.current}></div>
+      </div>
     </div>
   );
 }
