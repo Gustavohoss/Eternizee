@@ -237,7 +237,7 @@ export function DeviceMockup({
         <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200">
           <Lock className="w-3 h-3 text-neutral-400" />
           <div className="text-[11px] text-neutral-600 font-medium truncate">
-            heartzzu.com/{slugifiedTitle || 'seu-nome'}
+            eternize.com/{slugifiedTitle || 'seu-nome'}
           </div>
         </div>
       </div>
@@ -273,8 +273,8 @@ export function DeviceMockup({
                   <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col custom-scroll overflow-y-auto">
                     {/* Header */}
                     <header className="sticky top-0 z-50 px-4 py-4 flex items-center justify-between bg-gradient-to-b from-black via-black/80 to-transparent">
-                      <div className="text-[#e50914] font-bebas text-2xl tracking-tighter uppercase">HEARTZZU</div>
-                      <div className="w-8 h-8 rounded-sm bg-[#e50914] flex items-center justify-center text-[11px] font-black tracking-tight">HZ</div>
+                      <div className="text-[#e50914] font-bebas text-2xl tracking-tighter uppercase">ETERNIZE</div>
+                      <div className="w-8 h-8 rounded-sm bg-[#e50914] flex items-center justify-center text-[11px] font-black tracking-tight">EZ</div>
                     </header>
 
                     {/* Hero Section */}
@@ -290,7 +290,7 @@ export function DeviceMockup({
                       <div className="relative z-20 px-4 pb-6 pt-48">
                         <div className="mb-1">
                           <span className="text-[#e50914] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-1">
-                            <span className="text-xs">❤️</span> Heartzzu Original
+                            <span className="text-xs">❤️</span> Eternize Original
                           </span>
                         </div>
                         
