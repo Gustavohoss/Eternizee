@@ -1,6 +1,7 @@
+
 'use client';
 
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { 
   Heart, 
@@ -13,7 +14,10 @@ import {
   ChevronDown,
   Lock,
   Music2,
-  Hash
+  Hash,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -135,6 +139,11 @@ export function DeviceMockup({
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
+  // States for Netflix Experience
+  const [isIntroActive, setIsIntroActive] = useState(false);
+  const [showStories, setShowStories] = useState(false);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+
   useEffect(() => {
     if (!date) {
       setTimeDiff(null);
@@ -202,38 +211,143 @@ export function DeviceMockup({
     }
   };
 
-  const shadowSizeDate = dateNeonStrength;
+  const startExperience = () => {
+    if (uploadedPhotos.length === 0) return;
+    setIsIntroActive(true);
+    setTimeout(() => {
+      setIsIntroActive(false);
+      setShowStories(true);
+      setCurrentStoryIndex(0);
+    }, 3500); // 1.2s close + 0.3s black + 1s logo + 1s fade
+  };
+
+  const nextStory = () => {
+    if (currentStoryIndex < uploadedPhotos.length - 1) {
+      setCurrentStoryIndex(prev => prev + 1);
+    } else {
+      setShowStories(false);
+    }
+  };
+
+  const prevStory = () => {
+    if (currentStoryIndex > 0) {
+      setCurrentStoryIndex(prev => prev - 1);
+    }
+  };
+
+  const shadowSizeDate = dateNeonStrength || 10;
   const neonShadowDate = dateHasNeon 
     ? `0 0 ${shadowSizeDate/2}px ${dateColor}, 0 0 ${shadowSizeDate}px ${dateColor}, 0 0 ${shadowSizeDate*1.5}px ${dateColor}` 
     : 'none';
     
   const dateStyle: React.CSSProperties = {
     color: dateColor,
-    fontFamily: getFontFamily(dateFont),
+    fontFamily: getFontFamily(dateFont || 'inter'),
     fontWeight: dateIsBold ? '700' : '400',
     textShadow: neonShadowDate
   };
 
-  const shadowSizeTitle = titleNeonStrength;
+  const shadowSizeTitle = titleNeonStrength || 10;
   const neonShadowTitle = titleHasNeon 
     ? `0 0 ${shadowSizeTitle/2}px ${titleColor}, 0 0 ${shadowSizeTitle}px ${titleColor}, 0 0 ${shadowSizeTitle*1.5}px ${titleColor}` 
     : 'none';
 
   const titleStyle: React.CSSProperties = { 
     color: titleColor,
-    fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : getFontFamily(titleFont),
+    fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : getFontFamily(titleFont || 'dancing-script'),
     fontWeight: selectedTheme === 'netflix' ? 'normal' : (titleIsBold ? '700' : '400'),
     textShadow: neonShadowTitle,
     textTransform: selectedTheme === 'netflix' ? 'uppercase' : 'none' as any
   };
 
-  const slugifiedTitle = pageTitle.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   return (
     <div className={cn(
-      "w-full transition-all duration-500 flex flex-col", 
+      "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full max-w-none" : "max-w-[380px]"
     )}>
+      {/* Intro Curtain Animation */}
+      {isIntroActive && (
+        <div className="absolute inset-0 z-[1000] overflow-hidden bg-black flex items-center justify-center">
+          <div className="flex w-full h-full absolute inset-0">
+            {[...Array(30)].map((_, i) => (
+              <div 
+                key={i} 
+                className={cn(
+                  "flex-1 h-full transition-transform duration-[1200ms] cubic-bezier(0.45, 0.05, 0.55, 0.95)",
+                  i % 2 === 0 ? "translate-y-0" : "translate-y-0",
+                  "animate-in fade-in fill-mode-forwards"
+                )}
+                style={{
+                  backgroundColor: `rgb(${Math.floor(26 + (i * (192 / 30)))}, 0, 0)`,
+                  transitionDelay: `${i * 0.02}s`,
+                  transform: 'translateY(0%)'
+                }}
+              />
+            ))}
+          </div>
+          <div className="relative z-[1010] animate-in fade-in duration-1000 delay-1500">
+            <h1 className="text-[#E50914] text-4xl md:text-6xl font-bebas tracking-[15px] uppercase transform scale-110 blur-0 transition-all duration-1000">
+              ETERNIZE
+            </h1>
+          </div>
+        </div>
+      )}
+
+      {/* Story Viewer Interface */}
+      {showStories && uploadedPhotos.length > 0 && (
+        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-500">
+          {/* Progress Bars */}
+          <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1">
+            {uploadedPhotos.map((_, i) => (
+              <div key={i} className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
+                <div 
+                  className={cn(
+                    "h-full bg-white transition-all duration-100",
+                    i < currentStoryIndex ? "w-full" : i === currentStoryIndex ? "w-1/2" : "w-0"
+                  )} 
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Close Button */}
+          <button 
+            onClick={() => setShowStories(false)}
+            className="absolute top-8 right-4 z-[520] p-2 bg-black/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          {/* Interaction Layers */}
+          <div className="absolute inset-0 z-[505] flex">
+            <div className="flex-1 h-full cursor-pointer" onClick={prevStory} />
+            <div className="flex-1 h-full cursor-pointer" onClick={nextStory} />
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 relative">
+            <Image 
+              src={uploadedPhotos[currentStoryIndex]} 
+              fill 
+              className="object-cover" 
+              alt={`Story ${currentStoryIndex}`} 
+              priority
+            />
+            {/* Bottom Info Overlay */}
+            <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black via-black/40 to-transparent">
+              <p className="text-[#e50914] text-[10px] font-black uppercase tracking-[0.2em] mb-2">
+                Memória {currentStoryIndex + 1} / {uploadedPhotos.length}
+              </p>
+              <h2 style={titleStyle} className="text-3xl font-bebas text-white tracking-tight leading-none mb-4">
+                {pageTitle || 'ETERNIZE'}
+              </h2>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!isFullscreen && (
         <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       )}
@@ -313,7 +427,7 @@ export function DeviceMockup({
                       <div className="border border-neutral-600 px-1 rounded-sm text-[9px] bg-black/40 font-bold">HD</div>
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-4">
                       {message ? (
                         <div 
                           className="text-[13px] text-white/70 leading-relaxed line-clamp-3" 
@@ -329,7 +443,10 @@ export function DeviceMockup({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <button className="w-full bg-white text-black py-2.5 rounded flex items-center justify-center gap-2 text-sm font-bold active:scale-95 transition-transform">
+                      <button 
+                        onClick={startExperience}
+                        className="w-full bg-white text-black py-2.5 rounded flex items-center justify-center gap-2 text-sm font-bold active:scale-95 transition-transform"
+                      >
                         <span className="text-base">▶</span> Reproduzir
                       </button>
                       <div className="flex gap-2">
@@ -476,43 +593,43 @@ export function DeviceMockup({
                   <div className="w-full py-4">
                     {selectedCountStyle === 'padrao' && (
                       <div className="w-full text-center">
-                        <h2 className="text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                        <h2 className="text-[#55b2d4] text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                           Uau, estão juntos há
                         </h2>
                         <div className="bg-[#181818] rounded-[24px] border border-white/5 overflow-hidden p-6 shadow-2xl relative">
-                          <div className="grid grid-cols-3 relative">
+                          <div className="grid grid-cols-3 gap-y-8 relative">
                             {/* Linhas Divisórias */}
                             <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/5 -translate-y-1/2"></div>
                             <div className="absolute left-1/3 inset-y-0 w-[1px] bg-white/5"></div>
                             <div className="absolute left-2/3 inset-y-0 w-[1px] bg-white/5"></div>
 
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.years || 0}</span>
-                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Anos</span>
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.years || 0}</span>
+                              <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Anos</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.months || 0}</span>
-                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Meses</span>
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.months || 0}</span>
+                              <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Meses</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.days || 0}</span>
-                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Dias</span>
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.days || 0}</span>
+                              <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Dias</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.hours || 0}</span>
-                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Horas</span>
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.hours || 0}</span>
+                              <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Horas</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.minutes || 0}</span>
-                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Minutos</span>
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.minutes || 0}</span>
+                              <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Minutos</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.seconds || 0}</span>
-                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Segundos</span>
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.seconds || 0}</span>
+                              <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Segundos</span>
                             </div>
                           </div>
                         </div>
-                        <p className="text-neutral-500 text-[10px] mt-6 font-medium">
+                        <p className="text-neutral-500 text-xs mt-8 font-medium">
                           Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                         </p>
                       </div>
@@ -571,7 +688,7 @@ export function DeviceMockup({
                 {message && (
                   <div className="w-full px-2 mt-2">
                     <div 
-                      style={{ color: messageColor, fontFamily: getFontFamily(messageFont) }} 
+                      style={{ color: messageColor, fontFamily: getFontFamily(messageFont || 'inter') }} 
                       className="text-center text-sm leading-relaxed" 
                       dangerouslySetInnerHTML={{ __html: message }}
                     />
