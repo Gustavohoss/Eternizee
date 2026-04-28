@@ -591,7 +591,7 @@ export default function EternizeApp() {
                   </p>
                 </div>
 
-                <div className="w-full max-w-md space-y-8">
+                <div className="w-full max-md space-y-8">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {uploadedPhotos.map((photo, i) => (
                       <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
@@ -735,7 +735,6 @@ export default function EternizeApp() {
                   </Button>
                   <Button 
                     onClick={handleNextToPageTitle} 
-                    disabled={uploadedPhotos.length === 0}
                     className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                   >
                     Próxima etapa <ChevronRight className="w-4 h-4" />
@@ -885,7 +884,6 @@ export default function EternizeApp() {
                   </Button>
                   <Button 
                     onClick={handleNextToDataLocation} 
-                    disabled={!pageTitle.trim()}
                     className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
                   >
                     Próxima etapa <ChevronRight className="w-4 h-4" />
@@ -994,7 +992,7 @@ export default function EternizeApp() {
                   <Button onClick={handleBack} variant="outline" className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2">
                     <ChevronLeft className="w-4 h-4" /> Voltar
                   </Button>
-                  <Button className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2" disabled={!date}>
+                  <Button className="w-full sm:flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
                     Finalizar criação <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -1033,8 +1031,10 @@ export default function EternizeApp() {
                         if (step === 'customize-background') handleNextToPhotos();
                         else if (step === 'photos') handleNextToPageTitle();
                         else if (step === 'page-title') handleNextToDataLocation();
+                        else if (step === 'data-location') {
+                           // Logic to finish or proceed to payment/preview
+                        }
                      }}
-                     disabled={(step === 'photos' && uploadedPhotos.length === 0) || (step === 'page-title' && !pageTitle.trim())}
                      className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm"
                    >
                      {step === 'data-location' ? 'Finalizar criação' : 'Próxima etapa'} <ChevronRight className="w-4 h-4" />
