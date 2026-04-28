@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -8,6 +9,7 @@ out vec4 O;
 uniform float time;
 uniform vec2 resolution;
 uniform vec3 u_color;
+uniform float u_intensity;
 
 #define FC gl_FragCoord.xy
 #define R resolution
@@ -15,7 +17,7 @@ uniform vec3 u_color;
 
 float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(rnd(i),rnd(i+vec2(1,0)),u.x),mix(rnd(i+vec2(0,1)),rnd(i+1.),u.x),u.y);}
-float fbm(vec2 p){float t=.0,a=1.;for(int i=0;i<5;i++){t+=a*noise(p);p*=mat2(1,-1.2,.2,1.2)*2.;a*=.5;}return t;}
+float fbm(vec2 p){float t=.0,a=1.;for(int i=0; i<5; i++){t+=a*noise(p);p*=mat2(1,-1.2,.2,1.2)*2.;a*=.5;}return t;}
 
 void main(){
   vec2 uv=(FC-.5*R)/R.y;
@@ -29,6 +31,9 @@ void main(){
   col.r-=fbm(uv+vec2(0,T*.015)+n);
   col.g-=fbm(uv*1.003+vec2(0,T*.015)+n+.003);
   col.b-=fbm(uv*1.006+vec2(0,T*.015)+n+.006);
+
+  // Apply intensity to the smoke
+  col = mix(vec3(0.0), col, u_intensity);
 
   col=mix(col, u_color, dot(col,vec3(.21,.71,.07)));
 
@@ -51,6 +56,7 @@ void main(){gl_Position=position;}`;
   private fs: WebGLShader | null = null;
   private buffer: WebGLBuffer | null = null;
   private color: [number, number, number] = [0.5, 0.5, 0.5];
+  private intensity: number = 0.5;
 
   constructor(canvas: HTMLCanvasElement, fragmentSource: string) {
     this.canvas = canvas;
@@ -63,8 +69,12 @@ void main(){gl_Position=position;}`;
     this.color = newColor;
   }
 
+  updateIntensity(val: number) {
+    this.intensity = val;
+  }
+
   updateScale() {
-    const dpr = 1; // Keeping it standard for performance in mockup
+    const dpr = 1; 
     const width = this.canvas.clientWidth;
     const height = this.canvas.clientHeight;
     if (this.canvas.width !== width || this.canvas.height !== height) {
@@ -122,6 +132,7 @@ void main(){gl_Position=position;}`;
     (program as any).resolution = gl.getUniformLocation(program, "resolution");
     (program as any).time = gl.getUniformLocation(program, "time");
     (program as any).u_color = gl.getUniformLocation(program, "u_color");
+    (program as any).u_intensity = gl.getUniformLocation(program, "u_intensity");
   }
 
   render(now = 0) {
@@ -132,6 +143,7 @@ void main(){gl_Position=position;}`;
     gl.uniform2f((program as any).resolution, canvas.width, canvas.height);
     gl.uniform1f((program as any).time, now * 1e-3);
     gl.uniform3fv((program as any).u_color, this.color);
+    gl.uniform1f((program as any).u_intensity, this.intensity);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 }
@@ -149,10 +161,12 @@ const hexToRgb = (hex: string): [number, number, number] | null => {
 
 interface SmokeBackgroundProps {
   smokeColor?: string;
+  intensity?: number;
 }
 
 export const SmokeBackground: React.FC<SmokeBackgroundProps> = ({ 
-  smokeColor = "#808080"
+  smokeColor = "#808080",
+  intensity = 0.5
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rendererRef = useRef<Renderer | null>(null);
@@ -190,6 +204,13 @@ export const SmokeBackground: React.FC<SmokeBackgroundProps> = ({
             }
         }
     }, [smokeColor]);
+
+    useEffect(() => {
+      const renderer = rendererRef.current;
+      if (renderer) {
+          renderer.updateIntensity(intensity);
+      }
+    }, [intensity]);
 
     return (
         <canvas ref={canvasRef} className="w-full h-full block" />

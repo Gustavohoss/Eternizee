@@ -36,6 +36,13 @@ export default function CriadorApp() {
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   
+  // Customization states for specific effects
+  const [sparklesDensity, setSparklesDensity] = useState<number>(100);
+  const [sparklesSpeed, setSparklesSpeed] = useState<number>(0.5);
+  const [smokeIntensity, setSmokeIntensity] = useState<number>(0.5);
+  const [patternDuration, setPatternDuration] = useState<number>(150);
+  const [patternDensity, setPatternDensity] = useState<number>(1);
+
   // Card customization state
   const [cardColor, setCardColor] = useState<string>('#ffffff');
   const [showCard, setShowCard] = useState<boolean>(true);
@@ -195,6 +202,19 @@ export default function CriadorApp() {
                 onEmojiSizeChange={setEmojiSize}
                 isEmojiPickerOpen={isEmojiPickerOpen}
                 onEmojiPickerOpenChange={setIsEmojiPickerOpen}
+                
+                // Specific effect states
+                sparklesDensity={sparklesDensity}
+                onSparklesDensityChange={setSparklesDensity}
+                sparklesSpeed={sparklesSpeed}
+                onSparklesSpeedChange={setSparklesSpeed}
+                smokeIntensity={smokeIntensity}
+                onSmokeIntensityChange={setSmokeIntensity}
+                patternDuration={patternDuration}
+                onPatternDurationChange={setPatternDuration}
+                patternDensity={patternDensity}
+                onPatternDensityChange={setPatternDensity}
+
                 onBack={handleBack}
                 onNext={handleNext}
               />
@@ -330,6 +350,13 @@ export default function CriadorApp() {
                  musicHasNeon={musicHasNeon}
                  musicNeonStrength={musicNeonStrength}
                  isAutoPlay={isMusicAutoPlay}
+
+                 // Effect specific props
+                 sparklesDensity={sparklesDensity}
+                 sparklesSpeed={sparklesSpeed}
+                 smokeIntensity={smokeIntensity}
+                 patternDuration={patternDuration}
+                 patternDensity={patternDensity}
                />
                <div className="lg:hidden mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">

@@ -1,7 +1,8 @@
+
 'use client';
 
 import React from 'react';
-import { Palette, Sparkles, Ban, Heart, Type, ChevronLeft, ChevronRight, Star, Wind, Grid } from 'lucide-react';
+import { Palette, Sparkles, Ban, Heart, Type, ChevronLeft, ChevronRight, Star, Wind, Grid, Gauge, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -23,6 +24,19 @@ interface StepCustomizeBackgroundProps {
   onEmojiSizeChange: (size: number) => void;
   isEmojiPickerOpen: boolean;
   onEmojiPickerOpenChange: (open: boolean) => void;
+  
+  // Specific effect states
+  sparklesDensity: number;
+  onSparklesDensityChange: (val: number) => void;
+  sparklesSpeed: number;
+  onSparklesSpeedChange: (val: number) => void;
+  smokeIntensity: number;
+  onSmokeIntensityChange: (val: number) => void;
+  patternDuration: number;
+  onPatternDurationChange: (val: number) => void;
+  patternDensity: number;
+  onPatternDensityChange: (val: number) => void;
+
   onBack: () => void;
   onNext: () => void;
 }
@@ -40,6 +54,18 @@ export function StepCustomizeBackground({
   onEmojiSizeChange,
   isEmojiPickerOpen,
   onEmojiPickerOpenChange,
+
+  sparklesDensity,
+  onSparklesDensityChange,
+  sparklesSpeed,
+  onSparklesSpeedChange,
+  smokeIntensity,
+  onSmokeIntensityChange,
+  patternDuration,
+  onPatternDurationChange,
+  patternDensity,
+  onPatternDensityChange,
+
   onBack,
   onNext
 }: StepCustomizeBackgroundProps) {
@@ -63,6 +89,61 @@ export function StepCustomizeBackground({
             <div onClick={() => onEffectChange('smoke')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'smoke' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Wind className="w-5 h-5 text-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Nuvem de Fumaça</p><p className="text-[10px] text-white/40">Fumaça animada</p></div></div>
             <div onClick={() => onEffectChange('pattern')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'pattern' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Grid className="w-5 h-5 text-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Padrão em Queda</p><p className="text-[10px] text-white/40">Elementos caindo</p></div></div>
           </div>
+
+          {/* Dynamic Customization Controls based on selected effect */}
+          {selectedEffect !== 'none' && (
+            <div className="bg-[#141414] rounded-2xl p-6 border border-[#222] space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="flex items-center gap-2 mb-2"><Gauge className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Ajustes do Efeito</h3></div>
+              
+              {selectedEffect === 'sparkles' && (
+                <>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Densidade de Estrelas</Label>
+                      <span className="text-[10px] font-black text-primary">{sparklesDensity}</span>
+                    </div>
+                    <Slider value={[sparklesDensity]} onValueChange={(val) => onSparklesDensityChange(val[0])} min={50} max={800} step={10} />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Velocidade</Label>
+                      <span className="text-[10px] font-black text-primary">{sparklesSpeed.toFixed(1)}x</span>
+                    </div>
+                    <Slider value={[sparklesSpeed]} onValueChange={(val) => onSparklesSpeedChange(val[0])} min={0.1} max={5} step={0.1} />
+                  </div>
+                </>
+              )}
+
+              {selectedEffect === 'smoke' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Intensidade da Fumaça</Label>
+                    <span className="text-[10px] font-black text-primary">{(smokeIntensity * 100).toFixed(0)}%</span>
+                  </div>
+                  <Slider value={[smokeIntensity]} onValueChange={(val) => onSmokeIntensityChange(val[0])} min={0.1} max={1} step={0.05} />
+                </div>
+              )}
+
+              {selectedEffect === 'pattern' && (
+                <>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Velocidade da Queda</Label>
+                      <span className="text-[10px] font-black text-primary">{((300 - patternDuration) / 2.8).toFixed(0)}%</span>
+                    </div>
+                    <Slider value={[patternDuration]} onValueChange={(val) => onPatternDurationChange(val[0])} min={20} max={300} step={5} />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Densidade</Label>
+                      <span className="text-[10px] font-black text-primary">{patternDensity.toFixed(1)}x</span>
+                    </div>
+                    <Slider value={[patternDensity]} onValueChange={(val) => onPatternDensityChange(val[0])} min={0.5} max={4} step={0.1} />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="space-y-5 bg-white/5 p-6 rounded-2xl border border-white/10">

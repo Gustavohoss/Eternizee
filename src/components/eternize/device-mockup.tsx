@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -54,6 +55,13 @@ interface DeviceMockupProps {
   musicHasNeon?: boolean;
   musicNeonStrength?: number;
   isAutoPlay?: boolean;
+
+  // Specific effect customization
+  sparklesDensity?: number;
+  sparklesSpeed?: number;
+  smokeIntensity?: number;
+  patternDuration?: number;
+  patternDensity?: number;
 }
 
 export function DeviceMockup({
@@ -89,7 +97,13 @@ export function DeviceMockup({
   musicTextColor = '#ffffff',
   musicHasNeon = false,
   musicNeonStrength = 15,
-  isAutoPlay = true
+  isAutoPlay = true,
+
+  sparklesDensity = 120,
+  sparklesSpeed = 0.5,
+  smokeIntensity = 0.5,
+  patternDuration = 150,
+  patternDensity = 1
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -279,16 +293,16 @@ export function DeviceMockup({
                 background="transparent"
                 minSize={0.4}
                 maxSize={1.2}
-                particleDensity={100}
+                particleDensity={sparklesDensity}
                 className="w-full h-full"
                 particleColor="#FFFFFF"
-                speed={0.5}
+                speed={sparklesSpeed}
               />
             </div>
           )}
           {selectedEffect === 'smoke' && (
             <div className="absolute inset-0 pointer-events-none z-10">
-              <SmokeBackground smokeColor={selectedBgColor} />
+              <SmokeBackground smokeColor={selectedBgColor} intensity={smokeIntensity} />
             </div>
           )}
           {selectedEffect === 'pattern' && (
@@ -297,7 +311,8 @@ export function DeviceMockup({
                 backgroundColor={selectedBgColor}
                 color="rgba(255,255,255,0.15)"
                 blurIntensity="0px"
-                duration={120}
+                duration={patternDuration}
+                density={patternDensity}
               />
             </div>
           )}
