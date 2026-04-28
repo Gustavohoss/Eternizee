@@ -10,7 +10,8 @@ import {
   Play,
   Plus,
   ThumbsUp,
-  ChevronDown
+  ChevronDown,
+  Lock
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -220,13 +221,31 @@ export function DeviceMockup({
     textTransform: selectedTheme === 'netflix' ? 'uppercase' : 'none' as any
   };
 
+  const slugifiedTitle = pageTitle.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
   return (
-    <div className={cn("w-full transition-all duration-500", isFullscreen ? "max-w-[400px]" : "max-w-[300px]")}>
+    <div className={cn("w-full transition-all duration-500", isFullscreen ? "max-w-[420px]" : "max-w-[300px]")}>
       {!isFullscreen && (
         <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       )}
-      <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/presente</div></div></div>
-      <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2.5rem] overflow-hidden shadow-2xl">
+      
+      {/* Browser Address Bar - Based on image reference */}
+      <div className={cn(
+        "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center transition-all",
+        isFullscreen ? "rounded-none" : "rounded-t-2xl"
+      )}>
+        <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200">
+          <Lock className="w-3 h-3 text-neutral-400" />
+          <div className="text-[11px] text-neutral-600 font-medium truncate">
+            heartzzu.com/{slugifiedTitle || 'seu-nome'}
+          </div>
+        </div>
+      </div>
+
+      <div className={cn(
+        "relative aspect-[9/19] bg-black border-x border-b border-white/10 overflow-hidden shadow-2xl",
+        isFullscreen ? "rounded-none h-[calc(90vh-90px)]" : "rounded-b-[2.5rem]"
+      )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#141414' : selectedBgColor }}>
           {selectedEffect === 'sparkles' && selectedTheme !== 'netflix' && (
             <div className="absolute inset-0 pointer-events-none z-10">
@@ -286,7 +305,7 @@ export function DeviceMockup({
                         <div className="flex items-center gap-3 mb-5 text-[12px] font-semibold">
                           <span className="text-[#46d369]">98% compatível</span>
                           <span className="text-neutral-400 font-medium">{date ? date.getFullYear() : '2026'}</span>
-                          <span className="text-neutral-400 font-medium">1 Temporada</span>
+                          <span className="text-neutral-400 font-medium">{uploadedPhotos.length || 8} Temporadas</span>
                           <div className="border border-neutral-600 px-1 rounded-sm text-[9px] bg-black/40 font-bold">HD</div>
                         </div>
 

@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Pencil, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Maximize2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { getContrastColor } from '@/lib/color-utils';
 import { Step, MOCK_CITIES, ThemeId } from './constants';
@@ -394,10 +394,21 @@ export default function CriadorApp() {
                        <Maximize2 className="w-4 h-4" /> Ver em tela cheia
                      </Button>
                    </DialogTrigger>
-                   <DialogContent className="max-w-[420px] h-[90vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+                   <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex flex-col">
                      <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                      <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
-                     <DeviceMockup {...previewProps} isFullscreen />
+                     
+                     {/* Fullscreen Header based on image */}
+                     <div className="bg-black px-4 py-3 flex items-center justify-between shrink-0">
+                       <span className="text-white text-sm font-bold">Preview</span>
+                       <DialogClose className="text-white/60 hover:text-white transition-colors">
+                         <X className="w-5 h-5" />
+                       </DialogClose>
+                     </div>
+                     
+                     <div className="flex-1 overflow-hidden">
+                       <DeviceMockup {...previewProps} isFullscreen />
+                     </div>
                    </DialogContent>
                  </Dialog>
                  <DeviceMockup {...previewProps} />
@@ -441,10 +452,21 @@ export default function CriadorApp() {
                      <Maximize2 className="w-3 h-3" /> Ver em tela cheia
                    </Button>
                  </DialogTrigger>
-                 <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+                 <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex flex-col">
                    <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                    <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
-                   <DeviceMockup {...previewProps} isFullscreen />
+                   
+                   {/* Fullscreen Header based on image */}
+                   <div className="bg-black px-4 py-3 flex items-center justify-between shrink-0">
+                     <span className="text-white text-sm font-bold">Preview</span>
+                     <DialogClose className="text-white/60 hover:text-white transition-colors">
+                       <X className="w-5 h-5" />
+                     </DialogClose>
+                   </div>
+
+                   <div className="flex-1 overflow-hidden">
+                     <DeviceMockup {...previewProps} isFullscreen />
+                   </div>
                  </DialogContent>
                </Dialog>
                <DeviceMockup {...previewProps} />
