@@ -275,7 +275,7 @@ export function DeviceMockup({
           <div className="absolute inset-0 flex flex-col items-center pt-8 px-5 gap-6 overflow-y-auto hide-scrollbar pb-10">
             {(step !== 'theme-selection' && step !== 'gift-type') && (
               <>
-                <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center", showCard ? "shadow-[0_40px_100px_rgba(0,0,0,0.9)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
+                <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
                   {titlePosition === 'top' && <RenderTitle />}
                   <div className={cn("w-full aspect-square relative photo-display-area", photoEffect === 'slide' ? "overflow-hidden rounded-[4px]" : "overflow-visible")} style={{ perspective: '1000px' }}>
                     {uploadedPhotos.length > 0 ? (
@@ -342,4 +342,3 @@ export function DeviceMockup({
     </div>
   );
 }
-
