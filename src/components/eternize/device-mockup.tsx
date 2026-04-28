@@ -23,7 +23,11 @@ interface DeviceMockupProps {
   uploadedPhotos: string[];
   pageTitle: string;
   message?: string;
-  spotifyUrl?: string;
+  musicData?: {
+    id: string;
+    title: string;
+    thumb: string;
+  };
   date?: Date;
   selectedCountStyle: string;
   photoEffect: 'slide' | 'coverflow' | 'cards';
@@ -53,7 +57,7 @@ export function DeviceMockup({
   uploadedPhotos,
   pageTitle,
   message,
-  spotifyUrl,
+  musicData,
   date,
   selectedCountStyle,
   photoEffect = 'slide',
@@ -304,7 +308,7 @@ export function DeviceMockup({
                 )}
 
                 <div className="w-full animate-in zoom-in-95 duration-500">
-                  <MusicPlayer spotifyUrl={spotifyUrl} />
+                  <MusicPlayer musicData={musicData} />
                 </div>
 
                 <div className="w-full">

@@ -31,7 +31,7 @@ export default function CriadorApp() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');
-  const [spotifyUrl, setSpotifyUrl] = useState<string>('');
+  const [musicData, setMusicData] = useState<{id: string, title: string, thumb: string} | undefined>(undefined);
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   
@@ -242,8 +242,8 @@ export default function CriadorApp() {
 
             {step === 'music' && (
               <StepMusic 
-                spotifyUrl={spotifyUrl}
-                onSpotifyUrlChange={setSpotifyUrl}
+                musicData={musicData}
+                onMusicSelect={setMusicData}
                 onBack={handleBack}
                 onNext={handleNext}
               />
@@ -285,7 +285,7 @@ export default function CriadorApp() {
                  uploadedPhotos={uploadedPhotos}
                  pageTitle={pageTitle}
                  message={message}
-                 spotifyUrl={spotifyUrl}
+                 musicData={musicData}
                  date={date}
                  selectedCountStyle={selectedCountStyle}
                  photoEffect={photoEffect}
