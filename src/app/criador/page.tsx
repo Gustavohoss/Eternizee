@@ -150,7 +150,7 @@ export default function CriadorApp() {
   const isInitialSteps = step === 'theme-selection' || step === 'gift-type';
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative font-body">
+    <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative font-body overflow-x-hidden">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
 
       {/* Header Banner */}
@@ -193,7 +193,7 @@ export default function CriadorApp() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-[1fr_400px] gap-8 md:gap-12 items-start">
+          <div className="grid lg:grid-cols-[1fr_380px] gap-8 md:gap-12 items-start">
             
             {/* Form Column */}
             <div className="w-full min-w-0">
@@ -333,7 +333,55 @@ export default function CriadorApp() {
             </div>
 
             {/* Sticky Preview Column */}
-            <div className="lg:sticky lg:top-32 flex flex-col items-center mt-12 lg:mt-0 self-start">
+            <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center">
+               <DeviceMockup 
+                 selectedBgColor={selectedBgColor}
+                 selectedEffect={selectedEffect}
+                 isEmojiRainEnabled={isEmojiRainEnabled}
+                 selectedEmojis={selectedEmojis}
+                 emojiSize={emojiSize}
+                 step={step}
+                 uploadedPhotos={uploadedPhotos}
+                 pageTitle={pageTitle}
+                 message={message}
+                 musicData={musicData}
+                 date={date}
+                 selectedCountStyle={selectedCountStyle}
+                 photoEffect={photoEffect}
+                 titleColor={titleColor}
+                 titleFont={titleFont}
+                 titleIsBold={titleIsBold}
+                 titleHasNeon={titleHasNeon}
+                 titleNeonStrength={titleNeonStrength}
+                 cardColor={cardColor}
+                 showCard={showCard}
+                 titlePosition={titlePosition}
+                 dateColor={dateColor}
+                 dateFont={dateFont}
+                 dateIsBold={dateIsBold}
+                 dateHasNeon={dateHasNeon}
+                 dateNeonStrength={dateNeonStrength}
+                 messageColor={messageColor}
+                 messageFont={messageFont}
+                 musicBoxColor={musicBoxColor}
+                 musicTextColor={musicTextColor}
+                 musicHasNeon={musicHasNeon}
+                 musicNeonStrength={musicNeonStrength}
+                 isAutoPlay={isMusicAutoPlay}
+
+                 sparklesDensity={sparklesDensity}
+                 sparklesSpeed={sparklesSpeed}
+                 sparklesColor={sparklesColor}
+                 smokeIntensity={smokeIntensity}
+                 smokeColor={smokeColor}
+                 patternDuration={patternDuration}
+                 patternDensity={patternDensity}
+                 patternColor={patternColor}
+               />
+            </div>
+
+            {/* Mobile View Only - At the bottom of the form on small screens */}
+            <div className="lg:hidden flex flex-col items-center mt-12 w-full">
                <DeviceMockup 
                  selectedBgColor={selectedBgColor}
                  selectedEffect={selectedEffect}
@@ -379,8 +427,7 @@ export default function CriadorApp() {
                  patternColor={patternColor}
                />
 
-               {/* Mobile Controls Only */}
-               <div className="lg:hidden mt-10 space-y-5 w-full">
+               <div className="mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">
                    <Button onClick={handleBack} variant="outline" className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
                    <Button onClick={handleNext} className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm">{step === 'data-location' ? 'Finalizar criação' : 'Próxima etapa'} <ChevronRight className="w-4 h-4" /></Button>
