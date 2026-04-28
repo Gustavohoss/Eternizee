@@ -306,11 +306,26 @@ export function DeviceMockup({
                       <div className="w-[70%] h-12 bg-white/10 rounded-sm mb-3 animate-pulse-custom" />
                     )}
 
-                    <div className="flex items-center gap-3 mb-5 text-[12px] font-semibold">
+                    <div className="flex items-center gap-3 mb-4 text-[12px] font-semibold">
                       <span className="text-[#46d369]">98% compatível</span>
                       <span className="text-neutral-400 font-medium">{date ? date.getFullYear() : '2026'}</span>
                       <span className="text-neutral-400 font-medium">{uploadedPhotos.length || 8} Temporadas</span>
                       <div className="border border-neutral-600 px-1 rounded-sm text-[9px] bg-black/40 font-bold">HD</div>
+                    </div>
+
+                    <div className="mb-6">
+                      {message ? (
+                        <div 
+                          className="text-[13px] text-white/70 leading-relaxed line-clamp-3" 
+                          dangerouslySetInnerHTML={{ __html: message }}
+                        />
+                      ) : (
+                        <div className="space-y-2 animate-pulse-custom">
+                          <div className="h-2 bg-white/5 w-full rounded-full" />
+                          <div className="h-2 bg-white/5 w-full rounded-full" />
+                          <div className="h-2 bg-white/5 w-2/3 rounded-full" />
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -328,21 +343,6 @@ export function DeviceMockup({
                           ❤
                         </button>
                       </div>
-                    </div>
-
-                    <div className="mt-6">
-                      {message ? (
-                        <div 
-                          className="text-[13px] text-white/70 leading-relaxed line-clamp-3" 
-                          dangerouslySetInnerHTML={{ __html: message }}
-                        />
-                      ) : (
-                        <div className="space-y-2 animate-pulse-custom">
-                          <div className="h-2 bg-white/5 w-full rounded-full" />
-                          <div className="h-2 bg-white/5 w-full rounded-full" />
-                          <div className="h-2 bg-white/5 w-2/3 rounded-full" />
-                        </div>
-                      )}
                     </div>
                   </div>
                 </section>
