@@ -157,6 +157,51 @@ export default function CriadorApp() {
 
   const isInitialSteps = step === 'theme-selection' || step === 'gift-type';
 
+  const previewProps = {
+    selectedTheme,
+    selectedBgColor,
+    selectedEffect,
+    isEmojiRainEnabled,
+    selectedEmojis,
+    emojiSize,
+    step,
+    uploadedPhotos,
+    pageTitle,
+    message,
+    musicData,
+    date,
+    selectedCountStyle,
+    photoEffect,
+    titleColor,
+    titleFont,
+    titleIsBold,
+    titleHasNeon,
+    titleNeonStrength,
+    cardColor,
+    showCard,
+    titlePosition,
+    dateColor,
+    dateFont,
+    dateIsBold,
+    dateHasNeon,
+    dateNeonStrength,
+    messageColor,
+    messageFont,
+    musicBoxColor,
+    musicTextColor,
+    musicHasNeon,
+    musicNeonStrength,
+    isAutoPlay: isMusicAutoPlay,
+    sparklesDensity,
+    sparklesSpeed,
+    sparklesColor,
+    smokeIntensity,
+    smokeColor,
+    patternDuration,
+    patternDensity,
+    patternColor
+  };
+
   return (
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative font-body overflow-x-hidden">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
@@ -342,20 +387,25 @@ export default function CriadorApp() {
                 />
               )}
 
-              {/* Form Footer */}
-              <div className="mt-12 flex flex-col gap-5 max-w-md mx-auto md:mx-0">
-                <div className="flex flex-col sm:flex-row items-center gap-4 pt-10 border-t border-white/5">
+              {/* Mobile View Mockup - Placed between content and buttons on mobile */}
+              <div className="lg:hidden flex flex-col items-center mt-12 w-full">
+                 <DeviceMockup {...previewProps} />
+              </div>
+
+              {/* Form Footer - Buttons and purchase disclaimer */}
+              <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
+                <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
                   <Button 
                     onClick={handleBack} 
                     variant="outline" 
-                    className="w-full sm:w-auto px-8 h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center gap-2"
+                    className="w-full h-14 rounded-2xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                   >
                     <ChevronLeft className="w-4 h-4" /> Voltar etapa
                   </Button>
                   <Button 
                     onClick={handleNext} 
                     className={cn(
-                      "w-full sm:flex-1 h-12 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2",
+                      "w-full h-14 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2",
                       currentStepIndex === stepSequence.length - 1 ? "bg-primary text-white" : "bg-white text-black hover:bg-white/90"
                     )}
                   >
@@ -363,111 +413,20 @@ export default function CriadorApp() {
                     <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
+                
                 <div className="flex justify-center md:justify-start">
-                   <p className="text-[10px] font-medium text-white/30 italic flex items-center gap-2">
-                     <Pencil className="w-2.5 h-2.5" /> Você poderá editar isso após a compra
+                   <p className="text-[11px] font-medium text-white/30 italic flex items-center gap-2">
+                     <Pencil className="w-3 h-3" /> Você poderá editar isso após a compra
                    </p>
                 </div>
               </div>
             </div>
 
-            {/* Sticky Preview Column */}
+            {/* Sticky Preview Column - Only visible on desktop */}
             <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center">
-               <DeviceMockup 
-                 selectedTheme={selectedTheme}
-                 selectedBgColor={selectedBgColor}
-                 selectedEffect={selectedEffect}
-                 isEmojiRainEnabled={isEmojiRainEnabled}
-                 selectedEmojis={selectedEmojis}
-                 emojiSize={emojiSize}
-                 step={step}
-                 uploadedPhotos={uploadedPhotos}
-                 pageTitle={pageTitle}
-                 message={message}
-                 musicData={musicData}
-                 date={date}
-                 selectedCountStyle={selectedCountStyle}
-                 photoEffect={photoEffect}
-                 titleColor={titleColor}
-                 titleFont={titleFont}
-                 titleIsBold={titleIsBold}
-                 titleHasNeon={titleHasNeon}
-                 titleNeonStrength={titleNeonStrength}
-                 cardColor={cardColor}
-                 showCard={showCard}
-                 titlePosition={titlePosition}
-                 dateColor={dateColor}
-                 dateFont={dateFont}
-                 dateIsBold={dateIsBold}
-                 dateHasNeon={dateHasNeon}
-                 dateNeonStrength={dateNeonStrength}
-                 messageColor={messageColor}
-                 messageFont={messageFont}
-                 musicBoxColor={musicBoxColor}
-                 musicTextColor={musicTextColor}
-                 musicHasNeon={musicHasNeon}
-                 musicNeonStrength={musicNeonStrength}
-                 isAutoPlay={isMusicAutoPlay}
-
-                 sparklesDensity={sparklesDensity}
-                 sparklesSpeed={sparklesSpeed}
-                 sparklesColor={sparklesColor}
-                 smokeIntensity={smokeIntensity}
-                 smokeColor={smokeColor}
-                 patternDuration={patternDuration}
-                 patternDensity={patternDensity}
-                 patternColor={patternColor}
-               />
+               <DeviceMockup {...previewProps} />
             </div>
 
-            {/* Mobile View Only - At the bottom of the form on small screens */}
-            <div className="lg:hidden flex flex-col items-center mt-12 w-full">
-               <DeviceMockup 
-                 selectedTheme={selectedTheme}
-                 selectedBgColor={selectedBgColor}
-                 selectedEffect={selectedEffect}
-                 isEmojiRainEnabled={isEmojiRainEnabled}
-                 selectedEmojis={selectedEmojis}
-                 emojiSize={emojiSize}
-                 step={step}
-                 uploadedPhotos={uploadedPhotos}
-                 pageTitle={pageTitle}
-                 message={message}
-                 musicData={musicData}
-                 date={date}
-                 selectedCountStyle={selectedCountStyle}
-                 photoEffect={photoEffect}
-                 titleColor={titleColor}
-                 titleFont={titleFont}
-                 titleIsBold={titleIsBold}
-                 titleHasNeon={titleHasNeon}
-                 titleNeonStrength={titleNeonStrength}
-                 cardColor={cardColor}
-                 showCard={showCard}
-                 titlePosition={titlePosition}
-                 dateColor={dateColor}
-                 dateFont={dateFont}
-                 dateIsBold={dateIsBold}
-                 dateHasNeon={dateHasNeon}
-                 dateNeonStrength={dateNeonStrength}
-                 messageColor={messageColor}
-                 messageFont={messageFont}
-                 musicBoxColor={musicBoxColor}
-                 musicTextColor={musicTextColor}
-                 musicHasNeon={musicHasNeon}
-                 musicNeonStrength={musicNeonStrength}
-                 isAutoPlay={isMusicAutoPlay}
-
-                 sparklesDensity={sparklesDensity}
-                 sparklesSpeed={sparklesSpeed}
-                 sparklesColor={sparklesColor}
-                 smokeIntensity={smokeIntensity}
-                 smokeColor={smokeColor}
-                 patternDuration={patternDuration}
-                 patternDensity={patternDensity}
-                 patternColor={patternColor}
-               />
-            </div>
           </div>
         </div>
       )}
