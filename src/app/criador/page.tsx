@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Pencil, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { getContrastColor } from '@/lib/color-utils';
 import { Step, MOCK_CITIES, ThemeId } from './constants';
@@ -395,6 +395,8 @@ export default function CriadorApp() {
                      </Button>
                    </DialogTrigger>
                    <DialogContent className="max-w-[420px] h-[90vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+                     <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
+                     <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                      <DeviceMockup {...previewProps} isFullscreen />
                    </DialogContent>
                  </Dialog>
@@ -440,6 +442,8 @@ export default function CriadorApp() {
                    </Button>
                  </DialogTrigger>
                  <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+                   <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
+                   <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                    <DeviceMockup {...previewProps} isFullscreen />
                  </DialogContent>
                </Dialog>
