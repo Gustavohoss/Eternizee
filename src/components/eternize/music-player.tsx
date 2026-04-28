@@ -63,7 +63,7 @@ export function MusicPlayer({
             rel: 0,
             enablejsapi: 1,
             origin: window.location.origin,
-            mute: isAutoPlay ? 1 : 0 // Browsers often require muted for autoplay
+            mute: isAutoPlay ? 1 : 0
           },
           events: {
             onStateChange: (event: any) => {
@@ -109,9 +109,7 @@ export function MusicPlayer({
       playerRef.current.loadVideoById(musicData.id);
       setIsPlaying(false);
       setCurrentTime(0);
-      if (!isExpanded) setIsExpanded(true);
       
-      // If autoplay is on, ensure it plays and handles mute/unmute correctly
       if (isAutoPlay) {
         playerRef.current.playVideo();
       }
@@ -135,7 +133,6 @@ export function MusicPlayer({
     e.stopPropagation();
     if (!playerRef.current) return;
     
-    // FORÇA O DESMUDO E VOLUME NO CLIQUE (Crucial for audio to come out)
     playerRef.current.unMute();
     playerRef.current.setVolume(100);
 
