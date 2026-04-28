@@ -1,10 +1,10 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { getContrastColor } from '@/lib/color-utils';
 import { Step, MOCK_CITIES, ThemeId } from './constants';
@@ -90,10 +90,8 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix') {
-      // Sequência exclusiva para Netflix, sem o fundo padrão e com Data -> Título
       return [...base, 'data-location', 'page-title', 'photos', 'message', 'music'];
     }
-    // Sequência do Plano Padrão (Classic)
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
   }, [selectedTheme]);
 
@@ -139,6 +137,7 @@ export default function CriadorApp() {
   useEffect(() => {
     if (selectedTheme === 'netflix') {
       setTitleColor('#ffffff');
+      setDateColor('#ff0000');
     } else if (!userHasManuallyChangedTitleColor) {
       const surfaceColor = showCard ? cardColor : selectedBgColor;
       setTitleColor(getContrastColor(surfaceColor));
@@ -146,9 +145,7 @@ export default function CriadorApp() {
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor, selectedTheme]);
 
   useEffect(() => {
-    if (selectedTheme === 'netflix') {
-      setDateColor('#ff0000');
-    } else if (!userHasManuallyChangedDateColor) {
+    if (selectedTheme !== 'netflix' && !userHasManuallyChangedDateColor) {
       setDateColor(getContrastColor(selectedBgColor));
     }
   }, [selectedBgColor, userHasManuallyChangedDateColor, selectedTheme]);
@@ -390,7 +387,17 @@ export default function CriadorApp() {
               )}
 
               {/* Mobile View Mockup - Placed between content and buttons on mobile */}
-              <div className="lg:hidden flex flex-col items-center mt-12 w-full">
+              <div className="lg:hidden flex flex-col items-center mt-12 w-full gap-4">
+                 <Dialog>
+                   <DialogTrigger asChild>
+                     <Button variant="outline" className="w-full h-11 rounded-xl border-white/10 bg-white/5 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
+                       <Maximize2 className="w-4 h-4" /> Ver em tela cheia
+                     </Button>
+                   </DialogTrigger>
+                   <DialogContent className="max-w-[420px] h-[90vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+                     <DeviceMockup {...previewProps} isFullscreen />
+                   </DialogContent>
+                 </Dialog>
                  <DeviceMockup {...previewProps} />
               </div>
 
@@ -425,7 +432,17 @@ export default function CriadorApp() {
             </div>
 
             {/* Sticky Preview Column - Only visible on desktop */}
-            <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center">
+            <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center gap-6">
+               <Dialog>
+                 <DialogTrigger asChild>
+                   <Button variant="outline" size="sm" className="bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all rounded-full px-4 gap-2 text-[10px] font-black uppercase">
+                     <Maximize2 className="w-3 h-3" /> Ver em tela cheia
+                   </Button>
+                 </DialogTrigger>
+                 <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex items-center justify-center">
+                   <DeviceMockup {...previewProps} isFullscreen />
+                 </DialogContent>
+               </Dialog>
                <DeviceMockup {...previewProps} />
             </div>
 
