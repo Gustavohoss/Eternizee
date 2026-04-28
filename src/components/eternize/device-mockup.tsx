@@ -97,8 +97,6 @@ export function DeviceMockup({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
-  // Define se o player de música deve ser exibido
-  // Somente a partir do passo 'music'
   const showMusic = step === 'music' || step === 'data-location' || step === 'landing';
 
   useEffect(() => {
@@ -309,15 +307,14 @@ export function DeviceMockup({
 
                 {message && (
                   <div className="w-full text-center px-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                    <p 
+                    <div 
                       style={{ 
                         color: messageColor,
                         fontFamily: getFontFamily(messageFont)
                       }}
-                      className="text-xs md:text-sm italic leading-relaxed whitespace-pre-wrap"
-                    >
-                      "{message}"
-                    </p>
+                      className="text-xs md:text-sm italic leading-relaxed whitespace-pre-wrap break-words message-html-content"
+                      dangerouslySetInnerHTML={{ __html: message }}
+                    />
                   </div>
                 )}
 
@@ -345,3 +342,4 @@ export function DeviceMockup({
     </div>
   );
 }
+
