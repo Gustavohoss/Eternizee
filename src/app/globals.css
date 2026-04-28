@@ -77,6 +77,15 @@
   animation: selectPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Efeito de pulse para os skeletons da Netflix */
+@keyframes pulse-custom {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
+}
+.animate-pulse-custom {
+    animation: pulse-custom 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Color Picker Hue Slider Thumb Fix */
 .hue-slider {
   -webkit-appearance: none;
@@ -111,4 +120,15 @@
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+    background: #141414;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
 }

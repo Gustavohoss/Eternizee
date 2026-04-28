@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -211,8 +210,8 @@ export function DeviceMockup({
 
   const titleStyle: React.CSSProperties = { 
     color: titleColor,
-    fontFamily: selectedTheme === 'netflix' ? "'Inter', sans-serif" : getFontFamily(titleFont),
-    fontWeight: selectedTheme === 'netflix' ? '900' : (titleIsBold ? '700' : '400'),
+    fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : getFontFamily(titleFont),
+    fontWeight: selectedTheme === 'netflix' ? 'normal' : (titleIsBold ? '700' : '400'),
     textShadow: neonShadowTitle,
     textTransform: selectedTheme === 'netflix' ? 'uppercase' : 'none' as any
   };
@@ -222,18 +221,18 @@ export function DeviceMockup({
       <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/presente</div></div></div>
       <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2.5rem] overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#000000' : selectedBgColor }}>
-          {selectedEffect === 'sparkles' && (
+        <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#141414' : selectedBgColor }}>
+          {selectedEffect === 'sparkles' && selectedTheme !== 'netflix' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SparklesCore background="transparent" minSize={0.4} maxSize={1.2} particleDensity={sparklesDensity} className="w-full h-full" particleColor={sparklesColor} speed={sparklesSpeed} />
             </div>
           )}
-          {selectedEffect === 'smoke' && (
+          {selectedEffect === 'smoke' && selectedTheme !== 'netflix' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SmokeBackground smokeColor={smokeColor} backgroundColor={selectedBgColor} intensity={smokeIntensity} />
             </div>
           )}
-          {selectedEffect === 'pattern' && (
+          {selectedEffect === 'pattern' && selectedTheme !== 'netflix' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <FallingPattern backgroundColor={selectedBgColor} color={patternColor} blurIntensity="0px" duration={patternDuration} density={patternDensity} />
             </div>
@@ -246,123 +245,128 @@ export function DeviceMockup({
             {(step !== 'theme-selection' && step !== 'gift-type') && (
               <>
                 {selectedTheme === 'netflix' ? (
-                  <div className="w-full min-h-full flex flex-col bg-black" style={{ background: 'linear-gradient(180deg, #1a0505 0%, #000000 20%)' }}>
-                    <header className="flex justify-between items-center px-5 py-4">
-                      <div className="text-[#e50914] font-black tracking-tighter text-xl">HEARTZZU</div>
-                      <div className="bg-[#e50914] text-white px-2 py-1 rounded text-xs font-bold">HZ</div>
+                  <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col custom-scroll overflow-y-auto">
+                    {/* Header */}
+                    <header className="sticky top-0 z-50 px-4 py-4 flex items-center justify-between bg-gradient-to-b from-black via-black/80 to-transparent">
+                      <div className="text-[#e50914] font-bebas text-2xl tracking-tighter uppercase">HEARTZZU</div>
+                      <div className="w-8 h-8 rounded-sm bg-[#e50914] flex items-center justify-center text-[11px] font-black tracking-tight">HZ</div>
                     </header>
 
-                    <div className="px-5 space-y-4">
-                      {/* Hero Image / Placeholder */}
-                      <div className="w-full aspect-video bg-[#2f2f2f] rounded-lg overflow-hidden relative">
-                        {uploadedPhotos.length > 0 ? (
-                          <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Hero" />
-                        ) : null}
-                      </div>
-
-                      <div className="flex items-center gap-1 text-[#e50914] text-[10px] font-extrabold uppercase">
-                        <span className="text-xs">❤</span> HEARTZZU ORIGINAL
-                      </div>
-
-                      {/* Page Title / Skeleton */}
-                      {pageTitle ? (
-                        <div style={titleStyle} className="text-3xl font-black leading-tight uppercase tracking-tighter break-words">
-                          {pageTitle}
-                        </div>
-                      ) : (
-                        <div className="w-[70%] h-9 bg-[#2f2f2f] rounded-sm" />
-                      )}
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#00a651] text-[10px] font-bold">98% compatível</span>
-                        <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2026'}</span>
-                        <span className="text-white/60 text-[10px]">1 Temporada</span>
-                        <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">L</div>
-                        <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
-                      </div>
-
-                      <div className="space-y-2">
-                        {message ? (
-                          <div 
-                            className="text-[10px] text-white/80 leading-relaxed italic"
-                            style={{ color: messageColor, fontFamily: getFontFamily(messageFont) }}
-                            dangerouslySetInnerHTML={{ __html: message }}
-                          />
-                        ) : (
-                          <>
-                            <div className="w-full h-2 bg-[#2f2f2f] rounded-sm" />
-                            <div className="w-full h-2 bg-[#2f2f2f] rounded-sm" />
-                            <div className="w-4/5 h-2 bg-[#2f2f2f] rounded-sm" />
-                          </>
+                    {/* Hero Section */}
+                    <section className="relative min-h-[55vh] flex flex-col justify-end -mt-16">
+                      <div className="absolute inset-0 z-0 bg-cover bg-top" style={{ background: 'linear-gradient(135deg, rgb(35, 10, 10) 0%, rgb(15, 15, 15) 100%)' }}>
+                        {uploadedPhotos.length > 0 && (
+                          <Image src={uploadedPhotos[0]} fill className="object-cover opacity-60" alt="Hero" />
                         )}
                       </div>
+                      <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#141414] via-[#141414]/40 to-transparent"></div>
+                      <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#141414] via-[#141414]/20 to-transparent"></div>
 
-                      <button className="w-full bg-white text-black font-black py-2.5 rounded flex items-center justify-center gap-2 text-sm mt-5">
-                        <span className="text-base">▶</span> Reproduzir
-                      </button>
+                      <div className="relative z-20 px-4 pb-6 pt-24">
+                        <div className="mb-1">
+                          <span className="text-[#e50914] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-1">
+                            <span className="text-xs">❤️</span> Heartzzu Original
+                          </span>
+                        </div>
+                        
+                        {pageTitle ? (
+                          <h1 style={titleStyle} className="text-5xl font-bebas uppercase leading-[0.9] mb-3 drop-shadow-2xl tracking-tight break-words">
+                            {pageTitle}
+                          </h1>
+                        ) : (
+                          <div className="w-[70%] h-12 bg-white/10 rounded-sm mb-3 animate-pulse-custom" />
+                        )}
 
-                      <div className="action-row flex gap-2">
-                        <button className="flex-1 bg-[#2f2f2f] text-white font-bold py-2.5 rounded flex items-center justify-center gap-2 text-sm">
-                          <span className="text-base">+</span> Minha lista
-                        </button>
-                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center"><ThumbsUp className="w-4 h-4" /></button>
-                        <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center"><Heart className="w-4 h-4" /></button>
+                        <div className="flex items-center gap-3 mb-5 text-[12px] font-semibold">
+                          <span className="text-[#46d369]">98% compatível</span>
+                          <span className="text-neutral-400 font-medium">{date ? date.getFullYear() : '2026'}</span>
+                          <span className="text-neutral-400 font-medium">8 Temporadas</span>
+                          <div className="border border-neutral-600 px-1 rounded-sm text-[9px] bg-black/40 font-bold">HD</div>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <button className="w-full bg-white text-black py-2.5 rounded flex items-center justify-center gap-2 text-sm font-bold active:scale-95 transition-transform">
+                            <span className="text-base">▶</span> Reproduzir
+                          </button>
+                          <div className="flex gap-2">
+                            <button className="flex-1 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 py-2.5 rounded font-bold text-xs flex items-center justify-center gap-2 text-white">
+                              <span className="text-lg leading-none">+</span> Minha lista
+                            </button>
+                            <button className="w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center text-lg active:bg-white/20 text-white">
+                              👍
+                            </button>
+                            <button className="w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center text-lg active:bg-white/20 text-white">
+                              ❤
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* Stats Cards */}
+                    <div className="px-4 py-4 bg-[#141414]">
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5 shadow-inner">
+                          <p style={dateStyle} className="text-2xl font-bebas">{timeDiff?.years || 0}</p>
+                          <p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Anos juntos</p>
+                        </div>
+                        <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5 shadow-inner">
+                          <p style={dateStyle} className="text-2xl font-bebas">{totalDays || 0}</p>
+                          <p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias de história</p>
+                        </div>
+                        <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5 shadow-inner">
+                          <p style={dateStyle} className="text-2xl font-bebas">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '06/04'}</p>
+                          <p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Data especial</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tabs & Episodes */}
+                    <div className="px-4 mt-2">
+                      <div className="flex gap-8 border-b border-neutral-800 mb-4">
+                        <button className="pb-3 text-sm font-bold border-b-[3px] border-[#e50914] tracking-tight">Episódios</button>
+                        <button className="pb-3 text-sm font-bold text-neutral-500 tracking-tight">Detalhes</button>
+                      </div>
+                      
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-white text-sm font-bold flex items-center gap-1.5 uppercase text-[12px] tracking-tight">
+                          Temporada 1 
+                          <svg className="w-3 h-3 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                        </span>
+                        <span className="text-neutral-600 text-[11px] font-semibold">{uploadedPhotos.length || 8} episódios</span>
                       </div>
 
-                      {/* Stat Cards */}
-                      <div className="grid grid-cols-3 gap-2 mt-4">
-                        <div className="bg-[#1a1a1a] border border-white/5 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{timeDiff?.years || 0}</div>
-                          <div className="text-[8px] text-[#808080] font-bold uppercase">Anos Juntos</div>
-                        </div>
-                        <div className="bg-[#1a1a1a] border border-white/5 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{totalDays || 0}</div>
-                          <div className="text-[8px] text-[#808080] font-bold uppercase">Dias de História</div>
-                        </div>
-                        <div className="bg-[#1a1a1a] border border-white/5 rounded-md p-3 text-center">
-                          <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '06/04'}</div>
-                          <div className="text-[8px] text-[#808080] font-bold uppercase">Data Especial</div>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-5 border-b border-[#333] pt-4">
-                        <div className="pb-2 text-sm font-bold text-white border-b-[3px] border-white">Episódios</div>
-                        <div className="pb-2 text-sm font-bold text-[#808080]">Detalhes</div>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-5">
-                        <div className="font-bold flex items-center gap-1.5 text-sm text-white">
-                          Temporada 1 <ChevronDown className="w-3 h-3" />
-                        </div>
-                        <div className="text-[#808080] text-xs">{uploadedPhotos.length || 8} episódios</div>
-                      </div>
-
-                      {/* Episodes List / Skeleton */}
-                      <div className="space-y-5 pb-10">
+                      <div className="space-y-6 pb-10">
                         {uploadedPhotos.length > 0 ? (
                           uploadedPhotos.map((photo, i) => (
-                            <div key={i} className="flex gap-4">
-                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
+                            <div key={i} className="flex gap-3 items-center">
+                              <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0 relative overflow-hidden">
                                 <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
                               </div>
-                              <div className="flex-1 flex flex-col justify-center gap-2">
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                              <div className="flex-1 space-y-2">
+                                <div className="h-3 bg-[#2a2a2a] w-3/4 rounded-full"></div>
+                                <div className="h-2 bg-[#2a2a2a] w-full rounded-full"></div>
                               </div>
                             </div>
                           ))
                         ) : (
-                          [1, 2, 3].map((_, i) => (
-                            <div key={i} className="flex gap-4">
-                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0" />
-                              <div className="flex-1 flex flex-col justify-center gap-2">
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
-                              </div>
+                          <>
+                            <div className="flex gap-3 items-center animate-pulse-custom">
+                                <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0"></div>
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-3 bg-[#2a2a2a] w-3/4 rounded-full"></div>
+                                    <div className="h-2 bg-[#2a2a2a] w-full rounded-full"></div>
+                                    <div className="h-2 bg-[#2a2a2a] w-2/3 rounded-full"></div>
+                                </div>
                             </div>
-                          ))
+                            <div className="flex gap-3 items-center animate-pulse-custom opacity-60">
+                                <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0"></div>
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-3 bg-[#2a2a2a] w-2/4 rounded-full"></div>
+                                    <div className="h-2 bg-[#2a2a2a] w-full rounded-full"></div>
+                                </div>
+                            </div>
+                          </>
                         )}
                       </div>
                     </div>

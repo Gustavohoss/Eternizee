@@ -12,6 +12,8 @@ export default {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['Inter', 'sans-serif'],
+        bebas: ['Bebas Neue', 'cursive'],
+        inter: ['Inter', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
