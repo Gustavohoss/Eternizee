@@ -46,6 +46,10 @@ interface DeviceMockupProps {
   dateNeonStrength?: number;
   messageColor?: string;
   messageFont?: string;
+  musicBoxColor?: string;
+  musicTextColor?: string;
+  musicHasNeon?: boolean;
+  musicNeonStrength?: number;
 }
 
 export function DeviceMockup({
@@ -75,7 +79,11 @@ export function DeviceMockup({
   dateHasNeon = false,
   dateNeonStrength = 10,
   messageColor = '#ffffff',
-  messageFont = 'inter'
+  messageFont = 'inter',
+  musicBoxColor = '#0e0e0e',
+  musicTextColor = '#ffffff',
+  musicHasNeon = false,
+  musicNeonStrength = 15
 }: DeviceMockupProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
@@ -308,7 +316,13 @@ export function DeviceMockup({
                 )}
 
                 <div className="w-full animate-in zoom-in-95 duration-500">
-                  <MusicPlayer musicData={musicData} />
+                  <MusicPlayer 
+                    musicData={musicData} 
+                    musicBoxColor={musicBoxColor}
+                    musicTextColor={musicTextColor}
+                    musicHasNeon={musicHasNeon}
+                    musicNeonStrength={musicNeonStrength}
+                  />
                 </div>
 
                 <div className="w-full">

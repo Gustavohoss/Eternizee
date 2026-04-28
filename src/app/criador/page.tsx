@@ -61,6 +61,12 @@ export default function CriadorApp() {
   const [messageFont, setMessageFont] = useState<string>('inter');
   const [userHasManuallyChangedMessageColor, setUserHasManuallyChangedMessageColor] = useState(false);
   
+  // Music box customization state
+  const [musicBoxColor, setMusicBoxColor] = useState<string>('#0e0e0e');
+  const [musicTextColor, setMusicTextColor] = useState<string>('#ffffff');
+  const [musicHasNeon, setMusicHasNeon] = useState<boolean>(false);
+  const [musicNeonStrength, setMusicNeonStrength] = useState<number>(15);
+
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -244,6 +250,14 @@ export default function CriadorApp() {
               <StepMusic 
                 musicData={musicData}
                 onMusicSelect={setMusicData}
+                musicBoxColor={musicBoxColor}
+                onMusicBoxColorChange={setMusicBoxColor}
+                musicTextColor={musicTextColor}
+                onMusicTextColorChange={setMusicTextColor}
+                musicHasNeon={musicHasNeon}
+                onMusicHasNeonChange={setMusicHasNeon}
+                musicNeonStrength={musicNeonStrength}
+                onMusicNeonStrengthChange={setMusicNeonStrength}
                 onBack={handleBack}
                 onNext={handleNext}
               />
@@ -304,6 +318,10 @@ export default function CriadorApp() {
                  dateNeonStrength={dateNeonStrength}
                  messageColor={messageColor}
                  messageFont={messageFont}
+                 musicBoxColor={musicBoxColor}
+                 musicTextColor={musicTextColor}
+                 musicHasNeon={musicHasNeon}
+                 musicNeonStrength={musicNeonStrength}
                />
                <div className="lg:hidden mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">

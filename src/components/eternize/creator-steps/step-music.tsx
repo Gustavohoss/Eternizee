@@ -2,10 +2,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Music, Search, ChevronLeft, ChevronRight, X, Play, Pause } from 'lucide-react';
+import { Music, Search, ChevronLeft, ChevronRight, X, Play, Palette, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ColorPicker } from '@/components/eternize/color-picker';
 import { cn } from '@/lib/utils';
 
 const API_KEY = 'AIzaSyAzbeELZ6u1jXGKVGvNXHnlaqIZhJSmD0A';
@@ -19,6 +23,14 @@ interface MusicData {
 interface StepMusicProps {
   musicData?: MusicData;
   onMusicSelect: (data: MusicData | undefined) => void;
+  musicBoxColor: string;
+  onMusicBoxColorChange: (color: string) => void;
+  musicTextColor: string;
+  onMusicTextColorChange: (color: string) => void;
+  musicHasNeon: boolean;
+  onMusicHasNeonChange: (has: boolean) => void;
+  musicNeonStrength: number;
+  onMusicNeonStrengthChange: (strength: number) => void;
   onBack: () => void;
   onNext: () => void;
 }
@@ -26,6 +38,14 @@ interface StepMusicProps {
 export function StepMusic({
   musicData,
   onMusicSelect,
+  musicBoxColor,
+  onMusicBoxColorChange,
+  musicTextColor,
+  onMusicTextColorChange,
+  musicHasNeon,
+  onMusicHasNeonChange,
+  musicNeonStrength,
+  onMusicNeonStrengthChange,
   onBack,
   onNext
 }: StepMusicProps) {
@@ -129,22 +149,52 @@ export function StepMusic({
         </div>
 
         {musicData && (
-          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 animate-in zoom-in-95 group/card">
-            <div className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14">
-              <img src={musicData.thumb} className="w-full h-full object-cover" alt="" />
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <div className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">Música Selecionada</div>
-              <div className="text-white text-xs font-bold truncate pr-2">{musicData.title}</div>
+          <div className="space-y-6">
+            <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 animate-in zoom-in-95 group/card">
+              <div className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14 flex items-center justify-center bg-black">
+                <img src={musicData.thumb} className="w-full h-full object-cover opacity-80" alt="" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/card:bg-black/20 transition-all cursor-pointer">
+                    <Play className="w-6 h-6 text-white fill-white" />
+                </div>
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">Música Selecionada</div>
+                <div className="text-white text-xs font-bold truncate pr-2">{musicData.title}</div>
+              </div>
+
+              <button 
+                onClick={() => onMusicSelect(undefined)}
+                className="p-2 hover:bg-white/5 rounded-full text-white/30 hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            <button 
-              onClick={() => onMusicSelect(undefined)}
-              className="p-2 hover:bg-white/5 rounded-full text-white/30 hover:text-white transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Caixa de Música</h3></div>
+                
+                <div className="space-y-4">
+                  <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Caixa</Label>
+                  <div className="flex items-center gap-4">
+                    <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: musicBoxColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30">Fundo</p><p className="text-xs font-mono font-bold">{musicBoxColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={musicBoxColor} onChange={onMusicBoxColorChange} /></PopoverContent></Popover>
+                    <div className="flex flex-wrap gap-1.5">{['#0e0e0e', '#1a1a1a', '#7a1a1a', '#ffffff', '#111111'].map((color) => (<button key={color} onClick={() => onMusicBoxColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", musicBoxColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-white/5">
+                  <Label className="text-[11px] font-bold text-white/50 uppercase">Cor do Texto</Label>
+                  <div className="flex items-center gap-4">
+                    <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: musicTextColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30">Texto</p><p className="text-xs font-mono font-bold">{musicTextColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={musicTextColor} onChange={onMusicTextColorChange} /></PopoverContent></Popover>
+                    <div className="flex flex-wrap gap-1.5">{['#ffffff', '#ff4da6', '#e11d48', '#7a1a1a', '#111111'].map((color) => (<button key={color} onClick={() => onMusicTextColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", musicTextColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-white/5">
+                  <div className="flex items-center justify-between mb-2"><div className="flex items-center gap-2"><Zap className="w-4 h-4 text-white/40" /><Label className="text-[11px] font-bold text-white/50 uppercase cursor-pointer" htmlFor="music-neon-toggle">Efeito Neon no Botão</Label></div><Switch id="music-neon-toggle" checked={musicHasNeon} onCheckedChange={onMusicHasNeonChange} /></div>
+                  {musicHasNeon && (<div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2"><div className="flex items-center justify-between"><Label className="text-[9px] font-black uppercase tracking-wider text-white/40">Força do Neon</Label><span className="text-[10px] font-black text-primary">{musicNeonStrength}</span></div><Slider value={[musicNeonStrength]} onValueChange={(val) => onMusicNeonStrengthChange(val[0])} min={5} max={40} step={1} /></div>)}
+                </div>
+            </div>
           </div>
         )}
 

@@ -18,9 +18,19 @@ interface MusicPlayerProps {
     title: string;
     thumb: string;
   };
+  musicBoxColor?: string;
+  musicTextColor?: string;
+  musicHasNeon?: boolean;
+  musicNeonStrength?: number;
 }
 
-export function MusicPlayer({ musicData }: MusicPlayerProps) {
+export function MusicPlayer({ 
+  musicData,
+  musicBoxColor = '#0e0e0e',
+  musicTextColor = '#ffffff',
+  musicHasNeon = false,
+  musicNeonStrength = 15
+}: MusicPlayerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -30,17 +40,12 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Carrega o script da API do YouTube se não existir
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       const firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
     }
-
-    window.onYouTubeIframeAPIReady = () => {
-      initPlayer();
-    };
 
     const initPlayer = () => {
       if (window.YT && window.YT.Player && !playerRef.current) {
@@ -54,13 +59,12 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
             disablekb: 1,
             fs: 0,
             rel: 0,
-            origin: window.location.origin,
-            enablejsapi: 1
+            enablejsapi: 1,
+            origin: window.location.origin
           },
           events: {
             onStateChange: (event: any) => {
-              // 1 = PLAYING
-              if (event.data === 1) {
+              if (event.data === 1) { // 1 = PLAYING
                 setIsPlaying(true);
                 setDuration(event.target.getDuration());
                 startTimer();
@@ -79,9 +83,10 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
       }
     };
 
-    // Tenta inicializar caso a API já esteja carregada
     if (window.YT && window.YT.Player) {
       initPlayer();
+    } else {
+      window.onYouTubeIframeAPIReady = () => initPlayer();
     }
 
     return () => {
@@ -93,9 +98,8 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     };
   }, []);
 
-  // Atualiza o vídeo quando o ID muda
   useEffect(() => {
-    if (playerRef.current && musicData?.id && playerRef.current.loadVideoById) {
+    if (playerRef.current && musicData?.id) {
       playerRef.current.loadVideoById(musicData.id);
       setIsPlaying(false);
       setCurrentTime(0);
@@ -120,7 +124,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     e.stopPropagation();
     if (!playerRef.current) return;
     
-    // Força unMute e Volume no clique do usuário (necessário para navegadores liberarem som)
+    // FORÇA O DESMUDO E VOLUME NO CLIQUE
     playerRef.current.unMute();
     playerRef.current.setVolume(100);
 
@@ -147,12 +151,18 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     return `${min}:${sec < 10 ? '0' + sec : sec}`;
   };
 
+  const accentColor = '#7a1a1a';
+  const neonShadow = musicHasNeon 
+    ? `0 0 ${musicNeonStrength/2}px ${accentColor}, 0 0 ${musicNeonStrength}px ${accentColor}` 
+    : 'none';
+
   return (
     <div 
       className={cn(
-        "w-full bg-[#0e0e0e] rounded-[20px] border border-[#1f1f1f] overflow-hidden p-[12px] transition-all duration-500 shadow-2xl",
+        "w-full rounded-[20px] border border-[#1f1f1f] overflow-hidden p-[12px] transition-all duration-500 shadow-2xl",
         isExpanded ? "pb-[20px]" : ""
       )}
+      style={{ backgroundColor: musicBoxColor }}
     >
       <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
         <div className="w-[48px] h-[48px] bg-[#1a1a1a] rounded-[12px] flex items-center justify-center overflow-hidden shrink-0">
@@ -164,15 +174,15 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         </div>
         
         <div className="flex-1 ml-[15px] overflow-hidden">
-          <div className="text-white text-[14px] font-semibold truncate">
+          <div className="text-[14px] font-semibold truncate" style={{ color: musicTextColor }}>
             {musicData?.title || "Nenhuma música"}
           </div>
-          <div className="text-[#666] text-[12px] truncate">
+          <div className="text-[12px] truncate opacity-50" style={{ color: musicTextColor }}>
             {musicData?.id ? "YouTube Audio" : "Selecione uma opção"}
           </div>
         </div>
 
-        <div className={cn("text-[#666] transition-transform duration-500", isExpanded ? "rotate-180" : "")}>
+        <div className={cn("transition-transform duration-500 opacity-50", isExpanded ? "rotate-180" : "")} style={{ color: musicTextColor }}>
           <ChevronDown size={20} />
         </div>
       </div>
@@ -182,25 +192,26 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         isExpanded ? "max-h-[200px] opacity-100 mt-[20px]" : "max-h-0 opacity-0"
       )}>
         <div className="progress-container px-1" onClick={seek}>
-          <div className="w-full h-[2px] bg-[#222] relative cursor-pointer">
+          <div className="w-full h-[2px] bg-white/10 relative cursor-pointer">
             <div 
               className="absolute top-0 left-0 h-full bg-[#7a1a1a] transition-all duration-100" 
               style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
             />
           </div>
           
-          <div className="flex justify-between text-[#666] text-[11px] mt-[8px]">
+          <div className="flex justify-between text-[11px] mt-[8px] opacity-50" style={{ color: musicTextColor }}>
             <span className="tabular-nums">{formatTime(currentTime)}</span>
             <span className="tabular-nums">{formatTime(duration)}</span>
           </div>
         </div>
 
         <div className="player-controls flex items-center justify-between mt-[15px] px-[5px]">
-          <Volume2 size={18} className="text-[#666]" />
+          <Volume2 size={18} className="opacity-50" style={{ color: musicTextColor }} />
           <button 
             type="button"
-            className="w-[45px] h-[45px] bg-[#7a1a1a] rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_15px_rgba(0,0,0,0.4)] border-none cursor-pointer"
+            className="w-[45px] h-[45px] bg-[#7a1a1a] rounded-full flex items-center justify-center text-white active:scale-95 transition-all shadow-[0_4px_15px_rgba(0,0,0,0.4)] border-none cursor-pointer"
             onClick={togglePlay}
+            style={{ boxShadow: neonShadow }}
           >
             {isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" className="ml-[3px]" />}
           </button>
@@ -208,7 +219,6 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         </div>
       </div>
 
-      {/* Player invisível mas presente para o navegador não bloquear o áudio */}
       <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
         <div id={containerId.current}></div>
       </div>
