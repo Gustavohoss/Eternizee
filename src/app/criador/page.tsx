@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -403,8 +404,8 @@ export default function CriadorApp() {
                      <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                      
                      <div className="flex-1 overflow-hidden relative flex flex-col">
-                       <div className="absolute top-4 right-4 z-[210]">
-                         <DialogClose className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors">
+                       <div className="absolute top-6 right-6 z-[250]">
+                         <DialogClose className="p-2.5 bg-black/60 hover:bg-black/80 rounded-full text-white transition-all border border-white/20 shadow-2xl backdrop-blur-md">
                            <X className="w-5 h-5" />
                          </DialogClose>
                        </div>
@@ -458,8 +459,8 @@ export default function CriadorApp() {
                    <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                    
                    <div className="flex-1 overflow-hidden relative flex flex-col">
-                     <div className="absolute top-4 right-4 z-[210]">
-                       <DialogClose className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors">
+                     <div className="absolute top-6 right-6 z-[250]">
+                       <DialogClose className="p-2.5 bg-black/60 hover:bg-black/80 rounded-full text-white transition-all border border-white/20 shadow-2xl backdrop-blur-md">
                          <X className="w-5 h-5" />
                        </DialogClose>
                      </div>
