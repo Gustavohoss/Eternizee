@@ -278,7 +278,7 @@ export function DeviceMockup({
                     </header>
 
                     {/* Hero Section */}
-                    <section className="relative min-h-[55vh] flex flex-col justify-end -mt-16">
+                    <section className="relative min-h-[65vh] flex flex-col justify-end -mt-16">
                       <div className="absolute inset-0 z-0 bg-cover bg-top" style={{ background: 'linear-gradient(135deg, rgb(35, 10, 10) 0%, rgb(15, 15, 15) 100%)' }}>
                         {uploadedPhotos.length > 0 && (
                           <Image src={uploadedPhotos[0]} fill className="object-cover opacity-60" alt="Hero" />
@@ -287,7 +287,7 @@ export function DeviceMockup({
                       <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#141414] via-[#141414]/40 to-transparent"></div>
                       <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#141414] via-[#141414]/20 to-transparent"></div>
 
-                      <div className="relative z-20 px-4 pb-6 pt-32">
+                      <div className="relative z-20 px-4 pb-6 pt-48">
                         <div className="mb-1">
                           <span className="text-[#e50914] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-1">
                             <span className="text-xs">❤️</span> Heartzzu Original
