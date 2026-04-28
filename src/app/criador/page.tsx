@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -89,8 +90,10 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix') {
-      return [...base, 'data-location', 'customize-background', 'photos', 'page-title', 'message', 'music'];
+      // Sequência exclusiva para Netflix, sem o fundo padrão e com Data -> Título
+      return [...base, 'data-location', 'page-title', 'photos', 'message', 'music'];
     }
+    // Sequência do Plano Padrão (Classic)
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
   }, [selectedTheme]);
 
@@ -142,7 +145,6 @@ export default function CriadorApp() {
     }
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor, selectedTheme]);
 
-  // Lógica de cor da data: Netflix é sempre vermelho. Outros temas auto-contrastam se não houver mudança manual.
   useEffect(() => {
     if (selectedTheme === 'netflix') {
       setDateColor('#ff0000');

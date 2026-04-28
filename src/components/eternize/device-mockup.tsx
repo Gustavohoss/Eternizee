@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -292,7 +293,6 @@ export function DeviceMockup({
                             <div className="w-full h-2 bg-[#2f2f2f] rounded-sm" />
                             <div className="w-full h-2 bg-[#2f2f2f] rounded-sm" />
                             <div className="w-4/5 h-2 bg-[#2f2f2f] rounded-sm" />
-                            <div className="w-2/3 h-2 bg-[#2f2f2f] rounded-sm" />
                           </>
                         )}
                       </div>
