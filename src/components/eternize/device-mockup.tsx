@@ -308,7 +308,11 @@ export function DeviceMockup({
           )}
           {selectedEffect === 'smoke' && (
             <div className="absolute inset-0 pointer-events-none z-10">
-              <SmokeBackground smokeColor={smokeColor} intensity={smokeIntensity} />
+              <SmokeBackground 
+                smokeColor={smokeColor} 
+                backgroundColor={selectedBgColor} 
+                intensity={smokeIntensity} 
+              />
             </div>
           )}
           {selectedEffect === 'pattern' && (

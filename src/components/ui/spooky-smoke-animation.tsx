@@ -9,6 +9,7 @@ out vec4 O;
 uniform float time;
 uniform vec2 resolution;
 uniform vec3 u_color;
+uniform vec3 u_bg_color;
 uniform float u_intensity;
 
 #define FC gl_FragCoord.xy
@@ -35,11 +36,15 @@ void main(){
   // Apply intensity to the smoke
   col = mix(vec3(0.0), col, u_intensity);
 
+  // Tint the smoke with the chosen smoke color
   col=mix(col, u_color, dot(col,vec3(.21,.71,.07)));
 
-  col=mix(vec3(.08),col,min(time*.1,1.));
-  col=clamp(col,.08,1.);
-  O=vec4(col,1);
+  // Mix with the actual background color chosen by the user
+  col=mix(u_bg_color, col, min(time*.1, 1.));
+  
+  // Final clamp to ensure colors are valid
+  col=clamp(col, 0.0, 1.0);
+  O=vec4(col, 1.0);
 }`;
 
 class Renderer {
@@ -55,7 +60,8 @@ void main(){gl_Position=position;}`;
   private vs: WebGLShader | null = null;
   private fs: WebGLShader | null = null;
   private buffer: WebGLBuffer | null = null;
-  private color: [number, number, number] = [0.5, 0.5, 0.5];
+  private smokeColor: [number, number, number] = [0.5, 0.5, 0.5];
+  private bgColor: [number, number, number] = [0, 0, 0];
   private intensity: number = 0.5;
 
   constructor(canvas: HTMLCanvasElement, fragmentSource: string) {
@@ -65,8 +71,12 @@ void main(){gl_Position=position;}`;
     this.init();
   }
   
-  updateColor(newColor: [number, number, number]) {
-    this.color = newColor;
+  updateSmokeColor(newColor: [number, number, number]) {
+    this.smokeColor = newColor;
+  }
+
+  updateBgColor(newColor: [number, number, number]) {
+    this.bgColor = newColor;
   }
 
   updateIntensity(val: number) {
@@ -132,6 +142,7 @@ void main(){gl_Position=position;}`;
     (program as any).resolution = gl.getUniformLocation(program, "resolution");
     (program as any).time = gl.getUniformLocation(program, "time");
     (program as any).u_color = gl.getUniformLocation(program, "u_color");
+    (program as any).u_bg_color = gl.getUniformLocation(program, "u_bg_color");
     (program as any).u_intensity = gl.getUniformLocation(program, "u_intensity");
   }
 
@@ -142,7 +153,8 @@ void main(){gl_Position=position;}`;
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.uniform2f((program as any).resolution, canvas.width, canvas.height);
     gl.uniform1f((program as any).time, now * 1e-3);
-    gl.uniform3fv((program as any).u_color, this.color);
+    gl.uniform3fv((program as any).u_color, this.smokeColor);
+    gl.uniform3fv((program as any).u_bg_color, this.bgColor);
     gl.uniform1f((program as any).u_intensity, this.intensity);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
@@ -161,11 +173,13 @@ const hexToRgb = (hex: string): [number, number, number] | null => {
 
 interface SmokeBackgroundProps {
   smokeColor?: string;
+  backgroundColor?: string;
   intensity?: number;
 }
 
 export const SmokeBackground: React.FC<SmokeBackgroundProps> = ({ 
   smokeColor = "#808080",
+  backgroundColor = "#000000",
   intensity = 0.5
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -198,12 +212,22 @@ export const SmokeBackground: React.FC<SmokeBackgroundProps> = ({
     useEffect(() => {
         const renderer = rendererRef.current;
         if (renderer) {
-            const rgbColor = hexToRgb(smokeColor);
-            if (rgbColor) {
-                renderer.updateColor(rgbColor);
+            const rgbSmoke = hexToRgb(smokeColor);
+            if (rgbSmoke) {
+                renderer.updateSmokeColor(rgbSmoke);
             }
         }
     }, [smokeColor]);
+
+    useEffect(() => {
+        const renderer = rendererRef.current;
+        if (renderer) {
+            const rgbBg = hexToRgb(backgroundColor);
+            if (rgbBg) {
+                renderer.updateBgColor(rgbBg);
+            }
+        }
+    }, [backgroundColor]);
 
     useEffect(() => {
       const renderer = rendererRef.current;
