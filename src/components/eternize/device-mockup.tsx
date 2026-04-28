@@ -18,6 +18,7 @@ import { SparklesCore } from '@/components/ui/sparkles';
 interface DeviceMockupProps {
   selectedBgColor: string;
   selectedEffect: string;
+  isEmojiRainEnabled: boolean;
   selectedEmojis: string[];
   emojiSize: number;
   step: string;
@@ -57,6 +58,7 @@ interface DeviceMockupProps {
 export function DeviceMockup({
   selectedBgColor,
   selectedEffect,
+  isEmojiRainEnabled,
   selectedEmojis,
   emojiSize,
   step,
@@ -270,9 +272,6 @@ export function DeviceMockup({
       <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">eternize.com/...</div></div></div>
       <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2.5rem] overflow-hidden shadow-2xl">
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedBgColor }}>
-          {selectedEffect === 'emoji-rain' && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">{raindrops.map((drop) => (<div key={drop.id} className="absolute animate-fall" style={{ left: drop.left, top: `-40px`, animationDuration: drop.duration, animationDelay: drop.delay, opacity: drop.opacity, fontSize: `${emojiSize}px` }}>{drop.emoji}</div>))}</div>
-          )}
           {selectedEffect === 'sparkles' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SparklesCore
@@ -285,6 +284,9 @@ export function DeviceMockup({
                 speed={0.5}
               />
             </div>
+          )}
+          {isEmojiRainEnabled && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden z-[15]">{raindrops.map((drop) => (<div key={drop.id} className="absolute animate-fall" style={{ left: drop.left, top: `-40px`, animationDuration: drop.duration, animationDelay: drop.delay, opacity: drop.opacity, fontSize: `${emojiSize}px` }}>{drop.emoji}</div>))}</div>
           )}
           <div className="absolute inset-0 flex flex-col items-center pt-8 px-5 gap-6 overflow-y-auto hide-scrollbar pb-10">
             {(step !== 'theme-selection' && step !== 'gift-type') && (

@@ -24,6 +24,7 @@ export default function CriadorApp() {
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
   const [selectedBgColor, setSelectedBgColor] = useState<string>('#000000');
   const [selectedEffect, setSelectedEffect] = useState<string>('none');
+  const [isEmojiRainEnabled, setIsEmojiRainEnabled] = useState<boolean>(false);
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>(['❤️']);
   const [emojiSize, setEmojiSize] = useState<number>(20);
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
@@ -186,6 +187,8 @@ export default function CriadorApp() {
                 onBgColorChange={setSelectedBgColor}
                 selectedEffect={selectedEffect}
                 onEffectChange={setSelectedEffect}
+                isEmojiRainEnabled={isEmojiRainEnabled}
+                onEmojiRainToggle={setIsEmojiRainEnabled}
                 selectedEmojis={selectedEmojis}
                 onToggleEmoji={toggleEmoji}
                 emojiSize={emojiSize}
@@ -296,6 +299,7 @@ export default function CriadorApp() {
                <DeviceMockup 
                  selectedBgColor={selectedBgColor}
                  selectedEffect={selectedEffect}
+                 isEmojiRainEnabled={isEmojiRainEnabled}
                  selectedEmojis={selectedEmojis}
                  emojiSize={emojiSize}
                  step={step}
