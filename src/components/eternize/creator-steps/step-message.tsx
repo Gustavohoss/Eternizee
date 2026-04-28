@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useRef, useEffect } from 'react';
@@ -24,10 +23,11 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ColorPicker } from '@/components/eternize/color-picker';
-import { FONT_OPTIONS } from '@/app/criador/constants';
+import { FONT_OPTIONS, ThemeId } from '@/app/criador/constants';
 import { cn } from '@/lib/utils';
 
 interface StepMessageProps {
+  selectedTheme?: ThemeId;
   message: string;
   onMessageChange: (msg: string) => void;
   messageFont: string;
@@ -39,6 +39,7 @@ interface StepMessageProps {
 }
 
 export function StepMessage({
+  selectedTheme,
   message,
   onMessageChange,
   messageFont,
@@ -49,6 +50,7 @@ export function StepMessage({
   onNext
 }: StepMessageProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const isNetflix = selectedTheme === 'netflix';
 
   // Inicializa o conteúdo do editor se ele estiver vazio
   useEffect(() => {
@@ -87,17 +89,21 @@ export function StepMessage({
           <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
             <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
           </div>
-          <h2 className="text-2xl md:text-4xl font-black tracking-tight">Mensagem</h2>
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight">
+            {isNetflix ? 'Descrição da história' : 'Mensagem'}
+          </h2>
         </div>
         <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
-          Escreva uma mensagem especial. Seja criativo e use as ferramentas de formatação para deixar do seu jeito.
+          {isNetflix 
+            ? 'Escreva uma breve sinopse sobre a história de vocês. Ela aparecerá logo abaixo dos botões de reproduzir.' 
+            : 'Escreva uma mensagem especial. Seja criativo e use as ferramentas de formatação para deixar do seu jeito.'}
         </p>
       </div>
 
       <div className="space-y-8 w-full max-w-md">
         <div className="space-y-4">
           <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
-            O que você quer dizer pro seu mozão? 📩
+            {isNetflix ? 'O que resume vocês? ✍️' : 'O que você quer dizer pro seu mozão? 📩'}
           </Label>
           
           <div className="editor-container w-full bg-[#0a0a0a] border border-[#222] rounded-xl overflow-hidden shadow-2xl">
@@ -175,14 +181,16 @@ export function StepMessage({
           </div>
         </div>
 
-        <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
-          <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Bloco de Mensagem</h3></div>
-          <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte Base</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onMessageFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", messageFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>
-          <div className="space-y-4 pt-4 border-t border-white/5"><Label className="text-[11px] font-bold text-white/50 uppercase">Cor Base do Texto</Label><div className="flex items-center gap-4">
-              <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: messageColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{messageColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={messageColor} onChange={onMessageColorChange} /></PopoverContent></Popover>
-              <div className="flex flex-wrap gap-1.5">{['#ffffff', '#ff4da6', '#e11d48', '#7c3aed', '#111111'].map((color) => (<button key={color} onClick={() => onMessageColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", messageColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
-          </div></div>
-        </div>
+        {!isNetflix && (
+          <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+            <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Bloco de Mensagem</h3></div>
+            <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte Base</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onMessageFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", messageFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>
+            <div className="space-y-4 pt-4 border-t border-white/5"><Label className="text-[11px] font-bold text-white/50 uppercase">Cor Base do Texto</Label><div className="flex items-center gap-4">
+                <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: messageColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{messageColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={messageColor} onChange={onMessageColorChange} /></PopoverContent></Popover>
+                <div className="flex flex-wrap gap-1.5">{['#ffffff', '#ff4da6', '#e11d48', '#7c3aed', '#111111'].map((color) => (<button key={color} onClick={() => onMessageColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", messageColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
+            </div></div>
+          </div>
+        )}
       </div>
 
       <div className="hidden lg:flex flex-col sm:flex-row items-center gap-5 pt-10 border-t border-white/5 w-full max-md">
@@ -192,4 +200,3 @@ export function StepMessage({
     </div>
   );
 }
-

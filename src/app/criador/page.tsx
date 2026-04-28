@@ -90,7 +90,8 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix') {
-      return [...base, 'data-location', 'page-title', 'photos', 'message', 'music'];
+      // Fluxo Netflix: Tema -> Tipo -> Data -> Título -> Descrição (Message) -> Fotos -> Música
+      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music'];
     }
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
   }, [selectedTheme]);
@@ -329,6 +330,7 @@ export default function CriadorApp() {
 
               {step === 'message' && (
                 <StepMessage 
+                  selectedTheme={selectedTheme}
                   message={message}
                   onMessageChange={setMessage}
                   messageFont={messageFont}

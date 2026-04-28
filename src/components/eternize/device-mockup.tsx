@@ -325,6 +325,22 @@ export function DeviceMockup({
                             </button>
                           </div>
                         </div>
+
+                        {/* Netflix Synopsis/Description */}
+                        <div className="mt-6">
+                          {message ? (
+                            <div 
+                              className="text-[13px] text-white/70 leading-relaxed line-clamp-3" 
+                              dangerouslySetInnerHTML={{ __html: message }}
+                            />
+                          ) : (
+                            <div className="space-y-2 animate-pulse-custom">
+                              <div className="h-2 bg-white/5 w-full rounded-full" />
+                              <div className="h-2 bg-white/5 w-full rounded-full" />
+                              <div className="h-2 bg-white/5 w-2/3 rounded-full" />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </section>
 
