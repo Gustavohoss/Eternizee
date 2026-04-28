@@ -14,6 +14,7 @@ import { intervalToDuration } from 'date-fns';
 import { MusicPlayer } from './music-player';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { SmokeBackground } from '@/components/ui/spooky-smoke-animation';
+import { FallingPattern } from '@/components/ui/falling-pattern';
 
 interface DeviceMockupProps {
   selectedBgColor: string;
@@ -288,6 +289,16 @@ export function DeviceMockup({
           {selectedEffect === 'smoke' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SmokeBackground smokeColor={selectedBgColor} />
+            </div>
+          )}
+          {selectedEffect === 'pattern' && (
+            <div className="absolute inset-0 pointer-events-none z-10">
+              <FallingPattern 
+                backgroundColor={selectedBgColor}
+                color="rgba(255,255,255,0.15)"
+                blurIntensity="0px"
+                duration={120}
+              />
             </div>
           )}
           {isEmojiRainEnabled && (
