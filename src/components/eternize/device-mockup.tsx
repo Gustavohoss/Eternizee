@@ -97,6 +97,10 @@ export function DeviceMockup({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
+  // Define se o player de música deve ser exibido
+  // Somente a partir do passo 'music'
+  const showMusic = step === 'music' || step === 'data-location' || step === 'landing';
+
   useEffect(() => {
     if (!date) {
       setTimeDiff(null);
@@ -317,16 +321,18 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                <div className="w-full animate-in zoom-in-95 duration-500">
-                  <MusicPlayer 
-                    musicData={musicData} 
-                    musicBoxColor={musicBoxColor}
-                    musicTextColor={musicTextColor}
-                    musicHasNeon={musicHasNeon}
-                    musicNeonStrength={musicNeonStrength}
-                    isAutoPlay={isAutoPlay}
-                  />
-                </div>
+                {showMusic && (
+                  <div className="w-full animate-in zoom-in-95 duration-500">
+                    <MusicPlayer 
+                      musicData={musicData} 
+                      musicBoxColor={musicBoxColor}
+                      musicTextColor={musicTextColor}
+                      musicHasNeon={musicHasNeon}
+                      musicNeonStrength={musicNeonStrength}
+                      isAutoPlay={isAutoPlay}
+                    />
+                  </div>
+                )}
 
                 <div className="w-full">
                   <RenderCounter />

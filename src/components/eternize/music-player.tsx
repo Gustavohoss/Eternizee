@@ -42,6 +42,7 @@ export function MusicPlayer({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Carrega a API do YouTube se ainda não estiver presente
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
@@ -62,12 +63,13 @@ export function MusicPlayer({
             fs: 0,
             rel: 0,
             enablejsapi: 1,
-            origin: window.location.origin,
-            mute: isAutoPlay ? 1 : 0
+            origin: typeof window !== 'undefined' ? window.location.origin : '',
+            mute: isAutoPlay ? 1 : 0 // Autoplay geralmente exige mute inicial
           },
           events: {
             onStateChange: (event: any) => {
-              if (event.data === 1) { // 1 = PLAYING
+              // Estados: -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
+              if (event.data === 1) {
                 setIsPlaying(true);
                 setDuration(event.target.getDuration());
                 startTimer();
@@ -80,6 +82,7 @@ export function MusicPlayer({
               if (musicData?.id) {
                 event.target.cueVideoById(musicData.id);
                 if (isAutoPlay) {
+                  // Tenta dar play, mas navegadores podem bloquear som sem interação
                   event.target.playVideo();
                 }
               }
@@ -104,6 +107,7 @@ export function MusicPlayer({
     };
   }, []);
 
+  // Efeito para trocar de música sem destruir o player
   useEffect(() => {
     if (playerRef.current && musicData?.id) {
       playerRef.current.loadVideoById(musicData.id);
@@ -133,6 +137,8 @@ export function MusicPlayer({
     e.stopPropagation();
     if (!playerRef.current) return;
     
+    // NAVEGADORES: O clique do usuário é a "chave" para liberar o áudio.
+    // Forçamos o unMute e volume 100 aqui para garantir que o som saia.
     playerRef.current.unMute();
     playerRef.current.setVolume(100);
 
@@ -227,6 +233,7 @@ export function MusicPlayer({
         </div>
       </div>
 
+      {/* Container invisível mas presente para o YouTube não bloquear por falta de visibilidade */}
       <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
         <div id={containerId.current}></div>
       </div>
