@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeviceMockup } from '@/components/eternize/device-mockup';
@@ -86,26 +86,27 @@ export default function CriadorApp() {
   const [locationQuery, setLocationQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  // Step sequence management based on theme
+  const stepSequence = useMemo((): Step[] => {
+    const base: Step[] = ['theme-selection', 'gift-type'];
+    if (selectedTheme === 'netflix') {
+      return [...base, 'data-location', 'customize-background', 'photos', 'page-title', 'message', 'music'];
+    }
+    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
+  }, [selectedTheme]);
+
+  const currentStepIndex = stepSequence.indexOf(step);
+
   const handleBack = () => {
-    if (step === 'theme-selection') { window.location.href = '/'; return; }
-    if (step === 'gift-type') setStep('theme-selection');
-    if (step === 'customize-background') setStep('gift-type');
-    if (step === 'photos') setStep('customize-background');
-    if (step === 'page-title') setStep('photos');
-    if (step === 'message') setStep('page-title');
-    if (step === 'music') setStep('message');
-    if (step === 'data-location') setStep('music');
+    if (currentStepIndex <= 0) { window.location.href = '/'; return; }
+    setStep(stepSequence[currentStepIndex - 1]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNext = () => {
-    if (step === 'theme-selection') setStep('gift-type');
-    else if (step === 'gift-type') setStep('customize-background');
-    else if (step === 'customize-background') setStep('photos');
-    else if (step === 'photos') setStep('page-title');
-    else if (step === 'page-title') setStep('message');
-    else if (step === 'message') setStep('music');
-    else if (step === 'music') setStep('data-location');
+    if (currentStepIndex < stepSequence.length - 1) {
+      setStep(stepSequence[currentStepIndex + 1]);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -183,17 +184,13 @@ export default function CriadorApp() {
           <div className="flex items-center justify-center mb-8 md:mb-10">
             <div className="w-full max-w-md text-center">
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div className={cn(
-                  "h-full bg-primary transition-all duration-500", 
-                  step === 'customize-background' ? "w-[15%]" : 
-                  step === 'photos' ? "w-[30%]" : 
-                  step === 'page-title' ? "w-[45%]" : 
-                  step === 'message' ? "w-[60%]" : 
-                  step === 'music' ? "w-[75%]" : "w-[100%]"
-                )} />
+                <div 
+                  className="h-full bg-primary transition-all duration-500" 
+                  style={{ width: `${((currentStepIndex - 1) / (stepSequence.length - 2)) * 100}%` }}
+                />
               </div>
               <div className="mt-4 text-xs md:text-sm font-black text-white/40 uppercase tracking-[0.2em]">
-                Passo {step === 'customize-background' ? '1' : step === 'photos' ? '2' : step === 'page-title' ? '3' : step === 'message' ? '4' : step === 'music' ? '5' : '6'} de 6
+                Passo {currentStepIndex - 1} de {stepSequence.length - 2}
               </div>
             </div>
           </div>
@@ -437,7 +434,7 @@ export default function CriadorApp() {
                <div className="mt-10 space-y-5 w-full">
                  <div className="flex flex-col gap-3">
                    <Button onClick={handleBack} variant="outline" className="w-full h-12 rounded-xl border-white/10 bg-white/5 font-black text-sm"><ChevronLeft className="w-4 h-4" /> Voltar</Button>
-                   <Button onClick={handleNext} className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm">{step === 'data-location' ? 'Finalizar criação' : 'Próxima etapa'} <ChevronRight className="w-4 h-4" /></Button>
+                   <Button onClick={handleNext} className="w-full h-12 rounded-xl bg-primary text-white font-black text-sm">{currentStepIndex === stepSequence.length - 1 ? 'Finalizar criação' : 'Próxima etapa'} <ChevronRight className="w-4 h-4" /></Button>
                  </div>
                  <div className="flex justify-center pb-6"><p className="text-[10px] font-medium text-white/20 italic flex items-center gap-2"><span className="not-italic">✏️</span> Você poderá editar isso após a compra</p></div>
                </div>

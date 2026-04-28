@@ -221,7 +221,7 @@ export function DeviceMockup({
     );
   };
 
-  const RenderCounter = (isNetflix: boolean = false) => {
+  const RenderCounter = () => {
     if (!date || !timeDiff) return null;
     const units = [
       { label: 'anos', value: timeDiff.years, netflixLabel: 'ANOS JUNTOS' },
@@ -231,25 +231,6 @@ export function DeviceMockup({
       { label: 'min', value: timeDiff.minutes, netflixLabel: 'MIN' },
       { label: 'seg', value: timeDiff.seconds, netflixLabel: 'SEG' },
     ];
-
-    if (isNetflix) {
-      return (
-        <div className="w-full grid grid-cols-3 gap-1.5 px-1">
-          <div className="bg-[#111] border border-white/5 rounded-md p-2 text-center aspect-square flex flex-col items-center justify-center">
-             <p className="text-xl font-black text-primary leading-none">{timeDiff.years}</p>
-             <p className="text-[7px] font-black text-white/40 uppercase mt-1">Anos Juntos</p>
-          </div>
-          <div className="bg-[#111] border border-white/5 rounded-md p-2 text-center aspect-square flex flex-col items-center justify-center">
-             <p className="text-xl font-black text-white leading-none">{Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24))}</p>
-             <p className="text-[7px] font-black text-white/40 uppercase mt-1">Dias de História</p>
-          </div>
-          <div className="bg-[#111] border border-white/5 rounded-md p-2 text-center aspect-square flex flex-col items-center justify-center">
-             <p className="text-[10px] font-black text-white leading-none">{date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</p>
-             <p className="text-[7px] font-black text-white/40 uppercase mt-1">Data Especial</p>
-          </div>
-        </div>
-      );
-    }
 
     const shadowSize = dateNeonStrength;
     const neonShadow = dateHasNeon 
@@ -314,12 +295,117 @@ export function DeviceMockup({
     }
   };
 
+  const NetflixLayout = () => {
+    return (
+      <div className="w-full min-h-full flex flex-col animate-in fade-in duration-700 bg-black" style={{ background: 'linear-gradient(180deg, #1a0505 0%, #000000 20%)' }}>
+        <header className="flex justify-between items-center px-5 py-4">
+          <div className="text-[#e50914] font-black tracking-tighter text-xl">HEARTZZU</div>
+          <div className="bg-[#e50914] text-white px-2 py-1 rounded text-xs font-bold">HZ</div>
+        </header>
+
+        <div className="px-5 space-y-4">
+          <div className="w-full aspect-video bg-[#2f2f2f] rounded-lg overflow-hidden relative">
+            {uploadedPhotos.length > 0 ? (
+              <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Hero" />
+            ) : null}
+          </div>
+
+          <div className="flex items-center gap-1 text-[#e50914] text-[10px] font-extrabold uppercase">
+            <span className="text-xs">❤</span> HEARTZZU ORIGINAL
+          </div>
+
+          {pageTitle ? (
+            <div className="text-2xl font-black leading-tight uppercase tracking-tighter" style={{ fontFamily: 'sans-serif' }}>
+              {pageTitle}
+            </div>
+          ) : (
+            <div className="w-2/3 h-8 bg-[#2f2f2f] rounded" />
+          )}
+
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-3 bg-[#2f2f2f] rounded-sm" />
+            <div className="bg-[#00a651] px-1.5 py-0.5 rounded text-[10px] font-bold text-white uppercase">L</div>
+            <div className="border border-[#808080] text-[#808080] text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
+          </div>
+
+          <div className="space-y-2">
+            {message ? (
+              <div 
+                className="text-[10px] text-white/80 leading-relaxed line-clamp-4 italic"
+                dangerouslySetInnerHTML={{ __html: message }}
+              />
+            ) : (
+              <>
+                <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
+                <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
+                <div className="w-4/5 h-2.5 bg-[#2f2f2f] rounded-sm" />
+                <div className="w-1/2 h-2.5 bg-[#2f2f2f] rounded-sm" />
+              </>
+            )}
+          </div>
+
+          <button className="w-full bg-white text-black font-black py-2.5 rounded flex items-center justify-center gap-2 text-sm mt-5">
+            <span className="text-base">▶</span> Reproduzir
+          </button>
+
+          <div className="flex gap-2 mb-8">
+            <button className="flex-1 bg-[#2f2f2f] text-white font-bold py-2.5 rounded flex items-center justify-center gap-2 text-sm">
+              <span className="text-base">+</span> Minha lista
+            </button>
+            <button className="bg-[#2f2f2f] text-white p-2.5 rounded aspect-square flex items-center justify-center">👍</button>
+            <button className="bg-[#2f2f2f] text-white p-2.5 rounded aspect-square flex items-center justify-center text-lg leading-none">♡</button>
+          </div>
+
+          <div className="flex gap-5 border-b border-[#333]">
+            <div className="pb-2 text-sm font-bold text-white border-b-[3px] border-white">Episódios</div>
+            <div className="pb-2 text-sm font-bold text-[#808080]">Detalhes</div>
+          </div>
+
+          <div className="flex justify-between items-center mt-5">
+            <div className="font-bold flex items-center gap-1.5 text-sm">
+              Temporada 1 <small className="text-[8px]">▼</small>
+            </div>
+            <div className="text-[#808080] text-xs">{uploadedPhotos.length} episódios</div>
+          </div>
+
+          <div className="space-y-5 pb-10">
+            {uploadedPhotos.length > 0 ? (
+              uploadedPhotos.map((photo, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
+                    <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
+                  </div>
+                  <div className="flex-1 flex flex-col justify-center gap-2">
+                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                  </div>
+                </div>
+              ))
+            ) : (
+              [1, 2, 3].map((i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0" />
+                  <div className="flex-1 flex flex-col justify-center gap-2">
+                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                    <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">eternize.com/...</div></div></div>
       <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2.5rem] overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedBgColor }}>
+        <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#000000' : selectedBgColor }}>
           {selectedEffect === 'sparkles' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SparklesCore background="transparent" minSize={0.4} maxSize={1.2} particleDensity={sparklesDensity} className="w-full h-full" particleColor={sparklesColor} speed={sparklesSpeed} />
@@ -339,81 +425,14 @@ export function DeviceMockup({
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-[15]">{raindrops.map((drop) => (<div key={drop.id} className="absolute animate-fall" style={{ left: drop.left, top: `-40px`, animationDuration: drop.duration, animationDelay: drop.delay, opacity: drop.opacity, fontSize: `${emojiSize}px` }}>{drop.emoji}</div>))}</div>
           )}
           
-          <div className="absolute inset-0 flex flex-col items-center pt-8 px-5 gap-6 overflow-y-auto hide-scrollbar pb-10">
+          <div className="absolute inset-0 flex flex-col items-center overflow-y-auto hide-scrollbar">
             {(step !== 'theme-selection' && step !== 'gift-type') && (
               <>
                 {selectedTheme === 'netflix' ? (
-                  /* NETFLIX THEME LAYOUT */
-                  <div className="w-full space-y-6 z-20 animate-in fade-in zoom-in-95 duration-700">
-                    {/* Header Controls */}
-                    <div className="flex flex-col gap-4">
-                      <div className="flex gap-2">
-                        <Button className="flex-1 bg-white text-black font-black h-8 text-[10px] rounded hover:bg-white/90">
-                          <Play className="w-3 h-3 fill-current mr-1" /> Reproduzir
-                        </Button>
-                        <Button variant="secondary" className="flex-1 bg-white/10 border-white/5 text-white font-black h-8 text-[10px] rounded">
-                          <Plus className="w-3 h-3 mr-1" /> Minha lista
-                        </Button>
-                        <div className="flex gap-2">
-                          <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/60"><ThumbsUp className="w-3.5 h-3.5" /></div>
-                          <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/60"><Heart className="w-3.5 h-3.5" /></div>
-                        </div>
-                      </div>
-
-                      {RenderCounter(true)}
-
-                      <div className="flex gap-4 border-b border-white/10 pb-2">
-                        <span className="text-[10px] font-black text-white border-b-2 border-primary pb-2">Episódios</span>
-                        <span className="text-[10px] font-black text-white/40 pb-2">Detalhes</span>
-                      </div>
-                    </div>
-
-                    {/* Episodes List (Uploaded Photos) */}
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                         <h4 className="text-xs font-black flex items-center gap-1">Temporada 1 <ChevronDown className="w-3 h-3" /></h4>
-                         <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest">{uploadedPhotos.length} episódios</span>
-                      </div>
-                      <div className="space-y-3">
-                        {uploadedPhotos.length > 0 ? (
-                          uploadedPhotos.map((photo, i) => (
-                            <div key={i} className="flex gap-3 group">
-                              <div className="relative w-24 aspect-video rounded overflow-hidden bg-[#111] shrink-0">
-                                <Image src={photo} fill className="object-cover" alt="" sizes="100px" />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <Play className="w-4 h-4 fill-white text-white" />
-                                </div>
-                              </div>
-                              <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                <p className="text-[10px] font-black truncate">{i + 1}. Memória {i + 1}</p>
-                                <p className="text-[8px] text-white/30 line-clamp-2 leading-tight">Reviva este capítulo essencial da nossa história.</p>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="bg-[#111] aspect-video rounded flex items-center justify-center border border-dashed border-white/5">
-                            <ImageIcon className="w-6 h-6 text-white/10" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Bottom Info */}
-                    <div className="pt-4 border-t border-white/5 space-y-2">
-                      <div className="flex items-center gap-2">
-                         <span className="text-lg font-black italic tracking-tighter">Netflix</span>
-                         <Badge variant="outline" className="h-4 text-[7px] font-black border-white/20 bg-white/5">Série</Badge>
-                      </div>
-                      <p className="text-[10px] font-bold text-white/80">{pageTitle || "Nossa História"}</p>
-                      <p className="text-[8px] text-white/40 leading-relaxed italic">Estilo cinematográfico inspirado na Netflix. Épico para casais.</p>
-                      <Button variant="outline" className="w-full bg-white/5 border-white/10 h-8 rounded-lg text-[8px] font-black uppercase tracking-wider mt-2">
-                         Ver demo
-                      </Button>
-                    </div>
-                  </div>
+                  <NetflixLayout />
                 ) : (
                   /* CLASSIC THEME LAYOUT */
-                  <>
+                  <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
                     <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 animate-in fade-in duration-500 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
                       {titlePosition === 'top' && <RenderTitle />}
                       <div className={cn("w-full aspect-square relative photo-display-area", photoEffect === 'slide' ? "overflow-hidden rounded-[4px]" : "overflow-visible")} style={{ perspective: '1000px' }}>
@@ -459,7 +478,7 @@ export function DeviceMockup({
                     <div className="w-full z-20">
                       {RenderCounter()}
                     </div>
-                  </>
+                  </div>
                 )}
               </>
             )}
