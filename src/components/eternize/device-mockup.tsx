@@ -486,28 +486,28 @@ export function DeviceMockup({
                             <div className="absolute left-1/3 inset-y-0 w-[1px] bg-white/5"></div>
                             <div className="absolute left-2/3 inset-y-0 w-[1px] bg-white/5"></div>
 
-                            <div className="flex flex-col items-center py-4">
-                              <span style={dateStyle} className="text-3xl">{timeDiff?.years || 0}</span>
+                            <div className="flex flex-col items-center py-2">
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.years || 0}</span>
                               <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Anos</span>
                             </div>
-                            <div className="flex flex-col items-center py-4">
-                              <span style={dateStyle} className="text-3xl">{timeDiff?.months || 0}</span>
+                            <div className="flex flex-col items-center py-2">
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.months || 0}</span>
                               <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Meses</span>
                             </div>
-                            <div className="flex flex-col items-center py-4">
-                              <span style={dateStyle} className="text-3xl">{timeDiff?.days || 0}</span>
+                            <div className="flex flex-col items-center py-2">
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.days || 0}</span>
                               <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Dias</span>
                             </div>
-                            <div className="flex flex-col items-center py-4">
-                              <span style={dateStyle} className="text-3xl">{timeDiff?.hours || 0}</span>
+                            <div className="flex flex-col items-center py-2">
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.hours || 0}</span>
                               <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Horas</span>
                             </div>
-                            <div className="flex flex-col items-center py-4">
-                              <span style={dateStyle} className="text-3xl">{timeDiff?.minutes || 0}</span>
+                            <div className="flex flex-col items-center py-2">
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.minutes || 0}</span>
                               <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Minutos</span>
                             </div>
-                            <div className="flex flex-col items-center py-4">
-                              <span style={dateStyle} className="text-3xl">{timeDiff?.seconds || 0}</span>
+                            <div className="flex flex-col items-center py-2">
+                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-3xl">{timeDiff?.seconds || 0}</span>
                               <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Segundos</span>
                             </div>
                           </div>
@@ -555,12 +555,13 @@ export function DeviceMockup({
                     )}
 
                     {selectedCountStyle === 'dias-grandes' && (
-                      <div className="text-center">
-                        <div className="flex items-center gap-2">
-                           <Hash className="w-5 h-5 opacity-20" style={{ color: dateColor }} />
-                           <p style={dateStyle} className="text-5xl font-black">{totalDays}</p>
-                        </div>
-                        <p className="text-[10px] uppercase tracking-[0.3em] font-black opacity-40 mt-1">Dias de Felicidade</p>
+                      <div className="text-center w-full py-8">
+                        <p style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-7xl mb-2">
+                          {totalDays}
+                        </p>
+                        <p className="text-neutral-500 text-[10px] uppercase tracking-[0.4em] font-bold">
+                          Dias de Felicidade
+                        </p>
                       </div>
                     )}
                   </div>
