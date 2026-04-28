@@ -55,7 +55,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
           },
           events: {
             onStateChange: (event: any) => {
-              // 1 = PLAYING
+              // 1 = PLAYING (Tocando)
               if (event.data === 1) {
                 setIsPlaying(true);
                 setDuration(event.target.getDuration());
@@ -92,12 +92,16 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     };
   }, []);
 
+  // Atualiza o vídeo quando o ID muda
   useEffect(() => {
     if (playerRef.current && musicData?.id && playerRef.current.cueVideoById) {
       playerRef.current.cueVideoById(musicData.id);
       setIsPlaying(false);
       setCurrentTime(0);
-      if (!isExpanded && musicData.id) setIsExpanded(true);
+      // Expande automaticamente ao selecionar uma música nova
+      if (!isExpanded && musicData.id) {
+        setTimeout(() => setIsExpanded(true), 300);
+      }
     }
   }, [musicData?.id]);
 
@@ -118,13 +122,14 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     e.stopPropagation();
     if (!playerRef.current) return;
     
+    // Força ativação do som e volume em cada interação para garantir que saia áudio
+    playerRef.current.unMute();
+    playerRef.current.setVolume(100);
+
     const state = playerRef.current.getPlayerState?.();
-    if (state === 1) { // Tocando
+    if (state === 1) { // 1 = Tocando
       playerRef.current.pauseVideo();
     } else {
-      // Força ativação do som e volume no gesto do usuário
-      playerRef.current.unMute();
-      playerRef.current.setVolume(100);
       playerRef.current.playVideo();
     }
   };
@@ -192,11 +197,11 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-[15px] px-[5px]">
+        <div className="player-controls flex items-center justify-between mt-[15px] px-[5px]">
           <Volume2 size={18} className="text-[#666]" />
           <button 
             type="button"
-            className="w-[45px] h-[45px] bg-[#7a1a1a] rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_15px_rgba(0,0,0,0.4)]"
+            className="w-[45px] h-[45px] bg-[#7a1a1a] rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_15px_rgba(0,0,0,0.4)] border-none cursor-pointer"
             onClick={togglePlay}
           >
             {isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" className="ml-[3px]" />}
@@ -205,7 +210,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         </div>
       </div>
 
-      {/* Player invisível mas presente para evitar bloqueios de visibilidade */}
+      {/* Container do Player YouTube (Escondido) */}
       <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
         <div id={containerId.current}></div>
       </div>
