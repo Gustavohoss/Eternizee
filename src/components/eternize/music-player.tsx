@@ -29,31 +29,27 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    }
-
     const initPlayer = () => {
       if (window.YT && window.YT.Player && !playerRef.current) {
         playerRef.current = new window.YT.Player('youtube-audio-element', {
-          height: '0',
-          width: '0',
+          height: '1',
+          width: '1',
           videoId: musicData?.id || '',
           playerVars: {
             playsinline: 1,
             controls: 0,
             disablekb: 1,
             fs: 0,
-            rel: 0
+            rel: 0,
+            origin: window.location.origin
           },
           events: {
             onStateChange: (event: any) => {
               if (event.data === window.YT.PlayerState.PLAYING) {
                 setIsPlaying(true);
                 setDuration(playerRef.current.getDuration());
+                playerRef.current.unMute();
+                playerRef.current.setVolume(100);
                 startTimer();
               } else {
                 setIsPlaying(false);
@@ -70,23 +66,23 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
       }
     };
 
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-    } else {
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
       window.onYouTubeIframeAPIReady = initPlayer;
+    } else {
+      initPlayer();
     }
 
     return () => {
       stopTimer();
-      if (playerRef.current) {
-        playerRef.current.destroy();
-        playerRef.current = null;
-      }
     };
   }, []);
 
   useEffect(() => {
-    if (playerRef.current && musicData?.id) {
+    if (playerRef.current && musicData?.id && playerRef.current.loadVideoById) {
       playerRef.current.loadVideoById(musicData.id);
       if (!isExpanded) setIsExpanded(true);
     }
@@ -112,6 +108,8 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
     if (state === 1) {
       playerRef.current.pauseVideo();
     } else {
+      playerRef.current.unMute();
+      playerRef.current.setVolume(100);
       playerRef.current.playVideo();
     }
   };
@@ -136,16 +134,16 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
   return (
     <div 
       className={cn(
-        "w-full bg-[#0e0e0e] rounded-[20px] border border-[#1f1f1f] overflow-hidden p-[12px] transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
+        "w-full bg-[#0e0e0e] rounded-[20px] border border-[#1f1f1f] overflow-hidden p-[12px] transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-2xl",
         isExpanded ? "pb-[20px]" : ""
       )}
     >
       <div className="flex items-center justify-between cursor-pointer" onClick={toggleExpand}>
-        <div className="w-[48px] h-[48px] bg-[#1a1a1a] rounded-[12px] flex items-center justify-center overflow-hidden">
+        <div className="w-[48px] h-[48px] bg-[#1a1a1a] rounded-[12px] flex items-center justify-center overflow-hidden shrink-0">
           {musicData?.thumb ? (
             <img src={musicData.thumb} className="w-full h-full object-cover" alt="Album Art" />
           ) : (
-            <Music2 className="text-white" />
+            <Music2 className="text-white w-5 h-5" />
           )}
         </div>
         
@@ -167,7 +165,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         "overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
         isExpanded ? "max-h-[200px] opacity-100 mt-[20px]" : "max-h-0 opacity-0"
       )}>
-        <div className="progress-container group" onClick={seek}>
+        <div className="progress-container group px-1" onClick={seek}>
           <div className="w-full h-[2px] bg-[#222] relative cursor-pointer">
             <div 
               className="absolute top-0 left-0 h-full bg-[#7a1a1a] transition-all duration-100" 
@@ -176,8 +174,8 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
           </div>
           
           <div className="flex justify-between text-[#666] text-[11px] mt-[8px]">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
+            <span className="tabular-nums">{formatTime(currentTime)}</span>
+            <span className="tabular-nums">{formatTime(duration)}</span>
           </div>
         </div>
 
@@ -193,7 +191,7 @@ export function MusicPlayer({ musicData }: MusicPlayerProps) {
         </div>
       </div>
 
-      <div id="youtube-audio-element"></div>
+      <div id="youtube-audio-element" className="hidden"></div>
     </div>
   );
 }
