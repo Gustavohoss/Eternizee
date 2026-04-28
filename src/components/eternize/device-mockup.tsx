@@ -197,6 +197,7 @@ export function DeviceMockup({
       case 'playfair': return "'Playfair Display', serif";
       case 'inter': return "'Inter', sans-serif";
       case 'dancing-script': return "'Dancing Script', cursive";
+      case 'lora': return "'Lora', serif";
       default: return "'Inter', sans-serif";
     }
   };
@@ -237,7 +238,6 @@ export function DeviceMockup({
         <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       )}
       
-      {/* Browser Address Bar */}
       <div className={cn(
         "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center shrink-0",
         isFullscreen ? "rounded-none" : "rounded-t-2xl"
@@ -473,21 +473,48 @@ export function DeviceMockup({
 
                 {/* Date Counter Block */}
                 {date && (
-                  <div className="w-full py-4 flex flex-col items-center gap-4">
+                  <div className="w-full py-4">
                     {selectedCountStyle === 'padrao' && (
-                      <div className="flex gap-4">
-                        <div className="text-center">
-                          <p style={dateStyle} className="text-3xl">{timeDiff?.years || 0}</p>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Anos</p>
+                      <div className="w-full text-center">
+                        <h2 className="text-primary text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                          Uau, estão juntos há
+                        </h2>
+                        <div className="bg-[#181818] rounded-[24px] border border-white/5 overflow-hidden p-6 shadow-2xl relative">
+                          <div className="grid grid-cols-3 relative">
+                            {/* Linhas Divisórias */}
+                            <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/5 -translate-y-1/2"></div>
+                            <div className="absolute left-1/3 inset-y-0 w-[1px] bg-white/5"></div>
+                            <div className="absolute left-2/3 inset-y-0 w-[1px] bg-white/5"></div>
+
+                            <div className="flex flex-col items-center py-4">
+                              <span style={dateStyle} className="text-3xl">{timeDiff?.years || 0}</span>
+                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Anos</span>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                              <span style={dateStyle} className="text-3xl">{timeDiff?.months || 0}</span>
+                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Meses</span>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                              <span style={dateStyle} className="text-3xl">{timeDiff?.days || 0}</span>
+                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Dias</span>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                              <span style={dateStyle} className="text-3xl">{timeDiff?.hours || 0}</span>
+                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Horas</span>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                              <span style={dateStyle} className="text-3xl">{timeDiff?.minutes || 0}</span>
+                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Minutos</span>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                              <span style={dateStyle} className="text-3xl">{timeDiff?.seconds || 0}</span>
+                              <span className="text-neutral-500 text-[8px] uppercase tracking-widest mt-1 font-bold">Segundos</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-center">
-                          <p style={dateStyle} className="text-3xl">{timeDiff?.months || 0}</p>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Meses</p>
-                        </div>
-                        <div className="text-center">
-                          <p style={dateStyle} className="text-3xl">{timeDiff?.days || 0}</p>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50 font-black">Dias</p>
-                        </div>
+                        <p className="text-neutral-500 text-[10px] mt-6 font-medium">
+                          Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                        </p>
                       </div>
                     )}
 

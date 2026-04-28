@@ -10,6 +10,7 @@ export const FONT_OPTIONS = [
   { id: 'dancing-script', name: 'Dancing Script', class: 'font-["Dancing_Script"]' },
   { id: 'pacifico', name: 'Pacifico', class: 'font-["Pacifico"]' },
   { id: 'playfair', name: 'Playfair Display', class: 'font-["Playfair_Display"]' },
+  { id: 'lora', name: 'Lora Serif', class: 'font-["Lora"]' },
   { id: 'inter', name: 'Inter Sans', class: 'font-["Inter"]' },
 ];
 
