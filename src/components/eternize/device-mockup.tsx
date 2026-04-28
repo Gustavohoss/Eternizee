@@ -224,7 +224,7 @@ export function DeviceMockup({
   const slugifiedTitle = pageTitle.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   return (
-    <div className={cn("w-full transition-all duration-500", isFullscreen ? "max-w-[420px]" : "max-w-[300px]")}>
+    <div className={cn("w-full transition-all duration-500", isFullscreen ? "max-w-[450px]" : "max-w-[380px]")}>
       {!isFullscreen && (
         <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
       )}

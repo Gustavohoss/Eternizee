@@ -229,11 +229,11 @@ export default function CriadorApp() {
       )}
 
       {!isInitialSteps && (
-        <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-6xl">
+        <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-7xl">
           
           {/* Progress Bar - Netflix Style */}
           <div className="fixed top-[32px] md:top-[40px] left-0 right-0 z-[110] px-4 md:px-10">
-            <div className="max-w-6xl mx-auto flex items-center gap-4 h-8">
+            <div className="max-w-7xl mx-auto flex items-center gap-4 h-8">
                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-primary transition-all duration-500" 
@@ -246,7 +246,7 @@ export default function CriadorApp() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-[1fr_380px] gap-8 md:gap-12 items-start pt-8">
+          <div className="grid lg:grid-cols-[1fr_420px] gap-8 md:gap-16 items-start pt-8">
             
             {/* Form Column */}
             <div className="w-full min-w-0">
@@ -394,7 +394,7 @@ export default function CriadorApp() {
                        <Maximize2 className="w-4 h-4" /> Ver em tela cheia
                      </Button>
                    </DialogTrigger>
-                   <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex flex-col">
+                   <DialogContent className="max-w-[450px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex flex-col">
                      <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                      <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                      
@@ -406,7 +406,7 @@ export default function CriadorApp() {
                        </DialogClose>
                      </div>
                      
-                     <div className="flex-1 overflow-hidden">
+                     <div className="flex-1 overflow-hidden flex justify-center items-center">
                        <DeviceMockup {...previewProps} isFullscreen />
                      </div>
                    </DialogContent>
@@ -452,7 +452,7 @@ export default function CriadorApp() {
                      <Maximize2 className="w-3 h-3" /> Ver em tela cheia
                    </Button>
                  </DialogTrigger>
-                 <DialogContent className="max-w-[420px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex flex-col">
+                 <DialogContent className="max-w-[450px] h-[95vh] p-0 bg-transparent border-none overflow-hidden flex flex-col">
                    <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                    <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                    
@@ -464,7 +464,7 @@ export default function CriadorApp() {
                      </DialogClose>
                    </div>
 
-                   <div className="flex-1 overflow-hidden">
+                   <div className="flex-1 overflow-hidden flex justify-center items-center">
                      <DeviceMockup {...previewProps} isFullscreen />
                    </div>
                  </DialogContent>
