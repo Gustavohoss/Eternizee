@@ -13,6 +13,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 import { intervalToDuration } from 'date-fns';
 import { MusicPlayer } from './music-player';
+import { SparklesCore } from '@/components/ui/sparkles';
 
 interface DeviceMockupProps {
   selectedBgColor: string;
@@ -272,6 +273,19 @@ export function DeviceMockup({
           {selectedEffect === 'emoji-rain' && (
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">{raindrops.map((drop) => (<div key={drop.id} className="absolute animate-fall" style={{ left: drop.left, top: `-40px`, animationDuration: drop.duration, animationDelay: drop.delay, opacity: drop.opacity, fontSize: `${emojiSize}px` }}>{drop.emoji}</div>))}</div>
           )}
+          {selectedEffect === 'sparkles' && (
+            <div className="absolute inset-0 pointer-events-none z-10">
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1.2}
+                particleDensity={100}
+                className="w-full h-full"
+                particleColor="#FFFFFF"
+                speed={0.5}
+              />
+            </div>
+          )}
           <div className="absolute inset-0 flex flex-col items-center pt-8 px-5 gap-6 overflow-y-auto hide-scrollbar pb-10">
             {(step !== 'theme-selection' && step !== 'gift-type') && (
               <>
@@ -306,7 +320,7 @@ export function DeviceMockup({
                 </div>
 
                 {message && (
-                  <div className="w-full text-center px-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="w-full text-center px-2 animate-in fade-in slide-in-from-bottom-2 duration-500 z-20">
                     <div 
                       style={{ 
                         color: messageColor,
@@ -319,7 +333,7 @@ export function DeviceMockup({
                 )}
 
                 {showMusic && (
-                  <div className="w-full animate-in zoom-in-95 duration-500">
+                  <div className="w-full animate-in zoom-in-95 duration-500 z-20">
                     <MusicPlayer 
                       musicData={musicData} 
                       musicBoxColor={musicBoxColor}
@@ -331,7 +345,7 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                <div className="w-full">
+                <div className="w-full z-20">
                   <RenderCounter />
                 </div>
               </>
