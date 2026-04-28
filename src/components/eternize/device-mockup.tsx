@@ -126,8 +126,6 @@ export function DeviceMockup({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
-  const showMusic = step === 'music' || step === 'data-location' || step === 'landing' || step === 'message' || step === 'photos';
-
   useEffect(() => {
     if (!date) {
       setTimeDiff(null);
@@ -184,17 +182,6 @@ export function DeviceMockup({
     return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
   }, [date]);
 
-  const getSlidePosition = (index: number) => {
-    const total = uploadedPhotos.length;
-    if (total === 0) return 'active';
-    let diff = index - selectedIndex;
-    if (diff > total / 2) diff -= total;
-    if (diff < -total / 2) diff += total;
-    if (diff === 0) return 'active';
-    if (diff > 0) return 'next';
-    return 'prev';
-  };
-
   const getFontFamily = (font: string) => {
     switch (font) {
       case 'pacifico': return "'Pacifico', cursive";
@@ -229,19 +216,10 @@ export function DeviceMockup({
     textTransform: selectedTheme === 'netflix' ? 'uppercase' : 'none' as any
   };
 
-  const units = timeDiff ? [
-    { label: 'anos', value: timeDiff.years },
-    { label: 'meses', value: timeDiff.months },
-    { label: 'dias', value: timeDiff.days },
-    { label: 'horas', value: timeDiff.hours },
-    { label: 'min', value: timeDiff.minutes },
-    { label: 'seg', value: timeDiff.seconds },
-  ] : [];
-
   return (
     <div className="w-full max-w-[300px]">
       <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
-      <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/gustavo-e-luisa</div></div></div>
+      <div className="bg-[#1a1a1a] rounded-t-2xl border-x border-t border-white/10 p-2.5 flex items-center gap-3"><div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" /><div className="w-1.5 h-1.5 rounded-full bg-green-500/20" /></div><div className="flex-1 bg-black/40 rounded-full h-4 flex items-center px-3 gap-2"><div className="w-2 h-2 text-white/20 text-[6px]">🔒</div><div className="text-[7px] font-medium text-white/40 truncate">heartzzu.com/presente</div></div></div>
       <div className="relative aspect-[9/19] bg-black border-x border-b border-white/10 rounded-b-[2.5rem] overflow-hidden shadow-2xl">
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: selectedTheme === 'netflix' ? '#000000' : selectedBgColor }}>
           {selectedEffect === 'sparkles' && (
@@ -274,6 +252,7 @@ export function DeviceMockup({
                     </header>
 
                     <div className="px-5 space-y-4">
+                      {/* Hero Image / Placeholder */}
                       <div className="w-full aspect-video bg-[#2f2f2f] rounded-lg overflow-hidden relative">
                         {uploadedPhotos.length > 0 ? (
                           <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Hero" />
@@ -284,13 +263,18 @@ export function DeviceMockup({
                         <span className="text-xs">❤</span> HEARTZZU ORIGINAL
                       </div>
 
-                      <div style={titleStyle} className="text-3xl font-black leading-tight uppercase tracking-tighter break-words">
-                        {pageTitle || "GUSTAVO E LUISA"}
-                      </div>
+                      {/* Page Title / Skeleton */}
+                      {pageTitle ? (
+                        <div style={titleStyle} className="text-3xl font-black leading-tight uppercase tracking-tighter break-words">
+                          {pageTitle}
+                        </div>
+                      ) : (
+                        <div className="w-[70%] h-9 bg-[#2f2f2f] rounded-sm" />
+                      )}
 
                       <div className="flex items-center gap-2">
                         <span className="text-[#00a651] text-[10px] font-bold">98% compatível</span>
-                        <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2018'}</span>
+                        <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2026'}</span>
                         <span className="text-white/60 text-[10px]">1 Temporada</span>
                         <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">L</div>
                         <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
@@ -299,7 +283,8 @@ export function DeviceMockup({
                       <div className="space-y-2">
                         {message ? (
                           <div 
-                            className="text-[10px] text-white/80 leading-relaxed line-clamp-4 italic"
+                            className="text-[10px] text-white/80 leading-relaxed italic"
+                            style={{ color: messageColor, fontFamily: getFontFamily(messageFont) }}
                             dangerouslySetInnerHTML={{ __html: message }}
                           />
                         ) : (
@@ -324,19 +309,19 @@ export function DeviceMockup({
                         <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center"><Heart className="w-4 h-4" /></button>
                       </div>
 
-                      {/* Stat Cards Customizados */}
+                      {/* Stat Cards */}
                       <div className="grid grid-cols-3 gap-2 mt-4">
-                        <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+                        <div className="bg-[#1a1a1a] border border-white/5 rounded-md p-3 text-center">
                           <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{timeDiff?.years || 0}</div>
-                          <div className="text-[8px] text-white/40 font-bold uppercase">Anos Juntos</div>
+                          <div className="text-[8px] text-[#808080] font-bold uppercase">Anos Juntos</div>
                         </div>
-                        <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+                        <div className="bg-[#1a1a1a] border border-white/5 rounded-md p-3 text-center">
                           <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{totalDays || 0}</div>
-                          <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
+                          <div className="text-[8px] text-[#808080] font-bold uppercase">Dias de História</div>
                         </div>
-                        <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+                        <div className="bg-[#1a1a1a] border border-white/5 rounded-md p-3 text-center">
                           <div style={dateStyle} className="text-xl tabular-nums leading-none mb-1">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '06/04'}</div>
-                          <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
+                          <div className="text-[8px] text-[#808080] font-bold uppercase">Data Especial</div>
                         </div>
                       </div>
 
@@ -352,25 +337,38 @@ export function DeviceMockup({
                         <div className="text-[#808080] text-xs">{uploadedPhotos.length || 8} episódios</div>
                       </div>
 
+                      {/* Episodes List / Skeleton */}
                       <div className="space-y-5 pb-10">
-                        {(uploadedPhotos.length > 0 ? uploadedPhotos : [1, 2, 3]).map((photo, i) => (
-                          <div key={i} className="flex gap-4">
-                            <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
-                              {typeof photo === 'string' ? <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /> : null}
+                        {uploadedPhotos.length > 0 ? (
+                          uploadedPhotos.map((photo, i) => (
+                            <div key={i} className="flex gap-4">
+                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0 relative overflow-hidden">
+                                <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
+                              </div>
+                              <div className="flex-1 flex flex-col justify-center gap-2">
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                              </div>
                             </div>
-                            <div className="flex-1 flex flex-col justify-center gap-2">
-                              <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
-                              <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
-                              <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                          ))
+                        ) : (
+                          [1, 2, 3].map((_, i) => (
+                            <div key={i} className="flex gap-4">
+                              <div className="w-28 h-16 bg-[#2f2f2f] rounded-md shrink-0" />
+                              <div className="flex-1 flex flex-col justify-center gap-2">
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[70%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[90%]" />
+                                <div className="h-2 bg-[#2f2f2f] rounded-sm w-[60%]" />
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))
+                        )}
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
-                    {/* Estilo clássico/outro omitido por brevidade e foco na Netflix */}
                     <div style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} className={cn("w-full rounded-[8px] z-20 flex flex-col items-center", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]") )}>
                       <div className="w-full aspect-square relative photo-display-area" style={{ perspective: '1000px' }}>
                         {uploadedPhotos.length > 0 ? (
