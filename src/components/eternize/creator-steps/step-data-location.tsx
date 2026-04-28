@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useRef, useEffect } from 'react';
@@ -25,10 +24,11 @@ import { Calendar } from '@/components/ui/calendar';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { ColorPicker } from '@/components/eternize/color-picker';
-import { FONT_OPTIONS } from '@/app/criador/constants';
+import { FONT_OPTIONS, ThemeId } from '@/app/criador/constants';
 import { cn } from '@/lib/utils';
 
 interface StepDataLocationProps {
+  selectedTheme: ThemeId;
   date?: Date;
   onDateSelect: (date: Date | undefined) => void;
   locationQuery: string;
@@ -53,6 +53,7 @@ interface StepDataLocationProps {
 }
 
 export function StepDataLocation({
+  selectedTheme,
   date,
   onDateSelect,
   locationQuery,
@@ -85,6 +86,8 @@ export function StepDataLocation({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onShowSuggestionsChange]);
 
+  const isNetflixTheme = selectedTheme === 'netflix';
+
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
       <div className="space-y-3 text-center md:text-left">
@@ -97,11 +100,25 @@ export function StepDataLocation({
             {showSuggestions && filteredCities.length > 0 && (<div className="absolute top-full left-0 right-0 mt-3 bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden z-[100] shadow-[0_30px_60px_rgba(0,0,0,0.8)] backdrop-blur-2xl">{filteredCities.map((city) => (<button key={city} onClick={() => { onLocationQueryChange(city); onShowSuggestionsChange(false); }} className="w-full text-left px-5 py-4 text-xs md:text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all border-b border-white/5 last:border-0 flex items-center gap-4 group/item"><Search className="w-4 h-4 text-white/20 group-hover/item:text-primary transition-colors" />{city}</button>))}</div>)}
         </div></div>
       </div>
-      <div className="space-y-5 w-full max-w-md">
-        <div className="space-y-1 text-center md:text-left"><h3 className="text-sm md:text-base font-black tracking-tight">Como mostrar a contagem</h3><p className="text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p></div>
-        <RadioGroup defaultValue="padrao" value={selectedCountStyle} onValueChange={onCountStyleChange} className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">{[{ id: 'padrao', label: 'Padrão', icon: Clock }, { id: 'classico', label: 'Clássico', icon: Layout }, { id: 'simples', label: 'Simples', icon: Hash }, { id: 'data-grande', label: 'Data Grande', icon: CalendarIcon }, { id: 'dias-grandes', label: 'Dias Grandes', icon: Hash },].map((style) => (<Label key={style.id} className={cn("relative flex items-center gap-4 p-4 md:p-5 rounded-2xl border cursor-pointer transition-all duration-300", selectedCountStyle === style.id ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/5 bg-white/5 hover:border-white/10")}><RadioGroupItem value={style.id} className="sr-only" /><div className={cn("w-4 h-4 md:w-5 md:h-5 rounded-full border flex items-center justify-center transition-colors", selectedCountStyle === style.id ? "border-primary bg-primary" : "border-white/20 bg-transparent")}>{selectedCountStyle === style.id && <div className="w-2 h-2 rounded-full bg-white" />}</div><style.icon className={cn("w-4 h-4 md:w-5 md:h-5", selectedCountStyle === style.id ? "text-primary" : "text-white/40")} /><span className="text-[11px] md:text-xs font-black">{style.label}</span></Label>))}
-        </RadioGroup>
-      </div>
+      
+      {!isNetflixTheme && (
+        <div className="space-y-5 w-full max-w-md">
+          <div className="space-y-1 text-center md:text-left"><h3 className="text-sm md:text-base font-black tracking-tight">Como mostrar a contagem</h3><p className="text-[11px] text-white/40 font-medium">Escolha como a data será exibida na página.</p></div>
+          <RadioGroup defaultValue="padrao" value={selectedCountStyle} onValueChange={onCountStyleChange} className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">{[{ id: 'padrao', label: 'Padrão', icon: Clock }, { id: 'classico', label: 'Clássico', icon: Layout }, { id: 'simples', label: 'Simples', icon: Hash }, { id: 'data-grande', label: 'Data Grande', icon: CalendarIcon }, { id: 'dias-grandes', label: 'Dias Grandes', icon: Hash },].map((style) => (<Label key={style.id} className={cn("relative flex items-center gap-4 p-4 md:p-5 rounded-2xl border cursor-pointer transition-all duration-300", selectedCountStyle === style.id ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/5 bg-white/5 hover:border-white/10")}><RadioGroupItem value={style.id} className="sr-only" /><div className={cn("w-4 h-4 md:w-5 md:h-5 rounded-full border flex items-center justify-center transition-colors", selectedCountStyle === style.id ? "border-primary bg-primary" : "border-white/20 bg-transparent")}>{selectedCountStyle === style.id && <div className="w-2 h-2 rounded-full bg-white" />}</div><style.icon className={cn("w-4 h-4 md:w-5 md:h-5", selectedCountStyle === style.id ? "text-primary" : "text-white/40")} /><span className="text-[11px] md:text-xs font-black">{style.label}</span></Label>))}
+          </RadioGroup>
+        </div>
+      )}
+
+      {isNetflixTheme && (
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 w-full max-w-md">
+          <div className="flex items-center gap-3 text-primary mb-2">
+            <Layout className="w-4 h-4" />
+            <span className="text-[11px] font-black uppercase tracking-widest">Estilo Netflix Ativo</span>
+          </div>
+          <p className="text-[10px] text-white/40 font-medium">Este tema utiliza um contador cinematográfico exclusivo que organiza automaticamente seus anos, dias e data em cards especiais.</p>
+        </div>
+      )}
+
       <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
           <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Contador</h3></div>
           <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Contador</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onDateFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", dateFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>

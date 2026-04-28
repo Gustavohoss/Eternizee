@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -309,6 +308,7 @@ export default function CriadorApp() {
 
               {step === 'data-location' && (
                 <StepDataLocation 
+                  selectedTheme={selectedTheme}
                   date={date}
                   onDateSelect={setDate}
                   locationQuery={locationQuery}
