@@ -178,6 +178,13 @@ export function DeviceMockup({
     }));
   }, [selectedEmojis]);
 
+  const totalDays = useMemo(() => {
+    if (!date) return 0;
+    const now = new Date();
+    if (now < date) return 0;
+    return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  }, [date]);
+
   const getSlidePosition = (index: number) => {
     const total = uploadedPhotos.length;
     if (total === 0) return 'active';
@@ -277,7 +284,6 @@ export function DeviceMockup({
           </div>
         );
       case 'dias-grandes':
-        const totalDays = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
         return (
           <div className="w-full text-center space-y-1">
             <p style={dateStyle} className="text-[40px] leading-none tracking-tighter tabular-nums">{totalDays > 0 ? totalDays : 0}</p>
@@ -314,18 +320,16 @@ export function DeviceMockup({
             <span className="text-xs">❤</span> HEARTZZU ORIGINAL
           </div>
 
-          {pageTitle ? (
-            <div className="text-2xl font-black leading-tight uppercase tracking-tighter" style={{ fontFamily: 'sans-serif' }}>
-              {pageTitle}
-            </div>
-          ) : (
-            <div className="w-2/3 h-8 bg-[#2f2f2f] rounded" />
-          )}
+          <div className="text-2xl font-black leading-tight uppercase tracking-tighter">
+            {pageTitle || "Nosso Romance"}
+          </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-10 h-3 bg-[#2f2f2f] rounded-sm" />
-            <div className="bg-[#00a651] px-1.5 py-0.5 rounded text-[10px] font-bold text-white uppercase">L</div>
-            <div className="border border-[#808080] text-[#808080] text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
+            <span className="text-[#00a651] text-[10px] font-bold">98% compatível</span>
+            <span className="text-white/60 text-[10px]">{date ? date.getFullYear() : '2024'}</span>
+            <span className="text-white/60 text-[10px]">1 Temporada</span>
+            <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">L</div>
+            <div className="border border-white/20 text-white/60 text-[8px] px-1 py-0.5 rounded font-bold">HD</div>
           </div>
 
           <div className="space-y-2">
@@ -339,7 +343,6 @@ export function DeviceMockup({
                 <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
                 <div className="w-full h-2.5 bg-[#2f2f2f] rounded-sm" />
                 <div className="w-4/5 h-2.5 bg-[#2f2f2f] rounded-sm" />
-                <div className="w-1/2 h-2.5 bg-[#2f2f2f] rounded-sm" />
               </>
             )}
           </div>
@@ -348,24 +351,40 @@ export function DeviceMockup({
             <span className="text-base">▶</span> Reproduzir
           </button>
 
-          <div className="flex gap-2 mb-8">
+          <div className="flex gap-2">
             <button className="flex-1 bg-[#2f2f2f] text-white font-bold py-2.5 rounded flex items-center justify-center gap-2 text-sm">
               <span className="text-base">+</span> Minha lista
             </button>
-            <button className="bg-[#2f2f2f] text-white p-2.5 rounded aspect-square flex items-center justify-center">👍</button>
-            <button className="bg-[#2f2f2f] text-white p-2.5 rounded aspect-square flex items-center justify-center text-lg leading-none">♡</button>
+            <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">👍</button>
+            <button className="bg-[#2f2f2f] text-white p-2.5 rounded flex items-center justify-center">♡</button>
           </div>
 
-          <div className="flex gap-5 border-b border-[#333]">
+          {/* Stat Cards - Conforme imagem enviada */}
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+              <div className="text-[#e50914] text-xl font-black">{timeDiff?.years || 0}</div>
+              <div className="text-[8px] text-white/40 font-bold uppercase">Anos Juntos</div>
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+              <div className="text-[#e50914] text-xl font-black">{totalDays || 0}</div>
+              <div className="text-[8px] text-white/40 font-bold uppercase">Dias de História</div>
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-md p-3 text-center">
+              <div className="text-[#e50914] text-xl font-black">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '00/00'}</div>
+              <div className="text-[8px] text-white/40 font-bold uppercase">Data Especial</div>
+            </div>
+          </div>
+
+          <div className="flex gap-5 border-b border-[#333] pt-4">
             <div className="pb-2 text-sm font-bold text-white border-b-[3px] border-white">Episódios</div>
             <div className="pb-2 text-sm font-bold text-[#808080]">Detalhes</div>
           </div>
 
           <div className="flex justify-between items-center mt-5">
-            <div className="font-bold flex items-center gap-1.5 text-sm">
+            <div className="font-bold flex items-center gap-1.5 text-sm text-white">
               Temporada 1 <small className="text-[8px]">▼</small>
             </div>
-            <div className="text-[#808080] text-xs">{uploadedPhotos.length} episódios</div>
+            <div className="text-[#808080] text-xs">{uploadedPhotos.length || 8} episódios</div>
           </div>
 
           <div className="space-y-5 pb-10">
