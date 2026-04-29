@@ -86,6 +86,14 @@
     animation: pulse-custom 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+@keyframes fadeOutBars {
+  to { opacity: 0; }
+}
+
+.animate-fade-out-bars {
+  animation: fadeOutBars 0.5s forwards;
+}
+
 /* Color Picker Hue Slider Thumb Fix */
 .hue-slider {
   -webkit-appearance: none;

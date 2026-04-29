@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -218,17 +217,18 @@ export function DeviceMockup({
     setIsIntroActive(true);
     setIntroPhase('closing');
     
-    // Inicia blackout após as barras fecharem (1.2s de transição + pequeno buffer)
+    // As barras levam 1.2s para fechar.
+    // Aos 1.5s as barras começam a sumir (fadeOutBars).
     setTimeout(() => {
       setIntroPhase('blackout');
     }, 1500);
 
-    // Mostra o logo após o blackout
+    // Aos 1.6s o logo começa a aparecer (fiel ao transition-delay: 1.6s).
     setTimeout(() => {
       setIntroPhase('logo');
     }, 1600);
 
-    // Finaliza tudo e abre os stories
+    // Finaliza tudo e abre os stories após a apresentação do logo.
     setTimeout(() => {
       setIsIntroActive(false);
       setIntroPhase('idle');
@@ -286,12 +286,6 @@ export function DeviceMockup({
       {/* Intro Curtain Animation - Exact logic from user snippet */}
       {isIntroActive && (
         <div className="absolute inset-0 z-[1000] overflow-hidden bg-black flex items-center justify-center">
-          {/* Overlay que escurece tudo */}
-          <div className={cn(
-            "fixed inset-0 bg-black transition-opacity duration-500 z-0",
-            introPhase !== 'closing' ? "opacity-100" : "opacity-0"
-          )} />
-
           {/* Curtain Bars */}
           <div className="absolute inset-0 flex z-10 pointer-events-none">
             {[...Array(30)].map((_, i) => (
@@ -299,12 +293,12 @@ export function DeviceMockup({
                 key={i} 
                 className={cn(
                   "flex-1 h-full transition-all duration-[1200ms] cubic-bezier(0.45, 0.05, 0.55, 0.95)",
-                  // Estado inicial (fora da tela)
-                  i % 2 !== 0 ? "-translate-y-full" : "translate-y-full",
-                  // Estado ativo (dentro da tela)
+                  // Direção: Ímpar -100%, Par 100%
+                  (i + 1) % 2 !== 0 ? "-translate-y-full" : "translate-y-full",
+                  // Estado ativo: Fechamento (translate-y-0)
                   introPhase !== 'idle' && "translate-y-0",
-                  // Blackout (sumindo no preto)
-                  introPhase === 'blackout' || introPhase === 'logo' ? "opacity-0" : "opacity-100"
+                  // Blackout: As barras somem após o fechamento
+                  (introPhase === 'blackout' || introPhase === 'logo') && "animate-fade-out-bars"
                 )}
                 style={{
                   backgroundColor: `rgb(${Math.floor(26 + (i * (192 / 30)))}, 0, 0)`,
@@ -314,7 +308,7 @@ export function DeviceMockup({
             ))}
           </div>
 
-          {/* Logo ETERNIZE - Aparece após o blackout */}
+          {/* Logo ETERNIZE - Aparece após o fechamento das barras e blackout */}
           <h1 className={cn(
             "logo-text absolute z-20 text-[#E50914] text-4xl md:text-6xl font-bebas tracking-[15px] uppercase transition-all duration-1000 pointer-events-none",
             introPhase === 'logo' ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-90 blur-xl"
@@ -449,7 +443,7 @@ export function DeviceMockup({
                       <div className="w-[70%] h-12 bg-white/10 rounded-sm mb-3 animate-pulse-custom" />
                     )}
 
-                    <div className="flex items-center gap-3 mb-4 text-[12px] font-semibold">
+                    <div className="flex items-center gap-3 mb-2 text-[12px] font-semibold">
                       <span className="text-[#46d369]">98% compatível</span>
                       <span className="text-neutral-400 font-medium">{date ? date.getFullYear() : '2026'}</span>
                       <span className="text-neutral-400 font-medium">{uploadedPhotos.length || 8} Temporadas</span>
