@@ -514,7 +514,7 @@ export function DeviceMockup({
               /* THEME SPOTIFY */
               <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col overflow-y-auto custom-scroll hide-scrollbar">
                 
-                {/* Header Mockup - Agora absoluto para sobrepor o degradê sem espaços */}
+                {/* Header Mockup */}
                 <div className="absolute top-6 left-0 right-0 z-[60] px-6 flex items-center justify-between pointer-events-none">
                   <div className="pointer-events-auto">
                     <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
@@ -534,15 +534,17 @@ export function DeviceMockup({
                       
                       <div className="relative z-10 px-6 pb-6 w-full">
                           <div className="flex items-center gap-2 mb-2">
-                              <div className="bg-[#2e77d0] p-0.5 rounded-full flex items-center justify-center">
-                                  <Check className="w-3 h-3 text-white" strokeWidth={4} />
+                              <div className="bg-[#1DB954] p-0.5 rounded-full flex items-center justify-center">
+                                  <Check className="w-3 h-3 text-black" strokeWidth={4} />
                               </div>
                               <span className="text-[11px] font-bold text-white">Artista verificado</span>
                           </div>
-                          <h1 style={titleStyle} className="text-[44px] font-black text-white leading-[0.9] mb-2 tracking-tighter break-words">
+                          <p className="text-sm font-bold text-white mb-2">
+                            {totalDays.toLocaleString('pt-BR')} dias de história
+                          </p>
+                          <h1 style={titleStyle} className="text-[44px] font-black text-white leading-[0.9] mb-4 tracking-tighter break-words">
                             {pageTitle || 'Nossa Playlist'}
                           </h1>
-                          <p className="text-sm font-bold text-neutral-400">1.234.567 ouvintes mensais</p>
                       </div>
                   </section>
 
@@ -619,21 +621,20 @@ export function DeviceMockup({
                         </div>
                     </div>
                   ) : (
-                    /* Eventos Section (Contadores) */
-                    <div className="px-6 pb-32 animate-in fade-in duration-300">
-                       <h2 className="text-white font-black text-xl mb-5">Próximos Eventos</h2>
-                       <div className="grid grid-cols-1 gap-4">
-                          <div className="bg-[#181818] rounded-xl p-6 border border-white/5">
-                             <p style={dateStyle} className="text-4xl font-black text-[#1DB954] tracking-tighter mb-1">{timeDiff?.years || 0}</p>
-                             <p className="text-white/30 text-xs font-black uppercase tracking-widest">Anos de Companheirismo</p>
+                    /* Eventos Section (Contadores Grade) */
+                    <div className="px-4 pb-32 animate-in fade-in duration-300">
+                       <div className="grid grid-cols-3 gap-2">
+                          <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                             <p className="text-2xl font-black text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
+                             <p className="text-[8px] text-white/30 font-black uppercase tracking-wider">Anos Juntos</p>
                           </div>
-                          <div className="bg-[#181818] rounded-xl p-6 border border-white/5">
-                             <p style={dateStyle} className="text-4xl font-black text-[#1DB954] tracking-tighter mb-1">{totalDays || 0}</p>
-                             <p className="text-white/30 text-xs font-black uppercase tracking-widest">Dias construindo o futuro</p>
+                          <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                             <p className="text-2xl font-black text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
+                             <p className="text-[8px] text-white/30 font-black uppercase tracking-wider">Dias de História</p>
                           </div>
-                          <div className="bg-[#181818] rounded-xl p-6 border border-white/5">
-                             <p style={dateStyle} className="text-4xl font-black text-[#1DB954] tracking-tighter mb-1">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '07/04'}</p>
-                             <p className="text-white/30 text-xs font-black uppercase tracking-widest">Nossa Data de Estreia</p>
+                          <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                             <p className="text-2xl font-black text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '00/00'}</p>
+                             <p className="text-[8px] text-white/30 font-black uppercase tracking-wider">Desde</p>
                           </div>
                        </div>
                     </div>
