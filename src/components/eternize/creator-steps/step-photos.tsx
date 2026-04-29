@@ -11,7 +11,8 @@ import {
   AlignVerticalJustifyEnd, 
   Layers, 
   Sparkles, 
-  Copy
+  Copy,
+  Plus
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -57,23 +58,70 @@ export function StepPhotos({
       <div className="space-y-3 text-center md:text-left">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="bg-white/5 p-2 rounded-2xl border border-white/10"><ImageIcon className="w-5 h-5 md:w-6 md:h-6 text-white/80" /></div>
-          <h2 className="text-2xl md:text-4xl font-black tracking-tight">As Fotos</h2>
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight">{isNetflix ? 'Capas das Temporadas' : 'As Fotos'}</h2>
         </div>
-        <p className="text-xs md:text-base text-white/40 font-medium max-w-md">Adicione até 8 fotos especiais para a sua história.</p>
+        <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
+          {isNetflix 
+            ? 'Adicione as fotos que representarão cada temporada da história de vocês (uma por uma).' 
+            : 'Adicione até 8 fotos especiais para a sua história.'}
+        </p>
       </div>
       
       <div className="w-full max-w-md space-y-8">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {uploadedPhotos.map((photo, i) => (
-            <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
-              <Image src={photo} fill className="object-cover" alt={`Photo ${i + 1}`} />
-              <button onClick={() => onRemovePhoto(i)} className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"><Trash2 className="w-4 h-4" /></button>
-            </div>
-          ))}
-          {uploadedPhotos.length < 8 && (
-            <label className="aspect-square rounded-2xl border-2 border-dashed border-white/10 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center justify-center gap-3 cursor-pointer group"><div className="bg-white/5 p-3 rounded-full group-hover:scale-110 transition-transform"><Upload className="w-6 h-6 text-white/40" /></div><span className="text-[10px] font-black uppercase tracking-wider text-white/30 text-center px-1">Adicionar Foto</span><input type="file" className="hidden" accept="image/*" multiple onChange={onPhotoUpload} /></label>
-          )}
-        </div>
+        {isNetflix ? (
+          /* NETFLIX: Upload 1 por 1 */
+          <div className="grid grid-cols-2 gap-4">
+            {[...Array(8)].map((_, i) => {
+              const photo = uploadedPhotos[i];
+              return (
+                <div key={i} className="space-y-2">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Temporada {i + 1}</span>
+                    {photo && (
+                      <button onClick={() => onRemovePhoto(i)} className="text-red-500 hover:text-red-400 transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative aspect-[2/3] rounded-xl overflow-hidden border border-white/10 bg-white/5 group">
+                    {photo ? (
+                      <>
+                        <Image src={photo} fill className="object-cover" alt={`Temporada ${i + 1}`} />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <label className="cursor-pointer bg-white text-black p-2 rounded-full transform scale-90 group-hover:scale-100 transition-transform">
+                            <Upload className="w-4 h-4" />
+                            <input type="file" className="hidden" accept="image/*" onChange={onPhotoUpload} />
+                          </label>
+                        </div>
+                      </>
+                    ) : (
+                      <label className="absolute inset-0 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5 transition-colors">
+                        <div className="bg-white/10 p-3 rounded-full group-hover:scale-110 transition-transform">
+                          <Plus className="w-5 h-5 text-white/40" />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Adicionar</span>
+                        <input type="file" className="hidden" accept="image/*" onChange={onPhotoUpload} />
+                      </label>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* CLASSIC: Upload Múltiplo */
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {uploadedPhotos.map((photo, i) => (
+              <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
+                <Image src={photo} fill className="object-cover" alt={`Photo ${i + 1}`} />
+                <button onClick={() => onRemovePhoto(i)} className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"><Trash2 className="w-4 h-4" /></button>
+              </div>
+            ))}
+            {uploadedPhotos.length < 8 && (
+              <label className="aspect-square rounded-2xl border-2 border-dashed border-white/10 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center justify-center gap-3 cursor-pointer group"><div className="bg-white/5 p-3 rounded-full group-hover:scale-110 transition-transform"><Upload className="w-6 h-6 text-white/40" /></div><span className="text-[10px] font-black uppercase tracking-wider text-white/30 text-center px-1">Adicionar Foto</span><input type="file" className="hidden" accept="image/*" multiple onChange={onPhotoUpload} /></label>
+            )}
+          </div>
+        )}
 
         {!isNetflix && (
           <>
