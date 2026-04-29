@@ -514,8 +514,8 @@ export function DeviceMockup({
               /* THEME SPOTIFY */
               <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col overflow-y-auto custom-scroll hide-scrollbar">
                 
-                {/* Header Mockup */}
-                <div className="sticky top-6 left-0 right-0 z-[60] px-6 flex items-center justify-between pointer-events-none">
+                {/* Header Mockup - Agora absoluto para sobrepor o degradê sem espaços */}
+                <div className="absolute top-6 left-0 right-0 z-[60] px-6 flex items-center justify-between pointer-events-none">
                   <div className="pointer-events-auto">
                     <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
                         <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
