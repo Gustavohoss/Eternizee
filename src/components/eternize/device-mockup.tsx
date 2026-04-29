@@ -247,22 +247,24 @@ export function DeviceMockup({
     setTimeout(() => {
       callback();
       setIsFading(false);
-    }, 400); // Metade da duração da animação para trocar o conteúdo no preto
+    }, 500); // Metade da duração da animação para trocar o conteúdo no preto absoluto
   }, []);
 
   const nextStory = useCallback(() => {
+    if (isFading) return;
     triggerFade(() => {
       setCurrentStoryIndex(prev => (prev < uploadedPhotos.length - 1 ? prev + 1 : 0));
       setStoryProgress(0);
     });
-  }, [uploadedPhotos.length, triggerFade]);
+  }, [uploadedPhotos.length, triggerFade, isFading]);
 
   const prevStory = useCallback(() => {
+    if (isFading) return;
     triggerFade(() => {
       setCurrentStoryIndex(prev => (prev > 0 ? prev - 1 : uploadedPhotos.length - 1));
       setStoryProgress(0);
     });
-  }, [uploadedPhotos.length, triggerFade]);
+  }, [uploadedPhotos.length, triggerFade, isFading]);
 
   // Automatic progression for stories
   useEffect(() => {
@@ -359,7 +361,7 @@ export function DeviceMockup({
 
       {/* Story Viewer Interface */}
       {showStories && uploadedPhotos.length > 0 && (
-        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-500">
+        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700">
           {/* Progress Bars */}
           <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1">
             {uploadedPhotos.map((_, i) => (
@@ -395,8 +397,8 @@ export function DeviceMockup({
 
           {/* Main Content */}
           <div className={cn(
-            "flex-1 relative transition-opacity duration-800 ease-in-out",
-            isFading ? "opacity-0" : "opacity-100"
+            "flex-1 relative transition-all duration-[1000ms] ease-in-out bg-black",
+            isFading ? "opacity-0 scale-95" : "opacity-100 scale-100"
           )}>
             <Image 
               src={uploadedPhotos[currentStoryIndex]} 
