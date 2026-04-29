@@ -143,6 +143,7 @@ export function DeviceMockup({
   const [introPhase, setIntroPhase] = useState<'idle' | 'closing' | 'blackout' | 'logo'>('idle');
   const [showStories, setShowStories] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [storyProgress, setStoryProgress] = useState(0);
 
   useEffect(() => {
     if (!date) {
@@ -217,39 +218,60 @@ export function DeviceMockup({
     setIsIntroActive(true);
     setIntroPhase('closing');
     
-    // As barras levam 1.2s para fechar.
-    // Aos 1.5s as barras começam a sumir (fadeOutBars).
     setTimeout(() => {
       setIntroPhase('blackout');
     }, 1500);
 
-    // Aos 1.6s o logo começa a aparecer (fiel ao transition-delay: 1.6s).
     setTimeout(() => {
       setIntroPhase('logo');
     }, 1600);
 
-    // Finaliza tudo e abre os stories após a apresentação do logo.
     setTimeout(() => {
       setIsIntroActive(false);
       setIntroPhase('idle');
       setShowStories(true);
       setCurrentStoryIndex(0);
+      setStoryProgress(0);
     }, 4500); 
   };
 
-  const nextStory = () => {
+  const nextStory = useCallback(() => {
     if (currentStoryIndex < uploadedPhotos.length - 1) {
       setCurrentStoryIndex(prev => prev + 1);
+      setStoryProgress(0);
     } else {
       setShowStories(false);
+      setStoryProgress(0);
     }
-  };
+  }, [currentStoryIndex, uploadedPhotos.length]);
 
-  const prevStory = () => {
+  const prevStory = useCallback(() => {
     if (currentStoryIndex > 0) {
       setCurrentStoryIndex(prev => prev - 1);
+      setStoryProgress(0);
     }
-  };
+  }, [currentStoryIndex]);
+
+  // Automatic progression for stories
+  useEffect(() => {
+    if (!showStories || uploadedPhotos.length === 0) return;
+
+    const intervalTime = 50; // Update every 50ms for smooth progress
+    const duration = 5000; // 5 seconds per story
+    const step = (intervalTime / duration) * 100;
+
+    const timer = setInterval(() => {
+      setStoryProgress(prev => {
+        if (prev >= 100) {
+          nextStory();
+          return 0;
+        }
+        return prev + step;
+      });
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [showStories, nextStory, uploadedPhotos.length]);
 
   const shadowSizeDate = dateNeonStrength || 10;
   const neonShadowDate = dateHasNeon 
@@ -283,21 +305,17 @@ export function DeviceMockup({
       "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full max-w-none" : "max-w-[380px]"
     )}>
-      {/* Intro Curtain Animation - Exact logic from user snippet */}
+      {/* Intro Curtain Animation */}
       {isIntroActive && (
         <div className="absolute inset-0 z-[1000] overflow-hidden bg-black flex items-center justify-center">
-          {/* Curtain Bars */}
           <div className="absolute inset-0 flex z-10 pointer-events-none">
             {[...Array(30)].map((_, i) => (
               <div 
                 key={i} 
                 className={cn(
                   "flex-1 h-full transition-all duration-[1200ms] cubic-bezier(0.45, 0.05, 0.55, 0.95)",
-                  // Direção: Ímpar -100%, Par 100%
                   (i + 1) % 2 !== 0 ? "-translate-y-full" : "translate-y-full",
-                  // Estado ativo: Fechamento (translate-y-0)
                   introPhase !== 'idle' && "translate-y-0",
-                  // Blackout: As barras somem após o fechamento
                   (introPhase === 'blackout' || introPhase === 'logo') && "animate-fade-out-bars"
                 )}
                 style={{
@@ -308,7 +326,6 @@ export function DeviceMockup({
             ))}
           </div>
 
-          {/* Logo ETERNIZE - Aparece após o fechamento das barras e blackout */}
           <h1 className={cn(
             "logo-text absolute z-20 text-[#E50914] text-4xl md:text-6xl font-bebas tracking-[15px] uppercase transition-all duration-1000 pointer-events-none",
             introPhase === 'logo' ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-90 blur-xl"
@@ -327,9 +344,10 @@ export function DeviceMockup({
               <div key={i} className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
                 <div 
                   className={cn(
-                    "h-full bg-white transition-all duration-100",
-                    i < currentStoryIndex ? "w-full" : i === currentStoryIndex ? "w-1/2" : "w-0"
+                    "h-full bg-white transition-all duration-100 ease-linear",
+                    i < currentStoryIndex ? "w-full" : i === currentStoryIndex ? "" : "w-0"
                   )} 
+                  style={i === currentStoryIndex ? { width: `${storyProgress}%` } : {}}
                 />
               </div>
             ))}
@@ -338,7 +356,7 @@ export function DeviceMockup({
           {/* Close Button */}
           <button 
             onClick={() => setShowStories(false)}
-            className="absolute top-8 right-4 z-[520] p-2 bg-black/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all"
+            className="absolute top-8 right-4 z-[520] p-2 bg-black/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all border border-white/10 shadow-2xl"
           >
             <X className="w-5 h-5" />
           </button>
@@ -564,7 +582,6 @@ export function DeviceMockup({
             ) : (
               /* THEME CLASSIC / OTHERS */
               <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
-                {/* Polaroid Card */}
                 <div 
                   style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} 
                   className={cn(
@@ -611,7 +628,6 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                {/* Date Counter Block */}
                 {date && (
                   <div className="w-full py-4">
                     {selectedCountStyle === 'padrao' && (
@@ -621,7 +637,6 @@ export function DeviceMockup({
                         </h2>
                         <div className="bg-[#181818] rounded-[24px] border border-white/5 overflow-hidden p-6 shadow-2xl relative">
                           <div className="grid grid-cols-3 gap-y-8 relative">
-                            {/* Linhas Divisórias */}
                             <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/5 -translate-y-1/2"></div>
                             <div className="absolute left-1/3 inset-y-0 w-[1px] bg-white/5"></div>
                             <div className="absolute left-2/3 inset-y-0 w-[1px] bg-white/5"></div>
@@ -707,7 +722,6 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                {/* Message Block */}
                 {message && (
                   <div className="w-full px-2 mt-2">
                     <div 
@@ -718,7 +732,6 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                {/* Music Player */}
                 {musicData && (
                   <div className="w-full px-1 mt-4">
                     <MusicPlayer 
