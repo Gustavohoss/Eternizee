@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -97,7 +98,7 @@ export default function CriadorApp() {
   // Step sequence management based on theme
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
-    if (selectedTheme === 'netflix') {
+    if (selectedTheme === 'netflix' || selectedTheme === 'spotify') {
       return [...base, 'data-location', 'page-title', 'message', 'photos', 'music'];
     }
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
@@ -146,6 +147,9 @@ export default function CriadorApp() {
     if (selectedTheme === 'netflix') {
       setTitleColor('#ffffff');
       setDateColor('#ff0000');
+    } else if (selectedTheme === 'spotify') {
+      setTitleColor('#ffffff');
+      setDateColor('#1DB954');
     } else if (!userHasManuallyChangedTitleColor) {
       const surfaceColor = showCard ? cardColor : selectedBgColor;
       setTitleColor(getContrastColor(surfaceColor));
@@ -155,6 +159,8 @@ export default function CriadorApp() {
   useEffect(() => {
     if (selectedTheme === 'netflix') {
       setDateColor('#ff0000');
+    } else if (selectedTheme === 'spotify') {
+      setDateColor('#1DB954');
     } else if (!userHasManuallyChangedDateColor) {
       setDateColor(getContrastColor(selectedBgColor));
     }
@@ -200,7 +206,7 @@ export default function CriadorApp() {
     musicTextColor,
     musicHasNeon,
     musicNeonStrength,
-    isAutoPlay: false, // Desativar auto play durante a criação
+    isAutoPlay: false,
     sparklesDensity,
     sparklesSpeed,
     sparklesColor,
@@ -241,7 +247,7 @@ export default function CriadorApp() {
       {!isInitialSteps && (
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-7xl">
           
-          {/* Progress Bar - Netflix Style */}
+          {/* Progress Bar */}
           <div className="fixed top-[32px] md:top-[40px] left-0 right-0 z-[110] px-4 md:px-10">
             <div className="max-w-7xl mx-auto flex items-center gap-4 h-8">
                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
@@ -399,7 +405,7 @@ export default function CriadorApp() {
                 />
               )}
 
-              {/* Mobile View Mockup - Placed between content and buttons on mobile */}
+              {/* Mobile View Mockup */}
               <div className="lg:hidden flex flex-col items-center mt-12 w-full gap-4">
                  <Dialog>
                    <DialogTrigger asChild>
@@ -424,7 +430,7 @@ export default function CriadorApp() {
                  {mounted && isMobile && <DeviceMockup {...previewProps} />}
               </div>
 
-              {/* Form Footer - Buttons and purchase disclaimer */}
+              {/* Form Footer */}
               <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
                 <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
                   <Button 
@@ -454,7 +460,7 @@ export default function CriadorApp() {
               </div>
             </div>
 
-            {/* Sticky Preview Column - Only visible on desktop */}
+            {/* Sticky Preview Column */}
             <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center gap-6">
                <Dialog>
                  <DialogTrigger asChild>

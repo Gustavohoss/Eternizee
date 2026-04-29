@@ -29,8 +29,15 @@ export const THEME_OPTIONS = [
     badge: 'Série',
     image: 'https://picsum.photos/seed/netflix-theme/400/600'
   },
+  { 
+    id: 'spotify', 
+    name: 'Spotify', 
+    description: 'Visual moderno inspirado no Spotify. Perfeito para quem ama música.', 
+    badge: 'Música',
+    image: 'https://picsum.photos/seed/spotify-theme/400/600'
+  },
 ];
 
-export type ThemeId = 'classic' | 'netflix';
+export type ThemeId = 'classic' | 'netflix' | 'spotify';
 
 export type Step = 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'message' | 'music' | 'data-location';
