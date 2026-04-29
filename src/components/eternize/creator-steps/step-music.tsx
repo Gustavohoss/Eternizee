@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Music, Search, X, Play, Palette, Zap, Info } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Music, Search, X, Play, Pause, Palette, Zap, Info, Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -51,6 +51,12 @@ export function StepMusic({
   const [results, setResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  
+  // Preview states for the selector card
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+  const [isPreviewReady, setIsPreviewReady] = useState(false);
+  const previewPlayerRef = useRef<any>(null);
+  const previewContainerId = useRef(`preview-yt-${Math.random().toString(36).substring(2, 11)}`);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,6 +70,85 @@ export function StepMusic({
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Preview Player Logic
+  useEffect(() => {
+    if (!musicData?.id) {
+      if (previewPlayerRef.current) {
+        previewPlayerRef.current.destroy();
+        previewPlayerRef.current = null;
+      }
+      setIsPreviewPlaying(false);
+      setIsPreviewReady(false);
+      return;
+    }
+
+    const initPreviewPlayer = () => {
+      if (!window.YT || !window.YT.Player) return;
+
+      if (previewPlayerRef.current) {
+        previewPlayerRef.current.loadVideoById(musicData.id);
+        previewPlayerRef.current.pauseVideo();
+        setIsPreviewPlaying(false);
+        return;
+      }
+
+      previewPlayerRef.current = new window.YT.Player(previewContainerId.current, {
+        height: '1',
+        width: '1',
+        videoId: musicData.id,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          rel: 0,
+          enablejsapi: 1
+        },
+        events: {
+          onReady: () => setIsPreviewReady(true),
+          onStateChange: (event: any) => {
+            if (event.data === 1) setIsPreviewPlaying(true);
+            else setIsPreviewPlaying(false);
+          }
+        }
+      });
+    };
+
+    if (window.YT && window.YT.Player) {
+      initPreviewPlayer();
+    } else {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      
+      const prevOnReady = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        if (prevOnReady) prevOnReady();
+        initPreviewPlayer();
+      };
+    }
+
+    return () => {
+      if (previewPlayerRef.current && previewPlayerRef.current.destroy) {
+        // No need to destroy immediately on music change, we reuse it above
+      }
+    };
+  }, [musicData?.id]);
+
+  const togglePreview = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!previewPlayerRef.current || !isPreviewReady) return;
+
+    const state = previewPlayerRef.current.getPlayerState?.();
+    if (state === 1) {
+      previewPlayerRef.current.pauseVideo();
+    } else {
+      previewPlayerRef.current.playVideo();
+    }
+  };
 
   const handleSearch = async () => {
     setIsSearching(true);
@@ -149,10 +234,19 @@ export function StepMusic({
         {musicData && (
           <div className="space-y-6">
             <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 animate-in zoom-in-95 group/card">
-              <div className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14 flex items-center justify-center bg-black">
-                <img src={musicData.thumb} className="w-full h-full object-cover opacity-80" alt="" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/card:bg-black/20 transition-all cursor-pointer">
-                    <Play className="w-6 h-6 text-white fill-white" />
+              <div 
+                className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14 flex items-center justify-center bg-black cursor-pointer"
+                onClick={togglePreview}
+              >
+                <img src={musicData.thumb} className={cn("w-full h-full object-cover transition-opacity", isPreviewPlaying ? "opacity-40" : "opacity-80")} alt="" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/card:bg-black/40 transition-all">
+                    {!isPreviewReady ? (
+                      <Loader2 className="w-6 h-6 text-white animate-spin" />
+                    ) : isPreviewPlaying ? (
+                      <Pause className="w-6 h-6 text-white fill-white" />
+                    ) : (
+                      <Play className="w-6 h-6 text-white fill-white" />
+                    )}
                 </div>
               </div>
               
@@ -162,11 +256,19 @@ export function StepMusic({
               </div>
 
               <button 
-                onClick={() => onMusicSelect(undefined)}
+                onClick={() => {
+                  if (previewPlayerRef.current) previewPlayerRef.current.pauseVideo();
+                  onMusicSelect(undefined);
+                }}
                 className="p-2 hover:bg-white/5 rounded-full text-white/30 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
+            </div>
+
+            {/* Hidden Player for Preview */}
+            <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
+              <div id={previewContainerId.current}></div>
             </div>
 
             <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
