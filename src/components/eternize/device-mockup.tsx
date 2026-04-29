@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -520,9 +519,9 @@ export function DeviceMockup({
                   <div className="pointer-events-auto">
                     <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
                         <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
-                        <path d="M10 26.5 Q20 22 31 24.5" stroke="black" stroke-width="2.7" stroke-linecap="round"></path>
-                        <path d="M9 21 Q20 15.5 32 19" stroke="black" stroke-width="2.7" stroke-linecap="round"></path>
-                        <path d="M8 15 Q20 8 33 13" stroke="black" stroke-width="2.7" stroke-linecap="round"></path>
+                        <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth="2.7" strokeLinecap="round"></path>
+                        <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth="2.7" strokeLinecap="round"></path>
+                        <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth="2.7" strokeLinecap="round"></path>
                     </svg>
                   </div>
                   <div className="bg-[#1DB954] w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black text-black tracking-tighter pointer-events-auto">EZ</div>
