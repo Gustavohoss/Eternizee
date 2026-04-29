@@ -633,7 +633,7 @@ export function DeviceMockup({
                         </div>
                         <div className="flex gap-2 text-[13px]">
                           <span className="text-neutral-500 min-w-[100px]">Referências:</span>
-                          <span className="text-neutral-200">Teste teste</span>
+                          <span className="text-neutral-200">{pageTitle || 'Nossa História'}</span>
                         </div>
                         <div className="flex gap-2 text-[13px]">
                           <span className="text-neutral-500 min-w-[100px]">Direção:</span>
