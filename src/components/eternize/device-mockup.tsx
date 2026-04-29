@@ -145,6 +145,11 @@ export function DeviceMockup({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
 
+  // Interaction States
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLoved, setIsLoved] = useState(false);
+  const [isInList, setIsInList] = useState(false);
+
   useEffect(() => {
     if (!date) {
       setTimeDiff(null);
@@ -256,8 +261,8 @@ export function DeviceMockup({
   useEffect(() => {
     if (!showStories || uploadedPhotos.length === 0) return;
 
-    const intervalTime = 50; // Update every 50ms for smooth progress
-    const duration = 5000; // 5 seconds per story
+    const intervalTime = 50; 
+    const duration = 5000; 
     const step = (intervalTime / duration) * 100;
 
     const timer = setInterval(() => {
@@ -491,14 +496,32 @@ export function DeviceMockup({
                         <span className="text-base">▶</span> Reproduzir
                       </button>
                       <div className="flex gap-2">
-                        <button className="flex-1 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 py-2.5 rounded font-bold text-xs flex items-center justify-center gap-2 text-white">
-                          <span className="text-lg leading-none">+</span> Minha lista
+                        <button 
+                          onClick={() => setIsInList(!isInList)}
+                          className={cn(
+                            "flex-1 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 py-2.5 rounded font-bold text-xs flex items-center justify-center gap-2 transition-all",
+                            isInList ? "text-[#46d369]" : "text-white"
+                          )}
+                        >
+                          <span className="text-lg leading-none">{isInList ? "✓" : "+"}</span> Minha lista
                         </button>
-                        <button className="w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center text-lg active:bg-white/20 text-white">
-                          👍
+                        <button 
+                          onClick={() => setIsLiked(!isLiked)}
+                          className={cn(
+                            "w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center transition-all active:scale-90",
+                            isLiked ? "text-[#46d369]" : "text-white"
+                          )}
+                        >
+                          <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
                         </button>
-                        <button className="w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center text-lg active:bg-white/20 text-white">
-                          ❤
+                        <button 
+                          onClick={() => setIsLoved(!isLoved)}
+                          className={cn(
+                            "w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center transition-all active:scale-90",
+                            isLoved ? "text-[#46d369]" : "text-white"
+                          )}
+                        >
+                          <Heart className={cn("w-5 h-5", isLoved && "fill-current")} />
                         </button>
                       </div>
                     </div>
