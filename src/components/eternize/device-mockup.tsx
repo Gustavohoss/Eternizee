@@ -141,6 +141,7 @@ export function DeviceMockup({
 
   // States for Netflix Experience
   const [isIntroActive, setIsIntroActive] = useState(false);
+  const [introPhase, setIntroPhase] = useState<'idle' | 'closing' | 'blackout' | 'logo'>('idle');
   const [showStories, setShowStories] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
@@ -213,12 +214,27 @@ export function DeviceMockup({
 
   const startExperience = () => {
     if (uploadedPhotos.length === 0) return;
+    
     setIsIntroActive(true);
+    setIntroPhase('closing');
+    
+    // Inicia blackout após as barras fecharem (1.2s de transição + pequeno buffer)
+    setTimeout(() => {
+      setIntroPhase('blackout');
+    }, 1500);
+
+    // Mostra o logo após o blackout
+    setTimeout(() => {
+      setIntroPhase('logo');
+    }, 1600);
+
+    // Finaliza tudo e abre os stories
     setTimeout(() => {
       setIsIntroActive(false);
+      setIntroPhase('idle');
       setShowStories(true);
       setCurrentStoryIndex(0);
-    }, 3500); // 1.2s close + 0.3s black + 1s logo + 1s fade
+    }, 4500); 
   };
 
   const nextStory = () => {
@@ -267,31 +283,44 @@ export function DeviceMockup({
       "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full max-w-none" : "max-w-[380px]"
     )}>
-      {/* Intro Curtain Animation */}
+      {/* Intro Curtain Animation - Exact logic from user snippet */}
       {isIntroActive && (
         <div className="absolute inset-0 z-[1000] overflow-hidden bg-black flex items-center justify-center">
-          <div className="flex w-full h-full absolute inset-0">
+          {/* Overlay que escurece tudo */}
+          <div className={cn(
+            "fixed inset-0 bg-black transition-opacity duration-500 z-0",
+            introPhase !== 'closing' ? "opacity-100" : "opacity-0"
+          )} />
+
+          {/* Curtain Bars */}
+          <div className="absolute inset-0 flex z-10 pointer-events-none">
             {[...Array(30)].map((_, i) => (
               <div 
                 key={i} 
                 className={cn(
-                  "flex-1 h-full transition-transform duration-[1200ms] cubic-bezier(0.45, 0.05, 0.55, 0.95)",
-                  i % 2 === 0 ? "translate-y-0" : "translate-y-0",
-                  "animate-in fade-in fill-mode-forwards"
+                  "flex-1 h-full transition-all duration-[1200ms] cubic-bezier(0.45, 0.05, 0.55, 0.95)",
+                  // Estado inicial (fora da tela)
+                  i % 2 !== 0 ? "-translate-y-full" : "translate-y-full",
+                  // Estado ativo (dentro da tela)
+                  introPhase !== 'idle' && "translate-y-0",
+                  // Blackout (sumindo no preto)
+                  introPhase === 'blackout' || introPhase === 'logo' ? "opacity-0" : "opacity-100"
                 )}
                 style={{
                   backgroundColor: `rgb(${Math.floor(26 + (i * (192 / 30)))}, 0, 0)`,
                   transitionDelay: `${i * 0.02}s`,
-                  transform: 'translateY(0%)'
                 }}
               />
             ))}
           </div>
-          <div className="relative z-[1010] animate-in fade-in duration-1000 delay-1500">
-            <h1 className="text-[#E50914] text-4xl md:text-6xl font-bebas tracking-[15px] uppercase transform scale-110 blur-0 transition-all duration-1000">
-              ETERNIZE
-            </h1>
-          </div>
+
+          {/* Logo ETERNIZE - Aparece após o blackout */}
+          <h1 className={cn(
+            "logo-text absolute z-20 text-[#E50914] text-4xl md:text-6xl font-bebas tracking-[15px] uppercase transition-all duration-1000 pointer-events-none",
+            introPhase === 'logo' ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-90 blur-xl"
+          )}>
+            ETERNIZE
+          </h1>
         </div>
       )}
 
