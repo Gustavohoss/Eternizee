@@ -75,16 +75,35 @@ export function StepMusic({
   useEffect(() => {
     if (!musicData?.id) {
       if (previewPlayerRef.current) {
-        previewPlayerRef.current.destroy();
-        previewPlayerRef.current = null;
+        previewPlayerRef.current.pauseVideo();
       }
       setIsPreviewPlaying(false);
-      setIsPreviewReady(false);
       return;
     }
 
+    const loadYoutubeApi = () => {
+      if (window.YT && window.YT.Player) {
+        initPreviewPlayer();
+        return;
+      }
+
+      if (!document.getElementById('youtube-api-script')) {
+        const tag = document.createElement('script');
+        tag.id = 'youtube-api-script';
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      }
+
+      const prevOnReady = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        if (prevOnReady) prevOnReady();
+        initPreviewPlayer();
+      };
+    };
+
     const initPreviewPlayer = () => {
-      if (!window.YT || !window.YT.Player) return;
+      if (!window.YT || !window.YT.Player || !document.getElementById(previewContainerId.current)) return;
 
       if (previewPlayerRef.current) {
         previewPlayerRef.current.loadVideoById(musicData.id);
@@ -103,7 +122,8 @@ export function StepMusic({
           disablekb: 1,
           fs: 0,
           rel: 0,
-          enablejsapi: 1
+          enablejsapi: 1,
+          origin: window.location.origin
         },
         events: {
           onReady: () => setIsPreviewReady(true),
@@ -115,24 +135,13 @@ export function StepMusic({
       });
     };
 
-    if (window.YT && window.YT.Player) {
-      initPreviewPlayer();
-    } else {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-      
-      const prevOnReady = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (prevOnReady) prevOnReady();
-        initPreviewPlayer();
-      };
-    }
+    loadYoutubeApi();
 
     return () => {
-      if (previewPlayerRef.current && previewPlayerRef.current.destroy) {
-        // No need to destroy immediately on music change, we reuse it above
+      // Don't destroy immediately to avoid flickering on re-renders,
+      // but pause to stop audio if component unmounts
+      if (previewPlayerRef.current && previewPlayerRef.current.pauseVideo) {
+        previewPlayerRef.current.pauseVideo();
       }
     };
   }, [musicData?.id]);
@@ -140,7 +149,12 @@ export function StepMusic({
   const togglePreview = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
     if (!previewPlayerRef.current || !isPreviewReady) return;
+
+    // Force unMute and Volume on first interaction
+    previewPlayerRef.current.unMute();
+    previewPlayerRef.current.setVolume(100);
 
     const state = previewPlayerRef.current.getPlayerState?.();
     if (state === 1) {
@@ -235,7 +249,7 @@ export function StepMusic({
           <div className="space-y-6">
             <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 animate-in zoom-in-95 group/card">
               <div 
-                className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14 flex items-center justify-center bg-black cursor-pointer"
+                className="relative shrink-0 overflow-hidden rounded-xl w-14 h-14 flex items-center justify-center bg-black cursor-pointer shadow-lg"
                 onClick={togglePreview}
               >
                 <img src={musicData.thumb} className={cn("w-full h-full object-cover transition-opacity", isPreviewPlaying ? "opacity-40" : "opacity-80")} alt="" />
@@ -267,7 +281,7 @@ export function StepMusic({
             </div>
 
             {/* Hidden Player for Preview */}
-            <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
+            <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0 invisible">
               <div id={previewContainerId.current}></div>
             </div>
 
