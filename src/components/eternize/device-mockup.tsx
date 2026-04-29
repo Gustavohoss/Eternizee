@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -9,6 +8,7 @@ import {
   Clock,
   Calendar as CalendarIcon,
   Play,
+  Pause,
   Plus,
   ThumbsUp,
   ChevronDown,
@@ -115,7 +115,7 @@ export function DeviceMockup({
   musicTextColor = '#ffffff',
   musicHasNeon = false,
   musicNeonStrength = 15,
-  isAutoPlay = false, // Padrão falso durante edição
+  isAutoPlay = false,
 
   sparklesDensity = 120,
   sparklesSpeed = 0.5,
@@ -145,8 +145,10 @@ export function DeviceMockup({
   const [showStories, setShowStories] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
+  const [isStoryPaused, setIsStoryPaused] = useState(false);
+  const [isFading, setIsFading] = useState(false);
   const [activeTab, setActiveTab] = useState<'episodios' | 'detalhes'>('episodios');
-  const [netflixAutoPlay, setNetflixAutoPlay] = useState(false); // Inicia desativado na Netflix
+  const [netflixAutoPlay, setNetflixAutoPlay] = useState(false);
 
   useEffect(() => {
     if (!date) {
@@ -218,9 +220,8 @@ export function DeviceMockup({
   const startExperience = () => {
     if (uploadedPhotos.length === 0) return;
     
-    // Inicia a música apenas ao clicar em reproduzir
     setNetflixAutoPlay(true);
-
+    setIsStoryPaused(false);
     setIsIntroActive(true);
     setIntroPhase('closing');
     
@@ -241,26 +242,31 @@ export function DeviceMockup({
     }, 4500); 
   };
 
+  const triggerFade = useCallback((callback: () => void) => {
+    setIsFading(true);
+    setTimeout(() => {
+      callback();
+      setIsFading(false);
+    }, 400); // Metade da duração da animação para trocar o conteúdo no preto
+  }, []);
+
   const nextStory = useCallback(() => {
-    if (currentStoryIndex < uploadedPhotos.length - 1) {
-      setCurrentStoryIndex(prev => prev + 1);
+    triggerFade(() => {
+      setCurrentStoryIndex(prev => (prev < uploadedPhotos.length - 1 ? prev + 1 : 0));
       setStoryProgress(0);
-    } else {
-      setShowStories(false);
-      setStoryProgress(0);
-    }
-  }, [currentStoryIndex, uploadedPhotos.length]);
+    });
+  }, [uploadedPhotos.length, triggerFade]);
 
   const prevStory = useCallback(() => {
-    if (currentStoryIndex > 0) {
-      setCurrentStoryIndex(prev => prev - 1);
+    triggerFade(() => {
+      setCurrentStoryIndex(prev => (prev > 0 ? prev - 1 : uploadedPhotos.length - 1));
       setStoryProgress(0);
-    }
-  }, [currentStoryIndex]);
+    });
+  }, [uploadedPhotos.length, triggerFade]);
 
   // Automatic progression for stories
   useEffect(() => {
-    if (!showStories || uploadedPhotos.length === 0) return;
+    if (!showStories || uploadedPhotos.length === 0 || isStoryPaused || isFading) return;
 
     const intervalTime = 50; 
     const duration = 5000; 
@@ -277,7 +283,12 @@ export function DeviceMockup({
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [showStories, nextStory, uploadedPhotos.length]);
+  }, [showStories, nextStory, uploadedPhotos.length, isStoryPaused, isFading]);
+
+  const togglePause = () => {
+    setIsStoryPaused(!isStoryPaused);
+    setNetflixAutoPlay(!isStoryPaused ? false : true);
+  };
 
   const shadowSizeDate = dateNeonStrength || 10;
   const neonShadowDate = dateHasNeon 
@@ -366,7 +377,11 @@ export function DeviceMockup({
 
           {/* Close Button */}
           <button 
-            onClick={() => { setShowStories(false); setNetflixAutoPlay(false); }}
+            onClick={() => { 
+              setShowStories(false); 
+              setNetflixAutoPlay(false); 
+              setIsStoryPaused(false);
+            }}
             className="absolute top-8 right-4 z-[520] p-2 bg-black/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all border border-white/10 shadow-2xl"
           >
             <X className="w-5 h-5" />
@@ -379,7 +394,10 @@ export function DeviceMockup({
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 relative">
+          <div className={cn(
+            "flex-1 relative transition-opacity duration-800 ease-in-out",
+            isFading ? "opacity-0" : "opacity-100"
+          )}>
             <Image 
               src={uploadedPhotos[currentStoryIndex]} 
               fill 
@@ -388,13 +406,39 @@ export function DeviceMockup({
               priority
             />
             {/* Bottom Info Overlay */}
-            <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black via-black/40 to-transparent">
-              <p className="text-[#e50914] text-[10px] font-black uppercase tracking-[0.2em] mb-2">
-                Memória {currentStoryIndex + 1} / {uploadedPhotos.length}
+            <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black via-black/60 to-transparent">
+              {/* Reference dots progress indicator from user image */}
+              <div className="flex justify-center gap-1.5 mb-6">
+                {uploadedPhotos.map((_, i) => (
+                  <div key={i} className={cn(
+                    "h-1 rounded-full transition-all duration-300",
+                    i === currentStoryIndex ? "w-6 bg-[#E50914]" : "w-2 bg-white/30"
+                  )} />
+                ))}
+              </div>
+
+              <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1">
+                MEMÓRIA {currentStoryIndex + 1} / {uploadedPhotos.length}
               </p>
-              <h2 style={titleStyle} className="text-3xl font-bebas text-white tracking-tight leading-none mb-4">
+              <h2 style={titleStyle} className="text-3xl font-bebas text-white tracking-tight leading-none mb-8">
                 {pageTitle || 'ETERNIZE'}
               </h2>
+
+              {/* Pause/Play Button as per reference image */}
+              <button 
+                onClick={togglePause}
+                className="w-full bg-white text-black py-4 rounded-lg flex items-center justify-center gap-3 text-sm font-black active:scale-95 transition-transform shadow-2xl"
+              >
+                {isStoryPaused ? (
+                  <>
+                    <Play className="w-4 h-4 fill-current" /> Retomar
+                  </>
+                ) : (
+                  <>
+                    <Pause className="w-4 h-4 fill-current" /> Pausar
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -431,7 +475,7 @@ export function DeviceMockup({
               <SmokeBackground smokeColor={smokeColor} backgroundColor={selectedBgColor} intensity={smokeIntensity} />
             </div>
           )}
-          {selectedEffect === 'pattern' && selectedTheme !== 'netflix' && (
+          {selectedEffect === 'falling' && selectedTheme !== 'netflix' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <FallingPattern backgroundColor={selectedBgColor} color={patternColor} blurIntensity="0px" duration={patternDuration} density={patternDensity} />
             </div>
@@ -664,7 +708,7 @@ export function DeviceMockup({
                         musicBoxColor="#1a1a1a"
                         musicTextColor="#ffffff"
                         musicHasNeon={false}
-                        isAutoPlay={netflixAutoPlay}
+                        isAutoPlay={netflixAutoPlay && !isStoryPaused}
                       />
                     </div>
                   )}
