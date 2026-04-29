@@ -144,6 +144,7 @@ export function DeviceMockup({
   const [showStories, setShowStories] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
+  const [activeTab, setActiveTab] = useState<'episodios' | 'detalhes'>('episodios');
 
   // Interaction States
   const [isLiked, setIsLiked] = useState(false);
@@ -547,59 +548,108 @@ export function DeviceMockup({
 
                 <div className="px-4 mt-2">
                   <div className="flex gap-8 border-b border-neutral-800 mb-4">
-                    <button className="pb-3 text-sm font-bold border-b-[3px] border-[#e50914] tracking-tight">Episódios</button>
-                    <button className="pb-3 text-sm font-bold text-neutral-500 tracking-tight">Detalhes</button>
+                    <button 
+                      onClick={() => setActiveTab('episodios')}
+                      className={cn(
+                        "pb-3 text-sm font-bold tracking-tight transition-all",
+                        activeTab === 'episodios' ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500"
+                      )}
+                    >
+                      Episódios
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('detalhes')}
+                      className={cn(
+                        "pb-3 text-sm font-bold tracking-tight transition-all",
+                        activeTab === 'detalhes' ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500"
+                      )}
+                    >
+                      Detalhes
+                    </button>
                   </div>
                   
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-white text-sm font-bold flex items-center gap-1.5 uppercase text-[12px] tracking-tight">
-                      Temporada 1 
-                      <svg className="w-3 h-3 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                    </span>
-                    <span className="text-neutral-600 text-[11px] font-semibold">{uploadedPhotos.length || 8} episódios</span>
-                  </div>
+                  {activeTab === 'episodios' ? (
+                    <>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-white text-sm font-bold flex items-center gap-1.5 uppercase text-[12px] tracking-tight">
+                          Temporada 1 
+                          <svg className="w-3 h-3 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                        </span>
+                        <span className="text-neutral-600 text-[11px] font-semibold">{uploadedPhotos.length || 8} episódios</span>
+                      </div>
 
-                  <div className="space-y-6 pb-10">
-                    {uploadedPhotos.length > 0 ? (
-                      uploadedPhotos.map((photo, i) => (
-                        <div 
-                          key={i} 
-                          className={cn(
-                            "flex gap-3 items-center cursor-pointer group/ep transition-all",
-                            activeHeroIndex === i ? "opacity-100" : "opacity-60 hover:opacity-100"
-                          )}
-                          onClick={() => setActiveHeroIndex(i)}
-                        >
-                          <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0 relative overflow-hidden">
-                            <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
-                            <div className="absolute inset-0 bg-black/20 group-hover/ep:bg-black/0 transition-all flex items-center justify-center">
-                              {activeHeroIndex === i && (
-                                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                  <Play className="w-4 h-4 text-white fill-white" />
-                                </div>
+                      <div className="space-y-6 pb-10">
+                        {uploadedPhotos.length > 0 ? (
+                          uploadedPhotos.map((photo, i) => (
+                            <div 
+                              key={i} 
+                              className={cn(
+                                "flex gap-3 items-center cursor-pointer group/ep transition-all",
+                                activeHeroIndex === i ? "opacity-100" : "opacity-60 hover:opacity-100"
                               )}
+                              onClick={() => setActiveHeroIndex(i)}
+                            >
+                              <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0 relative overflow-hidden">
+                                <Image src={photo} fill className="object-cover" alt={`Ep ${i}`} />
+                                <div className="absolute inset-0 bg-black/20 group-hover/ep:bg-black/0 transition-all flex items-center justify-center">
+                                  {activeHeroIndex === i && (
+                                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                      <Play className="w-4 h-4 text-white fill-white" />
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="absolute bottom-1 right-1 bg-black/60 px-1 rounded-sm text-[7px] font-black border border-white/20">HD</div>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p>
+                                <p className="text-[10px] text-neutral-500 leading-tight font-medium">Reviva este capítulo especial da nossa história.</p>
+                              </div>
                             </div>
-                            <div className="absolute bottom-1 right-1 bg-black/60 px-1 rounded-sm text-[7px] font-black border border-white/20">HD</div>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p>
-                            <p className="text-[10px] text-neutral-500 leading-tight font-medium">Reviva este capítulo especial da nossa história.</p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <>
-                        <div className="flex gap-3 items-center animate-pulse-custom">
-                            <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0"></div>
-                            <div className="flex-1 space-y-2">
-                                <div className="h-3 bg-[#2a2a2a] w-3/4 rounded-full"></div>
-                                <div className="h-2 bg-[#2a2a2a] w-full rounded-full"></div>
-                                <div className="h-2 bg-[#2a2a2a] w-2/3 rounded-full"></div>
+                          ))
+                        ) : (
+                          <>
+                            <div className="flex gap-3 items-center animate-pulse-custom">
+                                <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0"></div>
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-3 bg-[#2a2a2a] w-3/4 rounded-full"></div>
+                                    <div className="h-2 bg-[#2a2a2a] w-full rounded-full"></div>
+                                    <div className="h-2 bg-[#2a2a2a] w-2/3 rounded-full"></div>
+                                </div>
                             </div>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="space-y-6 pb-20 animate-in fade-in duration-300">
+                      <div className="space-y-4">
+                        <div className="flex gap-2 text-[13px]">
+                          <span className="text-neutral-500 min-w-[100px]">Data de estreia:</span>
+                          <span className="text-neutral-200">{date ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : '07 de abril de 2017'}</span>
                         </div>
-                      </>
-                    )}
-                  </div>
+                        <div className="flex gap-2 text-[13px]">
+                          <span className="text-neutral-500 min-w-[100px]">Gêneros:</span>
+                          <span className="text-neutral-200">Romance · Drama · Comédia</span>
+                        </div>
+                        <div className="flex gap-2 text-[13px]">
+                          <span className="text-neutral-500 min-w-[100px]">Referências:</span>
+                          <span className="text-neutral-200">Teste teste</span>
+                        </div>
+                        <div className="flex gap-2 text-[13px]">
+                          <span className="text-neutral-500 min-w-[100px]">Direção:</span>
+                          <span className="text-neutral-200">Heartzzu</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-8 flex items-center gap-3">
+                        <div className="bg-[#E50914] w-7 h-7 rounded-[2px] flex flex-col items-center justify-center leading-none shrink-0">
+                          <span className="text-[7px] font-black uppercase">TOP</span>
+                          <span className="text-[11px] font-black">10</span>
+                        </div>
+                        <p className="text-[13px] font-black text-white tracking-tight">Em alta nos nossos corações</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
