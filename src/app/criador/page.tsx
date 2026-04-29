@@ -201,7 +201,7 @@ export default function CriadorApp() {
     musicTextColor,
     musicHasNeon,
     musicNeonStrength,
-    isAutoPlay: isMusicAutoPlay,
+    isAutoPlay: false, // Desativar auto play durante a criação
     sparklesDensity,
     sparklesSpeed,
     sparklesColor,

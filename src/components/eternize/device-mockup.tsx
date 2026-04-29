@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -114,7 +115,7 @@ export function DeviceMockup({
   musicTextColor = '#ffffff',
   musicHasNeon = false,
   musicNeonStrength = 15,
-  isAutoPlay = true,
+  isAutoPlay = false, // Padrão falso durante edição
 
   sparklesDensity = 120,
   sparklesSpeed = 0.5,
@@ -145,12 +146,7 @@ export function DeviceMockup({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
   const [activeTab, setActiveTab] = useState<'episodios' | 'detalhes'>('episodios');
-  const [netflixAutoPlay, setNetflixAutoPlay] = useState(isAutoPlay);
-
-  // Sync autoPlay prop with internal state for Netflix override
-  useEffect(() => {
-    setNetflixAutoPlay(isAutoPlay);
-  }, [isAutoPlay]);
+  const [netflixAutoPlay, setNetflixAutoPlay] = useState(false); // Inicia desativado na Netflix
 
   useEffect(() => {
     if (!date) {
@@ -222,10 +218,8 @@ export function DeviceMockup({
   const startExperience = () => {
     if (uploadedPhotos.length === 0) return;
     
-    // Trigger music for Netflix theme specifically
-    if (selectedTheme === 'netflix') {
-      setNetflixAutoPlay(true);
-    }
+    // Inicia a música apenas ao clicar em reproduzir
+    setNetflixAutoPlay(true);
 
     setIsIntroActive(true);
     setIntroPhase('closing');
@@ -372,7 +366,7 @@ export function DeviceMockup({
 
           {/* Close Button */}
           <button 
-            onClick={() => setShowStories(false)}
+            onClick={() => { setShowStories(false); setNetflixAutoPlay(false); }}
             className="absolute top-8 right-4 z-[520] p-2 bg-black/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all border border-white/10 shadow-2xl"
           >
             <X className="w-5 h-5" />
