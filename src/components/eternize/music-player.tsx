@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -64,7 +65,7 @@ export function MusicPlayer({
     };
 
     const initPlayer = () => {
-      if (!window.YT || !window.YT.Player || playerRef.current) return;
+      if (!window.YT || !window.YT.Player || playerRef.current || !document.getElementById(containerId.current)) return;
 
       try {
         playerRef.current = new window.YT.Player(containerId.current, {
@@ -85,11 +86,6 @@ export function MusicPlayer({
             onReady: (event: any) => {
               setIsReady(true);
               setDuration(event.target.getDuration());
-              if (isAutoPlay) {
-                event.target.unMute();
-                event.target.setVolume(100);
-                event.target.playVideo();
-              }
             },
             onStateChange: (event: any) => {
               if (event.data === 1) {
@@ -119,20 +115,22 @@ export function MusicPlayer({
   }, []);
 
   useEffect(() => {
-    if (isReady && playerRef.current && musicData?.id) {
-      playerRef.current.loadVideoById(musicData.id);
-      setIsPlaying(false);
-      setCurrentTime(0);
+    if (!isReady || !playerRef.current) return;
+
+    if (musicData?.id) {
+      const currentPlayerId = playerRef.current.getVideoData?.().video_id;
+      if (currentPlayerId !== musicData.id) {
+        playerRef.current.loadVideoById(musicData.id);
+        setCurrentTime(0);
+      }
+      
       if (isAutoPlay) {
         playerRef.current.unMute();
         playerRef.current.setVolume(100);
         playerRef.current.playVideo();
+      } else {
+        playerRef.current.pauseVideo();
       }
-    } else if (isReady && playerRef.current && isAutoPlay) {
-      // If only isAutoPlay changed and it's true, force play
-      playerRef.current.unMute();
-      playerRef.current.setVolume(100);
-      playerRef.current.playVideo();
     }
   }, [musicData?.id, isReady, isAutoPlay]);
 

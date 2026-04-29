@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, D
 import { cn } from '@/lib/utils';
 import { getContrastColor } from '@/lib/color-utils';
 import { Step, MOCK_CITIES, ThemeId } from './constants';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Step Components
 import { StepThemeSelection } from '@/components/eternize/creator-steps/step-theme-selection';
@@ -21,6 +22,8 @@ import { StepMusic } from '@/components/eternize/creator-steps/step-music';
 import { StepDataLocation } from '@/components/eternize/creator-steps/step-data-location';
 
 export default function CriadorApp() {
+  const isMobile = useIsMobile();
+  const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>('theme-selection');
   const [selectedTheme, setSelectedTheme] = useState<ThemeId>('classic');
   const [selectedGiftType, setSelectedGiftType] = useState<string>('amor');
@@ -86,6 +89,11 @@ export default function CriadorApp() {
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Step sequence management based on theme
   const stepSequence = useMemo((): Step[] => {
@@ -409,11 +417,11 @@ export default function CriadorApp() {
                            <X className="w-5 h-5" />
                          </DialogClose>
                        </div>
-                       <DeviceMockup {...previewProps} isFullscreen />
+                       {mounted && <DeviceMockup {...previewProps} isFullscreen />}
                      </div>
                    </DialogContent>
                  </Dialog>
-                 <DeviceMockup {...previewProps} />
+                 {mounted && isMobile && <DeviceMockup {...previewProps} />}
               </div>
 
               {/* Form Footer - Buttons and purchase disclaimer */}
@@ -464,11 +472,11 @@ export default function CriadorApp() {
                          <X className="w-5 h-5" />
                        </DialogClose>
                      </div>
-                     <DeviceMockup {...previewProps} isFullscreen />
+                     {mounted && <DeviceMockup {...previewProps} isFullscreen />}
                    </div>
                  </DialogContent>
                </Dialog>
-               <DeviceMockup {...previewProps} />
+               {mounted && !isMobile && <DeviceMockup {...previewProps} />}
             </div>
 
           </div>
