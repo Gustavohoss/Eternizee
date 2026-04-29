@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -355,6 +354,7 @@ export default function CriadorApp() {
 
               {step === 'music' && (
                 <StepMusic 
+                  selectedTheme={selectedTheme}
                   musicData={musicData}
                   onMusicSelect={setMusicData}
                   musicBoxColor={musicBoxColor}
@@ -469,7 +469,7 @@ export default function CriadorApp() {
                    <div className="flex-1 overflow-hidden relative flex flex-col">
                      <div className="absolute top-6 right-6 z-[250]">
                        <DialogClose className="p-2.5 bg-black/60 hover:bg-black/80 rounded-full text-white transition-all border border-white/20 shadow-2xl backdrop-blur-md">
-                         <X className="w-5 h-5" />
+                           <X className="w-5 h-5" />
                        </DialogClose>
                      </div>
                      {mounted && <DeviceMockup {...previewProps} isFullscreen />}
