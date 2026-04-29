@@ -145,11 +145,12 @@ export function DeviceMockup({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [storyProgress, setStoryProgress] = useState(0);
   const [activeTab, setActiveTab] = useState<'episodios' | 'detalhes'>('episodios');
+  const [netflixAutoPlay, setNetflixAutoPlay] = useState(isAutoPlay);
 
-  // Interaction States
-  const [isLiked, setIsLiked] = useState(false);
-  const [isLoved, setIsLoved] = useState(false);
-  const [isInList, setIsInList] = useState(false);
+  // Sync autoPlay prop with internal state for Netflix override
+  useEffect(() => {
+    setNetflixAutoPlay(isAutoPlay);
+  }, [isAutoPlay]);
 
   useEffect(() => {
     if (!date) {
@@ -221,6 +222,11 @@ export function DeviceMockup({
   const startExperience = () => {
     if (uploadedPhotos.length === 0) return;
     
+    // Trigger music for Netflix theme specifically
+    if (selectedTheme === 'netflix') {
+      setNetflixAutoPlay(true);
+    }
+
     setIsIntroActive(true);
     setIntroPhase('closing');
     
@@ -305,6 +311,11 @@ export function DeviceMockup({
   };
 
   const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  // Interaction States
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLoved, setIsLoved] = useState(false);
+  const [isInList, setIsInList] = useState(false);
 
   return (
     <div className={cn(
@@ -650,6 +661,19 @@ export function DeviceMockup({
                       </div>
                     </div>
                   )}
+
+                  {musicData && (
+                    <div className="mt-8 pb-10">
+                      <div className="text-neutral-500 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Trilha Sonora</div>
+                      <MusicPlayer 
+                        musicData={musicData}
+                        musicBoxColor="#1a1a1a"
+                        musicTextColor="#ffffff"
+                        musicHasNeon={false}
+                        isAutoPlay={netflixAutoPlay}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -705,9 +729,10 @@ export function DeviceMockup({
                   <div className="w-full py-4">
                     {selectedCountStyle === 'padrao' && (
                       <div className="w-full text-center">
-                        <h2 className="text-[#55b2d4] text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                        <h2 className="text-[#55b2d4] text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
                           Uau, estão juntos há
                         </h2>
+
                         <div className="bg-[#181818] rounded-[24px] border border-white/5 overflow-hidden p-6 shadow-2xl relative">
                           <div className="grid grid-cols-3 gap-y-8 relative">
                             <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/5 -translate-y-1/2"></div>
@@ -715,27 +740,27 @@ export function DeviceMockup({
                             <div className="absolute left-2/3 inset-y-0 w-[1px] bg-white/5"></div>
 
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.years || 0}</span>
+                              <span style={dateStyle} className="text-4xl">{timeDiff?.years || 0}</span>
                               <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Anos</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.months || 0}</span>
+                              <span style={dateStyle} className="text-4xl">{timeDiff?.months || 0}</span>
                               <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Meses</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.days || 0}</span>
+                              <span style={dateStyle} className="text-4xl">{timeDiff?.days || 0}</span>
                               <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Dias</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.hours || 0}</span>
+                              <span style={dateStyle} className="text-4xl">{timeDiff?.hours || 0}</span>
                               <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Horas</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.minutes || 0}</span>
+                              <span style={dateStyle} className="text-4xl">{timeDiff?.minutes || 0}</span>
                               <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Minutos</span>
                             </div>
                             <div className="flex flex-col items-center py-2">
-                              <span style={{ ...dateStyle, fontFamily: "'Lora', serif" }} className="text-4xl">{timeDiff?.seconds || 0}</span>
+                              <span style={dateStyle} className="text-4xl">{timeDiff?.seconds || 0}</span>
                               <span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Segundos</span>
                             </div>
                           </div>

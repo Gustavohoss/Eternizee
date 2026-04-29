@@ -86,11 +86,12 @@ export function MusicPlayer({
               setIsReady(true);
               setDuration(event.target.getDuration());
               if (isAutoPlay) {
+                event.target.unMute();
+                event.target.setVolume(100);
                 event.target.playVideo();
               }
             },
             onStateChange: (event: any) => {
-              // -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
               if (event.data === 1) {
                 setIsPlaying(true);
                 startTimer();
@@ -123,8 +124,15 @@ export function MusicPlayer({
       setIsPlaying(false);
       setCurrentTime(0);
       if (isAutoPlay) {
+        playerRef.current.unMute();
+        playerRef.current.setVolume(100);
         playerRef.current.playVideo();
       }
+    } else if (isReady && playerRef.current && isAutoPlay) {
+      // If only isAutoPlay changed and it's true, force play
+      playerRef.current.unMute();
+      playerRef.current.setVolume(100);
+      playerRef.current.playVideo();
     }
   }, [musicData?.id, isReady, isAutoPlay]);
 
@@ -145,7 +153,6 @@ export function MusicPlayer({
     e.stopPropagation();
     if (!playerRef.current || !isReady) return;
     
-    // Libera áudio para navegadores
     playerRef.current.unMute();
     playerRef.current.setVolume(100);
 
