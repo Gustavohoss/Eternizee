@@ -783,26 +783,34 @@ export function DeviceMockup({
                         </div>
                       </section>
 
-                      {/* Seção Sobre */}
-                      {message && (
-                        <section className="px-6 pb-32">
-                          <h2 className="text-white text-xl font-black mb-4 font-['DM_Sans']">Sobre</h2>
-                          <div className="bg-[#181818] rounded-2xl p-4 overflow-hidden relative group">
-                            {uploadedPhotos.length > 0 && (
-                              <div className="absolute inset-0 grayscale opacity-40 transition-transform duration-500 group-hover:scale-110">
-                                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
+                      {/* Seção Sobre (Card de Biografia do Artista) */}
+                      <section className="px-6 pb-32">
+                        <div className="bg-[#181818] rounded-[24px] overflow-hidden flex flex-col shadow-2xl border border-white/5 transition-transform duration-500 hover:scale-[1.01]">
+                          {/* Top Image with fade */}
+                          <div className="relative aspect-square md:aspect-video w-full">
+                            {uploadedPhotos.length > 0 ? (
+                              <Image src={uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
+                            ) : (
+                              <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
+                                <ImageIcon className="w-10 h-10 text-white/10" />
                               </div>
                             )}
-                            <div className="relative z-10">
-                              <div 
-                                className="text-neutral-200 text-sm leading-relaxed mb-4 font-['DM_Sans']" 
-                                dangerouslySetInnerHTML={{ __html: message }} 
-                              />
-                              <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider font-['DM_Sans']">#TOP1DOSEUCORAÇÃO</span>
-                            </div>
+                            <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-[#181818] via-[#181818]/40 to-transparent" />
                           </div>
-                        </section>
-                      )}
+                          
+                          {/* Card Text Content */}
+                          <div className="p-6 pt-2">
+                            <div 
+                              className="text-neutral-400 text-sm md:text-base leading-relaxed mb-6 font-['DM_Sans'] font-medium" 
+                              dangerouslySetInnerHTML={{ __html: message || 'Nossa história começou de um jeito único e especial. Cada momento ao seu lado é uma nova música na nossa playlist da vida.' }} 
+                            />
+                            
+                            <p className="text-[#1DB954] text-[13px] font-black uppercase tracking-wider font-['DM_Sans']">
+                              Juntos desde {date ? format(date, 'dd/MM/yyyy') : '10/04/2026'}
+                            </p>
+                          </div>
+                        </div>
+                      </section>
                     </>
                   )}
                 </div>
