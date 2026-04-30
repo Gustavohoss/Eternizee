@@ -428,7 +428,7 @@ export function DeviceMockup({
 
       {/* Spotify Fullscreen Player Experience */}
       {showSpotifyFullscreen && (
-        <div className="absolute inset-0 z-[500] bg-[#121212] flex flex-col animate-in fade-in duration-500 overflow-hidden">
+        <div className="absolute inset-0 z-[500] bg-[#121212] flex flex-col animate-in fade-in duration-500 overflow-hidden no-scrollbar">
           {/* Blurred Dynamic Background */}
           <div className="absolute inset-0 z-0 scale-125 brightness-[0.4] blur-[60px] transition-all duration-1000">
              {uploadedPhotos.length > 0 ? (
@@ -565,7 +565,7 @@ export function DeviceMockup({
       </div>
 
       <div className={cn(
-        "relative bg-black border-x border-b border-white/10 overflow-hidden shadow-2xl flex-1",
+        "relative bg-black border-x border-b border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar",
         isFullscreen ? "rounded-none h-full" : "rounded-b-[2.5rem] aspect-[9/19]"
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? '#121212' : selectedBgColor }}>
@@ -584,7 +584,7 @@ export function DeviceMockup({
           <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar">
             {selectedTheme === 'netflix' ? (
               /* THEME NETFLIX */
-              <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col custom-scroll overflow-y-auto">
+              <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col no-scrollbar overflow-y-auto">
                 <header className="sticky top-0 z-50 px-4 py-4 flex items-center justify-between bg-gradient-to-b from-black via-black/80 to-transparent">
                   <div className="text-[#e50914] font-bebas text-2xl tracking-tighter uppercase">ETERNIZE</div>
                   <div className="w-8 h-8 rounded-sm bg-[#e50914] flex items-center justify-center text-[11px] font-black tracking-tight">EZ</div>
