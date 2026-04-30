@@ -1,137 +1,228 @@
 'use client';
 
 import React from 'react';
-import { Lock } from 'lucide-react';
+import { Lock, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+interface AchievementCardProps {
+  level: number;
+  stars: number;
+  title: string;
+  description: string;
+  icon: string;
+  currentDays: number;
+  targetDays: number;
+  color: string;
+  isLocked?: boolean;
+}
+
+function AchievementCard({ 
+  level, 
+  stars, 
+  title, 
+  description, 
+  icon, 
+  currentDays, 
+  targetDays, 
+  color, 
+  isLocked = false 
+}: AchievementCardProps) {
+  const progress = Math.min(100, (currentDays / targetDays) * 100);
+
+  if (isLocked) {
+    return (
+      <div className="rounded-[2rem] p-4 flex flex-col gap-4 relative overflow-hidden bg-[#0c0c0c] border border-white/5 opacity-40 grayscale filter">
+        <div className="flex justify-between items-start">
+          <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center text-xl border border-white/10 text-white/20">
+            {icon}
+          </div>
+          <div className="text-right">
+            <p className="text-[8px] font-black uppercase tracking-widest text-white/20">Nível {level}</p>
+            <div className="flex gap-0.5 mt-0.5 justify-end">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-2 h-2 fill-white/10 text-transparent" />
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm font-black text-white/20 tracking-tight">{title}</p>
+          <p className="text-[10px] text-white/10 leading-tight font-medium">{description}</p>
+        </div>
+        <div className="mt-auto space-y-2">
+          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-full bg-white/10" style={{ width: `${progress}%` }}></div>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] font-bold text-white/10">{currentDays}/{targetDays} dias</span>
+            <div className="bg-white/5 px-2 py-1 rounded-full border border-white/5">
+               <Lock className="w-2.5 h-2.5 text-white/10" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className="rounded-[2rem] p-4 flex flex-col gap-4 relative overflow-hidden bg-[#0c0c0c] border transition-all duration-500 shadow-2xl"
+      style={{ borderColor: `${color}40`, boxShadow: `0 0 20px ${color}10` }}
+    >
+      <div className="flex justify-between items-start">
+        <div 
+          className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl border shadow-inner"
+          style={{ backgroundColor: `${color}20`, borderColor: `${color}30` }}
+        >
+          {icon}
+        </div>
+        <div className="text-right">
+          <p className="text-[8px] font-black uppercase tracking-widest" style={{ color }}>Nível {level}</p>
+          <div className="flex gap-0.5 mt-0.5 justify-end">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={cn(
+                  "w-2 h-2",
+                  i < stars ? "fill-current" : "fill-white/10 text-transparent"
+                )} 
+                style={i < stars ? { color } : {}}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div>
+        <p className="text-sm font-black text-white tracking-tight">{title}</p>
+        <p className="text-[10px] text-white/40 leading-tight font-medium">{description}</p>
+      </div>
+      <div className="mt-auto space-y-2">
+        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+          <div className="h-full transition-all duration-1000" style={{ backgroundColor: color, width: `${progress}%` }}></div>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-[9px] font-bold text-white/30">{currentDays}/{targetDays} dias</span>
+          <div 
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg"
+            style={{ backgroundColor: `${color}20`, color: color, border: `1px solid ${color}40` }}
+          >
+            ✓ Conquistada
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function AchievementsModulePreview() {
   return (
-    <div className="bg-[#050508] text-white min-h-full overflow-x-hidden relative font-inter">
+    <div className="bg-[#050508] text-white min-h-full overflow-x-hidden relative font-inter pb-20">
       {/* Glow de fundo superior */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-gradient-to-b from-[#f0c060]/10 to-transparent pointer-events-none" />
 
-      <div className="w-full max-w-[450px] mx-auto px-5 pt-16 pb-12 relative z-10">
+      <div className="w-full max-w-[450px] mx-auto px-5 pt-16 relative z-10">
         
         {/* Título */}
         <div className="text-center mb-8">
             <h2 className="text-4xl font-bold tracking-tight mb-1 bg-gradient-to-br from-white to-[#f0c060] bg-clip-text text-transparent">Conquistas</h2>
-            <p className="text-sm text-white/40">Marcos desbloqueados ao longo da jornada</p>
+            <p className="text-sm text-white/40 font-medium">Marcos desbloqueados ao longo da jornada</p>
         </div>
 
         {/* Barra de Progresso Geral */}
-        <div className="rounded-2xl p-4 flex items-center gap-4 mb-10 bg-gradient-to-br from-white/5 to-black/80 border border-[#f0c060]/30 shadow-[0_0_20px_rgba(240,192,96,0.1)]">
-            <span className="text-3xl">🏆</span>
+        <div className="rounded-[2rem] p-5 flex items-center gap-5 mb-12 bg-[#0c0c0c] border border-[#f0c060]/20 shadow-[0_0_40px_rgba(240,192,96,0.05)]">
+            <div className="w-12 h-12 rounded-2xl bg-[#f0c060]/10 flex items-center justify-center text-3xl border border-[#f0c060]/20">🏆</div>
             <div className="flex-1">
-                <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-[#f0c060]">10</span>
-                    <span className="text-sm text-white/45">de 15 Conquistadas</span>
+                <div className="flex items-baseline gap-1.5">
+                    <span className="text-2xl font-black text-[#f0c060] tracking-tighter">10</span>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-widest">de 15 Conquistadas</span>
                 </div>
-                <div className="w-full h-1.5 bg-white/10 rounded-full mt-2 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-[#f0c060] to-[#fb923c]" style={{ width: '67%' }}></div>
+                <div className="w-full h-1.5 bg-white/5 rounded-full mt-2.5 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-[#f0c060] to-[#fb923c] shadow-[0_0_10px_rgba(240,192,96,0.3)]" style={{ width: '67%' }}></div>
                 </div>
             </div>
         </div>
 
         {/* Seção: Linha do Tempo */}
         <div className="mb-6">
-            <div className="flex items-center gap-2 mb-4 px-1">
-                <span className="text-[11px] font-semibold uppercase tracking-widest text-white/30">Linha do Tempo</span>
-                <div className="flex-1 h-px bg-white/10"></div>
-                <span className="text-[11px] text-white/30">5/7</span>
+            <div className="flex items-center gap-3 mb-6 px-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 whitespace-nowrap">Linha do Tempo</span>
+                <div className="flex-1 h-px bg-white/5"></div>
+                <span className="text-[10px] font-black text-white/30">5/7</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-                
-                {/* Card: Um Mês (Verde) */}
-                <div className="rounded-2xl p-3.5 flex flex-col gap-3 relative overflow-hidden bg-gradient-to-br from-white/5 to-black/80 border border-[#34d399]/40 shadow-[0_0_20px_rgba(52,211,153,0.1)] text-[#34d399]">
-                    <div className="flex justify-between items-start">
-                        <div className="w-9 h-9 rounded-xl bg-[#34d399]/20 flex items-center justify-center text-lg border border-[#34d399]/30">🌱</div>
-                        <div className="text-right">
-                            <p className="text-[9px] font-bold uppercase">Nível 1</p>
-                            <p className="text-[9px]">★★★★★</p>
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-white">Um Mês Juntos</p>
-                        <p className="text-[10px] text-white/40 leading-snug">Completaram 1 mês de história</p>
-                    </div>
-                    <div className="mt-auto">
-                        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-1">
-                            <div className="h-full bg-[#34d399]" style={{ width: '100%' }}></div>
-                        </div>
-                        <div className="flex justify-between text-[8px] font-bold">
-                            <span className="text-white/30">30/30 dias</span>
-                            <span>✓ CONQUISTADA</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Card: Um Ano (Amarelo) */}
-                <div className="rounded-2xl p-3.5 flex flex-col gap-3 relative overflow-hidden bg-gradient-to-br from-white/5 to-black/80 border border-[#f0c060]/40 shadow-[0_0_20px_rgba(240,192,96,0.1)] text-[#f0c060]">
-                    <div className="flex justify-between items-start">
-                        <div className="w-9 h-9 rounded-xl bg-[#f0c060]/20 flex items-center justify-center text-lg border border-[#f0c060]/30">🎂</div>
-                        <div className="text-right">
-                            <p className="text-[9px] font-bold uppercase">Nível 4</p>
-                            <p className="text-[9px]">★★★★☆</p>
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-white">Um Ano!</p>
-                        <p className="text-[10px] text-white/40 leading-snug">Um ano inteiro de cumplicidade</p>
-                    </div>
-                    <div className="mt-auto">
-                        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-1">
-                            <div className="h-full bg-[#f0c060]" style={{ width: '100%' }}></div>
-                        </div>
-                        <div className="flex justify-between text-[8px] font-bold">
-                            <span className="text-white/30">365/365 dias</span>
-                            <span>✓ CONQUISTADA</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Card: Três Anos (Azul) */}
-                <div className="rounded-2xl p-3.5 flex flex-col gap-3 relative overflow-hidden bg-gradient-to-br from-white/5 to-black/80 border border-[#60befa]/40 shadow-[0_0_20px_rgba(96,191,250,0.1)] text-[#60befa]">
-                    <div className="flex justify-between items-start">
-                        <div className="w-9 h-9 rounded-xl bg-[#60befa]/20 flex items-center justify-center text-lg border border-[#60befa]/30">💎</div>
-                        <div className="text-right">
-                            <p className="text-[9px] font-bold uppercase">Nível 5</p>
-                            <p className="text-[9px]">★★★★★</p>
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-white">Três Anos</p>
-                        <p className="text-[10px] text-white/40 leading-snug">Uma linda história que só cresce</p>
-                    </div>
-                    <div className="mt-auto">
-                        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-1">
-                            <div className="h-full bg-[#60befa]" style={{ width: '100%' }}></div>
-                        </div>
-                        <div className="flex justify-between text-[8px] font-bold">
-                            <span className="text-white/30">1095/1095 dias</span>
-                            <span>✓ CONQUISTADA</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Card Bloqueado */}
-                <div className="rounded-2xl p-3.5 flex flex-col gap-3 relative overflow-hidden bg-gradient-to-br from-white/5 to-black/80 border border-white/10 opacity-40 grayscale filter">
-                    <div className="flex justify-between items-start">
-                        <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-lg border border-white/10 text-white/20">🏆</div>
-                        <div className="absolute bottom-2 right-2 opacity-20"><Lock className="w-3 h-3" /></div>
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-white/20">Uma Década!</p>
-                        <p className="text-[10px] text-white/10 leading-snug">Dez anos de uma história épica</p>
-                    </div>
-                    <div className="mt-auto">
-                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-1">
-                            <div className="h-full bg-white/10" style={{ width: '42%' }}></div>
-                        </div>
-                        <p className="text-[8px] text-white/10">1536/3650 dias</p>
-                    </div>
-                </div>
-
+            <div className="grid grid-cols-2 gap-3.5">
+                <AchievementCard 
+                  level={1}
+                  stars={1}
+                  title="Um Mês Juntos"
+                  description="Completaram 1 mês de história"
+                  icon="🌱"
+                  currentDays={1536}
+                  targetDays={30}
+                  color="#34d399"
+                />
+                <AchievementCard 
+                  level={2}
+                  stars={2}
+                  title="Três Meses"
+                  description="Três meses de momentos especiais"
+                  icon="🌿"
+                  currentDays={1536}
+                  targetDays={90}
+                  color="#10b981"
+                />
+                <AchievementCard 
+                  level={3}
+                  stars={3}
+                  title="Seis Meses"
+                  description="Meio ano de histórias compartilhadas"
+                  icon="🌺"
+                  currentDays={1536}
+                  targetDays={180}
+                  color="#ec4899"
+                />
+                <AchievementCard 
+                  level={4}
+                  stars={4}
+                  title="Um Ano!"
+                  description="Um ano inteiro de cumplicidade"
+                  icon="🎂"
+                  currentDays={1536}
+                  targetDays={365}
+                  color="#f59e0b"
+                />
+                <AchievementCard 
+                  level={5}
+                  stars={5}
+                  title="Três Anos"
+                  description="Uma linda história que só cresce"
+                  icon="💎"
+                  currentDays={1536}
+                  targetDays={1095}
+                  color="#3b82f6"
+                />
+                <AchievementCard 
+                  level={5}
+                  stars={5}
+                  title="Cinco Anos"
+                  description="Meio caminho para a lenda"
+                  icon="👑"
+                  currentDays={1536}
+                  targetDays={1825}
+                  color="#f0c060"
+                  isLocked
+                />
+                <AchievementCard 
+                  level={5}
+                  stars={5}
+                  title="Uma Década!"
+                  description="Dez anos de uma história épica"
+                  icon="🏆"
+                  currentDays={1536}
+                  targetDays={3650}
+                  color="#f0c060"
+                  isLocked
+                />
             </div>
         </div>
 
