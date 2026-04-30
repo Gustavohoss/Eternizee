@@ -721,9 +721,9 @@ export function DeviceMockup({
                   </div>
                 </div>
 
-                {/* Floating Music Player (Instagram Style) */}
+                {/* Floating Music Player (Instagram Style) - Changed to absolute for preview context */}
                 {musicData && (
-                  <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] bg-neutral-900/90 backdrop-blur-xl border border-neutral-800 rounded-2xl p-3 shadow-2xl z-[100] animate-in slide-in-from-bottom-4 duration-500">
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] bg-neutral-900/90 backdrop-blur-xl border border-neutral-800 rounded-2xl p-3 shadow-2xl z-[100] animate-in slide-in-from-bottom-4 duration-500">
                     <div className="flex items-center gap-3">
                       <div className="p-[1px] rounded-lg ig-gradient shrink-0">
                         <div className="w-10 h-10 rounded-lg overflow-hidden relative bg-black">
