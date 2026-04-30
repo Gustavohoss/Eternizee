@@ -554,7 +554,7 @@ export function DeviceMockup({
 
                   {/* Controles de Ação */}
                   <div className="px-6 py-4 flex items-center gap-4">
-                    <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg relative overflow-hidden shrink-0">
+                    <div className="w-10 h-10 rounded overflow-hidden relative bg-black shrink-0">
                         {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
                     </div>
                     <button onClick={() => setIsLiked(!isLiked)} className="border border-neutral-500 rounded-full px-4 py-1.5 text-xs font-bold text-white hover:border-white transition-colors">
@@ -614,31 +614,41 @@ export function DeviceMockup({
                     <>
                       {/* Seção Populares */}
                       <section className="px-6 mb-8">
-                        <h2 className="text-white text-xl font-black mb-4">Populares</h2>
-                        <div className="space-y-4">
+                        <h2 className="text-white text-xl font-black mb-4 font-['DM_Sans']">Populares</h2>
+                        <div className="space-y-1">
                           {uploadedPhotos.length > 0 ? (
                             uploadedPhotos.map((photo, i) => (
-                              <div key={i} className="flex items-center gap-4 group" onClick={() => setActiveHeroIndex(i)}>
-                                <span className="text-neutral-500 text-sm w-4">{i + 1}</span>
-                                <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg relative overflow-hidden">
+                              <div 
+                                key={i} 
+                                className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" 
+                                onClick={() => setActiveHeroIndex(i)}
+                              >
+                                <div className="w-4 flex justify-center items-center">
+                                  <span className="text-neutral-500 text-sm font-bold group-hover:hidden">{i + 1}</span>
+                                  <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
+                                </div>
+                                <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg relative overflow-hidden shrink-0">
                                   <Image src={photo} fill className="object-cover" alt="" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <h3 className="text-white text-sm font-bold truncate">Memória {i + 1}</h3>
-                                  <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">{date ? date.getFullYear() : '2026'} • 03:45</p>
+                                  <h3 className="text-white text-sm font-bold truncate font-['DM_Sans'] tracking-tight">Memória {i + 1}</h3>
+                                  <p className="text-neutral-500 text-[11px] font-bold font-['DM_Sans'] truncate">{pageTitle || 'Gustavo e Luisa'}</p>
                                 </div>
-                                <button className="text-neutral-400 group-hover:text-[#1DB954]"><Heart className="w-5 h-5" /></button>
+                                <span className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">2:47</span>
                               </div>
                             ))
                           ) : (
-                            <div className="flex items-center gap-4 group">
-                              <span className="text-neutral-500 text-sm w-4">1</span>
-                              <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg"></div>
-                              <div className="flex-1">
-                                <h3 className="text-white text-sm font-bold">Nossa Primeira Música</h3>
-                                <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">2018 • 03:45</p>
+                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer">
+                              <div className="w-4 flex justify-center items-center">
+                                <span className="text-neutral-500 text-sm font-bold group-hover:hidden">1</span>
+                                <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
                               </div>
-                              <button className="text-neutral-400 group-hover:text-white"><Heart className="w-5 h-5" /></button>
+                              <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg shrink-0"></div>
+                              <div className="flex-1">
+                                <h3 className="text-white text-sm font-bold font-['DM_Sans'] tracking-tight">Nossa Primeira Música</h3>
+                                <p className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">{pageTitle || 'Gustavo e Luisa'}</p>
+                              </div>
+                              <span className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">2:47</span>
                             </div>
                           )}
                         </div>
@@ -647,7 +657,7 @@ export function DeviceMockup({
                       {/* Seção Sobre */}
                       {message && (
                         <section className="px-6 pb-20">
-                          <h2 className="text-white text-xl font-black mb-4">Sobre</h2>
+                          <h2 className="text-white text-xl font-black mb-4 font-['DM_Sans']">Sobre</h2>
                           <div className="bg-[#181818] rounded-2xl p-4 overflow-hidden relative group">
                             {uploadedPhotos.length > 0 && (
                               <div className="absolute inset-0 grayscale opacity-40 transition-transform duration-500 group-hover:scale-110">
