@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
@@ -6,6 +5,8 @@ import Image from 'next/image';
 import { Layout, ChevronLeft, ChevronRight, Zap, Flame, ExternalLink, X, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
+import { MemoriesModulePreview } from '@/components/eternize/memories-module-preview';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 
@@ -46,6 +47,7 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'center' });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isPackEnabled, setIsPackEnabled] = useState(true);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -104,7 +106,11 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
                     <p className="text-[11px] text-white/60 leading-relaxed font-medium">
                       {module.description}
                     </p>
-                    <Button variant="outline" className="w-full bg-white/5 border-white/10 rounded-xl h-10 text-[10px] font-bold uppercase tracking-wider hover:bg-white/10 flex items-center justify-center gap-2">
+                    <Button 
+                      onClick={() => setIsPreviewOpen(true)}
+                      variant="outline" 
+                      className="w-full bg-white/5 border-white/10 rounded-xl h-10 text-[10px] font-bold uppercase tracking-wider hover:bg-white/10 flex items-center justify-center gap-2"
+                    >
                       <ExternalLink className="w-3 h-3" /> Ver módulo
                     </Button>
                   </div>
@@ -122,7 +128,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
           <ChevronLeft className="w-5 h-5" />
         </button>
         <button 
-          scroll-next="true"
           onClick={scrollNext}
           className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center hover:bg-black/80 transition-all z-10"
         >
@@ -142,6 +147,25 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
           ))}
         </div>
       </div>
+
+      {/* Module Preview Dialog */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[300]">
+          <DialogTitle className="sr-only">Visualização do Módulo</DialogTitle>
+          <DialogDescription className="sr-only">Visualize como este módulo exclusivo aparecerá na sua página.</DialogDescription>
+          
+          <div className="flex-1 overflow-y-auto custom-scroll relative">
+            <div className="sticky top-0 right-0 z-[350] flex justify-end p-4 pointer-events-none">
+              <DialogClose asChild>
+                <Button className="pointer-events-auto w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 hover:bg-black/80">
+                  <X className="w-5 h-5" />
+                </Button>
+              </DialogClose>
+            </div>
+            <MemoriesModulePreview />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Toggle Box */}
       <div className="w-full space-y-4">
