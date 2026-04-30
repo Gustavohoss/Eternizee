@@ -153,7 +153,7 @@ export function DeviceMockup({
   const [storyProgress, setStoryProgress] = useState(0);
   const [isStoryPaused, setIsStoryPaused] = useState(false);
   const [isFading, setIsFading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'episodios' | 'detalhes' | 'musicas' | 'eventos'>('episodios');
+  const [activeTab, setActiveTab] = useState<'musicas' | 'eventos'>('musicas');
   const [experienceAutoPlay, setExperienceAutoPlay] = useState(false);
   const [showSpotifyAudioOverlay, setShowSpotifyAudioOverlay] = useState(false);
 
@@ -161,7 +161,7 @@ export function DeviceMockup({
     if (selectedTheme === 'spotify') {
       setActiveTab('musicas');
     } else {
-      setActiveTab('episodios');
+      setActiveTab('episodios' as any);
     }
   }, [selectedTheme]);
 
@@ -243,7 +243,7 @@ export function DeviceMockup({
     setTimeout(() => {
       callback();
       setIsFading(false);
-    }, 500);
+    }, 800);
   }, []);
 
   const nextStory = useCallback(() => {
@@ -364,11 +364,11 @@ export function DeviceMockup({
             <div className="flex-1 h-full cursor-pointer" onClick={nextStory} />
           </div>
           <div className={cn(
-            "flex-1 relative transition-all duration-[1000ms] ease-in-out bg-black",
+            "flex-1 relative transition-all duration-[1200ms] ease-in-out bg-black",
             isFading ? "opacity-0 scale-95" : "opacity-100 scale-100"
           )}>
             <Image src={uploadedPhotos[currentStoryIndex]} fill className="object-cover" alt={`Story ${currentStoryIndex}`} priority />
-            <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black via-black/60 to-transparent">
+            <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black via-black/90 to-transparent">
               <div className="flex justify-center gap-1.5 mb-6">
                 {uploadedPhotos.map((_, i) => (
                   <div key={i} className={cn(
@@ -496,10 +496,10 @@ export function DeviceMockup({
                 </div>
                 <div className="px-4 mt-2 pb-20">
                   <div className="flex gap-8 border-b border-neutral-800 mb-4">
-                    <button onClick={() => setActiveTab('episodios')} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === 'episodios' ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Episódios</button>
-                    <button onClick={() => setActiveTab('detalhes')} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === 'detalhes' ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Detalhes</button>
+                    <button onClick={() => setActiveTab('episodios' as any)} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === ('episodios' as any) ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Episódios</button>
+                    <button onClick={() => setActiveTab('detalhes' as any)} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === ('detalhes' as any) ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Detalhes</button>
                   </div>
-                  {activeTab === 'episodios' ? (
+                  {activeTab === ('episodios' as any) ? (
                     <div className="space-y-6">{uploadedPhotos.map((photo, i) => (
                       <div key={i} className="flex gap-3 items-center" onClick={() => setActiveHeroIndex(i)}>
                         <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md relative overflow-hidden"><Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /></div>
@@ -519,11 +519,11 @@ export function DeviceMockup({
                 <div className="absolute top-6 left-0 right-0 z-30 px-6 flex items-center justify-between pointer-events-none">
                   <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
-                    <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
-                    <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
-                    <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
+                    <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth={2.5} strokeLinecap="round" fill="none"></path>
+                    <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth={2.5} strokeLinecap="round" fill="none"></path>
+                    <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth={2.5} strokeLinecap="round" fill="none"></path>
                   </svg>
-                  <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">EZ</div>
+                  <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">HZ</div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto no-scrollbar relative">
@@ -538,7 +538,7 @@ export function DeviceMockup({
                         </div>
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
-                      <h1 className="text-white text-6xl font-black leading-[0.9] tracking-tighter mb-4 break-words">
+                      <h1 className="text-white text-5xl font-black leading-none tracking-tighter mb-4 break-words">
                         {pageTitle || 'Teste teste'}
                       </h1>
                       <p className="text-neutral-300 text-sm font-bold">{totalDays.toLocaleString('pt-BR')} dias de história</p>
@@ -563,75 +563,93 @@ export function DeviceMockup({
                     </div>
                   </div>
 
-                  {/* Grid de Estatísticas (Cards Rápidos) */}
+                  {/* Tab Navigation */}
                   <div className="px-6 mb-8">
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                        <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
-                        <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Anos juntos</p>
-                      </div>
-                      <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                        <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
-                        <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Dias</p>
-                      </div>
-                      <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                        <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '06/04'}</p>
-                        <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Desde</p>
-                      </div>
+                    <div className="flex gap-8 border-b border-white/5 pb-2">
+                        <button onClick={() => setActiveTab('musicas')} className="relative">
+                            <span className={cn("font-bold text-sm transition-colors", activeTab === 'musicas' ? "text-white" : "text-neutral-400")}>Músicas</span>
+                            {activeTab === 'musicas' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
+                        </button>
+                        <button onClick={() => setActiveTab('eventos')} className="relative">
+                            <span className={cn("font-bold text-sm transition-colors", activeTab === 'eventos' ? "text-white" : "text-neutral-400")}>Eventos</span>
+                            {activeTab === 'eventos' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
+                        </button>
                     </div>
                   </div>
 
-                  {/* Seção Populares */}
-                  <section className="px-6 mb-8">
-                    <h2 className="text-white text-xl font-black mb-4">Populares</h2>
-                    <div className="space-y-4">
-                      {uploadedPhotos.length > 0 ? (
-                        uploadedPhotos.map((photo, i) => (
-                          <div key={i} className="flex items-center gap-4 group">
-                            <span className="text-neutral-500 text-sm w-4">{i + 1}</span>
-                            <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg relative overflow-hidden">
-                              <Image src={photo} fill className="object-cover" alt="" />
+                  {activeTab === 'musicas' ? (
+                    <>
+                      {/* Seção Populares */}
+                      <section className="px-6 mb-8">
+                        <h2 className="text-white text-xl font-black mb-4">Populares</h2>
+                        <div className="space-y-4">
+                          {uploadedPhotos.length > 0 ? (
+                            uploadedPhotos.map((photo, i) => (
+                              <div key={i} className="flex items-center gap-4 group">
+                                <span className="text-neutral-500 text-sm w-4">{i + 1}</span>
+                                <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg relative overflow-hidden">
+                                  <Image src={photo} fill className="object-cover" alt="" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="text-white text-sm font-bold truncate">Memória {i + 1}</h3>
+                                  <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">{date ? date.getFullYear() : '2026'} • 03:45</p>
+                                </div>
+                                <button className="text-neutral-400 group-hover:text-[#1DB954]"><Heart className="w-5 h-5" /></button>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="flex items-center gap-4 group">
+                              <span className="text-neutral-500 text-sm w-4">1</span>
+                              <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg"></div>
+                              <div className="flex-1">
+                                <h3 className="text-white text-sm font-bold">Nossa Primeira Música</h3>
+                                <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">2018 • 03:45</p>
+                              </div>
+                              <button className="text-neutral-400 group-hover:text-white"><Heart className="w-5 h-5" /></button>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-white text-sm font-bold truncate">Memória {i + 1}</h3>
-                              <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">{date ? date.getFullYear() : '2026'} • 03:45</p>
-                            </div>
-                            <button className="text-neutral-400 group-hover:text-[#1DB954]"><Heart className="w-5 h-5" /></button>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="flex items-center gap-4 group">
-                          <span className="text-neutral-500 text-sm w-4">1</span>
-                          <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg"></div>
-                          <div className="flex-1">
-                            <h3 className="text-white text-sm font-bold">Nossa Primeira Música</h3>
-                            <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">2018 • 03:45</p>
-                          </div>
-                          <button className="text-neutral-400 group-hover:text-white"><Heart className="w-5 h-5" /></button>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </section>
+                      </section>
 
-                  {/* Seção Sobre */}
-                  {message && (
-                    <section className="px-6 pb-20">
-                      <h2 className="text-white text-xl font-black mb-4">Sobre</h2>
-                      <div className="bg-[#181818] rounded-2xl p-6 overflow-hidden relative group min-h-[160px] flex flex-col justify-end">
-                        {uploadedPhotos.length > 0 && (
-                          <div className="absolute inset-0 grayscale opacity-40 transition-transform duration-500 group-hover:scale-110">
-                            <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
+                      {/* Seção Sobre */}
+                      {message && (
+                        <section className="px-6 pb-20">
+                          <h2 className="text-white text-xl font-black mb-4">Sobre</h2>
+                          <div className="bg-[#181818] rounded-2xl p-6 overflow-hidden relative group min-h-[160px] flex flex-col justify-end">
+                            {uploadedPhotos.length > 0 && (
+                              <div className="absolute inset-0 grayscale opacity-40 transition-transform duration-500 group-hover:scale-110">
+                                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
+                              </div>
+                            )}
+                            <div className="relative z-10">
+                              <div 
+                                className="text-neutral-200 text-sm leading-relaxed mb-4 line-clamp-4" 
+                                dangerouslySetInnerHTML={{ __html: message }} 
+                              />
+                              <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">#TOP1DOSEUCORAÇÃO</span>
+                            </div>
                           </div>
-                        )}
-                        <div className="relative z-10">
-                          <div 
-                            className="text-neutral-200 text-sm leading-relaxed mb-4 line-clamp-4" 
-                            dangerouslySetInnerHTML={{ __html: message }} 
-                          />
-                          <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">#TOP1DOSEUCORAÇÃO</span>
+                        </section>
+                      )}
+                    </>
+                  ) : (
+                    <div className="px-6 mb-8 animate-in fade-in duration-500">
+                        <h2 className="text-white text-xl font-black mb-4">Estatísticas</h2>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                                <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
+                                <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Anos juntos</p>
+                            </div>
+                            <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                                <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
+                                <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Dias</p>
+                            </div>
+                            <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                                <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '06/04'}</p>
+                                <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Desde</p>
+                            </div>
                         </div>
-                      </div>
-                    </section>
+                    </div>
                   )}
                 </div>
 
