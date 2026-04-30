@@ -47,4 +47,4 @@ export const THEME_OPTIONS = [
 
 export type ThemeId = 'classic' | 'netflix' | 'spotify' | 'instagram';
 
-export type Step = 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'message' | 'music' | 'data-location';
+export type Step = 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'message' | 'music' | 'data-location' | 'plans';

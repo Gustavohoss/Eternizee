@@ -20,6 +20,7 @@ import { StepPageTitle } from '@/components/eternize/creator-steps/step-page-tit
 import { StepMessage } from '@/components/eternize/creator-steps/step-message';
 import { StepMusic } from '@/components/eternize/creator-steps/step-music';
 import { StepDataLocation } from '@/components/eternize/creator-steps/step-data-location';
+import { StepPlans } from '@/components/eternize/creator-steps/step-plans';
 
 export default function CriadorApp() {
   const isMobile = useIsMobile();
@@ -106,9 +107,9 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') {
-      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music'];
+      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans'];
     }
-    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
+    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location', 'plans'];
   }, [selectedTheme]);
 
   const currentStepIndex = stepSequence.indexOf(step);
@@ -406,7 +407,14 @@ export default function CriadorApp() {
                   dateColor={dateColor}
                   onDateColorChange={(c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }}
                   onBack={handleBack}
-                  onFinish={() => { console.log('Finish Creation'); }}
+                  onNext={handleNext}
+                />
+              )}
+
+              {step === 'plans' && (
+                <StepPlans 
+                  onBack={handleBack}
+                  onFinish={() => { console.log('Finish Creation and go to payment'); }}
                 />
               )}
 
@@ -435,34 +443,36 @@ export default function CriadorApp() {
                  {mounted && isMobile && <DeviceMockup {...previewProps} />}
               </div>
 
-              {/* Form Footer */}
-              <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
-                <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
-                  <Button 
-                    onClick={handleBack} 
-                    variant="outline" 
-                    className="w-full h-14 rounded-2xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-                  >
-                    <ChevronLeft className="w-4 h-4" /> Voltar etapa
-                  </Button>
-                  <Button 
-                    onClick={handleNext} 
-                    className={cn(
-                      "w-full h-14 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2",
-                      currentStepIndex === stepSequence.length - 1 ? "bg-primary text-white" : "bg-white text-black hover:bg-white/90"
-                    )}
-                  >
-                    {currentStepIndex === stepSequence.length - 1 ? 'Finalizar criação' : 'Próxima etapa'} 
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
+              {/* Form Footer (Only visible when not in Plans step since it has its own navigation) */}
+              {step !== 'plans' && (
+                <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
+                  <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
+                    <Button 
+                      onClick={handleBack} 
+                      variant="outline" 
+                      className="w-full h-14 rounded-2xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                    >
+                      <ChevronLeft className="w-4 h-4" /> Voltar etapa
+                    </Button>
+                    <Button 
+                      onClick={handleNext} 
+                      className={cn(
+                        "w-full h-14 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2",
+                        currentStepIndex === stepSequence.length - 1 ? "bg-primary text-white" : "bg-white text-black hover:bg-white/90"
+                      )}
+                    >
+                      {currentStepIndex === stepSequence.length - 1 ? 'Finalizar criação' : 'Próxima etapa'} 
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  
+                  <div className="flex justify-center md:justify-start">
+                     <p className="text-[11px] font-medium text-white/30 italic flex items-center gap-2">
+                       <Pencil className="w-3 h-3" /> Você poderá editar isso após a compra
+                     </p>
+                  </div>
                 </div>
-                
-                <div className="flex justify-center md:justify-start">
-                   <p className="text-[11px] font-medium text-white/30 italic flex items-center gap-2">
-                     <Pencil className="w-3 h-3" /> Você poderá editar isso após a compra
-                   </p>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Sticky Preview Column */}
