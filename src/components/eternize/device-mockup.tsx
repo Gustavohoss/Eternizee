@@ -537,10 +537,10 @@ export function DeviceMockup({
                         </div>
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
+                      <p className="text-neutral-300 text-sm font-bold font-['DM_Sans'] mb-1">{totalDays.toLocaleString('pt-BR')} dias de história</p>
                       <h1 className="text-white text-5xl font-black leading-[0.9] tracking-tighter mb-4 break-words font-['DM_Sans']">
                         {pageTitle || 'Nossa Playlist'}
                       </h1>
-                      <p className="text-neutral-300 text-sm font-bold font-['DM_Sans']">{totalDays.toLocaleString('pt-BR')} dias de história</p>
                     </div>
                   </section>
 
@@ -635,7 +635,7 @@ export function DeviceMockup({
                       {message && (
                         <section className="px-6 pb-20">
                           <h2 className="text-white text-xl font-black mb-4">Sobre</h2>
-                          <div className="bg-[#181818] rounded-2xl p-6 overflow-hidden relative group min-h-[160px] flex flex-col justify-end">
+                          <div className="bg-[#181818] rounded-2xl p-4 overflow-hidden relative group">
                             {uploadedPhotos.length > 0 && (
                               <div className="absolute inset-0 grayscale opacity-40 transition-transform duration-500 group-hover:scale-110">
                                 <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
@@ -643,7 +643,7 @@ export function DeviceMockup({
                             )}
                             <div className="relative z-10">
                               <div 
-                                className="text-neutral-200 text-sm leading-relaxed mb-4 line-clamp-4 font-['DM_Sans']" 
+                                className="text-neutral-200 text-sm leading-relaxed mb-4 font-['DM_Sans']" 
                                 dangerouslySetInnerHTML={{ __html: message }} 
                               />
                               <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider font-['DM_Sans']">#TOP1DOSEUCORAÇÃO</span>
