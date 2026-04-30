@@ -528,10 +528,10 @@ export function DeviceMockup({
 
                 <div className="flex-1 overflow-y-auto no-scrollbar relative">
                   {/* Banner do Artista */}
-                  <section className="relative h-[400px]">
+                  <section className="relative h-[340px]">
                     <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #0d4a2a 0%, #121212 100%)' }}></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 right-6">
+                    <div className="absolute bottom-1 left-6 right-6">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="bg-[#1DB954] w-5 h-5 rounded-full flex items-center justify-center">
                           <Check className="w-3.5 h-3.5 text-black" strokeWidth={4} />
@@ -539,14 +539,14 @@ export function DeviceMockup({
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
                       <p className="text-neutral-300 text-sm font-bold mb-2">{totalDays.toLocaleString('pt-BR')} dias de história</p>
-                      <h1 className="text-white text-5xl font-black leading-none tracking-tighter mb-4 break-words">
+                      <h1 className="text-white text-5xl font-black leading-none tracking-tighter break-words">
                         {pageTitle || 'Teste teste'}
                       </h1>
                     </div>
                   </section>
 
                   {/* Controles de Ação */}
-                  <div className="px-6 py-4 flex items-center gap-6">
+                  <div className="px-6 py-2 flex items-center gap-6">
                     <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg relative overflow-hidden shrink-0">
                         {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
                     </div>
@@ -566,8 +566,8 @@ export function DeviceMockup({
                     </div>
                   </div>
 
-                  {/* Grid de Estatísticas (Restauração solicitada) */}
-                  <div className="px-6 mb-8">
+                  {/* Grid de Estatísticas (Cards Rápidos) */}
+                  <div className="px-6 mb-8 mt-2">
                     <div className="grid grid-cols-3 gap-2">
                         <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
                             <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
