@@ -36,8 +36,15 @@ export const THEME_OPTIONS = [
     badge: 'Música',
     image: 'https://picsum.photos/seed/spotify-theme/400/600'
   },
+  { 
+    id: 'instagram', 
+    name: 'Instagram', 
+    description: 'Transforme sua história em um perfil social. Feed, biografia e memórias em grade.', 
+    badge: 'Social',
+    image: 'https://picsum.photos/seed/insta-theme/400/600'
+  },
 ];
 
-export type ThemeId = 'classic' | 'netflix' | 'spotify';
+export type ThemeId = 'classic' | 'netflix' | 'spotify' | 'instagram';
 
 export type Step = 'theme-selection' | 'gift-type' | 'customize-background' | 'photos' | 'page-title' | 'message' | 'music' | 'data-location';

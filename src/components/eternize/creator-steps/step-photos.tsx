@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -53,7 +54,8 @@ export function StepPhotos({
 }: StepPhotosProps) {
   const isNetflix = selectedTheme === 'netflix';
   const isSpotify = selectedTheme === 'spotify';
-  const isFixedTheme = isNetflix || isSpotify;
+  const isInstagram = selectedTheme === 'instagram';
+  const isFixedTheme = isNetflix || isSpotify || isInstagram;
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
@@ -61,7 +63,7 @@ export function StepPhotos({
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="bg-white/5 p-2 rounded-2xl border border-white/10"><ImageIcon className="w-5 h-5 md:w-6 md:h-6 text-white/80" /></div>
           <h2 className="text-2xl md:text-4xl font-black tracking-tight">
-            {isNetflix ? 'Capas das Temporadas' : isSpotify ? 'Capas das Músicas' : 'As Fotos'}
+            {isNetflix ? 'Capas das Temporadas' : isSpotify ? 'Capas das Músicas' : isInstagram ? 'Feed de Fotos' : 'As Fotos'}
           </h2>
         </div>
         <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
@@ -69,6 +71,8 @@ export function StepPhotos({
             ? 'Adicione as fotos que representarão cada temporada da história de vocês (uma por uma).' 
             : isSpotify
             ? 'Adicione as fotos que aparecerão na lista de músicas populares e no banner do artista.'
+            : isInstagram
+            ? 'Adicione as fotos que aparecerão no seu perfil social e grade do feed.'
             : 'Adicione até 8 fotos especiais para a sua história.'}
         </p>
       </div>
@@ -115,7 +119,7 @@ export function StepPhotos({
             })}
           </div>
         ) : (
-          /* CLASSIC & SPOTIFY: Upload Múltiplo */
+          /* CLASSIC & SPOTIFY & INSTAGRAM: Upload Múltiplo */
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {uploadedPhotos.map((photo, i) => (
               <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-white/5">
@@ -171,6 +175,19 @@ export function StepPhotos({
               </p>
               <p className="text-[10px] text-white/40 leading-relaxed font-medium">
                 No tema Spotify, as fotos são organizadas automaticamente no banner principal e na lista de músicas populares para garantir a estética de perfil de artista.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {isInstagram && (
+          <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <p className="text-[10px] text-primary font-black uppercase tracking-widest mb-1 flex items-center gap-2">
+                <Layers className="w-3 h-3" /> Layout Fixo Perfil Social
+              </p>
+              <p className="text-[10px] text-white/40 leading-relaxed font-medium">
+                No tema Instagram, as fotos são organizadas automaticamente na grade do perfil e no feed para garantir a estética de uma rede social real.
               </p>
             </div>
           </div>

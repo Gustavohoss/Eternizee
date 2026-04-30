@@ -98,7 +98,7 @@ export default function CriadorApp() {
   // Step sequence management based on theme
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
-    if (selectedTheme === 'netflix' || selectedTheme === 'spotify') {
+    if (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') {
       return [...base, 'data-location', 'page-title', 'message', 'photos', 'music'];
     }
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location'];
@@ -144,7 +144,7 @@ export default function CriadorApp() {
     : [];
 
   useEffect(() => {
-    if (selectedTheme === 'netflix') {
+    if (selectedTheme === 'netflix' || selectedTheme === 'instagram') {
       setTitleColor('#ffffff');
       setDateColor('#ff0000');
     } else if (selectedTheme === 'spotify') {
@@ -157,7 +157,7 @@ export default function CriadorApp() {
   }, [cardColor, selectedBgColor, showCard, userHasManuallyChangedTitleColor, selectedTheme]);
 
   useEffect(() => {
-    if (selectedTheme === 'netflix') {
+    if (selectedTheme === 'netflix' || selectedTheme === 'instagram') {
       setDateColor('#ff0000');
     } else if (selectedTheme === 'spotify') {
       setDateColor('#1DB954');

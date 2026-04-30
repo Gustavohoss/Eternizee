@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -28,7 +29,14 @@ import {
   SkipForward,
   Languages,
   Share2,
-  Maximize2
+  Maximize2,
+  Grid as GridIcon,
+  Clapperboard,
+  UserSquare2,
+  Bookmark,
+  MessageCircle,
+  Send,
+  MoreVertical
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -158,7 +166,7 @@ export function DeviceMockup({
   const [storyProgress, setStoryProgress] = useState(0);
   const [isStoryPaused, setIsStoryPaused] = useState(false);
   const [isFading, setIsFading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'músicas' | 'eventos' | 'loja'>('músicas');
+  const [activeTab, setActiveTab] = useState<'grid' | 'reels' | 'tagged' | 'músicas' | 'eventos' | 'loja'>('grid');
   const [experienceAutoPlay, setExperienceAutoPlay] = useState(false);
   const [showSpotifyFullscreen, setShowSpotifyFullscreen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -172,6 +180,8 @@ export function DeviceMockup({
   useEffect(() => {
     if (selectedTheme === 'spotify') {
       setActiveTab('músicas');
+    } else if (selectedTheme === 'instagram') {
+      setActiveTab('grid');
     } else {
       setActiveTab('episodios' as any);
     }
@@ -335,8 +345,8 @@ export function DeviceMockup({
 
   const titleStyle: React.CSSProperties = { 
     color: titleColor,
-    fontFamily: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
-    fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? '900' : (titleIsBold ? '700' : '400'),
+    fontFamily: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
+    fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? '900' : (titleIsBold ? '700' : '400'),
     textShadow: titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none',
   };
 
@@ -568,21 +578,194 @@ export function DeviceMockup({
         "relative bg-black border-x border-b border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar",
         isFullscreen ? "rounded-none h-full" : "rounded-b-[2.5rem] aspect-[9/19]"
       )}>
-        <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? '#121212' : selectedBgColor }}>
+        <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
           {/* Efeitos de Fundo */}
-          {selectedEffect === 'sparkles' && (selectedTheme !== 'netflix' && selectedTheme !== 'spotify') && (
+          {selectedEffect === 'sparkles' && (selectedTheme === 'classic') && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SparklesCore background="transparent" minSize={0.4} maxSize={1.2} particleDensity={sparklesDensity} className="w-full h-full" particleColor={sparklesColor} speed={sparklesSpeed} />
             </div>
           )}
-          {selectedEffect === 'smoke' && (selectedTheme !== 'netflix' && selectedTheme !== 'spotify') && (
+          {selectedEffect === 'smoke' && (selectedTheme === 'classic') && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SmokeBackground smokeColor={smokeColor} backgroundColor={selectedBgColor} intensity={smokeIntensity} />
             </div>
           )}
           
           <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar">
-            {selectedTheme === 'netflix' ? (
+            {selectedTheme === 'instagram' ? (
+              /* THEME INSTAGRAM */
+              <div className="w-full h-full bg-black text-white font-inter flex flex-col no-scrollbar">
+                {/* Header */}
+                <header className="px-4 py-3 flex items-center justify-between border-b border-white/10 bg-black sticky top-0 z-[100]">
+                  <div className="flex items-center gap-1 font-black text-xl tracking-tight">
+                    {pageTitle || 'eternize_love'}
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <Plus className="w-6 h-6" />
+                    <ListMusic className="w-6 h-6" />
+                  </div>
+                </header>
+
+                <div className="flex-1 overflow-y-auto no-scrollbar pb-20">
+                  {/* Profile Info */}
+                  <section className="px-4 pt-6 pb-4">
+                    <div className="flex items-center gap-8 mb-4">
+                      <div className="relative">
+                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-1 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
+                          <div className="w-full h-full rounded-full border-2 border-black overflow-hidden relative">
+                            {uploadedPhotos.length > 0 ? (
+                              <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Profile" />
+                            ) : (
+                              <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><UserSquare2 className="w-10 h-10 text-white/20" /></div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="absolute bottom-0 right-0 bg-primary border-2 border-black rounded-full p-1">
+                          <Plus className="w-3 h-3 text-white" />
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1 flex justify-around text-center">
+                        <div><p className="font-black text-lg">{uploadedPhotos.length}</p><p className="text-[11px] text-neutral-400">Publicações</p></div>
+                        <div><p className="font-black text-lg">{totalDays.toLocaleString('pt-BR')}</p><p className="text-[11px] text-neutral-400">Seguidores</p></div>
+                        <div><p className="font-black text-lg">1</p><p className="text-[11px] text-neutral-400">Seguindo</p></div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-0.5 mb-6">
+                      <p className="font-black text-sm">{pageTitle || 'Nossa História'}</p>
+                      <p className="text-sm text-neutral-400 font-medium">Casal</p>
+                      <div 
+                        className="text-sm leading-snug pt-1" 
+                        dangerouslySetInnerHTML={{ __html: message || '✨ Criando memórias eternas ao seu lado...' }} 
+                      />
+                      <p className="text-sm text-blue-400 font-medium pt-1">#love #eternize #juntosesempre</p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button className="flex-1 bg-white/10 hover:bg-white/15 h-9 rounded-lg text-sm font-black transition-colors">Editar perfil</button>
+                      <button className="flex-1 bg-white/10 hover:bg-white/15 h-9 rounded-lg text-sm font-black transition-colors">Compartilhar perfil</button>
+                      <button className="bg-white/10 hover:bg-white/15 w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><UserSquare2 className="w-5 h-5" /></button>
+                    </div>
+                  </section>
+
+                  {/* Highlights */}
+                  <section className="px-4 pb-4 overflow-x-auto no-scrollbar flex gap-4">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="flex flex-col items-center gap-1.5 shrink-0">
+                        <div className="w-16 h-16 rounded-full border border-white/10 p-0.5">
+                          <div className="w-full h-full rounded-full bg-neutral-900 border border-white/5 flex items-center justify-center overflow-hidden relative">
+                            {uploadedPhotos[i + 1] ? (
+                              <Image src={uploadedPhotos[i + 1]} fill className="object-cover opacity-50" alt="" />
+                            ) : (
+                              <Plus className="w-6 h-6 text-white/20" />
+                            )}
+                          </div>
+                        </div>
+                        <p className="text-[10px] font-medium">Destaque {i + 1}</p>
+                      </div>
+                    ))}
+                  </section>
+
+                  {/* Tabs */}
+                  <div className="flex border-t border-white/10">
+                    <button 
+                      onClick={() => setActiveTab('grid')}
+                      className={cn(
+                        "flex-1 h-12 flex items-center justify-center transition-all",
+                        activeTab === 'grid' ? "border-t-2 border-white" : "text-neutral-500"
+                      )}
+                    ><GridIcon className="w-6 h-6" /></button>
+                    <button 
+                      onClick={() => setActiveTab('reels')}
+                      className={cn(
+                        "flex-1 h-12 flex items-center justify-center transition-all",
+                        activeTab === 'reels' ? "border-t-2 border-white" : "text-neutral-500"
+                      )}
+                    ><Clapperboard className="w-6 h-6" /></button>
+                    <button 
+                      onClick={() => setActiveTab('tagged')}
+                      className={cn(
+                        "flex-1 h-12 flex items-center justify-center transition-all",
+                        activeTab === 'tagged' ? "border-t-2 border-white" : "text-neutral-500"
+                      )}
+                    ><UserSquare2 className="w-6 h-6" /></button>
+                  </div>
+
+                  {/* Grid Content */}
+                  {activeTab === 'grid' && (
+                    <div className="grid grid-cols-3 gap-0.5">
+                      {uploadedPhotos.length > 0 ? (
+                        uploadedPhotos.map((photo, i) => (
+                          <div key={i} className="aspect-square relative group cursor-pointer" onClick={() => setActiveHeroIndex(i)}>
+                            <Image src={photo} fill className="object-cover" alt="" />
+                            {i === 0 && <div className="absolute top-2 right-2"><Bookmark className="w-4 h-4 fill-white" /></div>}
+                          </div>
+                        ))
+                      ) : (
+                        [...Array(9)].map((_, i) => (
+                          <div key={i} className="aspect-square bg-neutral-900 border border-white/5 flex items-center justify-center">
+                            <ImageIcon className="w-6 h-6 text-white/5" />
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+
+                  {/* Feed Experience (Simulated below grid) */}
+                  <section className="pt-8 border-t border-white/10 mt-4">
+                    <p className="px-4 text-xs font-black text-neutral-500 uppercase tracking-widest mb-6">Sugestões para você</p>
+                    {uploadedPhotos.slice(0, 3).map((photo, i) => (
+                      <div key={i} className="mb-10">
+                         <div className="px-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                               <div className="w-8 h-8 rounded-full overflow-hidden relative">
+                                  <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
+                               </div>
+                               <div>
+                                  <p className="text-sm font-black">{pageTitle || 'eternize_love'}</p>
+                                  <p className="text-[11px] text-neutral-400">São Paulo, Brasil</p>
+                               </div>
+                            </div>
+                            <MoreVertical className="w-5 h-5 text-neutral-400" />
+                         </div>
+                         <div className="aspect-square relative bg-neutral-900">
+                            <Image src={photo} fill className="object-cover" alt="" />
+                         </div>
+                         <div className="px-4 py-4">
+                            <div className="flex items-center justify-between mb-4">
+                               <div className="flex items-center gap-4">
+                                  <Heart className="w-6 h-6 hover:text-red-500 transition-colors" />
+                                  <MessageCircle className="w-6 h-6" />
+                                  <Send className="w-6 h-6" />
+                               </div>
+                               <Bookmark className="w-6 h-6" />
+                            </div>
+                            <p className="text-sm font-black mb-1">{totalDays.toLocaleString('pt-BR')} curtidas</p>
+                            <p className="text-sm leading-relaxed">
+                               <span className="font-black mr-2">{pageTitle || 'eternize_love'}</span>
+                               O melhor capítulo da minha vida! ❤️
+                            </p>
+                            <p className="text-xs text-neutral-500 mt-2 uppercase">Há {i + 1} dias</p>
+                         </div>
+                      </div>
+                    ))}
+                  </section>
+                </div>
+
+                {/* Navbar (Bottom) */}
+                <nav className="h-[60px] bg-black border-t border-white/10 flex items-center justify-around fixed bottom-0 left-0 right-0 z-[100]">
+                  <button className="p-2"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.97 2.59a1.5 1.5 0 0 0-1.94 0l-7.5 6.363A1.5 1.5 0 0 0 3 10.097V19.5A1.5 1.5 0 0 0 4.5 21h4.75a.75.75 0 0 0 .75-.75V14.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v5.75c0 .414.336.75.75.75h4.75a1.5 1.5 0 0 0 1.5-1.5v-9.403a1.5 1.5 0 0 0-.53-1.144l-7.5-6.363Z" /></svg></button>
+                  <button className="p-2 text-neutral-400"><Search className="w-6 h-6" /></button>
+                  <button className="p-2 text-neutral-400"><Plus className="w-6 h-6" /></button>
+                  <button className="p-2 text-neutral-400"><Clapperboard className="w-6 h-6" /></button>
+                  <button className="w-8 h-8 rounded-full border-2 border-white overflow-hidden relative">
+                    {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
+                  </button>
+                </nav>
+              </div>
+            ) : selectedTheme === 'netflix' ? (
               /* THEME NETFLIX */
               <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col no-scrollbar overflow-y-auto">
                 <header className="sticky top-0 z-50 px-4 py-4 flex items-center justify-between bg-gradient-to-b from-black via-black/80 to-transparent">

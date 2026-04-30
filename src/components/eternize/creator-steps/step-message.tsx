@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useRef, useEffect } from 'react';
@@ -45,7 +46,8 @@ export function StepMessage({
   const editorRef = useRef<HTMLDivElement>(null);
   const isNetflix = selectedTheme === 'netflix';
   const isSpotify = selectedTheme === 'spotify';
-  const isFixedTheme = isNetflix || isSpotify;
+  const isInstagram = selectedTheme === 'instagram';
+  const isFixedTheme = isNetflix || isSpotify || isInstagram;
 
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== message) {
@@ -84,7 +86,7 @@ export function StepMessage({
             <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
           </div>
           <h2 className="text-2xl md:text-4xl font-black tracking-tight">
-            {isNetflix ? 'Descrição da história' : isSpotify ? 'Letra da Música / Bio' : 'Mensagem'}
+            {isNetflix ? 'Descrição da história' : isSpotify ? 'Letra da Música / Bio' : isInstagram ? 'Bio do Perfil' : 'Mensagem'}
           </h2>
         </div>
         <p className="text-xs md:text-base text-white/40 font-medium max-w-md">
@@ -92,6 +94,8 @@ export function StepMessage({
             ? 'Escreva uma breve sinopse sobre a história de vocês. Ela aparecerá logo abaixo dos botões de reproduzir.' 
             : isSpotify
             ? 'Escreva uma mensagem ou letra que represente vocês. No Spotify, isso aparecerá no card de "Letra" e na biografia do artista.'
+            : isInstagram
+            ? 'Escreva uma biografia curta para o perfil. Ela aparecerá abaixo do nome de usuário, como no Instagram real.'
             : 'Escreva uma mensagem especial. Seja criativo e use as ferramentas de formatação para deixar do seu jeito.'}
         </p>
       </div>
@@ -99,7 +103,7 @@ export function StepMessage({
       <div className="space-y-8 w-full max-w-md">
         <div className="space-y-4">
           <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
-            {isNetflix ? 'O que resume vocês? ✍️' : isSpotify ? 'Sua letra ou biografia ✍️' : 'O que você quer dizer pro seu mozão? 📩'}
+            {isNetflix ? 'O que resume vocês? ✍️' : isSpotify ? 'Sua letra ou biografia ✍️' : isInstagram ? 'Sua biografia ✍️' : 'O que você quer dizer pro seu mozão? 📩'}
           </Label>
           
           <div className="editor-container w-full bg-[#0a0a0a] border border-[#222] rounded-xl overflow-hidden shadow-2xl">
@@ -188,14 +192,14 @@ export function StepMessage({
           </div>
         )}
 
-        {isSpotify && (
+        {(isSpotify || isInstagram) && (
           <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
             <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
               <p className="text-[10px] text-primary font-black uppercase tracking-widest mb-1 flex items-center gap-2">
                 <Palette className="w-3 h-3" /> Estilo Visual Fixo
               </p>
               <p className="text-[10px] text-white/40 leading-relaxed font-medium">
-                No tema Spotify, a mensagem é apresentada como a letra da música e biografia do artista, utilizando tipografias e cores que seguem o design original do aplicativo.
+                No tema {isSpotify ? 'Spotify' : 'Instagram'}, a mensagem utiliza tipografias e cores que seguem o design original do aplicativo para uma experiência autêntica.
               </p>
             </div>
           </div>
