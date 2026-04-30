@@ -198,13 +198,11 @@ export function DeviceMockup({
       const b = pixel[2];
       
       // Spotify mini players are usually very dark. 
-      // We take the average color and apply a strong darkening factor.
-      const factor = 0.15; // Darken to 15% of original brightness
+      const factor = 0.15; 
       const darkenedR = Math.floor(r * factor);
       const darkenedG = Math.floor(g * factor);
       const darkenedB = Math.floor(b * factor);
       
-      // Mix with a bit of absolute black for depth
       setDynamicSpotifyColor(`rgb(${darkenedR}, ${darkenedG}, ${darkenedB})`);
     };
   }, [uploadedPhotos, selectedTheme]);
@@ -455,8 +453,8 @@ export function DeviceMockup({
                </button>
             </div>
 
-            {/* Album Cover with Mask - FIXED ASPECT RATIO */}
-            <div className="relative aspect-[16/7] w-full mb-12 shrink-0 group">
+            {/* Album Cover - 1:1 SQUARE ASPECT RATIO */}
+            <div className="relative aspect-square w-full mb-12 shrink-0 group">
               <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
                 {uploadedPhotos.length > 0 ? (
                   <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Album Cover" />
@@ -464,7 +462,6 @@ export function DeviceMockup({
                   <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><ImageIcon className="w-12 h-12 text-white/10" /></div>
                 )}
               </div>
-              {/* Corrected Image Mask from ref */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
 
