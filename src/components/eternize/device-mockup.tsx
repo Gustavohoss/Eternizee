@@ -23,7 +23,13 @@ import {
   Shuffle,
   Volume2,
   ListMusic,
-  Check
+  Check,
+  RotateCcw,
+  SkipBack,
+  SkipForward,
+  Languages,
+  Share2,
+  Maximize2
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -155,7 +161,7 @@ export function DeviceMockup({
   const [isFading, setIsFading] = useState(false);
   const [activeTab, setActiveTab] = useState<'músicas' | 'eventos' | 'loja'>('músicas');
   const [experienceAutoPlay, setExperienceAutoPlay] = useState(false);
-  const [showSpotifyAudioOverlay, setShowSpotifyAudioOverlay] = useState(false);
+  const [showSpotifyFullscreen, setShowSpotifyFullscreen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isInList, setIsInList] = useState(false);
 
@@ -336,8 +342,8 @@ export function DeviceMockup({
         </div>
       )}
 
-      {/* Story Viewer Interface */}
-      {showStories && uploadedPhotos.length > 0 && (
+      {/* Story Viewer Interface (Netflix) */}
+      {showStories && uploadedPhotos.length > 0 && selectedTheme === 'netflix' && (
         <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700">
           <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1">
             {uploadedPhotos.map((_, i) => (
@@ -386,38 +392,118 @@ export function DeviceMockup({
         </div>
       )}
 
-      {/* Spotify Audio Animation Overlay */}
-      {showSpotifyAudioOverlay && (
-        <div className="absolute inset-0 z-[500] bg-black/95 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500">
-           <div className="flex items-end gap-1.5 h-32">
-              {[...Array(6)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className="w-1.5 bg-[#1DB954] rounded-full" 
-                  style={{ 
-                    animation: `equalize 1s ease-in-out infinite alternate`,
-                    animationDelay: `${i * 0.1}s`,
-                    height: '15px'
-                  }} 
-                />
-              ))}
-           </div>
-           <div className="text-center">
-              <h2 className="text-white text-2xl font-black">Tocando agora...</h2>
-              <p className="text-[#1DB954] text-sm font-bold">O som do nosso amor</p>
-           </div>
-           <button 
-             onClick={() => { setShowSpotifyAudioOverlay(false); setExperienceAutoPlay(false); }}
-             className="mt-4 bg-white/10 text-white border border-white/20 px-8 py-2 rounded-full text-xs font-bold active:scale-95 transition-all backdrop-blur-md"
-           >
-             Voltar
-           </button>
-           <style jsx>{`
-             @keyframes equalize {
-               0%, 100% { height: 8px; }
-               50% { height: 60px; }
-             }
-           `}</style>
+      {/* Spotify Fullscreen Player Experience */}
+      {showSpotifyFullscreen && (
+        <div className="absolute inset-0 z-[500] bg-[#121212] flex flex-col animate-in fade-in duration-500 overflow-hidden">
+          {/* Blurred Dynamic Background */}
+          <div className="absolute inset-0 z-0 scale-125 brightness-[0.4] blur-[60px] transition-all duration-1000">
+             {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="blur-bg" />}
+          </div>
+
+          <div className="relative z-10 flex flex-col h-full px-6 pt-4 no-scrollbar overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8 md:mb-10 shrink-0">
+               <button onClick={() => setShowSpotifyFullscreen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white active:scale-90 transition-transform">
+                  <ChevronDown className="w-6 h-6 stroke-[3]" />
+               </button>
+               <div className="text-center min-w-0 px-4">
+                  <p className="text-[9px] uppercase font-black tracking-[0.2em] text-white/50 mb-0.5">Populares</p>
+                  <p className="text-[11px] font-black text-white truncate max-w-[150px]">{pageTitle || 'Eternize'}</p>
+               </div>
+               <button className="text-white/80 active:scale-90 transition-transform">
+                  <MoreHorizontal className="w-6 h-6" />
+               </button>
+            </div>
+
+            {/* Album Cover with Mask */}
+            <div className="relative aspect-square w-full mb-8 md:mb-12 shrink-0 group">
+              <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
+                {uploadedPhotos.length > 0 ? (
+                  <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Album Cover" />
+                ) : (
+                  <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><ImageIcon className="w-12 h-12 text-white/10" /></div>
+                )}
+              </div>
+              {/* Bottom Mask Style from ref */}
+              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#121212]/80 to-transparent rounded-b-2xl" />
+            </div>
+
+            {/* Title and Heart */}
+            <div className="flex items-center justify-between mb-8 shrink-0">
+               <div className="min-w-0 pr-4">
+                  <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tighter truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
+                  <p className="text-base font-bold text-white/60 truncate font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
+               </div>
+               <button onClick={() => setIsLiked(!isLiked)} className={cn("transition-all duration-300", isLiked ? "text-[#1DB954]" : "text-white/80")}>
+                  <Heart className={cn("w-8 h-8", isLiked && "fill-current")} />
+               </button>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-8 shrink-0">
+              <div className="w-full h-[4px] bg-white/20 rounded-full relative">
+                <div className="absolute left-0 top-0 h-full bg-white rounded-full w-[45%]" />
+              </div>
+              <div className="flex justify-between mt-2 text-[10px] font-black text-white/40 tracking-wider font-['DM_Sans']">
+                 <span>1:00</span>
+                 <span>-3:11</span>
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-between mb-10 shrink-0 px-1">
+               <button className="text-white/40 hover:text-white transition-colors"><Shuffle className="w-6 h-6" /></button>
+               <button className="text-white active:scale-90 transition-transform"><SkipBack className="w-8 h-8 fill-current" /></button>
+               <button className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black shadow-2xl active:scale-95 transition-transform">
+                  <Pause className="w-8 h-8 fill-current" />
+               </button>
+               <button className="text-white active:scale-90 transition-transform"><SkipForward className="w-8 h-8 fill-current" /></button>
+               <button className="text-white/40 hover:text-white transition-colors"><RotateCcw className="w-6 h-6" /></button>
+            </div>
+
+            {/* Lyrics Card */}
+            {message && (
+              <div className="bg-[#E11D48] rounded-[24px] p-6 mb-8 shrink-0 shadow-lg group">
+                 <div className="flex justify-between items-center mb-6">
+                    <span className="text-white font-black text-xs uppercase tracking-widest">Letra</span>
+                    <div className="flex gap-4 text-black/20">
+                       <Languages className="w-5 h-5" />
+                       <Share2 className="w-5 h-5" />
+                       <Maximize2 className="w-5 h-5" />
+                    </div>
+                 </div>
+                 <div 
+                   className="text-white text-xl md:text-2xl font-black leading-snug tracking-tighter opacity-95 line-clamp-6 font-['DM_Sans']"
+                   dangerouslySetInnerHTML={{ __html: message }}
+                 />
+                 <div className="mt-8">
+                    <span className="text-white/50 text-[11px] font-black uppercase tracking-widest">Ver mais</span>
+                 </div>
+              </div>
+            )}
+
+            {/* Conheça Section */}
+            <div className="bg-white/5 rounded-[24px] p-6 mb-12 shrink-0 border border-white/5 backdrop-blur-sm">
+               <h3 className="text-white text-base font-black mb-5 font-['DM_Sans']">Conheça {pageTitle || 'o casal'}</h3>
+               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x">
+                  {uploadedPhotos.length > 0 ? (
+                    uploadedPhotos.map((photo, i) => (
+                      <div key={i} className="w-[150px] h-[200px] flex-shrink-0 bg-neutral-800 rounded-xl overflow-hidden relative shadow-xl snap-start">
+                         <Image src={photo} fill className="object-cover" alt="" />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                         <p className="absolute bottom-4 left-4 text-[11px] font-black text-white">{pageTitle || 'Nós'}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="w-[150px] h-[200px] flex-shrink-0 bg-neutral-800 rounded-xl flex items-center justify-center border border-white/5">
+                       <ImageIcon className="w-8 h-8 text-white/10" />
+                    </div>
+                  )}
+               </div>
+            </div>
+            
+            <div className="h-10 shrink-0" />
+          </div>
         </div>
       )}
 
@@ -511,7 +597,7 @@ export function DeviceMockup({
                 </div>
               </div>
             ) : selectedTheme === 'spotify' ? (
-              /* THEME SPOTIFY CLONE (REF) */
+              /* THEME SPOTIFY CLONE */
               <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar">
                 
                 {/* Header fixo com Logo e Perfil */}
@@ -565,7 +651,7 @@ export function DeviceMockup({
                     <div className="flex-1 flex justify-end items-center gap-5">
                       <button className="text-neutral-400 hover:text-white"><Shuffle className="w-6 h-6" /></button>
                       <button 
-                        onClick={() => { setShowSpotifyAudioOverlay(true); setExperienceAutoPlay(true); }}
+                        onClick={() => setShowSpotifyFullscreen(true)}
                         className="w-14 h-14 bg-[#1DB954] rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-transform"
                       >
                         <Play className="w-6 h-6 text-black fill-black ml-1" />
@@ -621,7 +707,7 @@ export function DeviceMockup({
                               <div 
                                 key={i} 
                                 className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" 
-                                onClick={() => setActiveHeroIndex(i)}
+                                onClick={() => { setActiveHeroIndex(i); setShowSpotifyFullscreen(true); }}
                               >
                                 <div className="w-4 flex justify-center items-center">
                                   <span className="text-neutral-500 text-sm font-bold group-hover:hidden">{i + 1}</span>
@@ -679,9 +765,12 @@ export function DeviceMockup({
                 </div>
 
                 {/* Mini Player Footer Spotify Style */}
-                {musicData && !showSpotifyAudioOverlay && (
+                {musicData && !showSpotifyFullscreen && (
                   <footer className="fixed bottom-0 left-0 right-0 z-[60] px-3 pb-8">
-                    <div className="bg-[#282828] rounded-lg p-3 flex flex-col gap-2 shadow-2xl border border-white/5 backdrop-blur-xl mx-2">
+                    <div 
+                      className="bg-[#282828] rounded-lg p-3 flex flex-col gap-2 shadow-2xl border border-white/5 backdrop-blur-xl mx-2 cursor-pointer"
+                      onClick={() => setShowSpotifyFullscreen(true)}
+                    >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded overflow-hidden relative bg-black shrink-0">
                           <img src={musicData.thumb} className="w-full h-full object-cover" alt="" />
@@ -746,3 +835,4 @@ export function DeviceMockup({
     </div>
   );
 }
+
