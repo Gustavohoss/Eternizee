@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -42,7 +43,7 @@ export function StepPageTitle({
   titleColor,
   onTitleColorChange,
 }: StepPageTitleProps) {
-  const isNetflix = selectedTheme === 'netflix';
+  const isFixedTheme = selectedTheme === 'netflix' || selectedTheme === 'spotify';
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
@@ -78,7 +79,7 @@ export function StepPageTitle({
           </div>
         </div>
 
-        {!isNetflix && (
+        {!isFixedTheme ? (
           <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
             <div className="flex items-center gap-2 mb-2"><Palette className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Texto</h3></div>
             <div className="space-y-4"><Label className="text-[11px] font-bold text-white/50 uppercase">Fonte do Título</Label><div className="grid grid-cols-2 gap-2">{FONT_OPTIONS.map((f) => (<button key={f.id} onClick={() => onTitleFontChange(f.id)} className={cn("px-4 py-3 rounded-xl border text-xs transition-all", titleFont === f.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-white/10 bg-black/20 text-white/40 hover:border-white/20", f.class)}>{f.name}</button>))}</div></div>
@@ -91,6 +92,19 @@ export function StepPageTitle({
                 <Popover><PopoverTrigger asChild><button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group"><div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: titleColor }} /><div className="text-left pr-4"><p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p><p className="text-xs font-mono font-bold">{titleColor}</p></div></button></PopoverTrigger><PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start"><ColorPicker selectedBgColor={titleColor} onChange={onTitleColorChange} /></PopoverContent></Popover>
                 <div className="flex flex-wrap gap-1.5">{['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (<button key={color} onClick={() => onTitleColorChange(color)} className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", titleColor === color ? "border-white scale-110" : "border-white/10")} style={{ backgroundColor: color }} />))}</div>
             </div></div>
+          </div>
+        ) : (
+          <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <p className="text-[10px] text-primary font-black uppercase tracking-widest mb-1 flex items-center gap-2">
+                <Palette className="w-3 h-3" /> Estilo Visual Fixo
+              </p>
+              <p className="text-[10px] text-white/40 leading-relaxed font-medium">
+                {selectedTheme === 'netflix' 
+                  ? 'No tema Netflix, as cores e fontes são fixas para garantir a identidade cinematográfica original.' 
+                  : 'No tema Spotify, o título utiliza a fonte oficial DM Sans para uma experiência autêntica.'}
+              </p>
+            </div>
           </div>
         )}
       </div>
