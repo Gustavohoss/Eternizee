@@ -645,8 +645,8 @@ export function DeviceMockup({
                 
                 {/* Header fixo com Logo e Perfil */}
                 <div 
-                  className="absolute top-0 left-0 right-0 z-50 px-6 pt-8 pb-4 flex items-center justify-between transition-colors duration-300 pointer-events-none"
-                  style={{ backgroundColor: spotifyHeaderOpacity > 0 ? dynamicSpotifyColor.replace('rgb', 'rgba').replace(')', `, ${spotifyHeaderOpacity})`) : 'transparent' }}
+                  className="absolute top-0 left-0 right-0 z-50 px-6 pt-4 pb-2 flex items-center justify-between transition-colors duration-300 pointer-events-none"
+                  style={{ backgroundColor: spotifyHeaderOpacity > 0 ? `rgba(18, 18, 18, ${spotifyHeaderOpacity})` : 'transparent' }}
                 >
                   <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
