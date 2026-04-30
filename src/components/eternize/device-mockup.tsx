@@ -548,18 +548,27 @@ export function DeviceMockup({
                       </div>
                   </section>
 
-                  {/* Controls Section */}
+                  {/* Controls Section com Miniatura */}
                   <div className="px-6 py-4 flex items-center justify-between">
-                      <div className="flex items-center gap-5">
-                          <button onClick={() => setIsLiked(!isLiked)} className={cn("bg-transparent border rounded-full px-6 py-1.5 text-xs font-bold transition-all hover:scale-105", isLiked ? "border-[#1DB954] text-[#1DB954]" : "border-neutral-500 text-white")}>
-                            {isLiked ? 'Seguindo' : 'Seguir'}
-                          </button>
-                          <button className="text-neutral-400 text-2xl font-bold pb-2">...</button>
+                      <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-[#282828] rounded-sm overflow-hidden relative shadow-lg">
+                             {uploadedPhotos.length > 0 ? (
+                               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Thumb" />
+                             ) : (
+                               <div className="w-full h-full flex items-center justify-center text-white/10"><ImageIcon className="w-5 h-5" /></div>
+                             )}
+                          </div>
+                          <div className="flex items-center gap-3">
+                              <button onClick={() => setIsLiked(!isLiked)} className={cn("bg-transparent border rounded-full px-5 py-1.5 text-[10px] font-bold transition-all active:scale-95", isLiked ? "border-[#1DB954] text-[#1DB954]" : "border-neutral-500 text-white")}>
+                                {isLiked ? 'Seguindo' : 'Seguir'}
+                              </button>
+                              <button className="text-neutral-400 text-2xl font-bold pb-2">...</button>
+                          </div>
                       </div>
                       
-                      <div className="flex items-center gap-6">
-                          <button className="text-[#1DB954] active:scale-90 transition-transform">
-                              <Shuffle className="w-6 h-6" />
+                      <div className="flex items-center gap-5">
+                          <button className="text-neutral-400 active:scale-90 transition-transform">
+                              <Shuffle className="w-5 h-5" />
                           </button>
                           <button 
                             onClick={() => { setShowSpotifyAudioOverlay(true); setExperienceAutoPlay(true); }}
@@ -571,7 +580,7 @@ export function DeviceMockup({
                   </div>
 
                   {/* Tab Navigation */}
-                  <div className="px-6 mb-8">
+                  <div className="px-6 mb-6">
                       <div className="flex gap-8 border-b border-white/5 pb-2">
                           <button onClick={() => setActiveTab('musicas')} className="relative">
                               <span className={cn("text-sm font-bold transition-colors", activeTab === 'musicas' ? "text-white" : "text-neutral-400")}>Músicas</span>
@@ -588,7 +597,6 @@ export function DeviceMockup({
                   </div>
 
                   {activeTab === 'musicas' ? (
-                    /* List Section - Populares */
                     <div className="px-6 pb-32">
                         <h2 className="text-white font-black text-xl mb-5">Populares</h2>
                         <div className="space-y-6">
@@ -621,20 +629,20 @@ export function DeviceMockup({
                         </div>
                     </div>
                   ) : (
-                    /* Eventos Section (Contadores Grade) */
+                    /* Eventos Section (Contadores Grade Estilo Spotify) */
                     <div className="px-4 pb-32 animate-in fade-in duration-300">
                        <div className="grid grid-cols-3 gap-2">
-                          <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                             <p className="text-2xl font-black text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
-                             <p className="text-[8px] text-white/30 font-black uppercase tracking-wider">Anos Juntos</p>
+                          <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
+                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{timeDiff?.years || 0}</p>
+                             <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Anos<br/>Juntos</p>
                           </div>
-                          <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                             <p className="text-2xl font-black text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
-                             <p className="text-[8px] text-white/30 font-black uppercase tracking-wider">Dias de História</p>
+                          <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
+                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{totalDays.toLocaleString('pt-BR')}</p>
+                             <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Dias de<br/>História</p>
                           </div>
-                          <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                             <p className="text-2xl font-black text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '00/00'}</p>
-                             <p className="text-[8px] text-white/30 font-black uppercase tracking-wider">Desde</p>
+                          <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
+                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{date ? format(date, 'dd/MM') : '00/00'}</p>
+                             <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Desde<br/>sempre</p>
                           </div>
                        </div>
                     </div>
