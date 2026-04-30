@@ -164,6 +164,9 @@ export function DeviceMockup({
   const [showSpotifyFullscreen, setShowSpotifyFullscreen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isInList, setIsInList] = useState(false);
+  
+  // Dynamic color state for Spotify
+  const [dynamicSpotifyColor, setDynamicSpotifyColor] = useState('#1a0a0a');
 
   useEffect(() => {
     if (selectedTheme === 'spotify') {
@@ -172,6 +175,39 @@ export function DeviceMockup({
       setActiveTab('episodios' as any);
     }
   }, [selectedTheme]);
+
+  // Extract color from photo for Spotify
+  useEffect(() => {
+    if (selectedTheme !== 'spotify' || uploadedPhotos.length === 0) return;
+    
+    const img = new window.Image();
+    img.crossOrigin = "Anonymous";
+    img.src = uploadedPhotos[0];
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      canvas.width = 1;
+      canvas.height = 1;
+      ctx.drawImage(img, 0, 0, 1, 1);
+      
+      const pixel = ctx.getImageData(0, 0, 1, 1).data;
+      const r = pixel[0];
+      const g = pixel[1];
+      const b = pixel[2];
+      
+      // Spotify mini players are usually very dark. 
+      // We take the average color and apply a strong darkening factor.
+      const factor = 0.15; // Darken to 15% of original brightness
+      const darkenedR = Math.floor(r * factor);
+      const darkenedG = Math.floor(g * factor);
+      const darkenedB = Math.floor(b * factor);
+      
+      // Mix with a bit of absolute black for depth
+      setDynamicSpotifyColor(`rgb(${darkenedR}, ${darkenedG}, ${darkenedB})`);
+    };
+  }, [uploadedPhotos, selectedTheme]);
 
   useEffect(() => {
     if (!date) {
@@ -435,7 +471,7 @@ export function DeviceMockup({
             {/* Título e Like */}
             <div className="flex items-center justify-between mb-8 shrink-0">
                <div className="min-w-0 pr-4">
-                  <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tighter truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
                   <p className="text-base font-bold text-white/60 truncate font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
                </div>
                <button onClick={() => setIsLiked(!isLiked)} className={cn("transition-all duration-300", isLiked ? "text-[#1DB954]" : "text-white/80")}>
@@ -467,7 +503,10 @@ export function DeviceMockup({
 
             {/* Lyrics Card */}
             {message && (
-              <div className="bg-[#E11D48] rounded-[24px] p-6 mb-8 shrink-0 shadow-lg group">
+              <div 
+                className="rounded-[24px] p-6 mb-8 shrink-0 shadow-lg group transition-colors duration-700"
+                style={{ backgroundColor: dynamicSpotifyColor === '#1a0a0a' ? '#E11D48' : dynamicSpotifyColor }}
+              >
                  <div className="flex justify-between items-center mb-6">
                     <span className="text-white font-black text-xs uppercase tracking-widest">Letra</span>
                     <div className="flex gap-4 text-black/20">
@@ -486,7 +525,7 @@ export function DeviceMockup({
               </div>
             )}
 
-            {/* Conheça Section */}
+            {/* Seção Conheça */}
             <div className="bg-black/10 rounded-[24px] p-6 mb-12 shrink-0 backdrop-blur-sm">
                <h3 className="text-white text-base font-black mb-5 font-['DM_Sans']">Conheça {pageTitle || 'o casal'}</h3>
                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x">
@@ -772,10 +811,11 @@ export function DeviceMockup({
                 {musicData && !showSpotifyFullscreen && (
                   <div className="absolute bottom-6 left-0 right-0 z-[60] px-3 animate-in slide-in-from-bottom-4 duration-500">
                     <div 
-                      className="w-full bg-[#1a0a0a] rounded-xl p-2.5 flex flex-col shadow-2xl border border-white/5 cursor-pointer active:scale-[0.98] transition-all"
+                      className="w-full rounded-xl p-2.5 flex flex-col shadow-2xl border border-white/5 cursor-pointer active:scale-[0.98] transition-all overflow-hidden relative"
+                      style={{ backgroundColor: dynamicSpotifyColor }}
                       onClick={() => setShowSpotifyFullscreen(true)}
                     >
-                      <div className="flex items-center">
+                      <div className="flex items-center relative z-10">
                         {/* Capa da Música (Usa a foto do usuário se disponível) */}
                         <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-lg mr-3 relative">
                             {uploadedPhotos.length > 0 ? (
@@ -820,7 +860,7 @@ export function DeviceMockup({
                       </div>
                       
                       {/* Barra de Progresso Fina */}
-                      <div className="mt-2 w-full h-[2px] bg-white/10 rounded-full overflow-hidden">
+                      <div className="mt-2 w-full h-[2px] bg-white/10 rounded-full overflow-hidden relative z-10">
                         <div className="h-full bg-white w-[45%]" />
                       </div>
                     </div>
