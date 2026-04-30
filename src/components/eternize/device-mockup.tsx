@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -538,10 +537,10 @@ export function DeviceMockup({
                         </div>
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
-                      <h1 className="text-white text-5xl font-black leading-none tracking-tighter mb-4 break-words">
+                      <h1 className="text-white text-5xl font-black leading-[0.9] tracking-tighter mb-4 break-words font-['DM_Sans']">
                         {pageTitle || 'Nossa Playlist'}
                       </h1>
-                      <p className="text-neutral-300 text-sm font-bold">{totalDays.toLocaleString('pt-BR')} dias de história</p>
+                      <p className="text-neutral-300 text-sm font-bold font-['DM_Sans']">{totalDays.toLocaleString('pt-BR')} dias de história</p>
                     </div>
                   </section>
 
@@ -644,10 +643,10 @@ export function DeviceMockup({
                             )}
                             <div className="relative z-10">
                               <div 
-                                className="text-neutral-200 text-sm leading-relaxed mb-4 line-clamp-4" 
+                                className="text-neutral-200 text-sm leading-relaxed mb-4 line-clamp-4 font-['DM_Sans']" 
                                 dangerouslySetInnerHTML={{ __html: message }} 
                               />
-                              <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">#TOP1DOSEUCORAÇÃO</span>
+                              <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider font-['DM_Sans']">#TOP1DOSEUCORAÇÃO</span>
                             </div>
                           </div>
                         </section>
@@ -679,8 +678,8 @@ export function DeviceMockup({
                           <img src={musicData.thumb} className="w-full h-full object-cover" alt="" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-white truncate">{musicData.title}</p>
-                          <p className="text-[10px] text-white/50 font-bold">YouTube Original</p>
+                          <p className="text-xs font-bold text-white truncate font-['DM_Sans']">{musicData.title}</p>
+                          <p className="text-[10px] text-white/50 font-bold font-['DM_Sans']">YouTube Original</p>
                         </div>
                         <div className="flex items-center gap-4">
                           <Volume2 className="w-5 h-5 text-white/50" />
