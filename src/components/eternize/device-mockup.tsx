@@ -204,7 +204,7 @@ export function DeviceMockup({
   }, [emblaApi, onSelect]);
 
   const totalDays = useMemo(() => {
-    if (!date) return 26; // Default to match user's image reference if no date picked
+    if (!date) return 26; 
     const now = new Date();
     if (now < date) return 0;
     return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
@@ -296,13 +296,11 @@ export function DeviceMockup({
     fontFamily: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? "'Inter', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
     fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? '900' : (titleIsBold ? '700' : '400'),
     textShadow: titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none',
-    textTransform: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? 'none' : 'none' as any
   };
 
   const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   const [isLiked, setIsLiked] = useState(false);
-  const [isLoved, setIsLoved] = useState(false);
   const [isInList, setIsInList] = useState(false);
 
   return (
@@ -391,25 +389,36 @@ export function DeviceMockup({
 
       {/* Spotify Audio Animation Overlay */}
       {showSpotifyAudioOverlay && (
-        <div className="absolute inset-0 z-[500] bg-black flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500">
-           <div className="flex items-end gap-1.5 h-[100px]">
-              {[...Array(15)].map((_, i) => (
+        <div className="absolute inset-0 z-[500] bg-black/95 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500">
+           <div className="flex items-end gap-1.5 h-32">
+              {[...Array(6)].map((_, i) => (
                 <div 
                   key={i} 
-                  className="audio-bar" 
+                  className="w-1.5 bg-[#1DB954] rounded-full" 
                   style={{ 
-                    animation: `sound ${Math.floor(Math.random() * (900 - 400 + 1) + 400)}ms linear infinite alternate`,
-                    backgroundColor: '#1DB954'
+                    animation: `equalize 1s ease-in-out infinite alternate`,
+                    animationDelay: `${i * 0.1}s`,
+                    height: '15px'
                   }} 
                 />
               ))}
            </div>
+           <div className="text-center">
+              <h2 className="text-white text-2xl font-black">Tocando agora...</h2>
+              <p className="text-[#1DB954] text-sm font-bold">O som do nosso amor</p>
+           </div>
            <button 
              onClick={() => { setShowSpotifyAudioOverlay(false); setExperienceAutoPlay(false); }}
-             className="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full text-sm font-bold active:scale-95 transition-all backdrop-blur-md"
+             className="mt-4 bg-white/10 text-white border border-white/20 px-8 py-2 rounded-full text-xs font-bold active:scale-95 transition-all backdrop-blur-md"
            >
              Voltar
            </button>
+           <style jsx>{`
+             @keyframes equalize {
+               0%, 100% { height: 8px; }
+               50% { height: 60px; }
+             }
+           `}</style>
         </div>
       )}
 
@@ -444,7 +453,7 @@ export function DeviceMockup({
             </div>
           )}
           
-          <div className="absolute inset-0 flex flex-col items-center overflow-y-auto hide-scrollbar">
+          <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar">
             {selectedTheme === 'netflix' ? (
               /* THEME NETFLIX */
               <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col custom-scroll overflow-y-auto">
@@ -472,8 +481,8 @@ export function DeviceMockup({
                       <button onClick={startNetflixExperience} className="w-full bg-white text-black py-2.5 rounded flex items-center justify-center gap-2 text-sm font-bold active:scale-95 transition-transform"><span className="text-base">▶</span> Reproduzir</button>
                       <div className="flex gap-2">
                         <button onClick={() => setIsInList(!isInList)} className={cn("flex-1 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 py-2.5 rounded font-bold text-xs flex items-center justify-center gap-2 transition-all", isInList ? "text-[#46d369]" : "text-white")}><span className="text-lg leading-none">{isInList ? "✓" : "+"}</span> Minha lista</button>
-                        <button onClick={() => setIsLiked(!isLiked)} className={cn("w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center transition-all active:scale-90", isLiked ? "text-[#46d369]" : "text-white")}><ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} /></button>
-                        <button onClick={() => setIsLoved(!isLoved)} className={cn("w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center transition-all active:scale-90", isLoved ? "text-[#46d369]" : "text-white")}><Heart className={cn("w-5 h-5", isLoved && "fill-current")} /></button>
+                        <button className={cn("w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center transition-all text-white")}><ThumbsUp className="w-5 h-5" /></button>
+                        <button className={cn("w-12 h-11 bg-[#2a2a2a]/80 backdrop-blur-md border border-white/10 rounded flex items-center justify-center transition-all text-white")}><Heart className="w-5 h-5" /></button>
                       </div>
                     </div>
                   </div>
@@ -481,176 +490,152 @@ export function DeviceMockup({
                 <div className="px-4 py-4 bg-[#141414]">
                   <div className="grid grid-cols-3 gap-2">
                     <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{timeDiff?.years || 0}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Anos juntos</p></div>
-                    <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{totalDays.toLocaleString('pt-BR') || 26}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias de história</p></div>
-                    <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '06/04'}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Data especial</p></div>
+                    <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{totalDays.toLocaleString('pt-BR')}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias</p></div>
+                    <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{date ? format(date, 'dd/MM') : '06/04'}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Desde</p></div>
                   </div>
                 </div>
-                <div className="px-4 mt-2">
+                <div className="px-4 mt-2 pb-20">
                   <div className="flex gap-8 border-b border-neutral-800 mb-4">
                     <button onClick={() => setActiveTab('episodios')} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === 'episodios' ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Episódios</button>
                     <button onClick={() => setActiveTab('detalhes')} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === 'detalhes' ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Detalhes</button>
                   </div>
                   {activeTab === 'episodios' ? (
-                    <><div className="flex items-center justify-between mb-4"><span className="text-white text-sm font-bold flex items-center gap-1.5 uppercase text-[12px] tracking-tight">Temporada 1 <ChevronDown className="w-3 h-3 text-neutral-400" /></span><span className="text-neutral-600 text-[11px] font-semibold">{uploadedPhotos.length || 8} episódios</span></div>
-                      <div className="space-y-6 pb-10">{uploadedPhotos.map((photo, i) => (
-                        <div key={i} className={cn("flex gap-3 items-center cursor-pointer group/ep transition-all", activeHeroIndex === i ? "opacity-100" : "opacity-60 hover:opacity-100")} onClick={() => setActiveHeroIndex(i)}>
-                          <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md flex-shrink-0 relative overflow-hidden"><Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /><div className="absolute inset-0 bg-black/20 flex items-center justify-center">{activeHeroIndex === i && <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"><Play className="w-4 h-4 text-white fill-white" /></div>}</div></div>
-                          <div className="flex-1 min-w-0"><p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p><p className="text-[10px] text-neutral-500 leading-tight font-medium">Reviva este capítulo especial.</p></div>
-                        </div>
-                      ))}</div>
-                    </>
-                  ) : (
-                    <div className="space-y-6 pb-20 animate-in fade-in duration-300">
-                      <div className="space-y-4">
-                        <div className="flex gap-2 text-[13px]"><span className="text-neutral-500 min-w-[100px]">Data de estreia:</span><span className="text-neutral-200">{date ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : '07/04/2017'}</span></div>
-                        <div className="flex gap-2 text-[13px]"><span className="text-neutral-500 min-w-[100px]">Gêneros:</span><span className="text-neutral-200">Romance · Drama</span></div>
-                        <div className="flex gap-2 text-[13px]"><span className="text-neutral-500 min-w-[100px]">Referências:</span><span className="text-neutral-200">{pageTitle || 'Nossa História'}</span></div>
+                    <div className="space-y-6">{uploadedPhotos.map((photo, i) => (
+                      <div key={i} className="flex gap-3 items-center" onClick={() => setActiveHeroIndex(i)}>
+                        <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md relative overflow-hidden"><Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /></div>
+                        <div className="flex-1 min-w-0"><p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p><p className="text-[10px] text-neutral-500 leading-tight">Capítulo especial da nossa história.</p></div>
                       </div>
-                      <div className="pt-8 flex items-center gap-3"><div className="bg-[#E50914] w-7 h-7 rounded-[2px] flex flex-col items-center justify-center leading-none shrink-0"><span className="text-[7px] font-black uppercase">TOP</span><span className="text-[11px] font-black">10</span></div><p className="text-[13px] font-black text-white tracking-tight">Em alta nos nossos corações</p></div>
-                    </div>
+                    ))}</div>
+                  ) : (
+                    <div className="space-y-4 text-[13px]"><div className="flex gap-2"><span className="text-neutral-500 min-w-[100px]">Data:</span><span className="text-neutral-200">{date ? format(date, "dd/MM/yyyy") : '07/04/2017'}</span></div></div>
                   )}
                 </div>
               </div>
             ) : selectedTheme === 'spotify' ? (
-              /* THEME SPOTIFY */
-              <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col overflow-y-auto custom-scroll hide-scrollbar">
+              /* THEME SPOTIFY CLONE (REF) */
+              <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar">
                 
-                {/* Header Mockup */}
-                <div className="absolute top-6 left-0 right-0 z-[60] px-6 flex items-center justify-between pointer-events-none">
-                  <div className="pointer-events-auto">
-                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-                        <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
-                        <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth="2.7" strokeLinecap="round"></path>
-                        <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth="2.7" strokeLinecap="round"></path>
-                        <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth="2.7" strokeLinecap="round"></path>
-                    </svg>
-                  </div>
-                  <div className="bg-[#1DB954] w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black text-black tracking-tighter pointer-events-auto">EZ</div>
+                {/* Header fixo com Logo e Perfil */}
+                <div className="absolute top-6 left-0 right-0 z-30 px-6 flex items-center justify-between pointer-events-none">
+                  <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
+                    <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
+                    <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
+                    <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
+                  </svg>
+                  <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">EZ</div>
                 </div>
 
-                <div className={cn("flex-1 transition-opacity duration-500", showSpotifyAudioOverlay ? "opacity-0" : "opacity-100")}>
-                  {/* Hero Section */}
-                  <section className="relative h-[420px] flex items-end">
-                      <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #124d2c 0%, #121212 100%)' }}></div>
-                      
-                      <div className="relative z-10 px-6 pb-6 w-full">
-                          <div className="flex items-center gap-2 mb-2">
-                              <div className="bg-[#1DB954] w-4 h-4 rounded-full flex items-center justify-center">
-                                  <Check className="w-2.5 h-2.5 text-black" strokeWidth={4} />
-                              </div>
-                              <span className="text-[11px] font-bold text-white">Artista verificado</span>
-                          </div>
-                          <p className="text-sm font-bold text-white mb-1">
-                            {totalDays.toLocaleString('pt-BR')} dias de história
-                          </p>
-                          <h1 style={titleStyle} className="text-[44px] font-black text-white leading-[0.9] mb-4 tracking-tighter break-words">
-                            {pageTitle || 'Nossa Playlist'}
-                          </h1>
+                <div className="flex-1 overflow-y-auto no-scrollbar relative">
+                  {/* Banner do Artista */}
+                  <section className="relative h-[400px]">
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #0d4a2a 0%, #121212 100%)' }}></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="bg-[#1DB954] w-5 h-5 rounded-full flex items-center justify-center">
+                          <Check className="w-3.5 h-3.5 text-black" strokeWidth={4} />
+                        </div>
+                        <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
+                      <h1 className="text-white text-6xl font-black leading-[0.9] tracking-tighter mb-4 break-words">
+                        {pageTitle || 'Teste teste'}
+                      </h1>
+                      <p className="text-neutral-300 text-sm font-bold">{totalDays.toLocaleString('pt-BR')} dias de história</p>
+                    </div>
                   </section>
 
-                  {/* Controls Section */}
-                  <div className="px-6 py-4 flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-[#282828] rounded-sm overflow-hidden relative shadow-lg">
-                             {uploadedPhotos.length > 0 ? (
-                               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Thumb" />
-                             ) : (
-                               <div className="w-full h-full flex items-center justify-center text-white/10"><ImageIcon className="w-5 h-5" /></div>
-                             )}
-                          </div>
-                          <div className="flex items-center gap-3">
-                              <button onClick={() => setIsLiked(!isLiked)} className={cn("bg-transparent border border-neutral-500 rounded-full px-5 py-1.5 text-[10px] font-bold transition-all active:scale-95", isLiked ? "border-[#1DB954] text-[#1DB954]" : "text-white")}>
-                                {isLiked ? 'Seguindo' : 'Seguir'}
-                              </button>
-                              <button className="text-neutral-400 text-2xl font-bold pb-2">...</button>
-                          </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-5">
-                          <button className="text-neutral-400 active:scale-90 transition-transform">
-                              <Shuffle className="w-5 h-5" />
-                          </button>
-                          <button 
-                            onClick={() => { setShowSpotifyAudioOverlay(true); setExperienceAutoPlay(true); }}
-                            className="bg-[#1DB954] w-14 h-14 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform"
-                          >
-                              <Play className="w-7 h-7 fill-black text-black ml-1" />
-                          </button>
-                      </div>
+                  {/* Controles de Ação */}
+                  <div className="px-6 py-4 flex items-center gap-6">
+                    <button onClick={() => setIsLiked(!isLiked)} className="border border-neutral-500 rounded-full px-4 py-1.5 text-xs font-bold text-white hover:border-white transition-colors">
+                      {isLiked ? 'Seguindo' : 'Seguir'}
+                    </button>
+                    <button className="text-neutral-400 hover:text-white"><MoreHorizontal className="w-6 h-6" /></button>
+                    
+                    <div className="flex-1 flex justify-end items-center gap-6">
+                      <button className="text-neutral-400 hover:text-white"><Shuffle className="w-6 h-6" /></button>
+                      <button 
+                        onClick={() => { setShowSpotifyAudioOverlay(true); setExperienceAutoPlay(true); }}
+                        className="w-14 h-14 bg-[#1DB954] rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-transform"
+                      >
+                        <Play className="w-6 h-6 text-black fill-black ml-1" />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Tab Navigation */}
-                  <div className="px-6 mb-6">
-                      <div className="flex gap-8 border-b border-white/5 pb-2">
-                          <button onClick={() => setActiveTab('musicas')} className="relative">
-                              <span className={cn("text-sm font-bold transition-colors", activeTab === 'musicas' ? "text-white" : "text-neutral-400")}>Músicas</span>
-                              {activeTab === 'musicas' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
-                          </button>
-                          <button onClick={() => setActiveTab('eventos')} className="relative">
-                              <span className={cn("text-sm font-bold transition-colors", activeTab === 'eventos' ? "text-white" : "text-neutral-400")}>Eventos</span>
-                              {activeTab === 'eventos' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
-                          </button>
-                          <button className="relative">
-                              <span className="text-neutral-400 font-bold text-sm">Loja</span>
-                          </button>
+                  {/* Grid de Estatísticas (Cards Rápidos) */}
+                  <div className="px-6 mb-8">
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                        <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
+                        <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Anos juntos</p>
                       </div>
+                      <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                        <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
+                        <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Dias</p>
+                      </div>
+                      <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                        <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '06/04'}</p>
+                        <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Desde</p>
+                      </div>
+                    </div>
                   </div>
 
-                  {activeTab === 'musicas' ? (
-                    <div className="px-6 pb-32">
-                        <h2 className="text-white font-black text-xl mb-5">Populares</h2>
-                        <div className="space-y-6">
-                            {uploadedPhotos.length > 0 ? (
-                              uploadedPhotos.map((photo, i) => (
-                                <div key={i} className="flex items-center gap-4 group/track cursor-pointer active:bg-white/5 p-1 rounded transition-colors">
-                                    <span className="text-white font-bold text-sm w-4">{i + 1}</span>
-                                    <div className="w-12 h-12 bg-white/10 rounded-sm relative overflow-hidden shrink-0">
-                                      <Image src={photo} fill className="object-cover" alt={`Memória ${i+1}`} />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="text-white font-bold text-sm truncate">Memória {i + 1}</div>
-                                        <div className="text-neutral-500 text-xs font-medium truncate">Capítulo de amor</div>
-                                    </div>
-                                    <span className="text-neutral-500 text-[10px] font-mono">3:{Math.floor(Math.random() * 59).toString().padStart(2, '0')}</span>
-                                </div>
-                              ))
-                            ) : (
-                              [...Array(2)].map((_, i) => (
-                                <div key={i} className={cn("flex items-center gap-4", i === 1 && "opacity-50")}>
-                                    <span className="text-white font-bold text-sm w-4">{i + 1}</span>
-                                    <div className="w-12 h-12 bg-white/10 rounded-sm"></div>
-                                    <div className="flex-1">
-                                        <div className="h-4 bg-white/20 rounded w-3/4 mb-2"></div>
-                                        <div className="h-3 bg-white/10 rounded w-1/2"></div>
-                                    </div>
-                                </div>
-                              ))
-                            )}
+                  {/* Seção Populares */}
+                  <section className="px-6 mb-8">
+                    <h2 className="text-white text-xl font-black mb-4">Populares</h2>
+                    <div className="space-y-4">
+                      {uploadedPhotos.length > 0 ? (
+                        uploadedPhotos.map((photo, i) => (
+                          <div key={i} className="flex items-center gap-4 group">
+                            <span className="text-neutral-500 text-sm w-4">{i + 1}</span>
+                            <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg relative overflow-hidden">
+                              <Image src={photo} fill className="object-cover" alt="" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-white text-sm font-bold truncate">Memória {i + 1}</h3>
+                              <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">{date ? date.getFullYear() : '2026'} • 03:45</p>
+                            </div>
+                            <button className="text-neutral-400 group-hover:text-[#1DB954]"><Heart className="w-5 h-5" /></button>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="flex items-center gap-4 group">
+                          <span className="text-neutral-500 text-sm w-4">1</span>
+                          <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg"></div>
+                          <div className="flex-1">
+                            <h3 className="text-white text-sm font-bold">Nossa Primeira Música</h3>
+                            <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-wider">2018 • 03:45</p>
+                          </div>
+                          <button className="text-neutral-400 group-hover:text-white"><Heart className="w-5 h-5" /></button>
                         </div>
+                      )}
                     </div>
-                  ) : (
-                    /* Eventos Section (Contadores Grade Estilo Spotify) */
-                    <div className="px-4 pb-32 animate-in fade-in duration-300">
-                       <div className="grid grid-cols-3 gap-2">
-                          <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
-                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{timeDiff?.years || 0}</p>
-                             <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Anos<br/>Juntos</p>
+                  </section>
+
+                  {/* Seção Sobre */}
+                  {message && (
+                    <section className="px-6 pb-20">
+                      <h2 className="text-white text-xl font-black mb-4">Sobre</h2>
+                      <div className="bg-[#181818] rounded-2xl p-6 overflow-hidden relative group min-h-[160px] flex flex-col justify-end">
+                        {uploadedPhotos.length > 0 && (
+                          <div className="absolute inset-0 grayscale opacity-40 transition-transform duration-500 group-hover:scale-110">
+                            <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
                           </div>
-                          <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
-                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{totalDays.toLocaleString('pt-BR')}</p>
-                             <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Dias de<br/>História</p>
-                          </div>
-                          <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
-                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{date ? format(date, 'dd/MM') : '06/04'}</p>
-                             <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Desde<br/>sempre</p>
-                          </div>
-                       </div>
-                    </div>
+                        )}
+                        <div className="relative z-10">
+                          <div 
+                            className="text-neutral-200 text-sm leading-relaxed mb-4 line-clamp-4" 
+                            dangerouslySetInnerHTML={{ __html: message }} 
+                          />
+                          <span className="bg-[#1DB954] text-black text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">#TOP1DOSEUCORAÇÃO</span>
+                        </div>
+                      </div>
+                    </section>
                   )}
                 </div>
 
-                {/* Fixed Music Footer */}
+                {/* Mini Player Footer Spotify Style */}
                 {musicData && !showSpotifyAudioOverlay && (
                   <footer className="fixed bottom-0 left-0 right-0 z-[60] px-3 pb-8">
                     <div className="bg-[#282828] rounded-lg p-3 flex flex-col gap-2 shadow-2xl border border-white/5 backdrop-blur-xl mx-2">
@@ -663,7 +648,7 @@ export function DeviceMockup({
                           <p className="text-[10px] text-white/50 font-bold">YouTube Original</p>
                         </div>
                         <div className="flex items-center gap-4">
-                          <ListMusic className="w-5 h-5 text-white/50" />
+                          <Volume2 className="w-5 h-5 text-white/50" />
                           <button className="text-white"><Play className="w-5 h-5 fill-current" /></button>
                         </div>
                       </div>
@@ -703,7 +688,6 @@ export function DeviceMockup({
                             <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.seconds || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Segundos</span></div>
                           </div>
                         </div>
-                        <p className="text-neutral-500 text-xs mt-8 font-medium">Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</p>
                       </div>
                     )}
                   </div>
@@ -716,16 +700,6 @@ export function DeviceMockup({
           </div>
         </div>
       </div>
-      
-      {/* Hidden YouTube Player Triggering */}
-      {experienceAutoPlay && musicData && (
-        <div className="hidden">
-           <MusicPlayer 
-             musicData={musicData} 
-             isAutoPlay={true} 
-           />
-        </div>
-      )}
     </div>
   );
 }
