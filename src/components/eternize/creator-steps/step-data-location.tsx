@@ -252,7 +252,7 @@ export function StepDataLocation({
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
                     <ColorPicker selectedBgColor={dateColor} onChange={onDateColorChange} />
-                  </button>
+                  </PopoverContent>
                 </Popover>
                 <div className="flex flex-wrap gap-1.5">
                   {['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (
