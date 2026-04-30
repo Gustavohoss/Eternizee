@@ -548,7 +548,7 @@ export function DeviceMockup({
                       </div>
                   </section>
 
-                  {/* Controls Section com Miniatura */}
+                  {/* Controls Section */}
                   <div className="px-6 py-4 flex items-center justify-between">
                       <div className="flex items-center gap-4">
                           <div className="w-10 h-10 bg-[#282828] rounded-sm overflow-hidden relative shadow-lg">
