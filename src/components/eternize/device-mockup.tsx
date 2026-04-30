@@ -397,7 +397,11 @@ export function DeviceMockup({
         <div className="absolute inset-0 z-[500] bg-[#121212] flex flex-col animate-in fade-in duration-500 overflow-hidden">
           {/* Blurred Dynamic Background */}
           <div className="absolute inset-0 z-0 scale-125 brightness-[0.4] blur-[60px] transition-all duration-1000">
-             {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="blur-bg" />}
+             {uploadedPhotos.length > 0 ? (
+               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="blur-bg" />
+             ) : (
+               <div className="w-full h-full bg-[#121212]" />
+             )}
           </div>
 
           <div className="relative z-10 flex flex-col h-full px-6 pt-4 no-scrollbar overflow-y-auto">
@@ -416,7 +420,7 @@ export function DeviceMockup({
             </div>
 
             {/* Album Cover with Mask */}
-            <div className="relative aspect-square w-full mb-8 md:mb-12 shrink-0 group">
+            <div className="relative aspect-[16/6] w-full mb-8 md:mb-12 shrink-0 group">
               <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
                 {uploadedPhotos.length > 0 ? (
                   <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Album Cover" />
@@ -425,7 +429,7 @@ export function DeviceMockup({
                 )}
               </div>
               {/* Bottom Mask Style from ref */}
-              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#121212]/80 to-transparent rounded-b-2xl" />
+              <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-[#121212]/80 via-transparent to-transparent rounded-b-2xl" />
             </div>
 
             {/* Title and Heart */}
@@ -435,7 +439,7 @@ export function DeviceMockup({
                   <p className="text-base font-bold text-white/60 truncate font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
                </div>
                <button onClick={() => setIsLiked(!isLiked)} className={cn("transition-all duration-300", isLiked ? "text-[#1DB954]" : "text-white/80")}>
-                  <Heart className={cn("w-8 h-8", isLiked && "fill-current")} />
+                  {isLiked ? <Heart className="w-8 h-8 fill-current text-[#1DB954]" /> : <Heart className="w-8 h-8" />}
                </button>
             </div>
 
@@ -483,7 +487,7 @@ export function DeviceMockup({
             )}
 
             {/* Conheça Section */}
-            <div className="bg-white/5 rounded-[24px] p-6 mb-12 shrink-0 border border-white/5 backdrop-blur-sm">
+            <div className="bg-black/10 rounded-[24px] p-6 mb-12 shrink-0 backdrop-blur-sm">
                <h3 className="text-white text-base font-black mb-5 font-['DM_Sans']">Conheça {pageTitle || 'o casal'}</h3>
                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x">
                   {uploadedPhotos.length > 0 ? (
@@ -724,7 +728,7 @@ export function DeviceMockup({
                               </div>
                             ))
                           ) : (
-                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer">
+                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" onClick={() => setShowSpotifyFullscreen(true)}>
                               <div className="w-4 flex justify-center items-center">
                                 <span className="text-neutral-500 text-sm font-bold group-hover:hidden">1</span>
                                 <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
@@ -742,7 +746,7 @@ export function DeviceMockup({
 
                       {/* Seção Sobre */}
                       {message && (
-                        <section className="px-6 pb-20">
+                        <section className="px-6 pb-32">
                           <h2 className="text-white text-xl font-black mb-4 font-['DM_Sans']">Sobre</h2>
                           <div className="bg-[#181818] rounded-2xl p-4 overflow-hidden relative group">
                             {uploadedPhotos.length > 0 && (
@@ -764,31 +768,61 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                {/* Mini Player Footer Spotify Style */}
+                {/* MINI PLAYER FLUTUANTE (Spotify Style) */}
                 {musicData && !showSpotifyFullscreen && (
-                  <footer className="fixed bottom-0 left-0 right-0 z-[60] px-3 pb-8">
+                  <div className="absolute bottom-6 left-0 right-0 z-[60] px-3 animate-in slide-in-from-bottom-4 duration-500">
                     <div 
-                      className="bg-[#282828] rounded-lg p-3 flex flex-col gap-2 shadow-2xl border border-white/5 backdrop-blur-xl mx-2 cursor-pointer"
+                      className="w-full bg-[#1a0a0a] rounded-xl p-2.5 flex flex-col shadow-2xl border border-white/5 cursor-pointer active:scale-[0.98] transition-all"
                       onClick={() => setShowSpotifyFullscreen(true)}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded overflow-hidden relative bg-black shrink-0">
-                          <img src={musicData.thumb} className="w-full h-full object-cover" alt="" />
+                      <div className="flex items-center">
+                        {/* Capa da Música */}
+                        <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-lg mr-3 relative">
+                            {musicData.thumb ? (
+                              <img src={musicData.thumb} alt="Capa" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><Music2 className="w-5 h-5 text-white/20" /></div>
+                            )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-white truncate font-['DM_Sans']">{musicData.title}</p>
-                          <p className="text-[10px] text-white/50 font-bold font-['DM_Sans']">YouTube Original</p>
+
+                        {/* Informações da Música */}
+                        <div className="flex-1 min-w-0 mr-4">
+                            <h4 className="text-white text-[13px] font-bold truncate leading-tight font-['DM_Sans']">
+                                {musicData.title}
+                            </h4>
+                            <p className="text-[#b3b3b3] text-[12px] font-medium truncate mt-0.5 font-['DM_Sans']">
+                                {pageTitle || 'Gustavo e Luisa'}
+                            </p>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <Volume2 className="w-5 h-5 text-white/50" />
-                          <button className="text-white"><Play className="w-5 h-5 fill-current" /></button>
+
+                        {/* Botões de Controle */}
+                        <div className="flex items-center gap-5 pr-2">
+                            {/* Ícone de Connect/Cast */}
+                            <button className="text-white/70 hover:text-white transition-colors" onClick={(e) => e.stopPropagation()}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M5 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path>
+                                    <path d="M2 19a1 1 0 0 1 0-1"></path>
+                                    <path d="M2 15a4 4 0 0 1 4 4"></path>
+                                    <path d="M2 11a8 8 0 0 1 8 8"></path>
+                                </svg>
+                            </button>
+
+                            {/* Botão Pause */}
+                            <button className="text-white hover:scale-105 active:scale-95 transition-transform" onClick={(e) => e.stopPropagation()}>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                    <rect x="5" y="4" width="4" height="16" rx="1"></rect>
+                                    <rect x="15" y="4" width="4" height="16" rx="1"></rect>
+                                </svg>
+                            </button>
                         </div>
                       </div>
-                      <div className="w-full h-[3px] bg-white/10 rounded-full overflow-hidden">
-                         <div className="h-full bg-white w-[45%]" />
+                      
+                      {/* Barra de Progresso Fina */}
+                      <div className="mt-2 w-full h-[2px] bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-white w-[45%]" />
                       </div>
                     </div>
-                  </footer>
+                  </div>
                 )}
               </div>
             ) : (
@@ -835,4 +869,3 @@ export function DeviceMockup({
     </div>
   );
 }
-
