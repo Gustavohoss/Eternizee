@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -165,7 +164,8 @@ export function DeviceMockup({
   const [isLiked, setIsLiked] = useState(false);
   const [isInList, setIsInList] = useState(false);
   
-  // Dynamic color state for Spotify
+  // Spotify Specific State
+  const [isSpotifyMusicPlaying, setIsSpotifyMusicPlaying] = useState(false);
   const [dynamicSpotifyColor, setDynamicSpotifyColor] = useState('#1a0a0a');
 
   useEffect(() => {
@@ -197,7 +197,6 @@ export function DeviceMockup({
       const g = pixel[1];
       const b = pixel[2];
       
-      // Spotify mini players are usually very dark. 
       const factor = 0.15; 
       const darkenedR = Math.floor(r * factor);
       const darkenedG = Math.floor(g * factor);
@@ -491,8 +490,11 @@ export function DeviceMockup({
             <div className="flex items-center justify-between mb-10 shrink-0 px-1">
                <button className="text-white/40 hover:text-white transition-colors"><Shuffle className="w-6 h-6" /></button>
                <button className="text-white active:scale-90 transition-transform"><SkipBack className="w-8 h-8 fill-current" /></button>
-               <button className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black shadow-2xl active:scale-95 transition-transform">
-                  <Pause className="w-8 h-8 fill-current" />
+               <button 
+                onClick={() => setIsSpotifyMusicPlaying(!isSpotifyMusicPlaying)}
+                className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black shadow-2xl active:scale-95 transition-transform"
+               >
+                  {isSpotifyMusicPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1" />}
                </button>
                <button className="text-white active:scale-90 transition-transform"><SkipForward className="w-8 h-8 fill-current" /></button>
                <button className="text-white/40 hover:text-white transition-colors"><RotateCcw className="w-6 h-6" /></button>
@@ -626,7 +628,7 @@ export function DeviceMockup({
                   </div>
                   {activeTab === ('episodios' as any) ? (
                     <div className="space-y-6">{uploadedPhotos.map((photo, i) => (
-                      <div key={i} className="flex gap-3 items-center" onClick={() => setActiveHeroIndex(i)}>
+                      <div key={i} className="flex gap-3 items-center" onClick={() => { setActiveHeroIndex(i); setIsSpotifyMusicPlaying(true); }}>
                         <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md relative overflow-hidden"><Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /></div>
                         <div className="flex-1 min-w-0"><p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p><p className="text-[10px] text-neutral-500 leading-tight">Capítulo especial da nossa história.</p></div>
                       </div>
@@ -691,7 +693,10 @@ export function DeviceMockup({
                     <div className="flex-1 flex justify-end items-center gap-5">
                       <button className="text-neutral-400 hover:text-white"><Shuffle className="w-6 h-6" /></button>
                       <button 
-                        onClick={() => setShowSpotifyFullscreen(true)}
+                        onClick={() => {
+                          setIsSpotifyMusicPlaying(true);
+                          setShowSpotifyFullscreen(true);
+                        }}
                         className="w-14 h-14 bg-[#1DB954] rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-transform"
                       >
                         <Play className="w-6 h-6 text-black fill-black ml-1" />
@@ -747,7 +752,11 @@ export function DeviceMockup({
                               <div 
                                 key={i} 
                                 className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" 
-                                onClick={() => { setActiveHeroIndex(i); setShowSpotifyFullscreen(true); }}
+                                onClick={() => { 
+                                  setActiveHeroIndex(i); 
+                                  setIsSpotifyMusicPlaying(true);
+                                  setShowSpotifyFullscreen(true); 
+                                }}
                               >
                                 <div className="w-4 flex justify-center items-center">
                                   <span className="text-neutral-500 text-sm font-bold group-hover:hidden">{i + 1}</span>
@@ -764,7 +773,7 @@ export function DeviceMockup({
                               </div>
                             ))
                           ) : (
-                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" onClick={() => setShowSpotifyFullscreen(true)}>
+                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" onClick={() => { setIsSpotifyMusicPlaying(true); setShowSpotifyFullscreen(true); }}>
                               <div className="w-4 flex justify-center items-center">
                                 <span className="text-neutral-500 text-sm font-bold group-hover:hidden">1</span>
                                 <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
@@ -844,7 +853,7 @@ export function DeviceMockup({
 
                         {/* Botões de Controle */}
                         <div className="flex items-center gap-5 pr-2">
-                            {/* Ícone de Connect/Cast */}
+                            {/* Ícone de Cast/Connect */}
                             <button className="text-white/70 hover:text-white transition-colors" onClick={(e) => e.stopPropagation()}>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M5 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path>
@@ -854,12 +863,24 @@ export function DeviceMockup({
                                 </svg>
                             </button>
 
-                            {/* Botão Pause */}
-                            <button className="text-white hover:scale-105 active:scale-95 transition-transform" onClick={(e) => e.stopPropagation()}>
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                                    <rect x="5" y="4" width="4" height="16" rx="1"></rect>
-                                    <rect x="15" y="4" width="4" height="16" rx="1"></rect>
-                                </svg>
+                            {/* Botão Play/Pause */}
+                            <button 
+                              className="text-white hover:scale-105 active:scale-95 transition-transform" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsSpotifyMusicPlaying(!isSpotifyMusicPlaying);
+                              }}
+                            >
+                                {isSpotifyMusicPlaying ? (
+                                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                      <rect x="5" y="4" width="4" height="16" rx="1"></rect>
+                                      <rect x="15" y="4" width="4" height="16" rx="1"></rect>
+                                  </svg>
+                                ) : (
+                                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M8 5v14l11-7z" />
+                                  </svg>
+                                )}
                             </button>
                         </div>
                       </div>
@@ -870,6 +891,16 @@ export function DeviceMockup({
                       </div>
                     </div>
                   </div>
+                )}
+
+                {/* Motor de Áudio Invisível para Spotify */}
+                {musicData && (
+                  <MusicPlayer 
+                    musicData={musicData} 
+                    isAutoPlay={isSpotifyMusicPlaying} 
+                    hideUI 
+                    onStateChange={(playing) => setIsSpotifyMusicPlaying(playing)}
+                  />
                 )}
               </div>
             ) : (

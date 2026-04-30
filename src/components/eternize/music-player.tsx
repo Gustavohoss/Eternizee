@@ -22,6 +22,8 @@ interface MusicPlayerProps {
   musicHasNeon?: boolean;
   musicNeonStrength?: number;
   isAutoPlay?: boolean;
+  hideUI?: boolean;
+  onStateChange?: (isPlaying: boolean) => void;
 }
 
 export function MusicPlayer({ 
@@ -30,7 +32,9 @@ export function MusicPlayer({
   musicTextColor = '#ffffff',
   musicHasNeon = false,
   musicNeonStrength = 15,
-  isAutoPlay = true
+  isAutoPlay = false,
+  hideUI = false,
+  onStateChange
 }: MusicPlayerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -79,7 +83,7 @@ export function MusicPlayer({
             rel: 0,
             enablejsapi: 1,
             origin: window.location.origin,
-            mute: isAutoPlay ? 1 : 0 
+            mute: isAutoPlay ? 0 : 1 
           },
           events: {
             onReady: (event: any) => {
@@ -87,13 +91,15 @@ export function MusicPlayer({
               setDuration(event.target.getDuration());
             },
             onStateChange: (event: any) => {
-              if (event.data === 1) {
+              const playing = event.data === 1;
+              if (playing) {
                 setIsPlaying(true);
                 startTimer();
               } else {
                 setIsPlaying(false);
                 stopTimer();
               }
+              if (onStateChange) onStateChange(playing);
             }
           }
         });
@@ -184,6 +190,14 @@ export function MusicPlayer({
   const neonShadow = musicHasNeon 
     ? `0 0 ${musicNeonStrength/2}px ${accentColor}, 0 0 ${musicNeonStrength}px ${accentColor}` 
     : 'none';
+
+  if (hideUI) {
+    return (
+      <div className="fixed -left-[1000px] -top-[1000px] pointer-events-none opacity-0">
+        <div id={containerId.current}></div>
+      </div>
+    );
+  }
 
   return (
     <div 
