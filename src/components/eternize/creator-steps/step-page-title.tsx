@@ -60,7 +60,7 @@ export function StepPageTitle({
 
       <div className="space-y-8 w-full max-w-md">
         <div className="space-y-4">
-          <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
+          <Label className="text-[10px] font-black uppercase tracking-wider text-white/60 text-center md:text-left block">
             Como vai se chamar a história de vocês?
           </Label>
           <Input 
