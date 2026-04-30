@@ -62,6 +62,9 @@ export function StepMusic({
   const previewContainerId = useRef(`preview-yt-${Math.random().toString(36).substring(2, 11)}`);
 
   const isNetflix = selectedTheme === 'netflix';
+  const isSpotify = selectedTheme === 'spotify';
+  const isInstagram = selectedTheme === 'instagram';
+  const isFixedTheme = isNetflix || isSpotify || isInstagram;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -130,7 +133,7 @@ export function StepMusic({
           fs: 0,
           rel: 0,
           enablejsapi: 1,
-          origin: window.location.origin
+          origin: typeof window !== 'undefined' ? window.location.origin : ''
         },
         events: {
           onReady: () => setIsPreviewReady(true),
@@ -307,7 +310,7 @@ export function StepMusic({
                   </div>
                 </div>
 
-                {!isNetflix && (
+                {!isFixedTheme && (
                   <>
                     <div className="space-y-4 pt-4 border-t border-white/5">
                       <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Caixa</Label>
