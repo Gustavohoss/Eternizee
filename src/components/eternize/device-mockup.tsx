@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -36,7 +35,9 @@ import {
   Bookmark,
   MessageCircle,
   Send,
-  MoreVertical
+  MoreVertical,
+  Bell,
+  UserPlus
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -173,7 +174,7 @@ export function DeviceMockup({
   const [isInList, setIsInList] = useState(false);
   
   // Spotify Specific State
-  const [isSpotifyMusicPlaying, setIsSpotifyMusicPlaying] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [dynamicSpotifyColor, setDynamicSpotifyColor] = useState('#1a0a0a');
   const [spotifyHeaderOpacity, setSpotifyHeaderOpacity] = useState(0);
 
@@ -187,9 +188,9 @@ export function DeviceMockup({
     }
   }, [selectedTheme]);
 
-  // Extract color from photo for Spotify
+  // Extract color from photo for Dynamic UI
   useEffect(() => {
-    if (selectedTheme !== 'spotify' || uploadedPhotos.length === 0) return;
+    if (uploadedPhotos.length === 0) return;
     
     const img = new window.Image();
     img.crossOrigin = "Anonymous";
@@ -261,6 +262,13 @@ export function DeviceMockup({
     if (now < date) return 0;
     return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
   }, [date]);
+
+  const formattedTotalDays = useMemo(() => {
+    if (totalDays >= 1000) {
+      return (totalDays / 1000).toFixed(1) + 'K';
+    }
+    return totalDays.toString();
+  }, [totalDays]);
 
   const getFontFamily = (font: string) => {
     switch (font) {
@@ -502,10 +510,10 @@ export function DeviceMockup({
                <button className="text-white/40 hover:text-white transition-colors"><Shuffle className="w-6 h-6" /></button>
                <button className="text-white active:scale-90 transition-transform"><SkipBack className="w-8 h-8 fill-current" /></button>
                <button 
-                onClick={() => setIsSpotifyMusicPlaying(!isSpotifyMusicPlaying)}
+                onClick={() => setIsAudioPlaying(!isAudioPlaying)}
                 className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black shadow-2xl active:scale-95 transition-transform"
                >
-                  {isSpotifyMusicPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1" />}
+                  {isAudioPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current ml-1" />}
                </button>
                <button className="text-white active:scale-90 transition-transform"><SkipForward className="w-8 h-8 fill-current" /></button>
                <button className="text-white/40 hover:text-white transition-colors"><RotateCcw className="w-6 h-6" /></button>
@@ -593,177 +601,165 @@ export function DeviceMockup({
           
           <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar">
             {selectedTheme === 'instagram' ? (
-              /* THEME INSTAGRAM */
-              <div className="w-full h-full bg-black text-white font-inter flex flex-col no-scrollbar">
+              /* THEME INSTAGRAM (MODERN REFORMULATED) */
+              <div className="w-full h-full bg-black text-white font-inter flex flex-col no-scrollbar relative">
                 {/* Header */}
-                <header className="px-4 py-3 flex items-center justify-between border-b border-white/10 bg-black sticky top-0 z-[100]">
-                  <div className="flex items-center gap-1 font-black text-xl tracking-tight">
-                    {pageTitle || 'eternize_love'}
-                    <ChevronDown className="w-4 h-4" />
+                <header className="flex items-center justify-between px-4 py-3 sticky top-0 bg-black z-50">
+                  <div className="flex items-center gap-3">
+                    <ChevronLeft className="w-6 h-6" />
+                    <div className="flex items-center gap-1">
+                      <span className="font-bold text-lg tracking-tight truncate max-w-[150px]">{pageTitle || 'Gustavo E Luisa'}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#0095F6"><circle cx="12" cy="12" r="11"/><path d="M7 12l3.5 3.5L17 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-6">
-                    <Plus className="w-6 h-6" />
-                    <ListMusic className="w-6 h-6" />
-                  </div>
+                  <Bell className="w-6 h-6" />
                 </header>
 
                 <div className="flex-1 overflow-y-auto no-scrollbar pb-20">
                   {/* Profile Info */}
-                  <section className="px-4 pt-6 pb-4">
-                    <div className="flex items-center gap-8 mb-4">
-                      <div className="relative">
-                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-1 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
-                          <div className="w-full h-full rounded-full border-2 border-black overflow-hidden relative">
+                  <section className="px-4 pt-2 pb-4">
+                    <div className="flex items-center gap-6 mb-4">
+                      <div className="p-[2.5px] rounded-full ig-gradient">
+                        <div className="p-[2px] bg-black rounded-full">
+                          <div className="w-20 h-20 rounded-full border-2 border-black overflow-hidden relative bg-neutral-900">
                             {uploadedPhotos.length > 0 ? (
                               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Profile" />
                             ) : (
-                              <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><UserSquare2 className="w-10 h-10 text-white/20" /></div>
+                              <div className="w-full h-full flex items-center justify-center"><UserSquare2 className="w-10 h-10 text-white/20" /></div>
                             )}
                           </div>
-                        </div>
-                        <div className="absolute bottom-0 right-0 bg-primary border-2 border-black rounded-full p-1">
-                          <Plus className="w-3 h-3 text-white" />
                         </div>
                       </div>
                       
                       <div className="flex-1 flex justify-around text-center">
-                        <div><p className="font-black text-lg">{uploadedPhotos.length}</p><p className="text-[11px] text-neutral-400">Publicações</p></div>
-                        <div><p className="font-black text-lg">{totalDays.toLocaleString('pt-BR')}</p><p className="text-[11px] text-neutral-400">Seguidores</p></div>
-                        <div><p className="font-black text-lg">1</p><p className="text-[11px] text-neutral-400">Seguindo</p></div>
+                        <div><p className="font-bold text-base">{uploadedPhotos.length}</p><p className="text-[10px] text-neutral-400">publicações</p></div>
+                        <div><p className="font-bold text-base">{formattedTotalDays}</p><p className="text-[10px] text-neutral-400">dias</p></div>
+                        <div><p className="font-bold text-base">{timeDiff?.years || 0}</p><p className="text-[10px] text-neutral-400">anos</p></div>
                       </div>
                     </div>
 
                     <div className="space-y-0.5 mb-6">
-                      <p className="font-black text-sm">{pageTitle || 'Nossa História'}</p>
-                      <p className="text-sm text-neutral-400 font-medium">Casal</p>
+                      <p className="font-bold text-sm">{pageTitle || 'Gustavo E Luisa'}</p>
                       <div 
-                        className="text-sm leading-snug pt-1" 
-                        dangerouslySetInnerHTML={{ __html: message || '✨ Criando memórias eternas ao seu lado...' }} 
+                        className="text-sm text-neutral-200 leading-tight" 
+                        dangerouslySetInnerHTML={{ __html: message || 'Te amo meu amor e quero sempre ficar junto com você' }} 
                       />
-                      <p className="text-sm text-blue-400 font-medium pt-1">#love #eternize #juntosesempre</p>
+                      <p className="text-sm text-neutral-500 pt-1">💑 Juntos desde {date ? format(date, 'dd/MM/yyyy') : '07/04/2017'}</p>
+                      
+                      {musicData && (
+                        <div className="flex items-center gap-1 py-1 mt-1">
+                          <div className="w-4 h-4 rounded ig-gradient flex items-center justify-center">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                          </div>
+                          <p className="text-xs text-neutral-400 truncate max-w-[200px]">{musicData.title}</p>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex gap-2">
-                      <button className="flex-1 bg-white/10 hover:bg-white/15 h-9 rounded-lg text-sm font-black transition-colors">Editar perfil</button>
-                      <button className="flex-1 bg-white/10 hover:bg-white/15 h-9 rounded-lg text-sm font-black transition-colors">Compartilhar perfil</button>
-                      <button className="bg-white/10 hover:bg-white/15 w-9 h-9 rounded-lg flex items-center justify-center transition-colors"><UserSquare2 className="w-5 h-5" /></button>
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 mb-6">
+                      <button className="flex-1 bg-[#0095F6] hover:bg-blue-600 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95">Seguir</button>
+                      <button className="flex-1 bg-neutral-800 hover:bg-neutral-700 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95">Mensagem</button>
+                      <button className="px-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition active:scale-95"><UserPlus className="w-4.5 h-4.5" /></button>
                     </div>
                   </section>
 
-                  {/* Highlights */}
-                  <section className="px-4 pb-4 overflow-x-auto no-scrollbar flex gap-4">
-                    {[...Array(4)].map((_, i) => (
-                      <div key={i} className="flex flex-col items-center gap-1.5 shrink-0">
-                        <div className="w-16 h-16 rounded-full border border-white/10 p-0.5">
-                          <div className="w-full h-full rounded-full bg-neutral-900 border border-white/5 flex items-center justify-center overflow-hidden relative">
-                            {uploadedPhotos[i + 1] ? (
-                              <Image src={uploadedPhotos[i + 1]} fill className="object-cover opacity-50" alt="" />
-                            ) : (
-                              <Plus className="w-6 h-6 text-white/20" />
-                            )}
-                          </div>
-                        </div>
-                        <p className="text-[10px] font-medium">Destaque {i + 1}</p>
+                  {/* Stories Highlights */}
+                  <section className="px-4 pb-6 overflow-x-auto no-scrollbar flex gap-4">
+                    <div className="flex flex-col items-center gap-1 shrink-0">
+                      <div className="w-16 h-16 rounded-full border border-neutral-800 flex items-center justify-center active:scale-95 transition-transform">
+                        <span className="text-3xl font-light text-neutral-400">+</span>
+                      </div>
+                      <span className="text-[11px] text-neutral-400">Novo</span>
+                    </div>
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex flex-col items-center gap-1 shrink-0 opacity-40">
+                        <div className="w-16 h-16 rounded-full border border-neutral-800 bg-neutral-900/50" />
+                        <div className="h-2 w-10 bg-neutral-900 rounded-full" />
                       </div>
                     ))}
                   </section>
 
                   {/* Tabs */}
-                  <div className="flex border-t border-white/10">
+                  <div className="flex border-t border-neutral-900">
                     <button 
                       onClick={() => setActiveTab('grid')}
                       className={cn(
-                        "flex-1 h-12 flex items-center justify-center transition-all",
-                        activeTab === 'grid' ? "border-t-2 border-white" : "text-neutral-500"
+                        "flex-1 flex justify-center py-3 transition-all",
+                        activeTab === 'grid' ? "border-b border-white" : "text-neutral-500"
                       )}
-                    ><GridIcon className="w-6 h-6" /></button>
+                    >
+                      <GridIcon className="w-5 h-5" />
+                    </button>
                     <button 
                       onClick={() => setActiveTab('reels')}
                       className={cn(
-                        "flex-1 h-12 flex items-center justify-center transition-all",
-                        activeTab === 'reels' ? "border-t-2 border-white" : "text-neutral-500"
+                        "flex-1 flex justify-center py-3 transition-all",
+                        activeTab === 'reels' ? "border-b border-white" : "text-neutral-500"
                       )}
-                    ><Clapperboard className="w-6 h-6" /></button>
-                    <button 
-                      onClick={() => setActiveTab('tagged')}
-                      className={cn(
-                        "flex-1 h-12 flex items-center justify-center transition-all",
-                        activeTab === 'tagged' ? "border-t-2 border-white" : "text-neutral-500"
-                      )}
-                    ><UserSquare2 className="w-6 h-6" /></button>
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg>
+                    </button>
                   </div>
 
-                  {/* Grid Content */}
-                  {activeTab === 'grid' && (
-                    <div className="grid grid-cols-3 gap-0.5">
-                      {uploadedPhotos.length > 0 ? (
-                        uploadedPhotos.map((photo, i) => (
-                          <div key={i} className="aspect-square relative group cursor-pointer" onClick={() => setActiveHeroIndex(i)}>
-                            <Image src={photo} fill className="object-cover" alt="" />
-                            {i === 0 && <div className="absolute top-2 right-2"><Bookmark className="w-4 h-4 fill-white" /></div>}
-                          </div>
-                        ))
-                      ) : (
-                        [...Array(9)].map((_, i) => (
-                          <div key={i} className="aspect-square bg-neutral-900 border border-white/5 flex items-center justify-center">
-                            <ImageIcon className="w-6 h-6 text-white/5" />
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  )}
-
-                  {/* Feed Experience (Simulated below grid) */}
-                  <section className="pt-8 border-t border-white/10 mt-4">
-                    <p className="px-4 text-xs font-black text-neutral-500 uppercase tracking-widest mb-6">Sugestões para você</p>
-                    {uploadedPhotos.slice(0, 3).map((photo, i) => (
-                      <div key={i} className="mb-10">
-                         <div className="px-4 py-3 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                               <div className="w-8 h-8 rounded-full overflow-hidden relative">
-                                  <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />
-                               </div>
-                               <div>
-                                  <p className="text-sm font-black">{pageTitle || 'eternize_love'}</p>
-                                  <p className="text-[11px] text-neutral-400">São Paulo, Brasil</p>
-                               </div>
-                            </div>
-                            <MoreVertical className="w-5 h-5 text-neutral-400" />
-                         </div>
-                         <div className="aspect-square relative bg-neutral-900">
-                            <Image src={photo} fill className="object-cover" alt="" />
-                         </div>
-                         <div className="px-4 py-4">
-                            <div className="flex items-center justify-between mb-4">
-                               <div className="flex items-center gap-4">
-                                  <Heart className="w-6 h-6 hover:text-red-500 transition-colors" />
-                                  <MessageCircle className="w-6 h-6" />
-                                  <Send className="w-6 h-6" />
-                               </div>
-                               <Bookmark className="w-6 h-6" />
-                            </div>
-                            <p className="text-sm font-black mb-1">{totalDays.toLocaleString('pt-BR')} curtidas</p>
-                            <p className="text-sm leading-relaxed">
-                               <span className="font-black mr-2">{pageTitle || 'eternize_love'}</span>
-                               O melhor capítulo da minha vida! ❤️
-                            </p>
-                            <p className="text-xs text-neutral-500 mt-2 uppercase">Há {i + 1} dias</p>
-                         </div>
-                      </div>
-                    ))}
-                  </section>
+                  {/* Photo Grid */}
+                  <div className="grid grid-cols-3 gap-[1.5px] bg-black">
+                    {uploadedPhotos.length > 0 ? (
+                      uploadedPhotos.map((photo, i) => (
+                        <div key={i} className="aspect-square relative group cursor-pointer active:opacity-80">
+                          <Image src={photo} fill className="object-cover" alt="" />
+                        </div>
+                      ))
+                    ) : (
+                      [...Array(9)].map((_, i) => (
+                        <div key={i} className="aspect-square bg-neutral-900 animate-pulse" />
+                      ))
+                    )}
+                    {uploadedPhotos.length > 0 && uploadedPhotos.length < 9 && (
+                      <div className="aspect-square bg-neutral-900 animate-pulse" />
+                    )}
+                  </div>
                 </div>
 
-                {/* Navbar (Bottom) */}
-                <nav className="h-[60px] bg-black border-t border-white/10 flex items-center justify-around fixed bottom-0 left-0 right-0 z-[100]">
-                  <button className="p-2"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.97 2.59a1.5 1.5 0 0 0-1.94 0l-7.5 6.363A1.5 1.5 0 0 0 3 10.097V19.5A1.5 1.5 0 0 0 4.5 21h4.75a.75.75 0 0 0 .75-.75V14.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v5.75c0 .414.336.75.75.75h4.75a1.5 1.5 0 0 0 1.5-1.5v-9.403a1.5 1.5 0 0 0-.53-1.144l-7.5-6.363Z" /></svg></button>
-                  <button className="p-2 text-neutral-400"><Search className="w-6 h-6" /></button>
-                  <button className="p-2 text-neutral-400"><Plus className="w-6 h-6" /></button>
-                  <button className="p-2 text-neutral-400"><Clapperboard className="w-6 h-6" /></button>
-                  <button className="w-8 h-8 rounded-full border-2 border-white overflow-hidden relative">
-                    {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
-                  </button>
-                </nav>
+                {/* Floating Music Player (Instagram Style) */}
+                {musicData && (
+                  <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] bg-neutral-900/90 backdrop-blur-xl border border-neutral-800 rounded-2xl p-3 shadow-2xl z-[100] animate-in slide-in-from-bottom-4 duration-500">
+                    <div className="flex items-center gap-3">
+                      <div className="p-[1px] rounded-lg ig-gradient shrink-0">
+                        <div className="w-10 h-10 rounded-lg overflow-hidden relative bg-black">
+                          <Image src={uploadedPhotos[0] || musicData.thumb} fill className="object-cover" alt="" />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold truncate text-white">{musicData.title}</p>
+                        <p className="text-[10px] text-neutral-400 truncate">{pageTitle || 'Nossa História'}</p>
+                      </div>
+                      <button 
+                        onClick={() => setIsAudioPlaying(!isAudioPlaying)}
+                        className="text-white hover:scale-110 transition-transform"
+                      >
+                        {isAudioPlaying ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                        ) : (
+                          <Play className="w-5 h-5 fill-current" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="mt-2 h-0.5 bg-neutral-800 rounded-full overflow-hidden">
+                      <div className="h-full ig-gradient" style={{ width: isAudioPlaying ? '45%' : '0%', transition: 'width 0.5s ease' }}></div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Invisible Music Engine for Instagram */}
+                {musicData && (
+                  <MusicPlayer 
+                    musicData={musicData} 
+                    isAutoPlay={isAudioPlaying} 
+                    hideUI 
+                    onStateChange={(playing) => setIsAudioPlaying(playing)}
+                  />
+                )}
               </div>
             ) : selectedTheme === 'netflix' ? (
               /* THEME NETFLIX */
@@ -812,7 +808,7 @@ export function DeviceMockup({
                   </div>
                   {activeTab === ('episodios' as any) ? (
                     <div className="space-y-6">{uploadedPhotos.map((photo, i) => (
-                      <div key={i} className="flex gap-3 items-center" onClick={() => { setActiveHeroIndex(i); setIsSpotifyMusicPlaying(true); }}>
+                      <div key={i} className="flex gap-3 items-center" onClick={() => { setActiveHeroIndex(i); setIsAudioPlaying(true); }}>
                         <div className="w-32 h-[72px] bg-[#2a2a2a] rounded-md relative overflow-hidden"><Image src={photo} fill className="object-cover" alt={`Ep ${i}`} /></div>
                         <div className="flex-1 min-w-0"><p className="text-xs font-bold text-white mb-0.5">{(i + 1)}. Memória {(i + 1)}</p><p className="text-[10px] text-neutral-500 leading-tight">Capítulo especial da nossa história.</p></div>
                       </div>
@@ -888,7 +884,7 @@ export function DeviceMockup({
                       <button className="text-neutral-400 hover:text-white"><Shuffle className="w-6 h-6" /></button>
                       <button 
                         onClick={() => {
-                          setIsSpotifyMusicPlaying(true);
+                          setIsAudioPlaying(true);
                           setShowSpotifyFullscreen(true);
                         }}
                         className="w-14 h-14 bg-[#1DB954] rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-transform"
@@ -948,7 +944,7 @@ export function DeviceMockup({
                                 className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" 
                                 onClick={() => { 
                                   setActiveHeroIndex(i); 
-                                  setIsSpotifyMusicPlaying(true);
+                                  setIsAudioPlaying(true);
                                   setShowSpotifyFullscreen(true); 
                                 }}
                               >
@@ -967,7 +963,7 @@ export function DeviceMockup({
                               </div>
                             ))
                           ) : (
-                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" onClick={() => { setIsSpotifyMusicPlaying(true); setShowSpotifyFullscreen(true); }}>
+                            <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" onClick={() => { setIsAudioPlaying(true); setShowSpotifyFullscreen(true); }}>
                               <div className="w-4 flex justify-center items-center">
                                 <span className="text-neutral-500 text-sm font-bold group-hover:hidden">1</span>
                                 <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
@@ -1062,10 +1058,10 @@ export function DeviceMockup({
                               className="text-white hover:scale-105 active:scale-95 transition-transform" 
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setIsSpotifyMusicPlaying(!isSpotifyMusicPlaying);
+                                setIsAudioPlaying(!isAudioPlaying);
                               }}
                             >
-                                {isSpotifyMusicPlaying ? (
+                                {isAudioPlaying ? (
                                   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                                       <rect x="5" y="4" width="4" height="16" rx="1"></rect>
                                       <rect x="15" y="4" width="4" height="16" rx="1"></rect>
@@ -1091,9 +1087,9 @@ export function DeviceMockup({
                 {musicData && (
                   <MusicPlayer 
                     musicData={musicData} 
-                    isAutoPlay={isSpotifyMusicPlaying} 
+                    isAutoPlay={isAudioPlaying} 
                     hideUI 
-                    onStateChange={(playing) => setIsSpotifyMusicPlaying(playing)}
+                    onStateChange={(playing) => setIsAudioPlaying(playing)}
                   />
                 )}
               </div>
