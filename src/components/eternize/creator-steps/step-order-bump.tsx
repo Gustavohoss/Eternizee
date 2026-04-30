@@ -150,19 +150,24 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
 
       {/* Module Preview Dialog */}
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[300]">
+        <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[300] [&>button]:hidden">
           <DialogTitle className="sr-only">Visualização do Módulo</DialogTitle>
           <DialogDescription className="sr-only">Visualize como este módulo exclusivo aparecerá na sua página.</DialogDescription>
           
-          <div className="flex-1 overflow-y-auto custom-scroll relative">
-            <div className="sticky top-0 right-0 z-[350] flex justify-end p-4 pointer-events-none">
-              <DialogClose asChild>
-                <Button className="pointer-events-auto w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 hover:bg-black/80">
-                  <X className="w-5 h-5" />
-                </Button>
-              </DialogClose>
-            </div>
-            <MemoriesModulePreview />
+          <div className="relative h-full flex flex-col">
+             {/* Close Button Container - Absolute to float over content without taking layout space */}
+             <div className="absolute top-6 right-6 z-[350]">
+                <DialogClose asChild>
+                  <Button className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 hover:bg-black/80 flex items-center justify-center text-white shadow-2xl transition-all active:scale-95">
+                    <X className="w-5 h-5" />
+                  </Button>
+                </DialogClose>
+             </div>
+
+             {/* Scrollable Content */}
+             <div className="flex-1 overflow-y-auto custom-scroll">
+                <MemoriesModulePreview />
+             </div>
           </div>
         </DialogContent>
       </Dialog>
