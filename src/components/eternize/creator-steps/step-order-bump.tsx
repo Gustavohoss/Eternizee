@@ -2,11 +2,12 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import { Layout, ChevronLeft, ChevronRight, Zap, Flame, ExternalLink, X, CreditCard } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Zap, Flame, ExternalLink, X, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { MemoriesModulePreview } from '@/components/eternize/memories-module-preview';
+import { AchievementsModulePreview } from '@/components/eternize/achievements-module-preview';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 
@@ -23,6 +24,12 @@ const MODULES: ModuleItem[] = [
     title: 'Memórias',
     description: 'Uma linha do tempo interativa dos momentos mais especiais do casal, com fotos e música por memória.',
     image: 'https://picsum.photos/seed/memories-module/600/800'
+  },
+  {
+    id: 'conquistas',
+    title: 'Conquistas',
+    description: 'Desbloqueie marcos exclusivos conforme o tempo passa. Mostre ao mundo o nível do amor de vocês.',
+    image: 'https://picsum.photos/seed/achievements-module/600/800'
   },
   {
     id: 'playlist',
@@ -47,7 +54,7 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'center' });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isPackEnabled, setIsPackEnabled] = useState(true);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewModuleId, setPreviewModuleId] = useState<string | null>(null);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -63,6 +70,22 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
+
+  const renderPreviewContent = () => {
+    switch (previewModuleId) {
+      case 'memorias':
+        return <MemoriesModulePreview />;
+      case 'conquistas':
+        return <AchievementsModulePreview />;
+      default:
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-white/20 p-12 text-center">
+            <CreditCard className="w-12 h-12 mb-4 opacity-10" />
+            <p className="font-black uppercase tracking-widest text-xs">Prévia em desenvolvimento</p>
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -107,7 +130,7 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
                       {module.description}
                     </p>
                     <Button 
-                      onClick={() => setIsPreviewOpen(true)}
+                      onClick={() => setPreviewModuleId(module.id)}
                       variant="outline" 
                       className="w-full bg-white/5 border-white/10 rounded-xl h-10 text-[10px] font-bold uppercase tracking-wider hover:bg-white/10 flex items-center justify-center gap-2"
                     >
@@ -149,13 +172,12 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
       </div>
 
       {/* Module Preview Dialog */}
-      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+      <Dialog open={!!previewModuleId} onOpenChange={(open) => !open && setPreviewModuleId(null)}>
         <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[300] [&>button]:hidden">
           <DialogTitle className="sr-only">Visualização do Módulo</DialogTitle>
           <DialogDescription className="sr-only">Visualize como este módulo exclusivo aparecerá na sua página.</DialogDescription>
           
           <div className="relative h-full flex flex-col">
-             {/* Close Button Container - Absolute to float over content without taking layout space */}
              <div className="absolute top-6 right-6 z-[350]">
                 <DialogClose asChild>
                   <Button className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 hover:bg-black/80 flex items-center justify-center text-white shadow-2xl transition-all active:scale-95">
@@ -164,9 +186,8 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
                 </DialogClose>
              </div>
 
-             {/* Scrollable Content */}
              <div className="flex-1 overflow-y-auto custom-scroll">
-                <MemoriesModulePreview />
+                {renderPreviewContent()}
              </div>
           </div>
         </DialogContent>
