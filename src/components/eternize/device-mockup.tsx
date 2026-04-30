@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -203,7 +204,7 @@ export function DeviceMockup({
   }, [emblaApi, onSelect]);
 
   const totalDays = useMemo(() => {
-    if (!date) return 0;
+    if (!date) return 26; // Default to match user's image reference if no date picked
     const now = new Date();
     if (now < date) return 0;
     return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
@@ -480,7 +481,7 @@ export function DeviceMockup({
                 <div className="px-4 py-4 bg-[#141414]">
                   <div className="grid grid-cols-3 gap-2">
                     <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{timeDiff?.years || 0}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Anos juntos</p></div>
-                    <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{totalDays || 0}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias de história</p></div>
+                    <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{totalDays.toLocaleString('pt-BR') || 26}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias de história</p></div>
                     <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{date ? `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}` : '06/04'}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Data especial</p></div>
                   </div>
                 </div>
@@ -529,17 +530,17 @@ export function DeviceMockup({
 
                 <div className={cn("flex-1 transition-opacity duration-500", showSpotifyAudioOverlay ? "opacity-0" : "opacity-100")}>
                   {/* Hero Section */}
-                  <section className="relative h-[380px] flex items-end">
+                  <section className="relative h-[420px] flex items-end">
                       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #124d2c 0%, #121212 100%)' }}></div>
                       
                       <div className="relative z-10 px-6 pb-6 w-full">
                           <div className="flex items-center gap-2 mb-2">
-                              <div className="bg-[#1DB954] p-0.5 rounded-full flex items-center justify-center">
-                                  <Check className="w-3 h-3 text-black" strokeWidth={4} />
+                              <div className="bg-[#1DB954] w-4 h-4 rounded-full flex items-center justify-center">
+                                  <Check className="w-2.5 h-2.5 text-black" strokeWidth={4} />
                               </div>
                               <span className="text-[11px] font-bold text-white">Artista verificado</span>
                           </div>
-                          <p className="text-sm font-bold text-white mb-2">
+                          <p className="text-sm font-bold text-white mb-1">
                             {totalDays.toLocaleString('pt-BR')} dias de história
                           </p>
                           <h1 style={titleStyle} className="text-[44px] font-black text-white leading-[0.9] mb-4 tracking-tighter break-words">
@@ -559,7 +560,7 @@ export function DeviceMockup({
                              )}
                           </div>
                           <div className="flex items-center gap-3">
-                              <button onClick={() => setIsLiked(!isLiked)} className={cn("bg-transparent border rounded-full px-5 py-1.5 text-[10px] font-bold transition-all active:scale-95", isLiked ? "border-[#1DB954] text-[#1DB954]" : "border-neutral-500 text-white")}>
+                              <button onClick={() => setIsLiked(!isLiked)} className={cn("bg-transparent border border-neutral-500 rounded-full px-5 py-1.5 text-[10px] font-bold transition-all active:scale-95", isLiked ? "border-[#1DB954] text-[#1DB954]" : "text-white")}>
                                 {isLiked ? 'Seguindo' : 'Seguir'}
                               </button>
                               <button className="text-neutral-400 text-2xl font-bold pb-2">...</button>
@@ -641,7 +642,7 @@ export function DeviceMockup({
                              <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Dias de<br/>História</p>
                           </div>
                           <div className="bg-[#181818] rounded-xl p-5 text-center border border-white/5 shadow-xl">
-                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{date ? format(date, 'dd/MM') : '00/00'}</p>
+                             <p className="text-3xl font-black text-[#1DB954] leading-none mb-2">{date ? format(date, 'dd/MM') : '06/04'}</p>
                              <p className="text-[9px] text-white/30 font-black uppercase tracking-widest leading-tight">Desde<br/>sempre</p>
                           </div>
                        </div>
