@@ -442,7 +442,7 @@ export function DeviceMockup({
 
           <div className="relative z-10 flex flex-col h-full px-6 pt-4 no-scrollbar overflow-y-auto">
             {/* Header */}
-            <div className="flex items-center justify-between mb-8 md:mb-10 shrink-0">
+            <div className="flex items-center justify-between mb-10 shrink-0">
                <button onClick={() => setShowSpotifyFullscreen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white active:scale-90 transition-transform">
                   <ChevronDown className="w-6 h-6 stroke-[3]" />
                </button>
@@ -455,8 +455,8 @@ export function DeviceMockup({
                </button>
             </div>
 
-            {/* Album Cover with Mask */}
-            <div className="relative aspect-[16/6] w-full mb-8 md:mb-12 shrink-0 group">
+            {/* Album Cover with Mask - FIXED ASPECT RATIO */}
+            <div className="relative aspect-[16/7] w-full mb-12 shrink-0 group">
               <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
                 {uploadedPhotos.length > 0 ? (
                   <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Album Cover" />
@@ -464,14 +464,14 @@ export function DeviceMockup({
                   <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><ImageIcon className="w-12 h-12 text-white/10" /></div>
                 )}
               </div>
-              {/* Bottom Mask Style from ref */}
-              <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-[#121212]/80 via-transparent to-transparent rounded-b-2xl" />
+              {/* Corrected Image Mask from ref */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
 
             {/* Título e Like */}
             <div className="flex items-center justify-between mb-8 shrink-0">
                <div className="min-w-0 pr-4">
-                  <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
+                  <h2 className="text-3xl font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
                   <p className="text-base font-bold text-white/60 truncate font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
                </div>
                <button onClick={() => setIsLiked(!isLiked)} className={cn("transition-all duration-300", isLiked ? "text-[#1DB954]" : "text-white/80")}>
