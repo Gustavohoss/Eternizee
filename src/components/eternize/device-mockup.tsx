@@ -432,7 +432,7 @@ export function DeviceMockup({
               <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-[#121212]/80 via-transparent to-transparent rounded-b-2xl" />
             </div>
 
-            {/* Title and Heart */}
+            {/* Título e Like */}
             <div className="flex items-center justify-between mb-8 shrink-0">
                <div className="min-w-0 pr-4">
                   <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tighter truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
@@ -776,9 +776,11 @@ export function DeviceMockup({
                       onClick={() => setShowSpotifyFullscreen(true)}
                     >
                       <div className="flex items-center">
-                        {/* Capa da Música */}
+                        {/* Capa da Música (Usa a foto do usuário se disponível) */}
                         <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-lg mr-3 relative">
-                            {musicData.thumb ? (
+                            {uploadedPhotos.length > 0 ? (
+                              <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Capa" />
+                            ) : musicData.thumb ? (
                               <img src={musicData.thumb} alt="Capa" className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><Music2 className="w-5 h-5 text-white/20" /></div>
