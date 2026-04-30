@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -152,13 +153,15 @@ export function DeviceMockup({
   const [storyProgress, setStoryProgress] = useState(0);
   const [isStoryPaused, setIsStoryPaused] = useState(false);
   const [isFading, setIsFading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'musicas' | 'eventos'>('musicas');
+  const [activeTab, setActiveTab] = useState<'músicas' | 'eventos' | 'loja'>('músicas');
   const [experienceAutoPlay, setExperienceAutoPlay] = useState(false);
   const [showSpotifyAudioOverlay, setShowSpotifyAudioOverlay] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isInList, setIsInList] = useState(false);
 
   useEffect(() => {
     if (selectedTheme === 'spotify') {
-      setActiveTab('musicas');
+      setActiveTab('músicas');
     } else {
       setActiveTab('episodios' as any);
     }
@@ -292,15 +295,12 @@ export function DeviceMockup({
 
   const titleStyle: React.CSSProperties = { 
     color: titleColor,
-    fontFamily: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? "'Inter', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
+    fontFamily: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
     fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify') ? '900' : (titleIsBold ? '700' : '400'),
     textShadow: titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none',
   };
 
   const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-  const [isLiked, setIsLiked] = useState(false);
-  const [isInList, setIsInList] = useState(false);
 
   return (
     <div className={cn(
@@ -516,11 +516,11 @@ export function DeviceMockup({
                 
                 {/* Header fixo com Logo e Perfil */}
                 <div className="absolute top-6 left-0 right-0 z-30 px-6 flex items-center justify-between pointer-events-none">
-                  <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                  <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
-                    <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth={2.5} strokeLinecap="round" fill="none"></path>
-                    <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth={2.5} strokeLinecap="round" fill="none"></path>
-                    <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth={2.5} strokeLinecap="round" fill="none"></path>
+                    <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
+                    <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
+                    <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
                   </svg>
                   <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">HZ</div>
                 </div>
@@ -528,24 +528,32 @@ export function DeviceMockup({
                 <div className="flex-1 overflow-y-auto no-scrollbar relative">
                   {/* Banner do Artista */}
                   <section className="relative h-[400px]">
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #0d4a2a 0%, #121212 100%)' }}></div>
+                    <div className="absolute inset-0">
+                      {uploadedPhotos.length > 0 ? (
+                        <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="Hero" priority />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#0d4a2a] to-[#121212]" />
+                      )}
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
                     <div className="absolute bottom-6 left-6 right-6">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="bg-[#1DB954] w-5 h-5 rounded-full flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 text-black" strokeWidth={4} />
+                          <Check className="w-3.5 h-3.5 text-white" strokeWidth={4} />
                         </div>
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
-                      <p className="text-neutral-300 text-sm font-bold font-['DM_Sans'] mb-1">{totalDays.toLocaleString('pt-BR')} dias de história</p>
                       <h1 className="text-white text-5xl font-black leading-[0.9] tracking-tighter mb-4 break-words font-['DM_Sans']">
                         {pageTitle || 'Nossa Playlist'}
                       </h1>
+                      <p className="text-neutral-300 text-sm font-bold font-['DM_Sans']">
+                        {totalDays.toLocaleString('pt-BR')} dias de história
+                      </p>
                     </div>
                   </section>
 
                   {/* Controles de Ação */}
-                  <div className="px-6 py-4 flex items-center gap-6">
+                  <div className="px-6 py-4 flex items-center gap-4">
                     <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg relative overflow-hidden shrink-0">
                         {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
                     </div>
@@ -554,7 +562,7 @@ export function DeviceMockup({
                     </button>
                     <button className="text-neutral-400 hover:text-white"><MoreHorizontal className="w-6 h-6" /></button>
                     
-                    <div className="flex-1 flex justify-end items-center gap-6">
+                    <div className="flex-1 flex justify-end items-center gap-5">
                       <button className="text-neutral-400 hover:text-white"><Shuffle className="w-6 h-6" /></button>
                       <button 
                         onClick={() => { setShowSpotifyAudioOverlay(true); setExperienceAutoPlay(true); }}
@@ -565,39 +573,44 @@ export function DeviceMockup({
                     </div>
                   </div>
 
+                  {/* Tab Navigation */}
+                  <div className="px-6 mb-6">
+                    <div className="flex gap-8 border-white/5 border-b pb-2">
+                        {['Músicas', 'Eventos', 'Loja'].map((tab) => (
+                          <button 
+                            key={tab}
+                            onClick={() => setActiveTab(tab.toLowerCase() as any)} 
+                            className="relative"
+                          >
+                            <span className={cn(
+                              "font-bold text-sm transition-colors", 
+                              activeTab === tab.toLowerCase() ? "text-white" : "text-neutral-400"
+                            )}>{tab}</span>
+                            {activeTab === tab.toLowerCase() && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+
                   {/* Grid de Estatísticas (Cards Rápidos) */}
-                  <div className="px-6 mb-8 mt-2">
+                  <div className="px-6 mb-8">
                     <div className="grid grid-cols-3 gap-2">
                         <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
                             <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
-                            <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Anos juntos</p>
+                            <p className="text-[8px] text-neutral-400 uppercase font-bold tracking-wider">Anos juntos</p>
                         </div>
                         <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
                             <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
-                            <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Dias</p>
+                            <p className="text-[8px] text-neutral-400 uppercase font-bold tracking-wider">Dias de história</p>
                         </div>
                         <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
                             <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '06/04'}</p>
-                            <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Desde</p>
+                            <p className="text-[8px] text-neutral-400 uppercase font-bold tracking-wider">Desde</p>
                         </div>
                     </div>
                   </div>
 
-                  {/* Tab Navigation */}
-                  <div className="px-6 mb-8">
-                    <div className="flex gap-8 border-white/5 border-b pb-2">
-                        <button onClick={() => setActiveTab('musicas')} className="relative">
-                            <span className={cn("font-bold text-sm transition-colors", activeTab === 'musicas' ? "text-white" : "text-neutral-400")}>Músicas</span>
-                            {activeTab === 'musicas' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
-                        </button>
-                        <button onClick={() => setActiveTab('eventos')} className="relative">
-                            <span className={cn("font-bold text-sm transition-colors", activeTab === 'eventos' ? "text-white" : "text-neutral-400")}>Eventos</span>
-                            {activeTab === 'eventos' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
-                        </button>
-                    </div>
-                  </div>
-
-                  {activeTab === 'musicas' ? (
+                  {activeTab === 'músicas' && (
                     <>
                       {/* Seção Populares */}
                       <section className="px-6 mb-8">
@@ -605,7 +618,7 @@ export function DeviceMockup({
                         <div className="space-y-4">
                           {uploadedPhotos.length > 0 ? (
                             uploadedPhotos.map((photo, i) => (
-                              <div key={i} className="flex items-center gap-4 group">
+                              <div key={i} className="flex items-center gap-4 group" onClick={() => setActiveHeroIndex(i)}>
                                 <span className="text-neutral-500 text-sm w-4">{i + 1}</span>
                                 <div className="w-12 h-12 bg-neutral-800 rounded shadow-lg relative overflow-hidden">
                                   <Image src={photo} fill className="object-cover" alt="" />
@@ -652,20 +665,6 @@ export function DeviceMockup({
                         </section>
                       )}
                     </>
-                  ) : (
-                    <div className="px-6 mb-8 animate-in fade-in duration-500">
-                        <h2 className="text-white text-xl font-black mb-4">Detalhes da História</h2>
-                        <div className="space-y-4">
-                            <div className="bg-[#181818] rounded-xl p-4 border border-white/5">
-                                <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Data de Início</p>
-                                <p className="text-white text-lg font-black">{date ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : 'Selecione uma data'}</p>
-                            </div>
-                            <div className="bg-[#181818] rounded-xl p-4 border border-white/5">
-                                <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Localização</p>
-                                <p className="text-white text-lg font-black">Brasil</p>
-                            </div>
-                        </div>
-                    </div>
                   )}
                 </div>
 
