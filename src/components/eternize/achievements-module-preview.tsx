@@ -85,11 +85,11 @@ function AchievementCard({
         <div className="text-right">
           <p className="text-[8px] font-black uppercase tracking-widest" style={{ color }}>Nível {level}</p>
           <div className="flex gap-0.5 mt-0.5 justify-end">
-            {[...Array(stars)].map((_, i) => (
+            {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                className="w-2 h-2 fill-current" 
-                style={{ color }}
+                className={cn("w-2 h-2 transition-colors", i < stars ? "fill-current" : "fill-white/5 text-transparent")} 
+                style={i < stars ? { color } : {}}
               />
             ))}
           </div>
@@ -136,12 +136,68 @@ export function AchievementsModulePreview() {
             <div className="w-12 h-12 rounded-2xl bg-[#f0c060]/10 flex items-center justify-center text-3xl border border-[#f0c060]/20">🏆</div>
             <div className="flex-1">
                 <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl font-black text-[#f0c060] tracking-tighter">11</span>
-                    <span className="text-xs font-bold text-white/40 uppercase tracking-widest">de 19 Conquistadas</span>
+                    <span className="text-2xl font-black text-[#f0c060] tracking-tighter">15</span>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-widest">de 23 Conquistadas</span>
                 </div>
                 <div className="w-full h-1.5 bg-white/5 rounded-full mt-2.5 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-[#f0c060] to-[#fb923c] shadow-[0_0_10px_rgba(240,192,96,0.3)]" style={{ width: '58%' }}></div>
+                    <div className="h-full bg-gradient-to-r from-[#f0c060] to-[#fb923c] shadow-[0_0_10px_rgba(240,192,96,0.3)]" style={{ width: '65%' }}></div>
                 </div>
+            </div>
+        </div>
+
+        {/* Seção: Perfil */}
+        <div className="mb-10">
+            <div className="flex items-center gap-3 mb-6 px-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 whitespace-nowrap">Perfil</span>
+                <div className="flex-1 h-px bg-white/5"></div>
+                <span className="text-[10px] font-black text-white/30">4/4</span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3.5">
+                <AchievementCard 
+                  level={1}
+                  stars={1}
+                  title="Autor de Histórias"
+                  description="Escreveu a própria história de amor"
+                  icon="✍️"
+                  currentValue={1}
+                  targetValue={1}
+                  color="#d946ef"
+                  unit="ação"
+                />
+                <AchievementCard 
+                  level={1}
+                  stars={1}
+                  title="Nossa Música"
+                  description="Escolheu a trilha sonora da história"
+                  icon="🎵"
+                  currentValue={1}
+                  targetValue={1}
+                  color="#22c55e"
+                  unit="ação"
+                />
+                <AchievementCard 
+                  level={1}
+                  stars={1}
+                  title="Em Fotos"
+                  description="Imortalizou momentos em fotos"
+                  icon="🖼️"
+                  currentValue={1}
+                  targetValue={1}
+                  color="#f97316"
+                  unit="ação"
+                />
+                <AchievementCard 
+                  level={4}
+                  stars={4}
+                  title="Tudo Perfeito"
+                  description="Completou todos os detalhes da página"
+                  icon="⭐"
+                  currentValue={1}
+                  targetValue={1}
+                  color="#eab308"
+                  unit="ação"
+                />
             </div>
         </div>
 
