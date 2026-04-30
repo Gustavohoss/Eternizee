@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -107,7 +106,7 @@ export function MusicPlayer({
 
     return () => {
       stopTimer();
-      if (playerRef.current && playerRef.current.destroy) {
+      if (playerRef.current && typeof playerRef.current.destroy === 'function') {
         playerRef.current.destroy();
         playerRef.current = null;
       }
@@ -118,18 +117,20 @@ export function MusicPlayer({
     if (!isReady || !playerRef.current) return;
 
     if (musicData?.id) {
-      const currentPlayerId = playerRef.current.getVideoData?.().video_id;
+      const currentPlayerId = typeof playerRef.current.getVideoData === 'function' ? playerRef.current.getVideoData().video_id : null;
       if (currentPlayerId !== musicData.id) {
-        playerRef.current.loadVideoById(musicData.id);
-        setCurrentTime(0);
+        if (typeof playerRef.current.loadVideoById === 'function') {
+          playerRef.current.loadVideoById(musicData.id);
+          setCurrentTime(0);
+        }
       }
       
       if (isAutoPlay) {
-        playerRef.current.unMute();
-        playerRef.current.setVolume(100);
-        playerRef.current.playVideo();
+        if (typeof playerRef.current.unMute === 'function') playerRef.current.unMute();
+        if (typeof playerRef.current.setVolume === 'function') playerRef.current.setVolume(100);
+        if (typeof playerRef.current.playVideo === 'function') playerRef.current.playVideo();
       } else {
-        playerRef.current.pauseVideo();
+        if (typeof playerRef.current.pauseVideo === 'function') playerRef.current.pauseVideo();
       }
     }
   }, [musicData?.id, isReady, isAutoPlay]);
@@ -137,7 +138,7 @@ export function MusicPlayer({
   const startTimer = () => {
     stopTimer();
     timerRef.current = setInterval(() => {
-      if (playerRef.current && playerRef.current.getCurrentTime) {
+      if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
         setCurrentTime(playerRef.current.getCurrentTime());
       }
     }, 500);
@@ -151,14 +152,14 @@ export function MusicPlayer({
     e.stopPropagation();
     if (!playerRef.current || !isReady) return;
     
-    playerRef.current.unMute();
-    playerRef.current.setVolume(100);
+    if (typeof playerRef.current.unMute === 'function') playerRef.current.unMute();
+    if (typeof playerRef.current.setVolume === 'function') playerRef.current.setVolume(100);
 
-    const state = playerRef.current.getPlayerState?.();
+    const state = typeof playerRef.current.getPlayerState === 'function' ? playerRef.current.getPlayerState() : -1;
     if (state === 1) {
-      playerRef.current.pauseVideo();
+      if (typeof playerRef.current.pauseVideo === 'function') playerRef.current.pauseVideo();
     } else {
-      playerRef.current.playVideo();
+      if (typeof playerRef.current.playVideo === 'function') playerRef.current.playVideo();
     }
   };
 
@@ -168,7 +169,9 @@ export function MusicPlayer({
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const perc = x / rect.width;
-    playerRef.current.seekTo(duration * perc);
+    if (typeof playerRef.current.seekTo === 'function') {
+      playerRef.current.seekTo(duration * perc);
+    }
   };
 
   const formatTime = (time: number) => {

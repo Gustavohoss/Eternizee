@@ -79,7 +79,7 @@ export function StepMusic({
   // Preview Player Logic
   useEffect(() => {
     if (!musicData?.id) {
-      if (previewPlayerRef.current) {
+      if (previewPlayerRef.current && typeof previewPlayerRef.current.pauseVideo === 'function') {
         previewPlayerRef.current.pauseVideo();
       }
       setIsPreviewPlaying(false);
@@ -111,9 +111,11 @@ export function StepMusic({
       if (!window.YT || !window.YT.Player || !document.getElementById(previewContainerId.current)) return;
 
       if (previewPlayerRef.current) {
-        previewPlayerRef.current.loadVideoById(musicData.id);
-        previewPlayerRef.current.pauseVideo();
-        setIsPreviewPlaying(false);
+        if (typeof previewPlayerRef.current.loadVideoById === 'function') {
+          previewPlayerRef.current.loadVideoById(musicData.id);
+          previewPlayerRef.current.pauseVideo();
+          setIsPreviewPlaying(false);
+        }
         return;
       }
 
@@ -143,7 +145,7 @@ export function StepMusic({
     loadYoutubeApi();
 
     return () => {
-      if (previewPlayerRef.current && previewPlayerRef.current.pauseVideo) {
+      if (previewPlayerRef.current && typeof previewPlayerRef.current.pauseVideo === 'function') {
         previewPlayerRef.current.pauseVideo();
       }
     };
@@ -155,14 +157,14 @@ export function StepMusic({
     
     if (!previewPlayerRef.current || !isPreviewReady) return;
 
-    previewPlayerRef.current.unMute();
-    previewPlayerRef.current.setVolume(100);
+    if (typeof previewPlayerRef.current.unMute === 'function') previewPlayerRef.current.unMute();
+    if (typeof previewPlayerRef.current.setVolume === 'function') previewPlayerRef.current.setVolume(100);
 
-    const state = previewPlayerRef.current.getPlayerState?.();
+    const state = typeof previewPlayerRef.current.getPlayerState === 'function' ? previewPlayerRef.current.getPlayerState() : -1;
     if (state === 1) {
-      previewPlayerRef.current.pauseVideo();
+      if (typeof previewPlayerRef.current.pauseVideo === 'function') previewPlayerRef.current.pauseVideo();
     } else {
-      previewPlayerRef.current.playVideo();
+      if (typeof previewPlayerRef.current.playVideo === 'function') previewPlayerRef.current.playVideo();
     }
   };
 
@@ -257,7 +259,7 @@ export function StepMusic({
                 <img src={musicData.thumb} className={cn("w-full h-full object-cover transition-opacity", isPreviewPlaying ? "opacity-40" : "opacity-80")} alt="" />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/card:bg-black/40 transition-all">
                     {!isPreviewReady ? (
-                      <Loader2 className="w-6 h-6 text-white animate-spin" />
+                      <div className="animate-spin h-6 w-6 border-2 border-white border-t-transparent rounded-full" />
                     ) : isPreviewPlaying ? (
                       <Pause className="w-6 h-6 text-white fill-white" />
                     ) : (
@@ -273,7 +275,9 @@ export function StepMusic({
 
               <button 
                 onClick={() => {
-                  if (previewPlayerRef.current) previewPlayerRef.current.pauseVideo();
+                  if (previewPlayerRef.current && typeof previewPlayerRef.current.pauseVideo === 'function') {
+                    previewPlayerRef.current.pauseVideo();
+                  }
                   onMusicSelect(undefined);
                 }}
                 className="p-2 hover:bg-white/5 rounded-full text-white/30 hover:text-white transition-colors"
