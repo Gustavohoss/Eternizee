@@ -495,7 +495,7 @@ export function DeviceMockup({
                   </div>
                 </div>
                 <div className="px-4 mt-2 pb-20">
-                  <div className="flex gap-8 border-b border-neutral-800 mb-4">
+                  <div className="flex gap-8 border-neutral-800 border-b mb-4">
                     <button onClick={() => setActiveTab('episodios' as any)} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === ('episodios' as any) ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Episódios</button>
                     <button onClick={() => setActiveTab('detalhes' as any)} className={cn("pb-3 text-sm font-bold tracking-tight transition-all", activeTab === ('detalhes' as any) ? "border-b-[3px] border-[#e50914] text-white" : "text-neutral-500")}>Detalhes</button>
                   </div>
@@ -538,15 +538,18 @@ export function DeviceMockup({
                         </div>
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
+                      <p className="text-neutral-300 text-sm font-bold mb-2">{totalDays.toLocaleString('pt-BR')} dias de história</p>
                       <h1 className="text-white text-5xl font-black leading-none tracking-tighter mb-4 break-words">
                         {pageTitle || 'Teste teste'}
                       </h1>
-                      <p className="text-neutral-300 text-sm font-bold">{totalDays.toLocaleString('pt-BR')} dias de história</p>
                     </div>
                   </section>
 
                   {/* Controles de Ação */}
                   <div className="px-6 py-4 flex items-center gap-6">
+                    <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg relative overflow-hidden shrink-0">
+                        {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
+                    </div>
                     <button onClick={() => setIsLiked(!isLiked)} className="border border-neutral-500 rounded-full px-4 py-1.5 text-xs font-bold text-white hover:border-white transition-colors">
                       {isLiked ? 'Seguindo' : 'Seguir'}
                     </button>
@@ -563,9 +566,27 @@ export function DeviceMockup({
                     </div>
                   </div>
 
+                  {/* Grid de Estatísticas (Restauração solicitada) */}
+                  <div className="px-6 mb-8">
+                    <div className="grid grid-cols-3 gap-2">
+                        <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                            <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
+                            <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Anos juntos</p>
+                        </div>
+                        <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                            <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
+                            <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Dias</p>
+                        </div>
+                        <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
+                            <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '06/04'}</p>
+                            <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Desde</p>
+                        </div>
+                    </div>
+                  </div>
+
                   {/* Tab Navigation */}
                   <div className="px-6 mb-8">
-                    <div className="flex gap-8 border-b border-white/5 pb-2">
+                    <div className="flex gap-8 border-white/5 border-b pb-2">
                         <button onClick={() => setActiveTab('musicas')} className="relative">
                             <span className={cn("font-bold text-sm transition-colors", activeTab === 'musicas' ? "text-white" : "text-neutral-400")}>Músicas</span>
                             {activeTab === 'musicas' && <div className="absolute -bottom-[10px] left-0 w-full h-[3px] bg-[#1DB954]"></div>}
@@ -634,19 +655,15 @@ export function DeviceMockup({
                     </>
                   ) : (
                     <div className="px-6 mb-8 animate-in fade-in duration-500">
-                        <h2 className="text-white text-xl font-black mb-4">Estatísticas</h2>
-                        <div className="grid grid-cols-3 gap-2">
-                            <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                                <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{timeDiff?.years || 0}</p>
-                                <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Anos juntos</p>
+                        <h2 className="text-white text-xl font-black mb-4">Detalhes da História</h2>
+                        <div className="space-y-4">
+                            <div className="bg-[#181818] rounded-xl p-4 border border-white/5">
+                                <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Data de Início</p>
+                                <p className="text-white text-lg font-black">{date ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : 'Selecione uma data'}</p>
                             </div>
-                            <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                                <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{totalDays.toLocaleString('pt-BR')}</p>
-                                <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Dias</p>
-                            </div>
-                            <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
-                                <p className="font-black text-xl text-[#1DB954] leading-none mb-1">{date ? format(date, 'dd/MM') : '06/04'}</p>
-                                <p className="text-[8px] text-neutral-500 uppercase font-bold tracking-wider">Desde</p>
+                            <div className="bg-[#181818] rounded-xl p-4 border border-white/5">
+                                <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Localização</p>
+                                <p className="text-white text-lg font-black">Brasil</p>
                             </div>
                         </div>
                     </div>
