@@ -84,7 +84,7 @@ export default function CriadorApp() {
   const [musicTextColor, setMusicTextColor] = useState<string>('#ffffff');
   const [musicHasNeon, setMusicHasNeon] = useState<boolean>(false);
   const [musicNeonStrength, setMusicNeonStrength] = useState<number>(15);
-  const [isMusicAutoPlay, setIsMusicAutoPlay] = useState<boolean>(true);
+  const [isMusicAutoPlay, setIsMusicAutoPlay] = useState<boolean>(false);
 
   // Location States
   const [locationQuery, setLocationQuery] = useState('');
@@ -94,6 +94,13 @@ export default function CriadorApp() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Scroll to top on step change
+  useEffect(() => {
+    if (mounted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [step, mounted]);
 
   // Step sequence management based on theme
   const stepSequence = useMemo((): Step[] => {
@@ -109,14 +116,12 @@ export default function CriadorApp() {
   const handleBack = () => {
     if (currentStepIndex <= 0) { window.location.href = '/'; return; }
     setStep(stepSequence[currentStepIndex - 1]);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNext = () => {
     if (currentStepIndex < stepSequence.length - 1) {
       setStep(stepSequence[currentStepIndex + 1]);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleEmoji = (emoji: string) => {
