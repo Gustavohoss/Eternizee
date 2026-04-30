@@ -21,6 +21,7 @@ import { StepMessage } from '@/components/eternize/creator-steps/step-message';
 import { StepMusic } from '@/components/eternize/creator-steps/step-music';
 import { StepDataLocation } from '@/components/eternize/creator-steps/step-data-location';
 import { StepPlans } from '@/components/eternize/creator-steps/step-plans';
+import { StepOrderBump } from '@/components/eternize/creator-steps/step-order-bump';
 
 export default function CriadorApp() {
   const isMobile = useIsMobile();
@@ -107,9 +108,9 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') {
-      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans'];
+      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans', 'order-bump'];
     }
-    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location', 'plans'];
+    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location', 'plans', 'order-bump'];
   }, [selectedTheme]);
 
   const currentStepIndex = stepSequence.indexOf(step);
@@ -414,7 +415,14 @@ export default function CriadorApp() {
               {step === 'plans' && (
                 <StepPlans 
                   onBack={handleBack}
-                  onFinish={() => { console.log('Finish Creation and go to payment'); }}
+                  onFinish={handleNext}
+                />
+              )}
+
+              {step === 'order-bump' && (
+                <StepOrderBump 
+                  onBack={handleBack}
+                  onFinish={() => { console.log('Finalizando compra...'); }}
                 />
               )}
 
@@ -443,8 +451,8 @@ export default function CriadorApp() {
                  {mounted && isMobile && <DeviceMockup {...previewProps} />}
               </div>
 
-              {/* Form Footer (Only visible when not in Plans step since it has its own navigation) */}
-              {step !== 'plans' && (
+              {/* Form Footer (Only visible when not in Plans/Order Bump since they have their own navigation) */}
+              {step !== 'plans' && step !== 'order-bump' && (
                 <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
                   <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
                     <Button 
