@@ -79,7 +79,7 @@ export function StepDataLocation({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onShowSuggestionsChange]);
 
-  const isFixedTheme = selectedTheme === 'netflix' || selectedTheme === 'spotify';
+  const isFixedTheme = selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram';
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
@@ -252,7 +252,7 @@ export function StepDataLocation({
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
                     <ColorPicker selectedBgColor={dateColor} onChange={onDateColorChange} />
-                  </PopoverContent>
+                  </button>
                 </Popover>
                 <div className="flex flex-wrap gap-1.5">
                   {['#ffffff', '#e11d48', '#ff4da6', '#7c3aed', '#2563eb', '#111111'].map((color) => (
@@ -279,7 +279,9 @@ export function StepDataLocation({
             <p className="text-[10px] text-white/40 leading-relaxed font-medium">
               {selectedTheme === 'netflix' 
                 ? 'No tema Netflix, as cores e fontes são fixas para garantir a identidade cinematográfica original.' 
-                : 'No tema Spotify, os contadores seguem o design oficial do aplicativo para uma experiência autêntica.'}
+                : selectedTheme === 'spotify'
+                ? 'No tema Spotify, os contadores seguem o design oficial do aplicativo para uma experiência autêntica.'
+                : 'No tema Instagram, a visualização segue os padrões visuais oficiais da rede social.'}
             </p>
           </div>
         </div>

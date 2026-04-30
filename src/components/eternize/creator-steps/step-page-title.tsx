@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -43,7 +42,7 @@ export function StepPageTitle({
   titleColor,
   onTitleColorChange,
 }: StepPageTitleProps) {
-  const isFixedTheme = selectedTheme === 'netflix' || selectedTheme === 'spotify';
+  const isFixedTheme = selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram';
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
@@ -102,7 +101,9 @@ export function StepPageTitle({
               <p className="text-[10px] text-white/40 leading-relaxed font-medium">
                 {selectedTheme === 'netflix' 
                   ? 'No tema Netflix, as cores e fontes são fixas para garantir a identidade cinematográfica original.' 
-                  : 'No tema Spotify, o título utiliza a fonte oficial DM Sans para uma experiência autêntica.'}
+                  : selectedTheme === 'spotify'
+                  ? 'No tema Spotify, o título utiliza a fonte oficial DM Sans para uma experiência autêntica.'
+                  : 'No tema Instagram, a tipografia segue os padrões visuais oficiais da rede social.'}
               </p>
             </div>
           </div>
