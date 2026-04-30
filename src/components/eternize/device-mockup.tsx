@@ -167,6 +167,7 @@ export function DeviceMockup({
   // Spotify Specific State
   const [isSpotifyMusicPlaying, setIsSpotifyMusicPlaying] = useState(false);
   const [dynamicSpotifyColor, setDynamicSpotifyColor] = useState('#1a0a0a');
+  const [spotifyHeaderOpacity, setSpotifyHeaderOpacity] = useState(0);
 
   useEffect(() => {
     if (selectedTheme === 'spotify') {
@@ -467,7 +468,7 @@ export function DeviceMockup({
             {/* Título e Like */}
             <div className="flex items-center justify-between mb-8 shrink-0">
                <div className="min-w-0 pr-4">
-                  <h2 className="text-3xl font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
+                  <h2 className="text-[28px] font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
                   <p className="text-base font-bold text-white/60 truncate font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
                </div>
                <button onClick={() => setIsLiked(!isLiked)} className={cn("transition-all duration-300", isLiked ? "text-[#1DB954]" : "text-white/80")}>
@@ -475,7 +476,7 @@ export function DeviceMockup({
                </button>
             </div>
 
-            {/* Progress Bar */}
+            {/* Barra de Progresso */}
             <div className="mb-8 shrink-0">
               <div className="w-full h-[4px] bg-white/20 rounded-full relative">
                 <div className="absolute left-0 top-0 h-full bg-white rounded-full w-[45%]" />
@@ -640,10 +641,13 @@ export function DeviceMockup({
               </div>
             ) : selectedTheme === 'spotify' ? (
               /* THEME SPOTIFY CLONE */
-              <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar">
+              <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar overflow-hidden">
                 
                 {/* Header fixo com Logo e Perfil */}
-                <div className="absolute top-6 left-0 right-0 z-30 px-6 flex items-center justify-between pointer-events-none">
+                <div 
+                  className="absolute top-0 left-0 right-0 z-50 px-6 pt-8 pb-4 flex items-center justify-between transition-colors duration-300 pointer-events-none"
+                  style={{ backgroundColor: spotifyHeaderOpacity > 0 ? dynamicSpotifyColor.replace('rgb', 'rgba').replace(')', `, ${spotifyHeaderOpacity})`) : 'transparent' }}
+                >
                   <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="20" fill="#1DB954"></circle>
                     <path d="M10 26.5 Q20 22 31 24.5" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
@@ -653,7 +657,14 @@ export function DeviceMockup({
                   <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">HZ</div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto no-scrollbar relative">
+                <div 
+                  className="flex-1 overflow-y-auto no-scrollbar relative"
+                  onScroll={(e) => {
+                    const scrollTop = e.currentTarget.scrollTop;
+                    const opacity = Math.min(1, scrollTop / 100);
+                    setSpotifyHeaderOpacity(opacity);
+                  }}
+                >
                   {/* Banner do Artista */}
                   <section className="relative h-[400px]">
                     <div className="absolute inset-0">
