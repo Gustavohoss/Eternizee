@@ -536,14 +536,14 @@ export function DeviceMockup({
                       )}
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 right-6">
-                      <div className="flex items-center gap-2 mb-2">
+                    <div className="absolute bottom-2 left-6 right-6">
+                      <div className="flex items-center gap-2 mb-1">
                         <div className="bg-[#1DB954] w-5 h-5 rounded-full flex items-center justify-center">
                           <Check className="w-3.5 h-3.5 text-white" strokeWidth={4} />
                         </div>
                         <span className="text-white text-[11px] font-bold">Artista verificado</span>
                       </div>
-                      <h1 className="text-white text-5xl font-black leading-[0.9] tracking-tighter mb-4 break-words font-['DM_Sans']">
+                      <h1 className="text-white text-5xl font-black leading-[0.9] tracking-tighter mb-1 break-words font-['DM_Sans']">
                         {pageTitle || 'Nossa Playlist'}
                       </h1>
                       <p className="text-neutral-300 text-sm font-bold font-['DM_Sans']">
