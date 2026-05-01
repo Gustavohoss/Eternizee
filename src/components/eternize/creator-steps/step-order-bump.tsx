@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { MemoriesModulePreview } from '@/components/eternize/memories-module-preview';
 import { AchievementsModulePreview } from '@/components/eternize/achievements-module-preview';
+import { CuriosidadesModulePreview } from '@/components/eternize/curiosidades-module-preview';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +33,12 @@ const MODULES: ModuleItem[] = [
     image: 'https://picsum.photos/seed/achievements-module/600/800'
   },
   {
+    id: 'curiosidades',
+    title: 'Curiosidades',
+    description: 'Descubra a fase da lua, a estação do ano e fatos astronômicos do dia em que vocês se conheceram.',
+    image: 'https://picsum.photos/seed/curiosities-module/600/800'
+  },
+  {
     id: 'playlist',
     title: 'Nossa Playlist',
     description: 'Uma grade exclusiva com as músicas que marcaram cada fase do relacionamento de vocês.',
@@ -48,9 +55,10 @@ const MODULES: ModuleItem[] = [
 interface StepOrderBumpProps {
   onBack: () => void;
   onFinish: () => void;
+  date?: Date;
 }
 
-export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
+export function StepOrderBump({ onBack, onFinish, date }: StepOrderBumpProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'center' });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isPackEnabled, setIsPackEnabled] = useState(true);
@@ -77,6 +85,8 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
         return <MemoriesModulePreview />;
       case 'conquistas':
         return <AchievementsModulePreview />;
+      case 'curiosidades':
+        return <CuriosidadesModulePreview date={date} />;
       default:
         return (
           <div className="flex flex-col items-center justify-center h-full text-white/20 p-12 text-center">
@@ -89,7 +99,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Header */}
       <div className="space-y-3 text-center md:text-left w-full">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
@@ -102,7 +111,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
         </p>
       </div>
 
-      {/* Badges */}
       <div className="flex items-center gap-3">
         <div className="bg-[#3d0b17] border border-primary/20 px-3 py-1.5 rounded-full flex items-center gap-2">
           <Flame className="w-3 h-3 text-primary fill-current" />
@@ -114,7 +122,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
         </div>
       </div>
 
-      {/* Carousel */}
       <div className="relative w-full max-w-[450px] mx-auto md:mx-0">
         <div className="overflow-visible" ref={emblaRef}>
           <div className="flex">
@@ -143,7 +150,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
           </div>
         </div>
 
-        {/* Navigation Arrows */}
         <button 
           onClick={scrollPrev}
           className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center hover:bg-black/80 transition-all z-10"
@@ -157,7 +163,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* Pagination Dots */}
         <div className="flex justify-center gap-1.5 mt-6">
           {MODULES.map((_, i) => (
             <div 
@@ -171,7 +176,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
         </div>
       </div>
 
-      {/* Module Preview Dialog */}
       <Dialog open={!!previewModuleId} onOpenChange={(open) => !open && setPreviewModuleId(null)}>
         <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[300] [&>button]:hidden">
           <DialogTitle className="sr-only">Visualização do Módulo</DialogTitle>
@@ -186,14 +190,13 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
                 </DialogClose>
              </div>
 
-             <div className="flex-1 overflow-y-auto custom-scroll">
+             <div className="flex-1 overflow-y-auto no-scrollbar custom-scroll">
                 {renderPreviewContent()}
              </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Toggle Box */}
       <div className="w-full space-y-4">
         <div 
           onClick={() => setIsPackEnabled(!isPackEnabled)}
@@ -211,7 +214,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
           <Switch checked={isPackEnabled} onCheckedChange={setIsPackEnabled} />
         </div>
 
-        {/* Note Box */}
         <div className="w-full bg-white/5 border border-white/5 rounded-2xl p-4 flex items-start gap-4">
           <X className="w-4 h-4 text-white/20 mt-0.5 shrink-0" />
           <p className="text-[11px] font-medium text-white/30 leading-tight">
@@ -226,7 +228,6 @@ export function StepOrderBump({ onBack, onFinish }: StepOrderBumpProps) {
         </p>
       </div>
 
-      {/* Navigation Buttons */}
       <div className="grid grid-cols-2 gap-4 w-full pt-6">
         <Button 
           onClick={onBack} 

@@ -145,3 +145,157 @@
     background: #333;
     border-radius: 10px;
 }
+
+/* --- ESTILOS MÓDULO CURIOSIDADES --- */
+
+.glass-summer {
+  background: radial-gradient(at 50% 0%, rgba(234, 179, 8, 0.18) 0%, rgba(5, 5, 8, 0.97) 60%);
+}
+
+.glass-moon {
+  background: radial-gradient(at 50% 0%, rgba(186, 230, 253, 0.15) 0%, rgba(5, 5, 8, 0.97) 60%);
+}
+
+.glass-day {
+  background: radial-gradient(at 50% 0%, rgba(226, 232, 240, 0.12) 0%, rgba(5, 5, 8, 0.97) 60%);
+}
+
+.glass-autumn {
+  background: radial-gradient(at 50% 0%, rgba(251, 146, 60, 0.18) 0%, rgba(5, 5, 8, 0.97) 60%);
+}
+
+.glass-winter {
+  background: radial-gradient(at 50% 0%, rgba(147, 197, 253, 0.18) 0%, rgba(5, 5, 8, 0.97) 60%);
+}
+
+.glass-spring {
+  background: radial-gradient(at 50% 0%, rgba(249, 168, 212, 0.18) 0%, rgba(5, 5, 8, 0.97) 60%);
+}
+
+.text-title-gradient {
+  background: linear-gradient(135deg, rgb(240, 239, 255) 0%, rgba(167, 139, 250, 0.9) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-summer-glow {
+  color: rgb(253, 230, 138);
+  text-shadow: rgba(234, 179, 8, 0.7) 0px 0px 24px, rgba(234, 179, 8, 0.3) 0px 0px 48px;
+}
+
+.text-autumn-glow {
+  color: rgb(253, 186, 116);
+  text-shadow: rgba(251, 146, 60, 0.7) 0px 0px 24px, rgba(251, 146, 60, 0.3) 0px 0px 48px;
+}
+
+.text-winter-glow {
+  color: rgb(191, 219, 254);
+  text-shadow: rgba(147, 197, 253, 0.7) 0px 0px 24px, rgba(147, 197, 253, 0.3) 0px 0px 48px;
+}
+
+.text-spring-glow {
+  color: rgb(249, 168, 212);
+  text-shadow: rgba(244, 114, 182, 0.7) 0px 0px 24px, rgba(244, 114, 182, 0.3) 0px 0px 48px;
+}
+
+.text-moon-glow {
+  color: rgb(226, 232, 240);
+  text-shadow: rgba(186, 230, 253, 0.5) 0px 0px 24px, rgba(148, 163, 184, 0.25) 0px 0px 48px;
+}
+
+.text-day-glow {
+  color: rgb(255, 255, 255);
+  text-shadow: rgba(255, 255, 255, 0.5) 0px 0px 20px;
+}
+
+.sun-main-body {
+  background: radial-gradient(circle at 38% 35%, rgb(254, 240, 138) 0%, rgb(250, 204, 21) 40%, rgb(234, 179, 8) 75%, rgb(202, 138, 4) 100%);
+}
+
+.sun-inner-reflection {
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.35) 0%, transparent 55%);
+}
+
+.sun-glow-shadow {
+  box-shadow: rgba(250, 204, 21, 0.55) 0px 0px 28px 8px, rgba(234, 179, 8, 0.25) 0px 0px 60px 16px;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-sun {
+  animation: spin-slow 15s linear infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.6; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }

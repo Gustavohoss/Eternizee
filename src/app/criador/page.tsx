@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -423,6 +422,7 @@ export default function CriadorApp() {
                 <StepOrderBump 
                   onBack={handleBack}
                   onFinish={() => { console.log('Finalizando compra...'); }}
+                  date={date}
                 />
               )}
 
