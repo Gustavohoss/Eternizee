@@ -75,6 +75,8 @@ interface DeviceMockupProps {
   dateIsBold?: boolean;
   dateHasNeon?: boolean;
   dateNeonStrength?: number;
+  dateBoxBgColor?: string;
+  dateBoxBorderColor?: string;
   messageColor?: string;
   messageFont?: string;
   musicBoxColor?: string;
@@ -124,6 +126,8 @@ export function DeviceMockup({
   dateIsBold = true,
   dateHasNeon = false,
   dateNeonStrength = 10,
+  dateBoxBgColor = '#1a1a1a',
+  dateBoxBorderColor = '#2a2a2a',
   messageColor = '#ffffff',
   messageFont = 'inter',
   musicBoxColor = '#0e0e0e',
@@ -1140,12 +1144,15 @@ export function DeviceMockup({
                           UAU, ESTÃO JUNTOS HÁ
                         </div>
 
-                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] overflow-hidden w-full max-w-[360px] shadow-2xl">
+                        <div 
+                          style={{ backgroundColor: dateBoxBgColor, borderColor: dateBoxBorderColor }} 
+                          className="border rounded-[20px] overflow-hidden w-full max-w-[360px] shadow-2xl"
+                        >
                           <div className="grid grid-cols-3 relative h-[200px]">
-                            <div className="absolute top-1/2 left-[5%] right-[5%] h-px bg-[#333] -translate-y-1/2 z-0" />
+                            <div className="absolute top-1/2 left-[5%] right-[5%] h-px bg-[#333]/40 -translate-y-1/2 z-0" />
                             
-                            <div className="absolute left-[33.33%] top-[15%] bottom-[15%] w-px bg-[#333] z-0" />
-                            <div className="absolute left-[66.66%] top-[15%] bottom-[15%] w-px bg-[#333] z-0" />
+                            <div className="absolute left-[33.33%] top-[15%] bottom-[15%] w-px bg-[#333]/40 z-0" />
+                            <div className="absolute left-[66.66%] top-[15%] bottom-[15%] w-px bg-[#333]/40 z-0" />
 
                             {[
                               { val: timeDiff?.years || 0, label: 'ANOS' },
@@ -1185,7 +1192,10 @@ export function DeviceMockup({
                           UAU, ESTÃO JUNTOS HÁ
                         </div>
                         
-                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[15px] py-[15px] px-[10px] flex justify-center items-center w-full max-w-[360px] shadow-2xl">
+                        <div 
+                          style={{ backgroundColor: dateBoxBgColor, borderColor: dateBoxBorderColor }} 
+                          className="border rounded-[15px] py-[15px] px-[10px] flex justify-center items-center w-full max-w-[360px] shadow-2xl"
+                        >
                           {[
                             { val: timeDiff?.years || 0, label: 'Anos' },
                             { val: timeDiff?.months || 0, label: 'Meses' },
@@ -1205,7 +1215,7 @@ export function DeviceMockup({
                                 {item.label}
                               </div>
                               {i < arr.length - 1 && (
-                                <div className="absolute right-0 top-[15%] bottom-[15%] w-px bg-[#333]" />
+                                <div className="absolute right-0 top-[15%] bottom-[15%] w-px bg-[#333]/40" />
                               )}
                             </div>
                           ))}
@@ -1223,7 +1233,10 @@ export function DeviceMockup({
                           UAU, ESTÃO JUNTOS HÁ
                         </div>
                         
-                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] py-[25px] px-[20px] flex flex-col items-center justify-center w-full max-w-[280px] shadow-2xl">
+                        <div 
+                          style={{ backgroundColor: dateBoxBgColor, borderColor: dateBoxBorderColor }} 
+                          className="border rounded-[20px] py-[25px] px-[20px] flex flex-col items-center justify-center w-full max-w-[280px] shadow-2xl"
+                        >
                           <div 
                             style={dateStyle} 
                             className={cn(

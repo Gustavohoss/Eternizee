@@ -11,7 +11,8 @@ import {
   Hash, 
   Palette, 
   Bold, 
-  Zap
+  Zap,
+  Box
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -45,6 +46,10 @@ interface StepDataLocationProps {
   onDateNeonStrengthChange: (strength: number) => void;
   dateColor: string;
   onDateColorChange: (color: string) => void;
+  dateBoxBgColor: string;
+  onDateBoxBgColorChange: (color: string) => void;
+  dateBoxBorderColor: string;
+  onDateBoxBorderColorChange: (color: string) => void;
 }
 
 export function StepDataLocation({
@@ -68,6 +73,10 @@ export function StepDataLocation({
   onDateNeonStrengthChange,
   dateColor,
   onDateColorChange,
+  dateBoxBgColor,
+  onDateBoxBgColorChange,
+  dateBoxBorderColor,
+  onDateBoxBorderColorChange,
 }: StepDataLocationProps) {
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
@@ -188,7 +197,7 @@ export function StepDataLocation({
           <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
             <div className="flex items-center gap-2 mb-2">
               <Palette className="w-4 h-4 text-primary" />
-              <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Contador</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Texto do Contador</h3>
             </div>
             
             <div className="space-y-4">
@@ -238,7 +247,7 @@ export function StepDataLocation({
             </div>
             
             <div className="space-y-4 pt-4 border-t border-white/5">
-              <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Data</Label>
+              <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Data (Números)</Label>
               <div className="flex items-center gap-4">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -261,6 +270,73 @@ export function StepDataLocation({
                       onClick={() => onDateColorChange(color)} 
                       className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", dateColor === color ? "border-white scale-110" : "border-white/10")} 
                       style={{ backgroundColor: color }} 
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10 w-full max-w-md">
+            <div className="flex items-center gap-2 mb-2">
+              <Box className="w-4 h-4 text-primary" />
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Personalizar Caixa do Contador</h3>
+            </div>
+
+            <div className="space-y-4">
+              <Label className="text-[11px] font-bold text-white/50 uppercase">Cor de Fundo da Caixa</Label>
+              <div className="flex items-center gap-4">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group">
+                      <div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: dateBoxBgColor }} />
+                      <div className="text-left pr-4">
+                        <p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p>
+                        <p className="text-xs font-mono font-bold">{dateBoxBgColor}</p>
+                      </div>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                    <ColorPicker selectedBgColor={dateBoxBgColor} onChange={onDateBoxBgColorChange} />
+                  </PopoverContent>
+                </Popover>
+                <div className="flex flex-wrap gap-1.5">
+                  {['#1a1a1a', '#0d0d0d', '#222222', '#333333', '#ffffff', 'transparent'].map((color) => (
+                    <button 
+                      key={color} 
+                      onClick={() => onDateBoxBgColorChange(color)} 
+                      className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", dateBoxBgColor === color ? "border-primary scale-110" : "border-white/10")} 
+                      style={color === 'transparent' ? { background: 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%), linear-gradient(45deg, #ccc 25%, white 25%, white 75%, #ccc 75%)', backgroundSize: '10px 10px', backgroundPosition: '0 0, 5px 5px' } : { backgroundColor: color }} 
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 pt-4 border-t border-white/5">
+              <Label className="text-[11px] font-bold text-white/50 uppercase">Cor da Borda da Caixa</Label>
+              <div className="flex items-center gap-4">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-xl hover:bg-white/10 transition-all group">
+                      <div className="w-10 h-10 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: dateBoxBorderColor }} />
+                      <div className="text-left pr-4">
+                        <p className="text-[10px] font-black uppercase text-white/30 group-hover:text-primary transition-colors">Personalizar</p>
+                        <p className="text-xs font-mono font-bold">{dateBoxBorderColor}</p>
+                      </div>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
+                    <ColorPicker selectedBgColor={dateBoxBorderColor} onChange={onDateBoxBorderColorChange} />
+                  </PopoverContent>
+                </Popover>
+                <div className="flex flex-wrap gap-1.5">
+                  {['#2a2a2a', '#1a1a1a', '#444444', '#e11d48', '#ffffff', 'transparent'].map((color) => (
+                    <button 
+                      key={color} 
+                      onClick={() => onDateBoxBorderColorChange(color)} 
+                      className={cn("w-6 h-6 rounded-full border transition-transform active:scale-90", dateBoxBorderColor === color ? "border-primary scale-110" : "border-white/10")} 
+                      style={color === 'transparent' ? { background: 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%), linear-gradient(45deg, #ccc 25%, white 25%, white 75%, #ccc 75%)', backgroundSize: '10px 10px', backgroundPosition: '0 0, 5px 5px' } : { backgroundColor: color }} 
                     />
                   ))}
                 </div>

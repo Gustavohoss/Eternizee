@@ -76,6 +76,10 @@ export default function CriadorApp() {
   const [dateNeonStrength, setDateNeonStrength] = useState<number>(10);
   const [userHasManuallyChangedDateColor, setUserHasManuallyChangedDateColor] = useState(false);
 
+  // Date box customization state
+  const [dateBoxBgColor, setDateBoxBgColor] = useState<string>('#1a1a1a');
+  const [dateBoxBorderColor, setDateBoxBorderColor] = useState<string>('#2a2a2a');
+
   // Message customization state
   const [messageColor, setMessageColor] = useState<string>('#ffffff');
   const [messageFont, setMessageFont] = useState<string>('inter');
@@ -208,6 +212,8 @@ export default function CriadorApp() {
     dateIsBold,
     dateHasNeon,
     dateNeonStrength,
+    dateBoxBgColor,
+    dateBoxBorderColor,
     messageColor,
     messageFont,
     musicBoxColor,
@@ -401,6 +407,10 @@ export default function CriadorApp() {
                   onDateNeonStrengthChange={setDateNeonStrength}
                   dateColor={dateColor}
                   onDateColorChange={(c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }}
+                  dateBoxBgColor={dateBoxBgColor}
+                  onDateBoxBgColorChange={setDateBoxBgColor}
+                  dateBoxBorderColor={dateBoxBorderColor}
+                  onDateBoxBorderColorChange={setDateBoxBorderColor}
                   onBack={handleBack}
                   onNext={handleNext}
                 />
