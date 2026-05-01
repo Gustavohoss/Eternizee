@@ -465,7 +465,7 @@ export function DeviceMockup({
                   )} />
                 ))}
               </div>
-              <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1">MEMÓRIA {currentStoryIndex + 1} / {uploadedPhotos.length}</p>
+              <p className="text-white/55 text-[10px] font-bold uppercase tracking-wider mb-1">MEMÓRIA {currentStoryIndex + 1} / {uploadedPhotos.length}</p>
               <h2 style={titleStyle} className="text-3xl font-bebas text-white tracking-tight leading-none mb-8">{pageTitle || 'ETERNIZE'}</h2>
               <button onClick={togglePause} className="w-full bg-white text-black py-4 rounded-lg flex items-center justify-center gap-3 text-sm font-black active:scale-95 transition-transform shadow-2xl">
                 {isStoryPaused ? <><Play className="w-4 h-4 fill-current" /> Retomar</> : <><Pause className="w-4 h-4 fill-current" /> Pausar</>}
@@ -614,8 +614,8 @@ export function DeviceMockup({
       </div>
 
       <div className={cn(
-        "relative bg-black border-x border-b border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar",
-        isFullscreen ? "rounded-none h-full" : "rounded-b-[2.5rem] aspect-[9/19]"
+        "relative bg-black border-x border-b border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar flex flex-col",
+        isFullscreen ? "rounded-none" : "rounded-b-[2.5rem] aspect-[9/19]"
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
           
@@ -1005,8 +1005,8 @@ export function DeviceMockup({
                           ) : (
                             <div className="flex items-center gap-4 group p-2 -mx-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer" onClick={() => { setIsAudioPlaying(true); setShowSpotifyFullscreen(true); }}>
                               <div className="w-4 flex justify-center items-center">
-                                <span className="text-neutral-500 text-sm font-bold group-hover:hidden">1</span>
-                                <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
+                                  <span className="text-neutral-500 text-sm font-bold group-hover:hidden">1</span>
+                                  <Play className="w-3.5 h-3.5 text-white fill-current hidden group-hover:block" />
                               </div>
                               <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg shrink-0"></div>
                               <div className="flex-1">
@@ -1135,7 +1135,7 @@ export function DeviceMockup({
               </div>
             ) : (
               /* THEME CLASSIC / OTHERS */
-              <div className="w-full flex flex-col items-center pt-8 px-5 gap-6">
+              <div className="w-full min-h-full flex flex-col items-center pt-8 px-5 gap-6">
                 <div 
                   style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} 
                   className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[40px]" : "pb-[35px]"))}

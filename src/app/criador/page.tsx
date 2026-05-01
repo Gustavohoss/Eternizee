@@ -432,7 +432,7 @@ export default function CriadorApp() {
                        <Maximize2 className="w-4 h-4" /> Ver em tela cheia
                      </Button>
                    </DialogTrigger>
-                   <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[200]">
+                   <DialogContent className="max-w-full w-full h-full sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[200] sm:top-[50%] sm:translate-y-[-50%] top-0 translate-y-0 h-[100dvh]">
                      <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                      <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                      
