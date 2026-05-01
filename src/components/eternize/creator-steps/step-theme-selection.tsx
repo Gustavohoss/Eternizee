@@ -3,8 +3,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { THEME_OPTIONS, ThemeId } from '@/app/criador/constants';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -45,24 +44,17 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="relative z-10 container mx-auto px-4 h-[100dvh] flex flex-col items-center justify-between overflow-hidden py-10 md:py-16">
+    <div className="relative z-10 container mx-auto px-4 h-[100dvh] flex flex-col items-center justify-between overflow-hidden py-14 md:py-24">
       
       {/* Header Compacto */}
-      <div className="w-full max-w-4xl flex flex-col shrink-0">
-        <Link href="/">
-          <button className="group flex items-center gap-2 text-white/40 hover:text-white transition-colors text-[10px] font-bold mb-4 w-fit mx-auto md:mx-0">
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Voltar
-          </button>
-        </Link>
-        
-        <div className="space-y-1 text-center md:text-left">
+      <div className="w-full max-w-4xl flex flex-col shrink-0 mt-4 md:mt-0">
+        <div className="space-y-1 text-center md:text-center">
           <h2 className="text-xl md:text-4xl font-black tracking-tight uppercase italic italic-shadow">Qual tema você quer usar?</h2>
           <p className="text-[10px] md:text-sm text-white/40 font-medium">Personalizamos tudo para você automaticamente.</p>
         </div>
       </div>
 
-      <div className="relative w-full flex flex-col items-center flex-1 min-h-0 justify-center my-4">
+      <div className="relative w-full flex flex-col items-center flex-1 min-h-0 justify-center my-6">
         {/* Carousel Container - Peeking enabled */}
         <div className="w-full overflow-visible" ref={emblaRef}>
           <div className="flex">
@@ -105,9 +97,10 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
                         className="object-cover" 
                         alt={theme.name} 
                         priority
+                        data-ai-hint="theme preview"
                       />
                       {/* Gradient Overlay for Text */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-20" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
                     </div>
 
                     {/* Card Body Overlay */}
@@ -172,7 +165,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
       </div>
 
       {/* Footer Button */}
-      <div className="flex flex-col items-center gap-4 w-full max-w-[320px] shrink-0 z-20 pb-2">
+      <div className="flex flex-col items-center gap-6 w-full max-w-[320px] shrink-0 z-20 mb-4 md:mb-0">
         <div className="text-center">
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30">
             Selecionado: <span className="text-white" style={{ color: themeColor }}>{currentTheme.name}</span>
