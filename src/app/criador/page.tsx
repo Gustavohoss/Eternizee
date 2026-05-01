@@ -459,8 +459,7 @@ export default function CriadorApp() {
                     <Button 
                       onClick={handleNext} 
                       className={cn(
-                        "w-full h-14 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2",
-                        currentStepIndex === stepSequence.length - 1 ? "bg-primary text-white" : "bg-white text-black hover:bg-white/90"
+                        "w-full h-14 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-primary text-white hover:bg-primary/90 shadow-2xl shadow-primary/20"
                       )}
                     >
                       {currentStepIndex === stepSequence.length - 1 ? 'Finalizar criação' : 'Próxima etapa'} 
