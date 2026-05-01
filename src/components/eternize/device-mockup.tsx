@@ -1142,7 +1142,26 @@ export function DeviceMockup({
                   className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[25px]" : "pb-[20px]"))}
                 >
                   {titlePosition === 'top' && <div className="w-full text-center mb-4"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
-                  <div className="w-full aspect-square relative">{uploadedPhotos.length > 0 ? (<div className="w-full h-full overflow-visible" ref={emblaRef}><div className="flex h-full items-center">{uploadedPhotos.map((photo, i) => (<div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center"><div className="w-full h-full relative overflow-hidden rounded-[4px]"><Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority /></div></div>))}</div></div>) : (<div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]"><ImageIcon className="w-12 h-12 text-black/10" /><span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto</span></div>)}</div>
+                  <div className="w-full aspect-square relative">
+                    {uploadedPhotos.length > 0 ? (
+                      <div className="w-full h-full overflow-hidden" ref={emblaRef}>
+                        <div className="flex h-full items-center">
+                          {uploadedPhotos.map((photo, i) => (
+                            <div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center">
+                              <div className="w-full h-full relative overflow-hidden rounded-[4px]">
+                                <Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]">
+                        <ImageIcon className="w-12 h-12 text-black/10" />
+                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto</span>
+                      </div>
+                    )}
+                  </div>
                   {titlePosition === 'bottom' && <div className="w-full text-center mt-3"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
                 </div>
                 
