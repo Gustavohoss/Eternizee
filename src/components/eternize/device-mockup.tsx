@@ -56,6 +56,7 @@ interface DeviceMockupProps {
   isEmojiRainEnabled: boolean;
   selectedEmojis: string[];
   emojiSize: number;
+  emojiRainPosition?: 'behind' | 'front';
   step: string;
   uploadedPhotos: string[];
   pageTitle: string;
@@ -108,6 +109,7 @@ export function DeviceMockup({
   isEmojiRainEnabled,
   selectedEmojis,
   emojiSize,
+  emojiRainPosition = 'behind',
   step,
   uploadedPhotos,
   pageTitle,
@@ -360,6 +362,35 @@ export function DeviceMockup({
 
   const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+  // Emoji rain layer component
+  const EmojiRainLayer = () => (
+    isEmojiRainEnabled ? (
+      <div 
+        className={cn(
+          "absolute inset-0 pointer-events-none overflow-hidden",
+          emojiRainPosition === 'front' ? "z-[100]" : "z-[15]"
+        )}
+      >
+        {[...Array(15)].map((_, i) => (
+          <span 
+            key={i} 
+            className="absolute animate-fall" 
+            style={{ 
+              left: `${Math.random() * 100}%`, 
+              top: `-${Math.random() * 200}px`,
+              animationDuration: `${3 + Math.random() * 4}s`,
+              animationDelay: `${Math.random() * 5}s`,
+              fontSize: `${emojiSize}px`,
+              opacity: 0.8
+            }}
+          >
+            {selectedEmojis[i % selectedEmojis.length]}
+          </span>
+        ))}
+      </div>
+    ) : null
+  );
+
   return (
     <div className={cn(
       "w-full transition-all duration-500 flex flex-col relative", 
@@ -588,27 +619,8 @@ export function DeviceMockup({
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
           
-          {/* Layer: Chuva de Emojis */}
-          {isEmojiRainEnabled && (
-            <div className="absolute inset-0 pointer-events-none z-[60] overflow-hidden">
-              {[...Array(15)].map((_, i) => (
-                <span 
-                  key={i} 
-                  className="absolute animate-fall" 
-                  style={{ 
-                    left: `${Math.random() * 100}%`, 
-                    top: `-${Math.random() * 200}px`,
-                    animationDuration: `${3 + Math.random() * 4}s`,
-                    animationDelay: `${Math.random() * 5}s`,
-                    fontSize: `${emojiSize}px`,
-                    opacity: 0.8
-                  }}
-                >
-                  {selectedEmojis[i % selectedEmojis.length]}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Chuva de Emojis */}
+          <EmojiRainLayer />
 
           {/* Layer: Efeitos de Fundo */}
           {selectedEffect === 'sparkles' && (selectedTheme === 'classic') && (
@@ -627,7 +639,7 @@ export function DeviceMockup({
             </div>
           )}
           
-          <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar">
+          <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar z-20">
             {selectedTheme === 'instagram' ? (
               /* THEME INSTAGRAM (MODERN REFORMULATED) */
               <div className="w-full h-full bg-black text-white font-inter flex flex-col no-scrollbar relative">

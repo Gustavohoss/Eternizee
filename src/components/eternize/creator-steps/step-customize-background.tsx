@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Palette, Sparkles, Ban, Heart, Type, Star, Wind, Grid, Gauge } from 'lucide-react';
+import { Palette, Sparkles, Ban, Heart, Type, Star, Wind, Grid, Gauge, Layers } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ColorPicker } from '@/components/eternize/color-picker';
 import { EmojiPicker } from '@/components/eternize/emoji-picker';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 import { SparklesCore } from '@/components/ui/sparkles';
 import { SmokeBackground } from '@/components/ui/spooky-smoke-animation';
@@ -24,6 +25,8 @@ interface StepCustomizeBackgroundProps {
   onToggleEmoji: (emoji: string) => void;
   emojiSize: number;
   onEmojiSizeChange: (size: number) => void;
+  emojiRainPosition: 'behind' | 'front';
+  onEmojiRainPositionChange: (pos: 'behind' | 'front') => void;
   isEmojiPickerOpen: boolean;
   onEmojiPickerOpenChange: (open: boolean) => void;
   
@@ -61,6 +64,8 @@ export function StepCustomizeBackground({
   onToggleEmoji,
   emojiSize,
   onEmojiSizeChange,
+  emojiRainPosition,
+  onEmojiRainPositionChange,
   isEmojiPickerOpen,
   onEmojiPickerOpenChange,
 
@@ -384,10 +389,35 @@ export function StepCustomizeBackground({
                   </Label>
                   <EmojiPicker selectedEmojis={selectedEmojis} onToggle={onToggleEmoji} onOpenChange={onEmojiPickerOpenChange} open={isEmojiPickerOpen} />
                 </div>
-                <div className="space-y-4">
+                
+                <div className="space-y-4 pt-2 border-t border-white/5">
                   <div className="flex items-center justify-between">
                     <Label className="text-[10px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
-                      <Type className="w-3 h-3" /> Tamanho
+                      <Layers className="w-3 h-3" /> Posição da Chuva
+                    </Label>
+                  </div>
+                  <RadioGroup value={emojiRainPosition} onValueChange={(v: any) => onEmojiRainPositionChange(v)} className="grid grid-cols-2 gap-2">
+                    <Label className={cn(
+                      "flex items-center justify-center gap-2 p-3 rounded-xl border cursor-pointer transition-all",
+                      emojiRainPosition === 'behind' ? "border-primary bg-primary/10 text-primary" : "border-white/10 bg-black/20 text-white/40"
+                    )}>
+                      <RadioGroupItem value="behind" className="sr-only" />
+                      <span className="text-[10px] font-black uppercase">Por trás</span>
+                    </Label>
+                    <Label className={cn(
+                      "flex items-center justify-center gap-2 p-3 rounded-xl border cursor-pointer transition-all",
+                      emojiRainPosition === 'front' ? "border-primary bg-primary/10 text-primary" : "border-white/10 bg-black/20 text-white/40"
+                    )}>
+                      <RadioGroupItem value="front" className="sr-only" />
+                      <span className="text-[10px] font-black uppercase">Pela frente</span>
+                    </Label>
+                  </RadioGroup>
+                </div>
+
+                <div className="space-y-4 pt-2 border-t border-white/5">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-[10px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                      <Type className="w-3 h-3" /> Tamanho dos Emojis
                     </Label>
                     <span className="text-[10px] font-black text-primary">{emojiSize}px</span>
                   </div>

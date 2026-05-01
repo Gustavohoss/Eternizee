@@ -33,6 +33,7 @@ export default function CriadorApp() {
   const [isEmojiRainEnabled, setIsEmojiRainEnabled] = useState<boolean>(false);
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>(['❤️']);
   const [emojiSize, setEmojiSize] = useState<number>(20);
+  const [emojiRainPosition, setEmojiRainPosition] = useState<'behind' | 'front'>('behind');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
   const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow' | 'cards'>('slide');
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -185,6 +186,7 @@ export default function CriadorApp() {
     isEmojiRainEnabled,
     selectedEmojis,
     emojiSize,
+    emojiRainPosition,
     step,
     uploadedPhotos,
     pageTitle,
@@ -278,6 +280,8 @@ export default function CriadorApp() {
                   onToggleEmoji={toggleEmoji}
                   emojiSize={emojiSize}
                   onEmojiSizeChange={setEmojiSize}
+                  emojiRainPosition={emojiRainPosition}
+                  onEmojiRainPositionChange={setEmojiRainPosition}
                   isEmojiPickerOpen={isEmojiPickerOpen}
                   onEmojiPickerOpenChange={setIsEmojiPickerOpen}
                   
