@@ -1,0 +1,160 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Void Canvas application, owning projects and published sites.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user, used for identification. (Authentication handled externally)",
+          "format": "email"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Project": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Project",
+      "type": "object",
+      "description": "Represents a creative project developed by a user on the Void Canvas, which can be published to a subdomain.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Project entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this project. (Relationship: User 1:N Project)"
+        },
+        "name": {
+          "type": "string",
+          "description": "A user-defined name for the project or site."
+        },
+        "description": {
+          "type": "string",
+          "description": "An optional, user-provided description for the project."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current lifecycle status of the project (e.g., 'draft', 'published', 'archived')."
+        },
+        "subdomainName": {
+          "type": "string",
+          "description": "The unique part of the subdomain assigned to the published project (e.g., 'myproject' for 'myproject.voidcanvas.com'). This value is set when the project's status becomes 'published'."
+        },
+        "contentJson": {
+          "type": "string",
+          "description": "A JSON string representing the actual content and configuration of the site created by the user on the canvas. This could include layout, elements, styles, etc."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the project was initially created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the project was last modified.",
+          "format": "date-time"
+        },
+        "publishedAt": {
+          "type": "string",
+          "description": "Timestamp when the project was finalized and published to a subdomain.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "status",
+        "contentJson",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information, accessible only by the authenticated user matching the 'userId'. Path-based authorization ensures high security.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, matching 'request.auth.uid'."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/projects/{projectId}",
+        "definition": {
+          "entityName": "Project",
+          "schema": {
+            "$ref": "#/backend/entities/Project"
+          },
+          "description": "Stores private project data for a specific user. This includes projects in 'draft' or 'archived' states. The 'userId' in the path ensures that only the authenticated user can read or write their own projects. When a project is 'published', a version is also created in '/published_sites/{subdomainName}'.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns this project."
+            },
+            {
+              "name": "projectId",
+              "description": "The unique identifier for the specific project."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/published_sites/{subdomainName}",
+        "definition": {
+          "entityName": "Project",
+          "schema": {
+            "$ref": "#/backend/entities/Project"
+          },
+          "description": "Stores publicly accessible content for finalized and published projects. Documents in this collection are publicly readable. For write/delete operations, the 'ownerId' (the original 'userId') is denormalized into each document to ensure authorization independence, allowing only the project owner to modify their published site.",
+          "params": [
+            {
+              "name": "subdomainName",
+              "description": "The unique, user-defined subdomain name for the published site, acting as the document ID."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure is designed around strong authorization independence, clear segregation of data by security posture, and predictable access patterns. User profiles are stored in a top-level collection `/users/{userId}` where the `userId` directly corresponds to `request.auth.uid`, ensuring simple, path-based ownership for profile data.\n\nProject data is split into two distinct collections based on its lifecycle status and access requirements:\n\n1.  **`/users/{userId}/projects/{projectId}` (Draft/Private Projects):** This subcollection is for projects actively being worked on by a user. Ownership is enforced via the path wildcard `{userId}` matching `request.auth.uid`. This naturally provides a secure `list` operation where a user can only query their own private projects (QAPs). Authorization independence is inherently met as the owner's UID is part of the document path.\n\n2.  **`/published_sites/{subdomainName}` (Published/Public Projects):** When a user finalizes a project, its content is duplicated to this top-level collection. The `subdomainName` from the original project is used as the document ID, facilitating direct access via the subdomain. All documents in this collection share the same security posture: public read access. For write and delete operations, the `ownerId` (the original `userId`) is **denormalized** into each `Project` document within this collection. This critical denormalization achieves **Authorization Independence**, allowing security rules to verify `request.auth.uid == resource.data.ownerId` without needing to perform a `get()` operation to any other document (e.g., the original project or user profile). This also supports QAPs by allowing public `list` queries on a collection where all documents are intended to be publicly readable, thus rules do not act as filters on content.\n\nThis segregation and denormalization strategy minimizes complexity in security rules, ensures atomic operations, and provides clear, debuggable authorization logic consistent with the core design principles."
+  }
+}

@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * CORE PHILOSOPHY
+     * This ruleset implements a strict user-ownership model for private data while allowing public 
+     * access to finalized content. It prioritizes "Authorization Independence" by ensuring that 
+     * all write operations can be validated using only the data present in the request or the 
+     * targeted document, avoiding expensive cross-document lookups (get() calls).
+     *
+     * DATA STRUCTURE
+     * - /users/{userId}: Private user profiles.
+     * - /users/{userId}/projects/{projectId}: Private project drafts owned by the user.
+     * - /published_sites/{subdomainName}: Publicly readable finalized projects.
+     *
+     * KEY SECURITY DECISIONS
+     * 1. Path-Based Authorization: Access to user-specific trees (/users/{userId}/...) is 
+     *    strictly enforced by comparing the {userId} wildcard with the authenticated user's UID.
+     * 2. Denormalization for Performance: The 'userId' is denormalized into documents in the 
+     *    top-level 'published_sites' collection. This allows owners to manage their public sites 
+     *    without the rules needing to check the private project path.
+     * 3. Prototyping Flexibility: While authorization is strictly enforced (who can write), 
+     *    the internal data schema is flexible to allow for rapid iteration.
+     */
+
+    // --- HELPER FUNCTIONS ---
+
+    /** @description Checks if the request is from a signed-in user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the user's UID matches the provided ID. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** @description Checks if the user is the owner of an existing document. */
+    function isExistingOwner(ownerId) {
+      return isSignedIn() && resource != null && request.auth.uid == ownerId;
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Rules for user profile documents.
+     * @path /users/{userId}
+     * @allow (get) If the authenticated user matches the userId in the path.
+     * @deny (list) If a user attempts to list all users in the system.
+     * @principle Restricts access to a user's own data tree and enforces self-creation.
+     */
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Rules for private project drafts.
+       * @path /users/{userId}/projects/{projectId}
+       * @allow (create) If the user matches the path and sets their userId correctly in the data.
+       * @deny (update) If a user attempts to change the userId (owner) of a project.
+       * @principle Enforces strict ownership via path nesting and maintains relational integrity.
+       */
+      match /projects/{projectId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description Rules for publicly accessible published sites.
+     * @path /published_sites/{subdomainName}
+     * @allow (get) Anyone, including unauthenticated users, to view published sites.
+     * @deny (update) Any user who is not the original owner (denormalized userId).
+     * @principle Implements public-read/owner-write pattern via denormalized ownership fields.
+     */
+    match /published_sites/{subdomainName} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if resource != null && resource.data.userId == request.auth.uid && request.resource.data.userId == resource.data.userId;
+      allow delete: if resource != null && resource.data.userId == request.auth.uid;
+    }
+  }
+}
