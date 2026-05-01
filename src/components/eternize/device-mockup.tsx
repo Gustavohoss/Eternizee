@@ -1247,6 +1247,33 @@ export function DeviceMockup({
                         </div>
                       </div>
                     )}
+
+                    {selectedCountStyle === 'dias-grandes' && (
+                      <div className="w-full flex flex-col items-center">
+                        <div className="text-[#888] text-[14px] font-bold uppercase tracking-[4px] mb-[25px] text-center">
+                          UAU, ESTÃO JUNTOS HÁ
+                        </div>
+                        
+                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] py-[40px] px-[20px] md:px-[60px] flex flex-col items-center justify-center w-full max-w-[360px] shadow-2xl">
+                          <div 
+                            style={dateStyle} 
+                            className={cn(
+                              "text-[80px] italic leading-none mb-[15px] tabular-nums",
+                              !dateIsBold && "font-normal"
+                            )}
+                          >
+                            {totalDays.toLocaleString('pt-BR')}
+                          </div>
+                          <div className="text-[#666] text-[12px] font-black uppercase tracking-[4px]">
+                            Dias
+                          </div>
+                        </div>
+
+                        <div className="text-[#555] text-[14px] mt-[25px] text-center font-medium">
+                          Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 
