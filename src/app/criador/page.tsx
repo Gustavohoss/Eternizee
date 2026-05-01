@@ -111,7 +111,8 @@ export default function CriadorApp() {
     if (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') {
       return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans', 'order-bump'];
     }
-    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'music', 'data-location', 'plans', 'order-bump'];
+    // Classic theme sequence updated: data-location now comes before music
+    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'data-location', 'music', 'plans', 'order-bump'];
   }, [selectedTheme]);
 
   const currentStepIndex = stepSequence.indexOf(step);
