@@ -268,9 +268,9 @@ export function DeviceMockup({
 
   const formattedTotalDays = useMemo(() => {
     if (totalDays >= 1000) {
-      return (totalDays / 1000).toFixed(1) + 'K';
+      return (totalDays / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'K';
     }
-    return totalDays.toString();
+    return totalDays.toLocaleString('pt-BR');
   }, [totalDays]);
 
   const getFontFamily = (font: string) => {
@@ -1254,17 +1254,17 @@ export function DeviceMockup({
                           UAU, ESTÃO JUNTOS HÁ
                         </div>
                         
-                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] py-[40px] px-[20px] md:px-[60px] flex flex-col items-center justify-center w-full max-w-[360px] shadow-2xl">
+                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] py-[25px] px-[20px] flex flex-col items-center justify-center w-full max-w-[280px] shadow-2xl">
                           <div 
                             style={dateStyle} 
                             className={cn(
-                              "text-[80px] italic leading-none mb-[15px] tabular-nums",
+                              "text-[64px] italic leading-none mb-[10px] tabular-nums",
                               !dateIsBold && "font-normal"
                             )}
                           >
                             {totalDays.toLocaleString('pt-BR')}
                           </div>
-                          <div className="text-[#666] text-[12px] font-black uppercase tracking-[4px]">
+                          <div className="text-[#666] text-[10px] font-black uppercase tracking-[4px]">
                             Dias
                           </div>
                         </div>
