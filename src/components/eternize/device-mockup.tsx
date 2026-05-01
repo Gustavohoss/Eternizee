@@ -41,6 +41,8 @@ import {
   UserPlus
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, EffectCards, Autoplay } from 'swiper/modules';
 import { cn } from '@/lib/utils';
 import { intervalToDuration, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -49,6 +51,11 @@ import { SparklesCore } from '@/components/ui/sparkles';
 import { SmokeBackground } from '@/components/ui/spooky-smoke-animation';
 import { FallingPattern } from '@/components/ui/falling-pattern';
 import { ThemeId } from '@/app/criador/constants';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/effect-cards';
 
 interface DeviceMockupProps {
   selectedTheme?: ThemeId;
@@ -1142,19 +1149,52 @@ export function DeviceMockup({
                   className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[25px]" : "pb-[20px]"))}
                 >
                   {titlePosition === 'top' && <div className="w-full text-center mb-4"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
-                  <div className="w-full aspect-square relative">
+                  
+                  <div className="w-full aspect-square relative shadow-[inset_0_0_15px_rgba(0,0,0,0.2)] rounded-[4px] overflow-hidden">
                     {uploadedPhotos.length > 0 ? (
-                      <div className="w-full h-full overflow-hidden" ref={emblaRef}>
-                        <div className="flex h-full items-center">
-                          {uploadedPhotos.map((photo, i) => (
-                            <div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center">
-                              <div className="w-full h-full relative overflow-hidden rounded-[4px]">
-                                <Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority />
+                      photoEffect === 'slide' ? (
+                        <div className="w-full h-full overflow-hidden" ref={emblaRef}>
+                          <div className="flex h-full items-center">
+                            {uploadedPhotos.map((photo, i) => (
+                              <div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center">
+                                <div className="w-full h-full relative overflow-hidden">
+                                  <Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority />
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <Swiper
+                          effect={photoEffect === 'coverflow' ? 'coverflow' : 'cards'}
+                          grabCursor={true}
+                          centeredSlides={true}
+                          slidesPerView={1}
+                          loop={true}
+                          autoplay={{ delay: 3000, disableOnInteraction: false }}
+                          modules={[EffectCoverflow, EffectCards, Autoplay]}
+                          coverflowEffect={{
+                            rotate: 30,
+                            stretch: 0,
+                            depth: 100,
+                            modifier: 1,
+                            slideShadows: true,
+                          }}
+                          cardsEffect={{
+                            slideShadows: true,
+                            rotate: true,
+                          }}
+                          className="w-full h-full"
+                        >
+                          {uploadedPhotos.map((photo, i) => (
+                            <SwiperSlide key={i}>
+                              <div className="w-full h-full relative">
+                                <Image src={photo} fill className="object-cover" alt="" priority />
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      )
                     ) : (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]">
                         <ImageIcon className="w-12 h-12 text-black/10" />
@@ -1162,6 +1202,7 @@ export function DeviceMockup({
                       </div>
                     )}
                   </div>
+                  
                   {titlePosition === 'bottom' && <div className="w-full text-center mt-3"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
                 </div>
                 
