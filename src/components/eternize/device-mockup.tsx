@@ -1157,22 +1157,48 @@ export function DeviceMockup({
                 )}
 
                 {date && (
-                  <div className="w-full py-4">
+                  <div className="w-full py-4 flex flex-col items-center">
                     {selectedCountStyle === 'padrao' && (
-                      <div className="w-full text-center">
-                        <h2 className="text-[#55b2d4] text-[10px] font-bold uppercase tracking-[0.2em] mb-6">Uau, estão juntos há</h2>
-                        <div className="bg-[#181818] rounded-[24px] border border-white/5 overflow-hidden p-6 shadow-2xl relative">
-                          <div className="grid grid-cols-3 gap-y-8 relative">
-                            <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/5 -translate-y-1/2"></div>
-                            <div className="absolute left-1/3 inset-y-0 w-[1px] bg-white/5"></div>
-                            <div className="absolute left-2/3 inset-y-0 w-[1px] bg-white/5"></div>
-                            <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.years || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Anos</span></div>
-                            <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.months || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Meses</span></div>
-                            <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.days || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Dias</span></div>
-                            <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.hours || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Horas</span></div>
-                            <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.minutes || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Minutos</span></div>
-                            <div className="flex flex-col items-center py-2"><span style={dateStyle} className="text-4xl">{timeDiff?.seconds || 0}</span><span className="text-neutral-500 text-[9px] uppercase tracking-widest mt-1 font-bold">Segundos</span></div>
+                      <div className="w-full flex flex-col items-center">
+                        {/* Título Superior */}
+                        <div className="text-[#888] text-[14px] font-bold uppercase tracking-[4px] mb-8 text-center">
+                          UAU, ESTÃO JUNTOS HÁ
+                        </div>
+
+                        {/* O bloco do contador com as bordas arredondadas */}
+                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] overflow-hidden w-full max-w-[360px] shadow-2xl">
+                          <div className="grid grid-cols-3 relative h-[200px]">
+                            {/* Linha Horizontal (Centro) */}
+                            <div className="absolute top-1/2 left-[5%] right-[5%] h-px bg-[#333] -translate-y-1/2 z-0" />
+                            
+                            {/* Linhas Verticais */}
+                            <div className="absolute left-[33.33%] top-[15%] bottom-[15%] w-px bg-[#333] z-0" />
+                            <div className="absolute left-[66.66%] top-[15%] bottom-[15%] w-px bg-[#333] z-0" />
+
+                            {/* Itens de tempo */}
+                            {[
+                              { val: timeDiff?.years || 0, label: 'ANOS' },
+                              { val: timeDiff?.months || 0, label: 'MESES' },
+                              { val: timeDiff?.days || 0, label: 'DIAS' },
+                              { val: timeDiff?.hours || 0, label: 'HORAS' },
+                              { val: timeDiff?.minutes || 0, label: 'MINUTOS' },
+                              { val: timeDiff?.seconds || 0, label: 'SEGUNDOS' },
+                            ].map((item, i) => (
+                              <div key={i} className="flex flex-col items-center justify-center relative z-10 h-[100px]">
+                                <div className="font-['Playfair_Display'] text-[42px] italic font-bold leading-none mb-1 text-white">
+                                  {item.val.toString().padStart(2, '0')}
+                                </div>
+                                <div className="text-[#777] text-[11px] font-bold uppercase tracking-[2px]">
+                                  {item.label}
+                                </div>
+                              </div>
+                            ))}
                           </div>
+                        </div>
+
+                        {/* Data Inferior */}
+                        <div className="text-[#555] text-[14px] mt-8 text-center font-medium">
+                          Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                         </div>
                       </div>
                     )}
