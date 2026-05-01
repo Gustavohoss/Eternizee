@@ -1189,7 +1189,7 @@ export function DeviceMockup({
                                 <div 
                                   style={dateStyle} 
                                   className={cn(
-                                    "text-[42px] leading-none mb-1 tabular-nums",
+                                    "text-[42px] italic leading-none mb-1 tabular-nums",
                                     !dateIsBold && "font-normal"
                                   )}
                                 >
@@ -1205,6 +1205,44 @@ export function DeviceMockup({
 
                         {/* Data Inferior */}
                         <div className="text-[#555] text-[14px] mt-8 text-center font-medium">
+                          Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedCountStyle === 'data-grande' && (
+                      <div className="w-full flex flex-col items-center">
+                        <div className="text-[#888] text-[14px] font-bold uppercase tracking-[4px] mb-[20px] text-center">
+                          UAU, ESTÃO JUNTOS HÁ
+                        </div>
+                        
+                        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[15px] py-[15px] px-[10px] flex justify-center items-center w-full max-w-[360px] shadow-2xl">
+                          {[
+                            { val: timeDiff?.years || 0, label: 'Anos' },
+                            { val: timeDiff?.months || 0, label: 'Meses' },
+                            { val: timeDiff?.days || 0, label: 'Dias' },
+                          ].map((item, i, arr) => (
+                            <div key={i} className="flex flex-col items-center justify-center flex-1 relative">
+                              <div 
+                                style={dateStyle} 
+                                className={cn(
+                                  "text-[48px] italic leading-none mb-[5px] tabular-nums",
+                                  !dateIsBold && "font-normal"
+                                )}
+                              >
+                                {item.val.toString().padStart(2, '0')}
+                              </div>
+                              <div className="text-[#666] text-[10px] font-black uppercase tracking-[2px]">
+                                {item.label}
+                              </div>
+                              {i < arr.length - 1 && (
+                                <div className="absolute right-0 top-[15%] bottom-[15%] w-px bg-[#333]" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="text-[#555] text-[13px] mt-[20px] text-center font-medium">
                           Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                         </div>
                       </div>
