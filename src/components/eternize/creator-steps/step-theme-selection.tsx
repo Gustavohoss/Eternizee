@@ -59,16 +59,20 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
         <div className="w-full max-w-[480px] overflow-hidden" ref={emblaRef}>
           <div className="flex">
             {THEME_OPTIONS.map((theme) => (
-              <div key={theme.id} className="flex-[0_0_100%] min-w-0 px-6 md:px-10">
+              <div key={theme.id} className="flex-[0_0_100%] min-w-0 px-6 md:px-10 flex items-center justify-center">
                 <div 
                   className={cn(
-                    "relative bg-[#141414] rounded-[20px] overflow-hidden transition-all duration-500 w-full max-w-[280px] mx-auto aspect-[3/4]",
-                    "border-[1.5px] border-[#e50914]/40 shadow-[0_10px_40px_rgba(0,0,0,0.8)]",
-                    selectedTheme === theme.id ? "scale-100 opacity-100" : "scale-90 opacity-40"
+                    "relative bg-[#141414] rounded-[20px] overflow-hidden transition-all duration-500 w-full max-w-[260px] aspect-[3/4] border-2",
+                    selectedTheme === theme.id 
+                      ? "scale-100 opacity-100 border-[#e50914] shadow-[0_0_20px_rgba(229,9,20,0.6),0_0_40px_rgba(229,9,20,0.2)]" 
+                      : "scale-90 opacity-40 border-[#2b2b2b] shadow-none"
                   )}
                 >
                   {/* Top Glow Line */}
-                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#e50914] to-transparent z-30" />
+                  <div className={cn(
+                    "absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#e50914] to-transparent z-30 transition-opacity duration-500",
+                    selectedTheme === theme.id ? "opacity-100" : "opacity-0"
+                  )} />
 
                   {/* Media Area */}
                   <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
@@ -91,11 +95,11 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
                       </span>
                     </div>
 
-                    <p className="text-[#b3b3b3] text-[0.75rem] leading-[1.3] mb-4 font-medium line-clamp-2">
+                    <p className="text-[#b3b3b3] text-[0.7rem] leading-[1.3] mb-3 font-medium line-clamp-2">
                       {theme.description}
                     </p>
 
-                    <button className="w-full bg-white/5 border border-[#2b2b2b] text-white py-2 rounded-[10px] text-xs font-bold flex items-center justify-center gap-2 transition-all hover:bg-white/10 hover:border-[#b3b3b3] active:scale-95">
+                    <button className="w-full bg-white/5 border border-[#2b2b2b] text-white py-1.5 rounded-[10px] text-[0.7rem] font-bold flex items-center justify-center gap-2 transition-all hover:bg-white/10 hover:border-[#b3b3b3] active:scale-95">
                       <ExternalLink className="w-3 h-3" />
                       Ver demo
                     </button>
