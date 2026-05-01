@@ -45,6 +45,9 @@ interface StepCustomizeBackgroundProps {
   onPatternDensityChange: (val: number) => void;
   patternColor: string;
   onPatternColorChange: (val: string) => void;
+
+  onBack: () => void;
+  onNext: () => void;
 }
 
 export function StepCustomizeBackground({
@@ -132,9 +135,9 @@ export function StepCustomizeBackground({
                 <SparklesCore 
                   id="preview-sparkles"
                   background="transparent"
-                  minSize={0.4}
-                  maxSize={1.2}
-                  particleDensity={1200}
+                  minSize={0.6}
+                  maxSize={1.8}
+                  particleDensity={1800}
                   className="w-full h-full"
                   particleColor="#ffffff"
                   speed={0.5}
@@ -184,7 +187,7 @@ export function StepCustomizeBackground({
               )}
             >
               <div className="absolute inset-0 z-0 opacity-60">
-                <FallingPattern color="#ffffff" backgroundColor="transparent" density={2} duration={50} />
+                <FallingPattern color="#ffffff" backgroundColor="transparent" density={1} duration={50} className="p-0" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-[1]" />
               <div className="relative z-10 h-full flex items-center gap-4 px-6">
@@ -331,37 +334,63 @@ export function StepCustomizeBackground({
           )}
         </div>
 
-        <div className="space-y-5 bg-white/5 p-6 rounded-2xl border border-white/10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary/10 p-2 rounded-xl"><Heart className="w-5 h-5 text-primary fill-primary" /></div>
-              <div>
-                <p className="text-[11px] font-black uppercase tracking-wider">Chuva de Emojis</p>
-                <p className="text-[10px] text-white/40">Ativar emojis caindo</p>
-              </div>
-            </div>
-            <Switch checked={isEmojiRainEnabled} onCheckedChange={onEmojiRainToggle} />
-          </div>
-
+        <div className={cn(
+          "relative overflow-hidden space-y-5 bg-white/5 p-6 rounded-[2rem] border transition-all duration-300",
+          isEmojiRainEnabled ? "border-primary ring-1 ring-primary/40 shadow-[0_0_30px_rgba(225,29,72,0.1)]" : "border-white/10"
+        )}>
+          {/* Efeito de Chuva de Emojis no Fundo do Bloco */}
           {isEmojiRainEnabled && (
-            <div className="space-y-6 pt-4 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="space-y-4">
-                <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
-                  <Heart className="w-3.5 h-3.5" /> Escolha os emojis (Até 3)
-                </Label>
-                <EmojiPicker selectedEmojis={selectedEmojis} onToggle={onToggleEmoji} onOpenChange={onEmojiPickerOpenChange} open={isEmojiPickerOpen} />
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
-                    <Type className="w-3.5 h-3.5" /> Tamanho
-                  </Label>
-                  <span className="text-[10px] font-black text-primary">{emojiSize}px</span>
-                </div>
-                <Slider value={[emojiSize]} onValueChange={(val) => onEmojiSizeChange(val[0])} min={12} max={48} step={1} />
-              </div>
+            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-20">
+              {[...Array(6)].map((_, i) => (
+                <span 
+                  key={i} 
+                  className="absolute animate-fall" 
+                  style={{ 
+                    left: `${10 + (i * 18)}%`, 
+                    top: '-30px',
+                    animationDuration: `${3 + (i % 2)}s`,
+                    animationDelay: `${i * 0.6}s`,
+                    fontSize: `${emojiSize * 0.7}px`
+                  }}
+                >
+                  {selectedEmojis[i % selectedEmojis.length]}
+                </span>
+              ))}
             </div>
           )}
+
+          <div className="relative z-10 space-y-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary/10 p-2 rounded-xl"><Heart className="w-5 h-5 text-primary fill-primary" /></div>
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-wider">Chuva de Emojis</p>
+                  <p className="text-[10px] text-white/40">Ativar emojis caindo</p>
+                </div>
+              </div>
+              <Switch checked={isEmojiRainEnabled} onCheckedChange={onEmojiRainToggle} />
+            </div>
+
+            {isEmojiRainEnabled && (
+              <div className="space-y-6 pt-4 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="space-y-4">
+                  <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                    <Heart className="w-3.5 h-3.5" /> Escolha os emojis (Até 3)
+                  </Label>
+                  <EmojiPicker selectedEmojis={selectedEmojis} onToggle={onToggleEmoji} onOpenChange={onEmojiPickerOpenChange} open={isEmojiPickerOpen} />
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-[11px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
+                      <Type className="w-3.5 h-3.5" /> Tamanho
+                    </Label>
+                    <span className="text-[10px] font-black text-primary">{emojiSize}px</span>
+                  </div>
+                  <Slider value={[emojiSize]} onValueChange={(val) => onEmojiSizeChange(val[0])} min={12} max={48} step={1} />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
