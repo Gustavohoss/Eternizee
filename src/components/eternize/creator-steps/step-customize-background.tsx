@@ -9,6 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ColorPicker } from '@/components/eternize/color-picker';
 import { EmojiPicker } from '@/components/eternize/emoji-picker';
 import { cn } from '@/lib/utils';
+import { SparklesCore } from '@/components/ui/sparkles';
+import { SmokeBackground } from '@/components/ui/spooky-smoke-animation';
+import { FallingPattern } from '@/components/ui/falling-pattern';
 
 interface StepCustomizeBackgroundProps {
   selectedBgColor: string;
@@ -79,26 +82,129 @@ export function StepCustomizeBackground({
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start">
       <div className="space-y-3 text-center md:text-left">
         <div className="flex flex-col md:flex-row items-center gap-4">
-          <div className="bg-white/5 p-2 rounded-2xl border border-white/10"><Palette className="w-5 h-5 md:w-6 md:h-6 text-white/80" /></div>
+          <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
+            <Palette className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
+          </div>
           <h2 className="text-2xl md:text-4xl font-black tracking-tight">Personalizar Fundo</h2>
         </div>
         <p className="text-xs md:text-base text-white/40 font-medium max-w-md">Escolha a cor base e adicione efeitos especiais para sua página.</p>
       </div>
+
       <div className="w-full max-w-md space-y-8">
         <ColorPicker selectedBgColor={selectedBgColor} onChange={onBgColorChange} />
         
         <div className="space-y-5">
-          <div className="flex items-center justify-center md:justify-start gap-2"><Sparkles className="w-5 h-5 text-primary" /><h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest text-white/60">Efeito Visual de Fundo</h3></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div onClick={() => onEffectChange('none')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'none' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/5 p-2.5 rounded-xl"><Ban className="w-5 h-5 text-white/40" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Sem efeito</p><p className="text-[10px] text-white/40">Fundo estático</p></div></div>
-            <div onClick={() => onEffectChange('sparkles')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'sparkles' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Star className="w-5 h-5 text-white fill-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Fundo Estrelado</p><p className="text-[10px] text-white/40">Céu com estrelas</p></div></div>
-            <div onClick={() => onEffectChange('smoke')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'smoke' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Wind className="w-5 h-5 text-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Nuvem de Fumaça</p><p className="text-[10px] text-white/40">Fumaça animada</p></div></div>
-            <div onClick={() => onEffectChange('pattern')} className={cn("cursor-pointer border rounded-2xl p-5 transition-all duration-300 flex items-center gap-4", selectedEffect === 'pattern' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><div className="bg-white/10 p-2.5 rounded-xl"><Grid className="w-5 h-5 text-white" /></div><div><p className="text-[11px] font-black uppercase tracking-wider">Padrão em Queda</p><p className="text-[10px] text-white/40">Elementos caindo</p></div></div>
+          <div className="flex items-center justify-center md:justify-start gap-2">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest text-white/60">Efeito Visual de Fundo</h3>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {/* SEM EFEITO */}
+            <div 
+              onClick={() => onEffectChange('none')} 
+              className={cn(
+                "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
+                selectedEffect === 'none' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+              )}
+            >
+              <div className="absolute inset-0 bg-[#0a0a0a] z-0" />
+              <div className="relative z-10 h-full flex items-center gap-4 px-6">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10">
+                  <Ban className="w-6 h-6 text-white/40" />
+                </div>
+                <div>
+                  <p className="text-[13px] font-black uppercase tracking-wider text-white">Sem efeito</p>
+                  <p className="text-[11px] text-white/40 font-medium">Fundo estático</p>
+                </div>
+              </div>
+            </div>
+
+            {/* FUNDO ESTRELADO */}
+            <div 
+              onClick={() => onEffectChange('sparkles')} 
+              className={cn(
+                "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
+                selectedEffect === 'sparkles' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+              )}
+            >
+              <div className="absolute inset-0 bg-black z-0">
+                <SparklesCore 
+                  id="preview-sparkles"
+                  background="transparent"
+                  minSize={0.2}
+                  maxSize={0.8}
+                  particleDensity={100}
+                  className="w-full h-full"
+                  particleColor="#ffffff"
+                  speed={0.3}
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-[1]" />
+              <div className="relative z-10 h-full flex items-center gap-4 px-6">
+                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-sm">
+                  <Star className="w-6 h-6 text-white fill-white" />
+                </div>
+                <div>
+                  <p className="text-[13px] font-black uppercase tracking-wider text-white">Fundo Estrelado</p>
+                  <p className="text-[11px] text-white/40 font-medium">Céu com estrelas</p>
+                </div>
+              </div>
+            </div>
+
+            {/* NUVEM DE FUMAÇA */}
+            <div 
+              onClick={() => onEffectChange('smoke')} 
+              className={cn(
+                "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
+                selectedEffect === 'smoke' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+              )}
+            >
+              <div className="absolute inset-0 z-0">
+                <SmokeBackground smokeColor="#808080" backgroundColor="#000000" intensity={0.6} />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/20 to-transparent z-[1]" />
+              <div className="relative z-10 h-full flex items-center gap-4 px-6">
+                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-sm">
+                  <Wind className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-[13px] font-black uppercase tracking-wider text-white">Nuvem de Fumaça</p>
+                  <p className="text-[11px] text-white/40 font-medium">Fumaça animada</p>
+                </div>
+              </div>
+            </div>
+
+            {/* PADRÃO EM QUEDA */}
+            <div 
+              onClick={() => onEffectChange('pattern')} 
+              className={cn(
+                "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
+                selectedEffect === 'pattern' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+              )}
+            >
+              <div className="absolute inset-0 z-0 scale-[0.4] opacity-50">
+                <FallingPattern color="#ffffff" backgroundColor="transparent" density={2} duration={50} />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-[1]" />
+              <div className="relative z-10 h-full flex items-center gap-4 px-6">
+                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-sm">
+                  <Grid className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-[13px] font-black uppercase tracking-wider text-white">Padrão em Queda</p>
+                  <p className="text-[11px] text-white/40 font-medium">Elementos caindo</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {selectedEffect !== 'none' && (
-            <div className="bg-[#141414] rounded-2xl p-6 border border-[#222] space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="flex items-center gap-2 mb-2"><Gauge className="w-4 h-4 text-primary" /><h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Ajustes do Efeito</h3></div>
+            <div className="bg-[#141414] rounded-[2rem] p-8 border border-[#222] space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="flex items-center gap-2 mb-2">
+                <Gauge className="w-4 h-4 text-primary" />
+                <h3 className="text-[11px] font-black uppercase tracking-widest text-white/60">Ajustes do Efeito</h3>
+              </div>
               
               {selectedEffect === 'sparkles' && (
                 <>
