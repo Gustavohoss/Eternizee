@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Heart } from 'lucide-react';
+import { Heart, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
@@ -18,15 +18,26 @@ export default function LandingPage() {
           <h1 className="text-2xl font-black tracking-tighter uppercase italic">Eternize<span className="text-primary">.</span></h1>
         </div>
 
-        <Link href="/criador">
-          <Button 
-            size="lg" 
-            className="bg-white text-black hover:bg-neutral-200 h-14 px-12 rounded-2xl font-black text-base shadow-2xl transition-all active:scale-95 group"
-          >
-            Começar criação
-            <Heart className="ml-2 w-4 h-4 fill-primary text-primary group-hover:scale-125 transition-transform" />
-          </Button>
-        </Link>
+        <div className="flex flex-col gap-4 items-center">
+          <Link href="/criador">
+            <Button 
+              size="lg" 
+              className="bg-white text-black hover:bg-neutral-200 h-14 px-12 rounded-2xl font-black text-base shadow-2xl transition-all active:scale-95 group w-full sm:w-auto"
+            >
+              Começar criação
+              <Heart className="ml-2 w-4 h-4 fill-primary text-primary group-hover:scale-125 transition-transform" />
+            </Button>
+          </Link>
+
+          <Link href="/minhas-paginas">
+            <Button 
+              variant="ghost"
+              className="text-white/40 hover:text-white font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-2"
+            >
+              <LayoutGrid className="w-3 h-3" /> Minhas Páginas
+            </Button>
+          </Link>
+        </div>
       </main>
     </div>
   );
