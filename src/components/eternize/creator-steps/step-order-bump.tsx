@@ -37,18 +37,6 @@ const MODULES: ModuleItem[] = [
     title: 'Curiosidades',
     description: 'Descubra a fase da lua, a estação do ano e fatos astronômicos do dia em que vocês se conheceram.',
     image: 'https://picsum.photos/seed/curiosities-module/600/800'
-  },
-  {
-    id: 'playlist',
-    title: 'Nossa Playlist',
-    description: 'Uma grade exclusiva com as músicas que marcaram cada fase do relacionamento de vocês.',
-    image: 'https://picsum.photos/seed/playlist-module/600/800'
-  },
-  {
-    id: 'galeria',
-    title: 'Galeria Imersiva',
-    description: 'Uma visualização cinematográfica das suas fotos com efeitos de profundidade e transições suaves.',
-    image: 'https://picsum.photos/seed/gallery-module/600/800'
   }
 ];
 
@@ -107,7 +95,7 @@ export function StepOrderBump({ onBack, onFinish, date }: StepOrderBumpProps) {
           <h2 className="text-2xl md:text-4xl font-black tracking-tight">Pack de Módulos</h2>
         </div>
         <p className="text-xs md:text-base text-white/40 font-medium max-w-xl">
-          Adicione 6 módulos exclusivos ao presente. Você poderá editar e personalizar cada módulo após a compra.
+          Adicione 3 módulos exclusivos ao presente. Você poderá editar e personalizar cada módulo após a compra.
         </p>
       </div>
 
@@ -128,7 +116,13 @@ export function StepOrderBump({ onBack, onFinish, date }: StepOrderBumpProps) {
             {MODULES.map((module) => (
               <div key={module.id} className="flex-[0_0_85%] min-w-0 px-3">
                 <div className="relative aspect-[3/4] bg-[#0c0c0c] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl group">
-                  <Image src={module.image} fill className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110" alt={module.title} />
+                  <Image 
+                    src={module.image} 
+                    fill 
+                    className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110" 
+                    alt={module.title} 
+                    data-ai-hint="romantic module"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                   
                   <div className="absolute bottom-8 left-8 right-8 space-y-4">
