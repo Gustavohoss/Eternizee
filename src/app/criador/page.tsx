@@ -152,6 +152,7 @@ export default function CriadorApp() {
         name: pageTitle || 'Meu Presente',
         status: 'published',
         subdomainName: finalSlug,
+        pageUrl: `${window.location.origin}/site/${finalSlug}`,
         contentJson: JSON.stringify(contentData),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -160,6 +161,7 @@ export default function CriadorApp() {
 
       // Inicia a escrita no Firestore sem aguardar (non-blocking)
       setDoc(publishedRef, docData).catch(async (error) => {
+        setIsSaving(false);
         const permissionError = new FirestorePermissionError({
           path: publishedRef.path,
           operation: 'create',
