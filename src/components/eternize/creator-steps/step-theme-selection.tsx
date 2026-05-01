@@ -45,24 +45,24 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="relative z-10 container mx-auto px-4 h-screen flex flex-col items-center justify-center overflow-hidden py-2 md:py-6">
+    <div className="relative z-10 container mx-auto px-4 h-[100dvh] flex flex-col items-center justify-between overflow-hidden py-10 md:py-16">
       
       {/* Header Compacto */}
-      <div className="w-full max-w-4xl flex flex-col mb-4 md:mb-8 shrink-0">
+      <div className="w-full max-w-4xl flex flex-col shrink-0">
         <Link href="/">
-          <button className="group flex items-center gap-2 text-white/40 hover:text-white transition-colors text-[10px] font-bold mb-2 w-fit mx-auto md:mx-0">
+          <button className="group flex items-center gap-2 text-white/40 hover:text-white transition-colors text-[10px] font-bold mb-4 w-fit mx-auto md:mx-0">
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             Voltar
           </button>
         </Link>
         
-        <div className="space-y-0.5 text-center md:text-left">
-          <h2 className="text-xl md:text-3xl font-black tracking-tight uppercase italic italic-shadow">Qual tema você quer usar?</h2>
-          <p className="text-[10px] md:text-xs text-white/40 font-medium">Personalizamos tudo para você automaticamente.</p>
+        <div className="space-y-1 text-center md:text-left">
+          <h2 className="text-xl md:text-4xl font-black tracking-tight uppercase italic italic-shadow">Qual tema você quer usar?</h2>
+          <p className="text-[10px] md:text-sm text-white/40 font-medium">Personalizamos tudo para você automaticamente.</p>
         </div>
       </div>
 
-      <div className="relative w-full flex flex-col items-center flex-1 min-h-0 justify-center">
+      <div className="relative w-full flex flex-col items-center flex-1 min-h-0 justify-center my-4">
         {/* Carousel Container - Peeking enabled */}
         <div className="w-full overflow-visible" ref={emblaRef}>
           <div className="flex">
@@ -73,7 +73,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
                   key={theme.id} 
                   className="flex-[0_0_72%] sm:flex-[0_0_100%] min-w-0 px-3 sm:px-10 flex items-center justify-center transition-opacity duration-500"
                   style={{ 
-                    opacity: isSelected ? 1 : 0.4,
+                    opacity: isSelected ? 1 : 0.2,
                     zIndex: isSelected ? 50 : 10
                   }}
                 >
@@ -86,7 +86,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
                     )}
                     style={isSelected ? { 
                       borderColor: theme.color,
-                      boxShadow: `0 0 30px ${theme.color}66, 0 0 60px ${theme.color}33`
+                      boxShadow: `0 0 40px ${theme.color}66, 0 0 80px ${theme.color}33`
                     } : {}}
                   >
                     {/* Top Glow Line */}
@@ -107,7 +107,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
                         priority
                       />
                       {/* Gradient Overlay for Text */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-20" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-20" />
                     </div>
 
                     {/* Card Body Overlay */}
@@ -172,7 +172,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
       </div>
 
       {/* Footer Button */}
-      <div className="mt-6 flex flex-col items-center gap-4 w-full max-w-[320px] shrink-0 z-20 pb-4">
+      <div className="flex flex-col items-center gap-4 w-full max-w-[320px] shrink-0 z-20 pb-2">
         <div className="text-center">
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30">
             Selecionado: <span className="text-white" style={{ color: themeColor }}>{currentTheme.name}</span>
