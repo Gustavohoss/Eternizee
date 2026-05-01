@@ -1144,6 +1144,18 @@ export function DeviceMockup({
                   <div className="w-full aspect-square relative">{uploadedPhotos.length > 0 ? (<div className="w-full h-full overflow-visible" ref={emblaRef}><div className="flex h-full items-center">{uploadedPhotos.map((photo, i) => (<div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center"><div className="w-full h-full relative overflow-hidden rounded-[4px]"><Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority /></div></div>))}</div></div>) : (<div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]"><ImageIcon className="w-12 h-12 text-black/10" /><span className="text-[8px] font-black uppercase tracking-[0.2em] text-black/10">Sua Foto</span></div>)}</div>
                   {titlePosition === 'bottom' && <div className="w-full text-center mt-3"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
                 </div>
+                
+                {/* Mensagem maior e acima da data conforme solicitado */}
+                {message && (
+                  <div className="w-full px-2 mt-2">
+                    <div 
+                      style={{ color: messageColor, fontFamily: getFontFamily(messageFont || 'inter') }} 
+                      className="text-center text-lg md:text-xl leading-relaxed font-medium" 
+                      dangerouslySetInnerHTML={{ __html: message }} 
+                    />
+                  </div>
+                )}
+
                 {date && (
                   <div className="w-full py-4">
                     {selectedCountStyle === 'padrao' && (
@@ -1166,7 +1178,7 @@ export function DeviceMockup({
                     )}
                   </div>
                 )}
-                {message && <div className="w-full px-2 mt-2"><div style={{ color: messageColor, fontFamily: getFontFamily(messageFont || 'inter') }} className="text-center text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: message }} /></div>}
+                
                 {musicData && <div className="w-full px-1 mt-4"><MusicPlayer musicData={musicData} musicBoxColor={musicBoxColor} musicTextColor={musicTextColor} musicHasNeon={musicHasNeon} musicNeonStrength={musicNeonStrength} isAutoPlay={isAutoPlay} /></div>}
                 <div className="h-20 shrink-0" />
               </div>
