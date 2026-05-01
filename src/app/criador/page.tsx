@@ -227,12 +227,6 @@ export default function CriadorApp() {
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative font-body overflow-x-hidden">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
 
-      {/* Header Banner */}
-      <div className="fixed inset-x-0 top-0 z-[100] bg-[#3d0b17] border-b border-white/5 py-1.5 md:py-2 text-center text-[10px] md:text-xs font-medium flex items-center justify-center gap-4">
-        <div className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-[9px] md:text-[10px] font-black uppercase">Criador</div>
-        <p className="tracking-tight">Personalizando seu presente digital</p>
-      </div>
-
       {step === 'theme-selection' && (
         <StepThemeSelection 
           selectedTheme={selectedTheme} 
@@ -254,8 +248,8 @@ export default function CriadorApp() {
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-7xl">
           
           {/* Progress Bar */}
-          <div className="fixed top-[32px] md:top-[40px] left-0 right-0 z-[110] px-4 md:px-10">
-            <div className="max-w-7xl mx-auto flex items-center gap-4 h-8">
+          <div className="fixed top-0 left-0 right-0 z-[110] px-4 md:px-10 bg-black/60 backdrop-blur-md">
+            <div className="max-w-7xl mx-auto flex items-center gap-4 h-12">
                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-primary transition-all duration-500" 
