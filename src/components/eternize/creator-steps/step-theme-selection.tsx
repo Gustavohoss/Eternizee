@@ -5,8 +5,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, ChevronLeft, ChevronRight, Play } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { THEME_OPTIONS, ThemeId } from '@/app/criador/constants';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
@@ -60,32 +58,41 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
               <div key={theme.id} className="flex-[0_0_100%] min-w-0 px-4 md:px-8">
                 <div 
                   className={cn(
-                    "relative aspect-[3.5/5] bg-[#0c0c0c] border rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500",
-                    selectedTheme === theme.id ? "border-primary/50 ring-4 ring-primary/10 scale-100" : "border-white/10 opacity-40 scale-90"
+                    "relative bg-[#141414] rounded-[20px] overflow-hidden transition-all duration-500 w-full max-w-[340px] mx-auto",
+                    "border-[1.5px] border-[#e50914]/40 shadow-[0_10px_40px_rgba(0,0,0,0.8)]",
+                    selectedTheme === theme.id ? "scale-100 opacity-100" : "scale-90 opacity-40"
                   )}
                 >
-                  <Image 
-                    src={theme.image} 
-                    fill 
-                    className="object-cover opacity-80" 
-                    alt={theme.name} 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent" />
-                  
-                  {/* Theme Info Overlay */}
-                  <div className="absolute bottom-8 left-8 right-8 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-2xl md:text-3xl font-black italic tracking-tighter">{theme.name}</h3>
-                      <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/20 text-[10px] uppercase font-black px-3 py-1">
+                  {/* Top Glow Line */}
+                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#e50914] to-transparent z-10" />
+
+                  {/* Media Area */}
+                  <div className="relative w-full h-[300px] bg-gradient-to-b from-[#1f1f1f] to-[#141414]">
+                    <Image 
+                      src={theme.image} 
+                      fill 
+                      className="object-cover opacity-90" 
+                      alt={theme.name} 
+                    />
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-6">
+                    <div className="flex justify-between items-center mb-3">
+                      <h2 className="text-white text-xl md:text-[1.4rem] font-bold m-0 font-inter">{theme.name}</h2>
+                      <span className="bg-[#e50914]/15 text-[#ff4d4d] px-3.5 py-1 rounded-[15px] text-[0.75rem] font-semibold border border-[#e50914]/30">
                         {theme.badge}
-                      </Badge>
+                      </span>
                     </div>
-                    <p className="text-xs text-white/60 font-medium leading-relaxed">
+
+                    <p className="text-[#b3b3b3] text-[0.95rem] leading-[1.5] mb-6 font-medium line-clamp-2">
                       {theme.description}
                     </p>
-                    <Button variant="outline" className="w-full bg-white/5 border-white/10 rounded-xl h-10 text-[10px] font-bold uppercase tracking-wider group hover:bg-white/10">
-                      <Play className="w-3 h-3 fill-current mr-2" /> Ver demo
-                    </Button>
+
+                    <button className="w-full bg-white/5 border border-[#2b2b2b] text-white py-3.5 rounded-[12px] text-base font-semibold flex items-center justify-center gap-2.5 transition-all hover:bg-white/10 hover:border-[#b3b3b3] active:scale-95">
+                      <Play className="w-[18px] h-[18px] fill-current" />
+                      Ver demo
+                    </button>
                   </div>
                 </div>
               </div>
@@ -96,13 +103,13 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
         {/* Navigation Arrows */}
         <button 
           onClick={scrollPrev}
-          className="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90"
+          className="absolute left-0 md:-left-12 top-[40%] -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 z-20"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button 
           onClick={scrollNext}
-          className="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90"
+          className="absolute right-0 md:-right-12 top-[40%] -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 z-20"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -126,12 +133,12 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-1">Tema selecionado</p>
           <h4 className="text-xl font-black text-white">{THEME_OPTIONS[selectedIndex].name}</h4>
         </div>
-        <Button 
+        <button 
           onClick={onNext} 
-          className="w-full max-w-[280px] bg-primary hover:bg-primary/90 h-12 md:h-14 rounded-xl font-black text-sm md:text-base shadow-2xl shadow-primary/20 active:scale-95 transition-all"
+          className="w-full max-w-[280px] bg-[#e50914] hover:bg-[#b20710] text-white h-12 md:h-14 rounded-xl font-black text-sm md:text-base shadow-2xl active:scale-95 transition-all"
         >
           Próximo
-        </Button>
+        </button>
       </div>
     </div>
   );
