@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Heart, LayoutGrid } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
@@ -29,14 +29,9 @@ export default function LandingPage() {
             </Button>
           </Link>
 
-          <Link href="/minhas-paginas">
-            <Button 
-              variant="ghost"
-              className="text-white/40 hover:text-white font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-2"
-            >
-              <LayoutGrid className="w-3 h-3" /> Minhas Páginas
-            </Button>
-          </Link>
+          <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.3em] max-w-[200px] leading-relaxed">
+            Crie um presente digital único e eterno para quem você ama.
+          </p>
         </div>
       </main>
     </div>
