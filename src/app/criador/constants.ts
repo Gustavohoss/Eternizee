@@ -20,6 +20,7 @@ export const THEME_OPTIONS = [
     name: 'Clássico', 
     description: 'O estilo romântico e atemporal. Perfeito para declarações tradicionais.', 
     badge: 'Clássico',
+    color: '#e11d48',
     image: 'https://picsum.photos/seed/classic-theme/400/600'
   },
   { 
@@ -27,6 +28,7 @@ export const THEME_OPTIONS = [
     name: 'Netflix', 
     description: 'Estilo cinematográfico inspirado na Netflix. Transforme sua história em uma série épica.', 
     badge: 'Série',
+    color: '#e50914',
     image: 'https://picsum.photos/seed/netflix-theme/400/600'
   },
   { 
@@ -34,6 +36,7 @@ export const THEME_OPTIONS = [
     name: 'Spotify', 
     description: 'Visual moderno inspirado no Spotify. Perfeito para quem ama música.', 
     badge: 'Música',
+    color: '#1db954',
     image: 'https://picsum.photos/seed/spotify-theme/400/600'
   },
   { 
@@ -41,6 +44,7 @@ export const THEME_OPTIONS = [
     name: 'Instagram', 
     description: 'Transforme sua história em um perfil social. Feed, biografia e memórias em grade.', 
     badge: 'Social',
+    color: '#e1306c',
     image: 'https://picsum.photos/seed/insta-theme/400/600'
   },
 ];
