@@ -587,7 +587,30 @@ export function DeviceMockup({
         isFullscreen ? "rounded-none h-full" : "rounded-b-[2.5rem] aspect-[9/19]"
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
-          {/* Efeitos de Fundo */}
+          
+          {/* Layer: Chuva de Emojis */}
+          {isEmojiRainEnabled && (
+            <div className="absolute inset-0 pointer-events-none z-[60] overflow-hidden">
+              {[...Array(15)].map((_, i) => (
+                <span 
+                  key={i} 
+                  className="absolute animate-fall" 
+                  style={{ 
+                    left: `${Math.random() * 100}%`, 
+                    top: `-${Math.random() * 200}px`,
+                    animationDuration: `${3 + Math.random() * 4}s`,
+                    animationDelay: `${Math.random() * 5}s`,
+                    fontSize: `${emojiSize}px`,
+                    opacity: 0.8
+                  }}
+                >
+                  {selectedEmojis[i % selectedEmojis.length]}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Layer: Efeitos de Fundo */}
           {selectedEffect === 'sparkles' && (selectedTheme === 'classic') && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SparklesCore background="transparent" minSize={0.4} maxSize={1.2} particleDensity={sparklesDensity} className="w-full h-full" particleColor={sparklesColor} speed={sparklesSpeed} />
@@ -596,6 +619,11 @@ export function DeviceMockup({
           {selectedEffect === 'smoke' && (selectedTheme === 'classic') && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SmokeBackground smokeColor={smokeColor} backgroundColor={selectedBgColor} intensity={smokeIntensity} />
+            </div>
+          )}
+          {selectedEffect === 'pattern' && (selectedTheme === 'classic') && (
+            <div className="absolute inset-0 pointer-events-none z-10 opacity-40">
+              <FallingPattern color={patternColor} backgroundColor="transparent" density={patternDensity} duration={patternDuration} className="p-0" />
             </div>
           )}
           
