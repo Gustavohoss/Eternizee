@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -24,6 +25,7 @@ import { StepMusic } from '@/components/eternize/creator-steps/step-music';
 import { StepDataLocation } from '@/components/eternize/creator-steps/step-data-location';
 import { StepPlans } from '@/components/eternize/creator-steps/step-plans';
 import { StepOrderBump } from '@/components/eternize/creator-steps/step-order-bump';
+import { StepSubdomainConfig } from '@/components/eternize/creator-steps/step-subdomain-config';
 
 export default function CriadorApp() {
   const isMobile = useIsMobile();
@@ -32,7 +34,7 @@ export default function CriadorApp() {
   
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>('theme-selection');
-  const [isSaving, setIsSearching] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [savedUrl, setSavedUrl] = useState<string | null>(null);
 
   // States
@@ -99,9 +101,9 @@ export default function CriadorApp() {
   const stepSequence = useMemo((): Step[] => {
     const base: Step[] = ['theme-selection', 'gift-type'];
     if (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') {
-      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans', 'order-bump'];
+      return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans', 'order-bump', 'subdomain-config'];
     }
-    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'data-location', 'music', 'plans', 'order-bump'];
+    return [...base, 'customize-background', 'photos', 'page-title', 'message', 'data-location', 'music', 'plans', 'order-bump', 'subdomain-config'];
   }, [selectedTheme]);
 
   const currentStepIndex = stepSequence.indexOf(step);
@@ -117,22 +119,16 @@ export default function CriadorApp() {
     }
   };
 
-  const handleFinalize = async () => {
+  const handleFinalize = async (finalSlug: string) => {
     if (!firestore || !auth) return;
-    setIsSearching(true);
+    setIsSaving(true);
 
     try {
-      // 1. Sign in anonymously if not already signed in
       if (!auth.currentUser) {
         await signInAnonymously(auth);
       }
       
       const userId = auth.currentUser?.uid;
-      const slug = (pageTitle || 'presente').toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]/g, '') + '-' + Math.random().toString(36).substring(2, 6);
-
       const contentData = {
         selectedTheme, selectedBgColor, selectedEffect, isEmojiRainEnabled, selectedEmojis,
         emojiSize, emojiRainPosition, selectedCountStyle, photoEffect, date: date?.toISOString(),
@@ -144,25 +140,24 @@ export default function CriadorApp() {
         isMusicAutoPlay, locationQuery
       };
 
-      // 2. Save to published_sites (the "subdomain")
-      const publishedRef = doc(firestore, 'published_sites', slug);
+      const publishedRef = doc(firestore, 'published_sites', finalSlug);
       await setDoc(publishedRef, {
-        id: slug,
+        id: finalSlug,
         userId,
         name: pageTitle || 'Meu Presente',
         status: 'published',
-        subdomainName: slug,
+        subdomainName: finalSlug,
         contentJson: JSON.stringify(contentData),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         publishedAt: serverTimestamp(),
       });
 
-      setSavedUrl(`${window.location.origin}/site/${slug}`);
+      setSavedUrl(`${window.location.origin}/site/${finalSlug}`);
     } catch (error) {
       console.error("Erro ao salvar projeto:", error);
     } finally {
-      setIsSearching(false);
+      setIsSaving(false);
     }
   };
 
@@ -285,7 +280,8 @@ export default function CriadorApp() {
               {step === 'music' && <StepMusic {...{selectedTheme, musicData, onMusicSelect: setMusicData, musicBoxColor, onMusicBoxColorChange: setMusicBoxColor, musicTextColor, onMusicTextColorChange: setMusicTextColor, musicHasNeon, onMusicHasNeonChange: setMusicHasNeon, musicNeonStrength, onMusicNeonStrengthChange: setMusicNeonStrength, isAutoPlay: isMusicAutoPlay, onAutoPlayChange: setIsMusicAutoPlay, onBack: handleBack, onNext: handleNext}} />}
               {step === 'data-location' && <StepDataLocation {...{selectedTheme, date, onDateSelect: setDate, locationQuery, onLocationQueryChange: setLocationQuery, showSuggestions, onShowSuggestionsChange: setShowSuggestions, filteredCities, selectedCountStyle, onCountStyleChange: setSelectedCountStyle, dateFont, onDateFontChange: setDateFont, dateIsBold, onDateIsBoldChange: setDateIsBold, dateHasNeon, onDateHasNeonChange: setDateHasNeon, dateNeonStrength, onDateNeonStrengthChange: setDateNeonStrength, dateColor, onDateColorChange: (c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }, dateBoxBgColor, onDateBoxBgColorChange: setDateBoxBgColor, dateBoxBorderColor, onDateBoxBorderColorChange: setDateBoxBorderColor, onBack: handleBack, onNext: handleNext}} />}
               {step === 'plans' && <StepPlans onBack={handleBack} onFinish={handleNext} />}
-              {step === 'order-bump' && <StepOrderBump onBack={handleBack} onFinish={handleFinalize} date={date} />}
+              {step === 'order-bump' && <StepOrderBump onBack={handleBack} onFinish={handleNext} date={date} />}
+              {step === 'subdomain-config' && <StepSubdomainConfig onBack={handleBack} onFinish={handleFinalize} initialValue={pageTitle} />}
 
               <div className="lg:hidden flex flex-col items-center mt-12 w-full gap-4">
                  <Dialog>
@@ -302,7 +298,7 @@ export default function CriadorApp() {
                  {mounted && isMobile && <DeviceMockup {...previewProps} />}
               </div>
 
-              {step !== 'plans' && step !== 'order-bump' && (
+              {step !== 'plans' && step !== 'order-bump' && step !== 'subdomain-config' && (
                 <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
                   <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
                     <Button onClick={handleBack} variant="outline" className="w-full h-14 rounded-2xl border-white/10 bg-white/5 font-black text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2"><ChevronLeft className="w-4 h-4" /> Voltar etapa</Button>
