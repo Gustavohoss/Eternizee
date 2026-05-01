@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -1185,7 +1186,13 @@ export function DeviceMockup({
                               { val: timeDiff?.seconds || 0, label: 'SEGUNDOS' },
                             ].map((item, i) => (
                               <div key={i} className="flex flex-col items-center justify-center relative z-10 h-[100px]">
-                                <div className="font-['Playfair_Display'] text-[42px] italic font-bold leading-none mb-1 text-white">
+                                <div 
+                                  style={dateStyle} 
+                                  className={cn(
+                                    "text-[42px] leading-none mb-1 tabular-nums",
+                                    !dateIsBold && "font-normal"
+                                  )}
+                                >
                                   {item.val.toString().padStart(2, '0')}
                                 </div>
                                 <div className="text-[#777] text-[11px] font-bold uppercase tracking-[2px]">

@@ -69,9 +69,9 @@ export default function CriadorApp() {
   const [titleNeonStrength, setTitleNeonStrength] = useState<number>(10);
   const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
 
-  // Date customization state
-  const [dateColor, setDateColor] = useState<string>('#ff0000');
-  const [dateFont, setDateFont] = useState<string>('inter');
+  // Date customization state - Synced with the professional template request
+  const [dateColor, setDateColor] = useState<string>('#ffffff');
+  const [dateFont, setDateFont] = useState<string>('playfair');
   const [dateIsBold, setDateIsBold] = useState<boolean>(true);
   const [dateHasNeon, setDateHasNeon] = useState<boolean>(false);
   const [dateNeonStrength, setDateNeonStrength] = useState<number>(10);
@@ -154,10 +154,10 @@ export default function CriadorApp() {
   useEffect(() => {
     if (selectedTheme === 'netflix' || selectedTheme === 'instagram') {
       setTitleColor('#ffffff');
-      setDateColor('#ff0000');
+      if (!userHasManuallyChangedDateColor) setDateColor('#ff0000');
     } else if (selectedTheme === 'spotify') {
       setTitleColor('#ffffff');
-      setDateColor('#1DB954');
+      if (!userHasManuallyChangedDateColor) setDateColor('#1DB954');
     } else if (!userHasManuallyChangedTitleColor) {
       const surfaceColor = showCard ? cardColor : selectedBgColor;
       setTitleColor(getContrastColor(surfaceColor));
@@ -166,11 +166,12 @@ export default function CriadorApp() {
 
   useEffect(() => {
     if (selectedTheme === 'netflix' || selectedTheme === 'instagram') {
-      setDateColor('#ff0000');
+      if (!userHasManuallyChangedDateColor) setDateColor('#ff0000');
     } else if (selectedTheme === 'spotify') {
-      setDateColor('#1DB954');
+      if (!userHasManuallyChangedDateColor) setDateColor('#1DB954');
     } else if (!userHasManuallyChangedDateColor) {
-      setDateColor(getContrastColor(selectedBgColor));
+      // Default color for Classic theme requested as #ffffff in the template
+      setDateColor('#ffffff');
     }
   }, [selectedBgColor, userHasManuallyChangedDateColor, selectedTheme]);
 
@@ -433,7 +434,7 @@ export default function CriadorApp() {
                        <Maximize2 className="w-4 h-4" /> Ver em tela cheia
                      </Button>
                    </DialogTrigger>
-                   <DialogContent className="fixed inset-0 w-full h-[100dvh] sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[200] sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] translate-x-0 translate-y-0 rounded-none sm:rounded-lg">
+                   <DialogContent className="fixed inset-0 w-full h-[100dvh] p-0 bg-black border-none overflow-hidden flex flex-col z-[200] translate-x-0 translate-y-0 rounded-none">
                      <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                      <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                      
@@ -489,7 +490,7 @@ export default function CriadorApp() {
                      <Maximize2 className="w-3 h-3" /> Ver em tela cheia
                    </Button>
                  </DialogTrigger>
-                 <DialogContent className="fixed inset-0 w-full h-[100dvh] sm:max-w-[450px] sm:h-[92vh] p-0 bg-black border-none overflow-hidden flex flex-col z-[200] sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] translate-x-0 translate-y-0 rounded-none sm:rounded-lg">
+                 <DialogContent className="fixed inset-0 w-full h-[100dvh] p-0 bg-black border-none overflow-hidden flex flex-col z-[200] translate-x-0 translate-y-0 rounded-none">
                    <DialogTitle className="sr-only">Prévia do Presente</DialogTitle>
                    <DialogDescription className="sr-only">Visualização em tela cheia do seu presente personalizado.</DialogDescription>
                    
