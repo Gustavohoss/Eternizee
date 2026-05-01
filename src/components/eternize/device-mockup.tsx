@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -394,7 +395,7 @@ export function DeviceMockup({
   return (
     <div className={cn(
       "w-full transition-all duration-500 flex flex-col relative", 
-      isFullscreen ? "h-full max-w-none" : "max-w-[380px]"
+      isFullscreen ? "h-full max-w-none flex-1" : "max-w-[380px]"
     )}>
       {/* Intro Curtain Animation */}
       {isIntroActive && (
@@ -605,7 +606,7 @@ export function DeviceMockup({
       
       <div className={cn(
         "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center shrink-0",
-        isFullscreen ? "rounded-none" : "rounded-t-2xl"
+        isFullscreen ? "rounded-none border-none" : "rounded-t-2xl"
       )}>
         <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200 max-w-[400px]">
           <Lock className="w-3 h-3 text-neutral-400" />
@@ -615,7 +616,7 @@ export function DeviceMockup({
 
       <div className={cn(
         "relative bg-black border-x border-b border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar flex flex-col",
-        isFullscreen ? "rounded-none" : "rounded-b-[2.5rem] aspect-[9/19]"
+        isFullscreen ? "rounded-none border-none" : "rounded-b-[2.5rem] aspect-[9/19]"
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
           
