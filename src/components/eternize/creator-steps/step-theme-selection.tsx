@@ -19,7 +19,8 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     align: 'center', 
-    skipSnaps: false 
+    skipSnaps: false,
+    duration: 30
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -44,10 +45,10 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="relative z-10 container mx-auto px-4 h-screen flex flex-col items-center justify-center overflow-hidden py-4">
+    <div className="relative z-10 container mx-auto px-4 h-screen flex flex-col items-center justify-center overflow-hidden py-2 md:py-6">
       
       {/* Header Compacto */}
-      <div className="w-full max-w-4xl flex flex-col mb-4 shrink-0">
+      <div className="w-full max-w-4xl flex flex-col mb-4 md:mb-8 shrink-0">
         <Link href="/">
           <button className="group flex items-center gap-2 text-white/40 hover:text-white transition-colors text-[10px] font-bold mb-2 w-fit mx-auto md:mx-0">
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
@@ -56,32 +57,36 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
         </Link>
         
         <div className="space-y-0.5 text-center md:text-left">
-          <h2 className="text-xl md:text-3xl font-black tracking-tight uppercase italic">Qual tema você quer usar?</h2>
+          <h2 className="text-xl md:text-3xl font-black tracking-tight uppercase italic italic-shadow">Qual tema você quer usar?</h2>
           <p className="text-[10px] md:text-xs text-white/40 font-medium">Personalizamos tudo para você automaticamente.</p>
         </div>
       </div>
 
       <div className="relative w-full flex flex-col items-center flex-1 min-h-0 justify-center">
-        {/* Carousel Container */}
-        <div className="w-full max-w-[600px] overflow-visible" ref={emblaRef}>
+        {/* Carousel Container - Peeking enabled */}
+        <div className="w-full overflow-visible" ref={emblaRef}>
           <div className="flex">
-            {THEME_OPTIONS.map((theme) => {
+            {THEME_OPTIONS.map((theme, i) => {
               const isSelected = selectedTheme === theme.id;
               return (
                 <div 
                   key={theme.id} 
-                  className="flex-[0_0_80%] sm:flex-[0_0_100%] min-w-0 px-2 sm:px-10 flex items-center justify-center"
+                  className="flex-[0_0_72%] sm:flex-[0_0_100%] min-w-0 px-3 sm:px-10 flex items-center justify-center transition-opacity duration-500"
+                  style={{ 
+                    opacity: isSelected ? 1 : 0.4,
+                    zIndex: isSelected ? 50 : 10
+                  }}
                 >
                   <div 
                     className={cn(
-                      "relative bg-[#141414] rounded-[28px] overflow-hidden transition-all duration-500 w-full max-w-[280px] aspect-[3/4.2] border-2",
+                      "relative bg-[#141414] rounded-[24px] overflow-hidden transition-all duration-500 w-full max-w-[280px] aspect-[3/4] border-2",
                       isSelected 
                         ? "scale-100 opacity-100" 
-                        : "scale-90 opacity-30 border-transparent shadow-none grayscale-[0.5]"
+                        : "scale-85 opacity-50 border-transparent grayscale-[0.3]"
                     )}
                     style={isSelected ? { 
                       borderColor: theme.color,
-                      boxShadow: `0 0 25px ${theme.color}66, 0 0 50px ${theme.color}33`
+                      boxShadow: `0 0 30px ${theme.color}66, 0 0 60px ${theme.color}33`
                     } : {}}
                   >
                     {/* Top Glow Line */}
@@ -107,8 +112,8 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
 
                     {/* Card Body Overlay */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
-                      <div className="flex justify-between items-center mb-1.5">
-                        <h2 className="text-white text-xl font-black m-0 font-inter">{theme.name}</h2>
+                      <div className="flex justify-between items-center mb-1">
+                        <h2 className="text-white text-lg font-black m-0 font-inter">{theme.name}</h2>
                         <span 
                           className="px-2.5 py-0.5 rounded-full text-[0.6rem] font-black uppercase tracking-wider border"
                           style={{ 
@@ -121,7 +126,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
                         </span>
                       </div>
 
-                      <p className="text-[#b3b3b3] text-[11px] leading-snug mb-4 font-medium line-clamp-2">
+                      <p className="text-[#b3b3b3] text-[10px] leading-snug mb-4 font-medium line-clamp-2">
                         {theme.description}
                       </p>
 
@@ -152,7 +157,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
         </button>
 
         {/* Pagination Dots */}
-        <div className="flex gap-2.5 mt-6 shrink-0">
+        <div className="flex gap-2.5 mt-6 shrink-0 z-20">
           {THEME_OPTIONS.map((theme, i) => (
             <div 
               key={i} 
@@ -167,7 +172,7 @@ export function StepThemeSelection({ selectedTheme, onThemeSelect, onNext }: Ste
       </div>
 
       {/* Footer Button */}
-      <div className="mt-6 flex flex-col items-center gap-4 w-full max-w-[320px] shrink-0">
+      <div className="mt-6 flex flex-col items-center gap-4 w-full max-w-[320px] shrink-0 z-20 pb-4">
         <div className="text-center">
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30">
             Selecionado: <span className="text-white" style={{ color: themeColor }}>{currentTheme.name}</span>
