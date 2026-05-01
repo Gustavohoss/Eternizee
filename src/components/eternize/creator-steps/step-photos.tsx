@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -13,7 +12,8 @@ import {
   Layers, 
   Sparkles, 
   Copy,
-  Plus
+  Plus,
+  Component
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -34,8 +34,8 @@ interface StepPhotosProps {
   onCardColorChange: (color: string) => void;
   titlePosition: 'top' | 'bottom';
   onTitlePositionChange: (pos: 'top' | 'bottom') => void;
-  photoEffect: 'slide' | 'coverflow' | 'cards';
-  onPhotoEffectChange: (effect: 'slide' | 'coverflow' | 'cards') => void;
+  photoEffect: 'slide' | 'coverflow' | 'cards' | 'fan';
+  onPhotoEffectChange: (effect: 'slide' | 'coverflow' | 'cards' | 'fan') => void;
 }
 
 export function StepPhotos({
@@ -158,10 +158,11 @@ export function StepPhotos({
             
             <div className="space-y-5">
               <div className="flex items-center justify-center md:justify-start gap-2"><Layers className="w-5 h-5 text-primary" /><h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest text-white/60">Efeito de Passagem</h3></div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div onClick={() => onPhotoEffectChange('slide')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'slide' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><Layout className={cn("w-6 h-6", photoEffect === 'slide' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Slide Suave</p></div></div>
-                <div onClick={() => onPhotoEffectChange('coverflow')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'coverflow' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><Sparkles className={cn("w-6 h-6", photoEffect === 'coverflow' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Coverflow 3D</p></div></div>
-                <div onClick={() => onPhotoEffectChange('cards')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'cards' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/20")}><Copy className={cn("w-6 h-6", photoEffect === 'cards' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Cards Pilha</p></div></div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div onClick={() => onPhotoEffectChange('slide')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'slide' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/10")}><Layout className={cn("w-6 h-6", photoEffect === 'slide' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Slide Suave</p></div></div>
+                <div onClick={() => onPhotoEffectChange('coverflow')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'coverflow' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/10")}><Sparkles className={cn("w-6 h-6", photoEffect === 'coverflow' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Coverflow 3D</p></div></div>
+                <div onClick={() => onPhotoEffectChange('cards')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'cards' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/10")}><Copy className={cn("w-6 h-6", photoEffect === 'cards' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Cards Pilha</p></div></div>
+                <div onClick={() => onPhotoEffectChange('fan')} className={cn("cursor-pointer border rounded-2xl p-4 transition-all duration-300 flex flex-col items-center gap-2 text-center", photoEffect === 'fan' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-white/10 bg-white/5 hover:border-white/10")}><Component className={cn("w-6 h-6", photoEffect === 'fan' ? "text-primary" : "text-white/40")} /><div><p className="text-[10px] font-black uppercase tracking-wider">Leque 3D</p></div></div>
               </div>
             </div>
           </>

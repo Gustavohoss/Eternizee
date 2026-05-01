@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -36,7 +35,7 @@ export default function CriadorApp() {
   const [emojiSize, setEmojiSize] = useState<number>(20);
   const [emojiRainPosition, setEmojiRainPosition] = useState<'behind' | 'front'>('behind');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
-  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow' | 'cards'>('slide');
+  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow' | 'cards' | 'fan'>('slide');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');

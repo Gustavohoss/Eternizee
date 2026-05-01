@@ -76,7 +76,7 @@ interface DeviceMockupProps {
   };
   date?: Date;
   selectedCountStyle: string;
-  photoEffect: 'slide' | 'coverflow' | 'cards';
+  photoEffect: 'slide' | 'coverflow' | 'cards' | 'fan';
   titleColor?: string;
   titleFont?: string;
   titleIsBold?: boolean;
@@ -1146,7 +1146,7 @@ export function DeviceMockup({
               <div className="w-full min-h-full flex flex-col items-center pt-8 px-5 gap-6">
                 <div 
                   style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} 
-                  className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' ? "pb-[25px]" : "pb-[20px]"))}
+                  className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' || photoEffect === 'fan' ? "pb-[25px]" : "pb-[20px]"))}
                 >
                   {titlePosition === 'top' && <div className="w-full text-center mb-4"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
                   
@@ -1171,9 +1171,11 @@ export function DeviceMockup({
                           centeredSlides={true}
                           slidesPerView={1}
                           loop={true}
-                          speed={450}
+                          speed={photoEffect === 'fan' ? 600 : 450}
                           autoplay={{ delay: 3000, disableOnInteraction: false }}
                           modules={[EffectCoverflow, EffectCreative, Autoplay]}
+                          watchSlidesProgress={true}
+                          className={cn("w-full h-full", photoEffect === 'fan' && "fan-swiper")}
                           coverflowEffect={{
                             rotate: 30,
                             stretch: 0,
@@ -1193,8 +1195,20 @@ export function DeviceMockup({
                               scale: 0.90,
                               opacity: 1,
                             },
+                          } : photoEffect === 'fan' ? {
+                            limitProgress: 4,
+                            prev: {
+                              translate: [0, "-120%", -500],
+                              rotate: [0, 0, 15],
+                              opacity: 0,
+                            },
+                            next: {
+                              translate: ["15%", 0, -150],
+                              rotate: [0, 0, 5],
+                              scale: 0.85,
+                              opacity: 1,
+                            },
                           } : undefined}
-                          className="w-full h-full"
                         >
                           {uploadedPhotos.map((photo, i) => (
                             <SwiperSlide key={i}>
