@@ -108,7 +108,7 @@ export function StepCustomizeBackground({
               onClick={() => onEffectChange('none')} 
               className={cn(
                 "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
-                selectedEffect === 'none' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+                selectedEffect === 'none' ? "border-primary ring-1 ring-primary/40 shadow-[0_0_20px_rgba(225,29,72,0.1)]" : "border-white/10 hover:border-white/20"
               )}
             >
               <div className="absolute inset-0 bg-[#0a0a0a] z-0" />
@@ -128,16 +128,16 @@ export function StepCustomizeBackground({
               onClick={() => onEffectChange('sparkles')} 
               className={cn(
                 "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
-                selectedEffect === 'sparkles' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+                selectedEffect === 'sparkles' ? "border-primary ring-1 ring-primary/40 shadow-[0_0_20px_rgba(225,29,72,0.1)]" : "border-white/10 hover:border-white/20"
               )}
             >
               <div className="absolute inset-0 bg-black z-0">
                 <SparklesCore 
                   id="preview-sparkles"
                   background="transparent"
-                  minSize={0.6}
-                  maxSize={1.8}
-                  particleDensity={1800}
+                  minSize={0.8}
+                  maxSize={2.2}
+                  particleDensity={1200}
                   className="w-full h-full"
                   particleColor="#ffffff"
                   speed={0.5}
@@ -160,7 +160,7 @@ export function StepCustomizeBackground({
               onClick={() => onEffectChange('smoke')} 
               className={cn(
                 "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
-                selectedEffect === 'smoke' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+                selectedEffect === 'smoke' ? "border-primary ring-1 ring-primary/40 shadow-[0_0_20px_rgba(225,29,72,0.1)]" : "border-white/10 hover:border-white/20"
               )}
             >
               <div className="absolute inset-0 z-0">
@@ -183,11 +183,11 @@ export function StepCustomizeBackground({
               onClick={() => onEffectChange('pattern')} 
               className={cn(
                 "relative cursor-pointer border rounded-[2rem] h-24 overflow-hidden transition-all duration-300 group",
-                selectedEffect === 'pattern' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
+                selectedEffect === 'pattern' ? "border-primary ring-1 ring-primary/40 shadow-[0_0_20px_rgba(225,29,72,0.1)]" : "border-white/10 hover:border-white/20"
               )}
             >
-              <div className="absolute inset-0 z-0 opacity-60">
-                <FallingPattern color="#ffffff" backgroundColor="transparent" density={1} duration={50} className="p-0" />
+              <div className="absolute inset-0 z-0 opacity-80">
+                <FallingPattern color="#ffffff" backgroundColor="transparent" density={1.2} duration={50} className="p-0" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-[1]" />
               <div className="relative z-10 h-full flex items-center gap-4 px-6">
@@ -336,36 +336,37 @@ export function StepCustomizeBackground({
 
         <div className={cn(
           "relative overflow-hidden space-y-5 bg-white/5 p-6 rounded-[2rem] border transition-all duration-300",
-          isEmojiRainEnabled ? "border-primary ring-1 ring-primary/40 shadow-[0_0_30px_rgba(225,29,72,0.1)]" : "border-white/10"
+          isEmojiRainEnabled ? "border-primary ring-1 ring-primary/40 shadow-[0_0_30px_rgba(225,29,72,0.15)]" : "border-white/10"
         )}>
-          {/* Efeito de Chuva de Emojis no Fundo do Bloco */}
-          {isEmojiRainEnabled && (
-            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-20">
-              {[...Array(6)].map((_, i) => (
-                <span 
-                  key={i} 
-                  className="absolute animate-fall" 
-                  style={{ 
-                    left: `${10 + (i * 18)}%`, 
-                    top: '-30px',
-                    animationDuration: `${3 + (i % 2)}s`,
-                    animationDelay: `${i * 0.6}s`,
-                    fontSize: `${emojiSize * 0.7}px`
-                  }}
-                >
-                  {selectedEmojis[i % selectedEmojis.length]}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Efeito de Chuva de Emojis no Fundo do Bloco (Sempre Visível) */}
+          <div className={cn(
+            "absolute inset-0 pointer-events-none z-0 overflow-hidden transition-opacity duration-500",
+            isEmojiRainEnabled ? "opacity-30" : "opacity-15"
+          )}>
+            {[...Array(8)].map((_, i) => (
+              <span 
+                key={i} 
+                className="absolute animate-fall" 
+                style={{ 
+                  left: `${5 + (i * 13)}%`, 
+                  top: '-50px',
+                  animationDuration: `${2.5 + (i % 3)}s`,
+                  animationDelay: `${i * 0.4}s`,
+                  fontSize: `28px`
+                }}
+              >
+                {selectedEmojis[i % selectedEmojis.length]}
+              </span>
+            ))}
+          </div>
 
           <div className="relative z-10 space-y-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="bg-primary/10 p-2 rounded-xl"><Heart className="w-5 h-5 text-primary fill-primary" /></div>
+                <div className="bg-primary/10 p-2.5 rounded-xl border border-primary/20"><Heart className="w-5 h-5 text-primary fill-primary" /></div>
                 <div>
-                  <p className="text-[11px] font-black uppercase tracking-wider">Chuva de Emojis</p>
-                  <p className="text-[10px] text-white/40">Ativar emojis caindo</p>
+                  <p className="text-[12px] font-black uppercase tracking-wider text-white">Chuva de Emojis</p>
+                  <p className="text-[10px] text-white/40 font-medium">Ativar emojis caindo</p>
                 </div>
               </div>
               <Switch checked={isEmojiRainEnabled} onCheckedChange={onEmojiRainToggle} />
