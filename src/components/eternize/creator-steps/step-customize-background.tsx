@@ -132,12 +132,12 @@ export function StepCustomizeBackground({
                 <SparklesCore 
                   id="preview-sparkles"
                   background="transparent"
-                  minSize={0.2}
-                  maxSize={0.8}
-                  particleDensity={100}
+                  minSize={0.4}
+                  maxSize={1.2}
+                  particleDensity={1200}
                   className="w-full h-full"
                   particleColor="#ffffff"
-                  speed={0.3}
+                  speed={0.5}
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-[1]" />
@@ -183,7 +183,7 @@ export function StepCustomizeBackground({
                 selectedEffect === 'pattern' ? "border-primary ring-1 ring-primary/40" : "border-white/10 hover:border-white/20"
               )}
             >
-              <div className="absolute inset-0 z-0 scale-[0.4] opacity-50">
+              <div className="absolute inset-0 z-0 opacity-60">
                 <FallingPattern color="#ffffff" backgroundColor="transparent" density={2} duration={50} />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-[1]" />
@@ -222,7 +222,7 @@ export function StepCustomizeBackground({
                           </button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0 border-none bg-transparent shadow-none" align="start">
-                          <ColorPicker selectedBgColor={sparklesColor} onChange={onSparklesColorChange} />
+                          <ColorPicker selectedBgColor={sparklesColor} onChange={onStarColorChangeWrapper} />
                         </PopoverContent>
                       </Popover>
                       <div className="flex flex-wrap gap-1">
@@ -366,4 +366,8 @@ export function StepCustomizeBackground({
       </div>
     </div>
   );
+
+  function onStarColorChangeWrapper(hex: string) {
+    onSparklesColorChange(hex);
+  }
 }
