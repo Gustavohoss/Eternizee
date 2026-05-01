@@ -257,6 +257,7 @@ export function DeviceMockup({
       case 'inter': return "'Inter', sans-serif";
       case 'dancing-script': return "'Dancing Script', cursive";
       case 'lora': return "'Lora', serif";
+      case 'bebas-neue': return "'Bebas Neue', cursive";
       default: return "'Inter', sans-serif";
     }
   };
@@ -325,17 +326,17 @@ export function DeviceMockup({
   };
 
   const dateStyle: React.CSSProperties = {
-    color: dateColor,
-    fontFamily: getFontFamily(dateFont || 'inter'),
-    fontWeight: dateIsBold ? '700' : '400',
-    textShadow: dateHasNeon ? `0 0 ${dateNeonStrength!/2}px ${dateColor}, 0 0 ${dateNeonStrength!}px ${dateColor}` : 'none'
+    color: selectedTheme === 'netflix' ? '#e50914' : dateColor,
+    fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : getFontFamily(dateFont || 'inter'),
+    fontWeight: selectedTheme === 'netflix' ? '700' : (dateIsBold ? '700' : '400'),
+    textShadow: selectedTheme === 'netflix' ? 'none' : (dateHasNeon ? `0 0 ${dateNeonStrength!/2}px ${dateColor}, 0 0 ${dateNeonStrength!}px ${dateColor}` : 'none')
   };
 
   const titleStyle: React.CSSProperties = { 
-    color: titleColor,
-    fontFamily: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
+    color: selectedTheme === 'netflix' ? '#e50914' : titleColor,
+    fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : (selectedTheme === 'spotify' || selectedTheme === 'instagram') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
     fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? '900' : (titleIsBold ? '700' : '400'),
-    textShadow: titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none',
+    textShadow: selectedTheme === 'netflix' ? 'none' : (titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none'),
   };
 
   const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -793,9 +794,24 @@ export function DeviceMockup({
                   </section>
                   <div className="px-4 py-4 bg-[#141414]">
                     <div className="grid grid-cols-3 gap-2">
-                      <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{timeDiff?.years || 0}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Anos juntos</p></div>
-                      <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{totalDays.toLocaleString('pt-BR')}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias</p></div>
-                      <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5"><p style={dateStyle} className="text-2xl font-bebas">{date ? format(date, 'dd/MM') : '06/04'}</p><p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Desde</p></div>
+                      <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5">
+                        <p style={dateStyle} className="text-2xl font-bebas leading-none mb-1">
+                          {timeDiff?.years || 0}
+                        </p>
+                        <p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Anos juntos</p>
+                      </div>
+                      <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5">
+                        <p style={dateStyle} className="text-2xl font-bebas leading-none mb-1">
+                          {totalDays.toLocaleString('pt-BR')}
+                        </p>
+                        <p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Dias</p>
+                      </div>
+                      <div className="bg-[#1e1e1e] rounded-lg p-3 text-center border border-white/5">
+                        <p style={dateStyle} className="text-2xl font-bebas leading-none mb-1">
+                          {date ? format(date, 'dd/MM') : '06/04'}
+                        </p>
+                        <p className="text-neutral-500 text-[8px] uppercase tracking-wider font-bold">Desde</p>
+                      </div>
                     </div>
                   </div>
                   <div className="px-4 mt-2 pb-20">
