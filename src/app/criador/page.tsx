@@ -35,7 +35,7 @@ export default function CriadorApp() {
   const [emojiSize, setEmojiSize] = useState<number>(20);
   const [emojiRainPosition, setEmojiRainPosition] = useState<'behind' | 'front'>('behind');
   const [selectedCountStyle, setSelectedCountStyle] = useState<string>('padrao');
-  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow' | 'cards' | 'fan'>('slide');
+  const [photoEffect, setPhotoEffect] = useState<'slide' | 'coverflow' | 'fan'>('slide');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -68,7 +68,7 @@ export default function CriadorApp() {
   const [titleNeonStrength, setTitleNeonStrength] = useState<number>(10);
   const [userHasManuallyChangedTitleColor, setUserHasManuallyChangedTitleColor] = useState(false);
 
-  // Date customization state - Synced with the professional template request
+  // Date customization state
   const [dateColor, setDateColor] = useState<string>('#ffffff');
   const [dateFont, setDateFont] = useState<string>('playfair');
   const [dateIsBold, setDateIsBold] = useState<boolean>(true);
@@ -110,7 +110,6 @@ export default function CriadorApp() {
     if (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') {
       return [...base, 'data-location', 'page-title', 'message', 'photos', 'music', 'plans', 'order-bump'];
     }
-    // Classic theme sequence updated: data-location now comes before music
     return [...base, 'customize-background', 'photos', 'page-title', 'message', 'data-location', 'music', 'plans', 'order-bump'];
   }, [selectedTheme]);
 
@@ -170,7 +169,6 @@ export default function CriadorApp() {
     } else if (selectedTheme === 'spotify') {
       if (!userHasManuallyChangedDateColor) setDateColor('#1DB954');
     } else if (!userHasManuallyChangedDateColor) {
-      // Default color for Classic theme requested as #ffffff in the template
       setDateColor('#ffffff');
     }
   }, [selectedBgColor, userHasManuallyChangedDateColor, selectedTheme]);
@@ -251,7 +249,6 @@ export default function CriadorApp() {
       {!isInitialSteps && (
         <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-20 pb-12 max-w-7xl">
           
-          {/* Progress Bar */}
           <div className="fixed top-0 left-0 right-0 z-[110] px-4 md:px-10 bg-black/60 backdrop-blur-md">
             <div className="max-w-7xl mx-auto flex items-center gap-4 h-12">
                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
@@ -267,8 +264,6 @@ export default function CriadorApp() {
           </div>
 
           <div className="grid lg:grid-cols-[1fr_420px] gap-8 md:gap-16 items-start pt-8">
-            
-            {/* Form Column */}
             <div className="w-full min-w-0">
               {step === 'customize-background' && (
                 <StepCustomizeBackground 
@@ -426,7 +421,6 @@ export default function CriadorApp() {
                 />
               )}
 
-              {/* Mobile View Mockup */}
               <div className="lg:hidden flex flex-col items-center mt-12 w-full gap-4">
                  <Dialog>
                    <DialogTrigger asChild>
@@ -451,7 +445,6 @@ export default function CriadorApp() {
                  {mounted && isMobile && <DeviceMockup {...previewProps} />}
               </div>
 
-              {/* Form Footer (Only visible when not in Plans/Order Bump since they have their own navigation) */}
               {step !== 'plans' && step !== 'order-bump' && (
                 <div className="mt-12 flex flex-col gap-6 max-w-md mx-auto md:mx-0">
                   <div className="flex flex-col gap-4 pt-10 border-t border-white/5">
@@ -482,7 +475,6 @@ export default function CriadorApp() {
               )}
             </div>
 
-            {/* Sticky Preview Column */}
             <div className="lg:sticky lg:top-20 self-start hidden lg:flex flex-col items-center gap-6">
                <Dialog>
                  <DialogTrigger asChild>

@@ -5,24 +5,16 @@ import Image from 'next/image';
 import { 
   Heart, 
   ImageIcon, 
-  Clock,
-  Calendar as CalendarIcon,
   Play,
   Pause,
-  Plus,
   ThumbsUp,
   ChevronDown,
   Lock,
   Music2,
-  Hash,
   X,
   ChevronLeft,
-  ChevronRight,
   MoreHorizontal,
   Shuffle,
-  Volume2,
-  ListMusic,
-  Check,
   RotateCcw,
   SkipBack,
   SkipForward,
@@ -30,18 +22,13 @@ import {
   Share2,
   Maximize2,
   Grid as GridIcon,
-  Clapperboard,
-  UserSquare2,
-  Bookmark,
-  MessageCircle,
-  Send,
-  MoreVertical,
   Bell,
-  UserPlus
+  UserPlus,
+  UserSquare2
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, EffectCards, Autoplay, EffectCreative } from 'swiper/modules';
+import { EffectCoverflow, Autoplay, EffectCreative } from 'swiper/modules';
 import { cn } from '@/lib/utils';
 import { intervalToDuration, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -54,7 +41,6 @@ import { ThemeId } from '@/app/criador/constants';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-import 'swiper/css/effect-cards';
 import 'swiper/css/effect-creative';
 
 interface DeviceMockupProps {
@@ -76,7 +62,7 @@ interface DeviceMockupProps {
   };
   date?: Date;
   selectedCountStyle: string;
-  photoEffect: 'slide' | 'coverflow' | 'cards' | 'fan';
+  photoEffect: 'slide' | 'coverflow' | 'fan';
   titleColor?: string;
   titleFont?: string;
   titleIsBold?: boolean;
@@ -198,7 +184,6 @@ export function DeviceMockup({
     }
   }, [selectedTheme]);
 
-  // Extract color from photo for Dynamic UI
   useEffect(() => {
     if (uploadedPhotos.length === 0) return;
     
@@ -370,7 +355,6 @@ export function DeviceMockup({
 
   const slugifiedTitle = (pageTitle || '').toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-  // Emoji rain layer component
   const EmojiRainLayer = () => (
     isEmojiRainEnabled ? (
       <div 
@@ -404,7 +388,6 @@ export function DeviceMockup({
       "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full max-w-none flex-1" : "max-w-[380px]"
     )}>
-      {/* Intro Curtain Animation */}
       {isIntroActive && (
         <div className="absolute inset-0 z-[1000] overflow-hidden bg-black flex items-center justify-center">
           <div className="absolute inset-0 flex z-10 pointer-events-none">
@@ -433,7 +416,6 @@ export function DeviceMockup({
         </div>
       )}
 
-      {/* Story Viewer Interface (Netflix) */}
       {showStories && uploadedPhotos.length > 0 && selectedTheme === 'netflix' && (
         <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700">
           <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1">
@@ -483,10 +465,8 @@ export function DeviceMockup({
         </div>
       )}
 
-      {/* Spotify Fullscreen Player Experience */}
       {showSpotifyFullscreen && (
         <div className="absolute inset-0 z-[500] bg-[#121212] flex flex-col animate-in fade-in duration-500 overflow-hidden no-scrollbar">
-          {/* Blurred Dynamic Background */}
           <div className="absolute inset-0 z-0 scale-125 brightness-[0.4] blur-[60px] transition-all duration-1000">
              {uploadedPhotos.length > 0 ? (
                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="blur-bg" />
@@ -496,7 +476,6 @@ export function DeviceMockup({
           </div>
 
           <div className="relative z-10 flex flex-col h-full px-6 pt-4 no-scrollbar overflow-y-auto">
-            {/* Header */}
             <div className="flex items-center justify-between mb-10 shrink-0">
                <button onClick={() => setShowSpotifyFullscreen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white active:scale-90 transition-transform">
                   <ChevronDown className="w-6 h-6 stroke-[3]" />
@@ -510,7 +489,6 @@ export function DeviceMockup({
                </button>
             </div>
 
-            {/* Album Cover - 1:1 SQUARE ASPECT RATIO */}
             <div className="relative aspect-square w-full mb-12 shrink-0 group">
               <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
                 {uploadedPhotos.length > 0 ? (
@@ -522,7 +500,6 @@ export function DeviceMockup({
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
 
-            {/* Título e Like */}
             <div className="flex items-center justify-between mb-8 shrink-0">
                <div className="min-w-0 pr-4">
                   <h2 className="text-[28px] font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
@@ -533,7 +510,6 @@ export function DeviceMockup({
                </button>
             </div>
 
-            {/* Barra de Progresso */}
             <div className="mb-8 shrink-0">
               <div className="w-full h-[4px] bg-white/20 rounded-full relative">
                 <div className="absolute left-0 top-0 h-full bg-white rounded-full w-[45%]" />
@@ -544,7 +520,6 @@ export function DeviceMockup({
               </div>
             </div>
 
-            {/* Controls */}
             <div className="flex items-center justify-between mb-10 shrink-0 px-1">
                <button className="text-white/40 hover:text-white transition-colors"><Shuffle className="w-6 h-6" /></button>
                <button className="text-white active:scale-90 transition-transform"><SkipBack className="w-8 h-8 fill-current" /></button>
@@ -558,7 +533,6 @@ export function DeviceMockup({
                <button className="text-white/40 hover:text-white transition-colors"><RotateCcw className="w-6 h-6" /></button>
             </div>
 
-            {/* Lyrics Card */}
             {message && (
               <div 
                 className="rounded-[24px] p-6 mb-8 shrink-0 shadow-lg group transition-colors duration-700"
@@ -582,7 +556,6 @@ export function DeviceMockup({
               </div>
             )}
 
-            {/* Seção Conheça */}
             <div className="bg-black/10 rounded-[24px] p-6 mb-12 shrink-0 backdrop-blur-sm">
                <h3 className="text-white text-base font-black mb-5 font-['DM_Sans']">Conheça {pageTitle || 'o casal'}</h3>
                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x">
@@ -627,10 +600,8 @@ export function DeviceMockup({
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
           
-          {/* Chuva de Emojis */}
           <EmojiRainLayer />
 
-          {/* Layer: Efeitos de Fundo */}
           {selectedEffect === 'sparkles' && (selectedTheme === 'classic') && (
             <div className="absolute inset-0 pointer-events-none z-10">
               <SparklesCore background="transparent" minSize={0.4} maxSize={1.2} particleDensity={sparklesDensity} className="w-full h-full" particleColor={sparklesColor} speed={sparklesSpeed} />
@@ -649,9 +620,7 @@ export function DeviceMockup({
           
           <div className="absolute inset-0 flex flex-col items-center overflow-y-auto no-scrollbar z-20">
             {selectedTheme === 'instagram' ? (
-              /* THEME INSTAGRAM (MODERN REFORMULATED) */
               <div className="w-full h-full bg-black text-white font-inter flex flex-col no-scrollbar relative">
-                {/* Header */}
                 <header className="flex items-center justify-between px-4 py-3 sticky top-0 bg-black z-50">
                   <div className="flex items-center gap-3">
                     <ChevronLeft className="w-6 h-6" />
@@ -664,7 +633,6 @@ export function DeviceMockup({
                 </header>
 
                 <div className="flex-1 overflow-y-auto no-scrollbar pb-20">
-                  {/* Profile Info */}
                   <section className="px-4 pt-2 pb-4">
                     <div className="flex items-center gap-6 mb-4">
                       <div className="p-[2.5px] rounded-full ig-gradient">
@@ -704,7 +672,6 @@ export function DeviceMockup({
                       )}
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-2 mb-6">
                       <button className="flex-1 bg-[#0095F6] hover:bg-blue-600 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95">Seguir</button>
                       <button className="flex-1 bg-neutral-800 hover:bg-neutral-700 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95">Mensagem</button>
@@ -712,7 +679,6 @@ export function DeviceMockup({
                     </div>
                   </section>
 
-                  {/* Stories Highlights */}
                   <section className="px-4 pb-6 overflow-x-auto no-scrollbar flex gap-4">
                     <div className="flex flex-col items-center gap-1 shrink-0">
                       <div className="w-16 h-16 rounded-full border border-neutral-800 flex items-center justify-center active:scale-95 transition-transform">
@@ -728,7 +694,6 @@ export function DeviceMockup({
                     ))}
                   </section>
 
-                  {/* Tabs */}
                   <div className="flex border-t border-neutral-900">
                     <button 
                       onClick={() => setActiveTab('grid')}
@@ -750,7 +715,6 @@ export function DeviceMockup({
                     </button>
                   </div>
 
-                  {/* Photo Grid */}
                   <div className="grid grid-cols-3 gap-[1.5px] bg-black">
                     {uploadedPhotos.length > 0 ? (
                       uploadedPhotos.map((photo, i) => (
@@ -763,13 +727,9 @@ export function DeviceMockup({
                         <div key={i} className="aspect-square bg-neutral-900 animate-pulse" />
                       ))
                     )}
-                    {uploadedPhotos.length > 0 && uploadedPhotos.length < 9 && (
-                      <div className="aspect-square bg-neutral-900 animate-pulse" />
-                    )}
                   </div>
                 </div>
 
-                {/* Floating Music Player (Instagram Style) - Changed to absolute for preview context */}
                 {musicData && (
                   <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] bg-neutral-900/90 backdrop-blur-xl border border-neutral-800 rounded-2xl p-3 shadow-2xl z-[100] animate-in slide-in-from-bottom-4 duration-500">
                     <div className="flex items-center gap-3">
@@ -799,7 +759,6 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                {/* Invisible Music Engine for Instagram */}
                 {musicData && (
                   <MusicPlayer 
                     musicData={musicData} 
@@ -810,7 +769,6 @@ export function DeviceMockup({
                 )}
               </div>
             ) : selectedTheme === 'netflix' ? (
-              /* THEME NETFLIX */
               <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col no-scrollbar overflow-y-auto">
                 <header className="sticky top-0 z-50 px-4 py-4 flex items-center justify-between bg-gradient-to-b from-black via-black/80 to-transparent">
                   <div className="text-[#e50914] font-bebas text-2xl tracking-tighter uppercase">ETERNIZE</div>
@@ -867,10 +825,7 @@ export function DeviceMockup({
                 </div>
               </div>
             ) : selectedTheme === 'spotify' ? (
-              /* THEME SPOTIFY CLONE */
               <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar overflow-hidden">
-                
-                {/* Header fixo com Logo e Perfil */}
                 <div 
                   className="absolute top-0 left-0 right-0 z-50 px-6 pt-4 pb-2 flex items-center justify-between transition-colors duration-300 pointer-events-none"
                   style={{ backgroundColor: spotifyHeaderOpacity > 0 ? `rgba(18, 18, 18, ${spotifyHeaderOpacity})` : 'transparent' }}
@@ -892,7 +847,6 @@ export function DeviceMockup({
                     setSpotifyHeaderOpacity(opacity);
                   }}
                 >
-                  {/* Banner do Artista */}
                   <section className="relative h-[400px]">
                     <div className="absolute inset-0">
                       {uploadedPhotos.length > 0 ? (
@@ -918,7 +872,6 @@ export function DeviceMockup({
                     </div>
                   </section>
 
-                  {/* Controles de Ação */}
                   <div className="px-6 py-4 flex items-center gap-4">
                     <div className="w-10 h-10 rounded overflow-hidden relative bg-black shrink-0">
                         {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
@@ -942,7 +895,6 @@ export function DeviceMockup({
                     </div>
                   </div>
 
-                  {/* Tab Navigation */}
                   <div className="px-6 mb-6">
                     <div className="flex gap-8 border-white/5 border-b pb-2">
                         {['Músicas', 'Eventos', 'Loja'].map((tab) => (
@@ -961,7 +913,6 @@ export function DeviceMockup({
                     </div>
                   </div>
 
-                  {/* Grid de Estatísticas (Cards Rápidos) */}
                   <div className="px-6 mb-8">
                     <div className="grid grid-cols-3 gap-2">
                         <div className="bg-[#181818] rounded-lg p-3 text-center border border-white/5">
@@ -981,7 +932,6 @@ export function DeviceMockup({
 
                   {activeTab === 'músicas' && (
                     <>
-                      {/* Seção Populares */}
                       <section className="px-6 mb-8">
                         <h2 className="text-white text-xl font-black mb-4 font-['DM_Sans']">Populares</h2>
                         <div className="space-y-1">
@@ -1027,10 +977,8 @@ export function DeviceMockup({
                         </div>
                       </section>
 
-                      {/* Seção Sobre (Card de Biografia do Artista) */}
                       <section className="px-6 pb-32">
                         <div className="bg-[#181818] rounded-[24px] overflow-hidden flex flex-col shadow-2xl border border-white/5 transition-transform duration-500 hover:scale-[1.01]">
-                          {/* Top Image with fade */}
                           <div className="relative aspect-square md:aspect-video w-full">
                             {uploadedPhotos.length > 0 ? (
                               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
@@ -1042,7 +990,6 @@ export function DeviceMockup({
                             <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-[#181818] via-[#181818]/40 to-transparent" />
                           </div>
                           
-                          {/* Card Text Content */}
                           <div className="p-6 pt-2">
                             <div 
                               className="text-neutral-400 text-sm md:text-base leading-relaxed mb-6 font-['DM_Sans'] font-medium" 
@@ -1059,7 +1006,6 @@ export function DeviceMockup({
                   )}
                 </div>
 
-                {/* MINI PLAYER FLUTUANTE (Spotify Style) */}
                 {musicData && !showSpotifyFullscreen && (
                   <div className="absolute bottom-6 left-0 right-0 z-[60] px-3 animate-in slide-in-from-bottom-4 duration-500">
                     <div 
@@ -1068,7 +1014,6 @@ export function DeviceMockup({
                       onClick={() => setShowSpotifyFullscreen(true)}
                     >
                       <div className="flex items-center relative z-10">
-                        {/* Capa da Música (Usa a foto do usuário se disponível) */}
                         <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-lg mr-3 relative">
                             {uploadedPhotos.length > 0 ? (
                               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Capa" />
@@ -1079,7 +1024,6 @@ export function DeviceMockup({
                             )}
                         </div>
 
-                        {/* Informações da Música */}
                         <div className="flex-1 min-w-0 mr-4">
                             <h4 className="text-white text-[13px] font-bold truncate leading-tight font-['DM_Sans']">
                                 {musicData.title}
@@ -1089,9 +1033,7 @@ export function DeviceMockup({
                             </p>
                         </div>
 
-                        {/* Botões de Controle */}
                         <div className="flex items-center gap-5 pr-2">
-                            {/* Ícone de Cast/Connect */}
                             <button className="text-white/70 hover:text-white transition-colors" onClick={(e) => e.stopPropagation()}>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M5 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path>
@@ -1101,7 +1043,6 @@ export function DeviceMockup({
                                 </svg>
                             </button>
 
-                            {/* Botão Play/Pause */}
                             <button 
                               className="text-white hover:scale-105 active:scale-95 transition-transform" 
                               onClick={(e) => {
@@ -1123,7 +1064,6 @@ export function DeviceMockup({
                         </div>
                       </div>
                       
-                      {/* Barra de Progresso Fina */}
                       <div className="mt-2 w-full h-[2px] bg-white/10 rounded-full overflow-hidden relative z-10">
                         <div className="h-full bg-white w-[45%]" />
                       </div>
@@ -1131,7 +1071,6 @@ export function DeviceMockup({
                   </div>
                 )}
 
-                {/* Motor de Áudio Invisível para Spotify */}
                 {musicData && (
                   <MusicPlayer 
                     musicData={musicData} 
@@ -1142,11 +1081,10 @@ export function DeviceMockup({
                 )}
               </div>
             ) : (
-              /* THEME CLASSIC / OTHERS */
               <div className="w-full min-h-full flex flex-col items-center pt-8 px-5 gap-6">
                 <div 
                   style={showCard ? { backgroundColor: cardColor } : { backgroundColor: 'transparent' }} 
-                  className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'cards' || photoEffect === 'fan' ? "pb-[25px]" : "pb-[20px]"))}
+                  className={cn("w-full rounded-[8px] z-20 flex flex-col items-center transition-all duration-300", showCard ? "shadow-[0_15px_35px_rgba(0,0,0,0.5)] p-[12px]" : "p-0", showCard && (photoEffect === 'fan' ? "pb-[25px]" : "pb-[20px]"))}
                 >
                   {titlePosition === 'top' && <div className="w-full text-center mb-4"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
                   
@@ -1176,26 +1114,14 @@ export function DeviceMockup({
                           modules={[EffectCoverflow, EffectCreative, Autoplay]}
                           watchSlidesProgress={true}
                           className={cn("w-full h-full", photoEffect === 'fan' && "fan-swiper")}
-                          coverflowEffect={{
+                          coverflowEffect={photoEffect === 'coverflow' ? {
                             rotate: 30,
                             stretch: 0,
                             depth: 100,
                             modifier: 1,
                             slideShadows: true,
-                          }}
-                          creativeEffect={photoEffect === 'cards' ? {
-                            limitProgress: 3,
-                            prev: {
-                              translate: ["-125%", "5%", -500],
-                              rotate: [0, 0, -15],
-                              opacity: 0,
-                            },
-                            next: {
-                              translate: [0, 0, -35],
-                              scale: 0.90,
-                              opacity: 1,
-                            },
-                          } : photoEffect === 'fan' ? {
+                          } : undefined}
+                          creativeEffect={photoEffect === 'fan' ? {
                             limitProgress: 4,
                             prev: {
                               translate: [0, "-120%", -500],
@@ -1230,7 +1156,6 @@ export function DeviceMockup({
                   {titlePosition === 'bottom' && <div className="w-full text-center mt-3"><span style={titleStyle} className="text-[32px] block px-2 tracking-[1px] leading-relaxed break-words">{pageTitle || "Seu Nome"}</span></div>}
                 </div>
                 
-                {/* Mensagem maior e acima da data conforme solicitado */}
                 {message && (
                   <div className="w-full px-2 mt-2">
                     <div 
@@ -1245,22 +1170,17 @@ export function DeviceMockup({
                   <div className="w-full py-4 flex flex-col items-center">
                     {selectedCountStyle === 'padrao' && (
                       <div className="w-full flex flex-col items-center">
-                        {/* Título Superior */}
                         <div className="text-[#888] text-[14px] font-bold uppercase tracking-[4px] mb-8 text-center">
                           UAU, ESTÃO JUNTOS HÁ
                         </div>
 
-                        {/* O bloco do contador com as bordas arredondadas */}
                         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[20px] overflow-hidden w-full max-w-[360px] shadow-2xl">
                           <div className="grid grid-cols-3 relative h-[200px]">
-                            {/* Linha Horizontal (Centro) */}
                             <div className="absolute top-1/2 left-[5%] right-[5%] h-px bg-[#333] -translate-y-1/2 z-0" />
                             
-                            {/* Linhas Verticais */}
                             <div className="absolute left-[33.33%] top-[15%] bottom-[15%] w-px bg-[#333] z-0" />
                             <div className="absolute left-[66.66%] top-[15%] bottom-[15%] w-px bg-[#333] z-0" />
 
-                            {/* Itens de tempo */}
                             {[
                               { val: timeDiff?.years || 0, label: 'ANOS' },
                               { val: timeDiff?.months || 0, label: 'MESES' },
@@ -1287,7 +1207,6 @@ export function DeviceMockup({
                           </div>
                         </div>
 
-                        {/* Data Inferior */}
                         <div className="text-[#555] text-[14px] mt-8 text-center font-medium">
                           Desde {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                         </div>
