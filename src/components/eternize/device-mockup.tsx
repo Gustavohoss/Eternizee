@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
@@ -42,7 +41,7 @@ import {
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, EffectCards, Autoplay } from 'swiper/modules';
+import { EffectCoverflow, EffectCards, Autoplay, EffectCreative } from 'swiper/modules';
 import { cn } from '@/lib/utils';
 import { intervalToDuration, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -56,6 +55,7 @@ import { ThemeId } from '@/app/criador/constants';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/effect-cards';
+import 'swiper/css/effect-creative';
 
 interface DeviceMockupProps {
   selectedTheme?: ThemeId;
@@ -1166,13 +1166,14 @@ export function DeviceMockup({
                         </div>
                       ) : (
                         <Swiper
-                          effect={photoEffect === 'coverflow' ? 'coverflow' : 'cards'}
+                          effect={photoEffect === 'coverflow' ? 'coverflow' : 'creative'}
                           grabCursor={true}
                           centeredSlides={true}
                           slidesPerView={1}
                           loop={true}
+                          speed={450}
                           autoplay={{ delay: 3000, disableOnInteraction: false }}
-                          modules={[EffectCoverflow, EffectCards, Autoplay]}
+                          modules={[EffectCoverflow, EffectCreative, Autoplay]}
                           coverflowEffect={{
                             rotate: 30,
                             stretch: 0,
@@ -1180,10 +1181,19 @@ export function DeviceMockup({
                             modifier: 1,
                             slideShadows: true,
                           }}
-                          cardsEffect={{
-                            slideShadows: true,
-                            rotate: true,
-                          }}
+                          creativeEffect={photoEffect === 'cards' ? {
+                            limitProgress: 3,
+                            prev: {
+                              translate: ["-125%", "5%", -500],
+                              rotate: [0, 0, -15],
+                              opacity: 0,
+                            },
+                            next: {
+                              translate: [0, 0, -35],
+                              scale: 0.90,
+                              opacity: 1,
+                            },
+                          } : undefined}
                           className="w-full h-full"
                         >
                           {uploadedPhotos.map((photo, i) => (
