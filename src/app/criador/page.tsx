@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { getContrastColor } from '@/lib/color-utils';
 import { Step, MOCK_CITIES, ThemeId } from './constants';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useFirestore, useAuth } from '@/firebase';
+import { useFirestore, useAuth, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
 
@@ -124,11 +124,16 @@ export default function CriadorApp() {
     setIsSaving(true);
 
     try {
-      if (!auth.currentUser) {
-        await signInAnonymously(auth);
+      // Garante que o usuário está autenticado
+      let currentUser = auth.currentUser;
+      if (!currentUser) {
+        const credential = await signInAnonymously(auth);
+        currentUser = credential.user;
       }
       
-      const userId = auth.currentUser?.uid;
+      if (!currentUser) throw new Error("Falha na autenticação silenciosa.");
+
+      const userId = currentUser.uid;
       const contentData = {
         selectedTheme, selectedBgColor, selectedEffect, isEmojiRainEnabled, selectedEmojis,
         emojiSize, emojiRainPosition, selectedCountStyle, photoEffect, date: date?.toISOString(),
@@ -141,7 +146,7 @@ export default function CriadorApp() {
       };
 
       const publishedRef = doc(firestore, 'published_sites', finalSlug);
-      await setDoc(publishedRef, {
+      const docData = {
         id: finalSlug,
         userId,
         name: pageTitle || 'Meu Presente',
@@ -151,13 +156,29 @@ export default function CriadorApp() {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         publishedAt: serverTimestamp(),
+      };
+
+      // Inicia a escrita no Firestore sem aguardar (non-blocking)
+      setDoc(publishedRef, docData).catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: publishedRef.path,
+          operation: 'create',
+          requestResourceData: docData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
       });
 
-      setSavedUrl(`${window.location.origin}/site/${finalSlug}`);
+      // Prossegue imediatamente para a tela de sucesso para melhor UX (feedback instantâneo)
+      // Adicionamos um pequeno delay artificial para a animação de "eternizando"
+      setTimeout(() => {
+        setSavedUrl(`${window.location.origin}/site/${finalSlug}`);
+        setIsSaving(false);
+      }, 1800);
+
     } catch (error) {
       console.error("Erro ao salvar projeto:", error);
-    } finally {
       setIsSaving(false);
+      alert("Ocorreu um erro ao salvar sua página. Por favor, tente novamente.");
     }
   };
 
