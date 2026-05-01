@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { 
   Heart, 
@@ -26,7 +26,6 @@ import {
   UserPlus,
   UserSquare2
 } from 'lucide-react';
-import useEmblaCarousel from 'embla-carousel-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay, EffectCreative } from 'swiper/modules';
 import { cn } from '@/lib/utils';
@@ -144,14 +143,6 @@ export function DeviceMockup({
   
   isFullscreen = false
 }: DeviceMockupProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    duration: 30,
-    align: 'center',
-    containScroll: false,
-    skipSnaps: false
-  });
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const [timeDiff, setTimeDiff] = useState<any>(null);
 
@@ -238,18 +229,6 @@ export function DeviceMockup({
     const interval = setInterval(updateCounter, 1000);
     return () => clearInterval(interval);
   }, [date]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
-  }, [emblaApi, onSelect]);
 
   const totalDays = useMemo(() => {
     if (!date) return 26; 
@@ -1090,61 +1069,48 @@ export function DeviceMockup({
                   
                   <div className="w-full aspect-square relative shadow-[inset_0_0_15px_rgba(0,0,0,0.2)] rounded-[4px] overflow-hidden">
                     {uploadedPhotos.length > 0 ? (
-                      photoEffect === 'slide' ? (
-                        <div className="w-full h-full overflow-hidden" ref={emblaRef}>
-                          <div className="flex h-full items-center">
-                            {uploadedPhotos.map((photo, i) => (
-                              <div key={i} className="relative aspect-square flex-[0_0_100%] flex items-center justify-center">
-                                <div className="w-full h-full relative overflow-hidden">
-                                  <Image src={photo} fill className="object-cover block" alt={`Foto ${i + 1}`} sizes="300px" priority />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <Swiper
-                          effect={photoEffect === 'coverflow' ? 'coverflow' : 'creative'}
-                          grabCursor={true}
-                          centeredSlides={true}
-                          slidesPerView={1}
-                          loop={true}
-                          speed={photoEffect === 'fan' ? 600 : 450}
-                          autoplay={{ delay: 3000, disableOnInteraction: false }}
-                          modules={[EffectCoverflow, EffectCreative, Autoplay]}
-                          watchSlidesProgress={true}
-                          className={cn("w-full h-full", photoEffect === 'fan' && "fan-swiper")}
-                          coverflowEffect={photoEffect === 'coverflow' ? {
-                            rotate: 30,
-                            stretch: 0,
-                            depth: 100,
-                            modifier: 1,
-                            slideShadows: true,
-                          } : undefined}
-                          creativeEffect={photoEffect === 'fan' ? {
-                            limitProgress: 4,
-                            prev: {
-                              translate: [0, "-120%", -500],
-                              rotate: [0, 0, 15],
-                              opacity: 0,
-                            },
-                            next: {
-                              translate: ["15%", 0, -150],
-                              rotate: [0, 0, 5],
-                              scale: 0.85,
-                              opacity: 1,
-                            },
-                          } : undefined}
-                        >
-                          {uploadedPhotos.map((photo, i) => (
-                            <SwiperSlide key={i}>
-                              <div className="w-full h-full relative">
-                                <Image src={photo} fill className="object-cover" alt="" priority />
-                              </div>
-                            </SwiperSlide>
-                          ))}
-                        </Swiper>
-                      )
+                      <Swiper
+                        key={photoEffect} // FORÇA A REINICIALIZAÇÃO DO SWIPER AO TROCAR O EFEITO (CORRIGE BUG DE ARRASTE)
+                        effect={photoEffect === 'slide' ? 'slide' : photoEffect === 'coverflow' ? 'coverflow' : 'creative'}
+                        grabCursor={true}
+                        centeredSlides={true}
+                        slidesPerView={1}
+                        loop={true}
+                        speed={photoEffect === 'fan' ? 600 : 450}
+                        autoplay={{ delay: 3000, disableOnInteraction: false }}
+                        modules={[EffectCoverflow, EffectCreative, Autoplay]}
+                        watchSlidesProgress={true}
+                        className={cn("w-full h-full", photoEffect === 'fan' && "fan-swiper")}
+                        coverflowEffect={photoEffect === 'coverflow' ? {
+                          rotate: 30,
+                          stretch: 0,
+                          depth: 100,
+                          modifier: 1,
+                          slideShadows: true,
+                        } : undefined}
+                        creativeEffect={photoEffect === 'fan' ? {
+                          limitProgress: 4,
+                          prev: {
+                            translate: [0, "-120%", -500],
+                            rotate: [0, 0, 15],
+                            opacity: 0,
+                          },
+                          next: {
+                            translate: ["15%", 0, -150],
+                            rotate: [0, 0, 5],
+                            scale: 0.85,
+                            opacity: 1,
+                          },
+                        } : undefined}
+                      >
+                        {uploadedPhotos.map((photo, i) => (
+                          <SwiperSlide key={i}>
+                            <div className="w-full h-full relative">
+                              <Image src={photo} fill className="object-cover" alt="" priority />
+                            </div>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
                     ) : (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f5f5f5] rounded-[4px]">
                         <ImageIcon className="w-12 h-12 text-black/10" />
