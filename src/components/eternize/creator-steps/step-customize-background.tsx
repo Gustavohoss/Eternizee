@@ -335,7 +335,7 @@ export function StepCustomizeBackground({
         </div>
 
         <div className={cn(
-          "relative overflow-hidden bg-white/5 px-5 py-4.5 rounded-[1.5rem] border transition-all duration-300",
+          "relative overflow-hidden bg-white/5 rounded-[1.5rem] border transition-all duration-300",
           isEmojiRainEnabled ? "border-primary ring-1 ring-primary/40 shadow-[0_0_30px_rgba(225,29,72,0.15)]" : "border-white/10"
         )}>
           {/* Efeito de Chuva de Emojis no Fundo do Bloco (Sempre Visível) */}
@@ -360,10 +360,13 @@ export function StepCustomizeBackground({
             ))}
           </div>
 
-          <div className="relative z-10 space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="relative z-10 flex flex-col">
+            {/* Header / Toggle Section - Mantém a altura igual aos outros blocos (h-20) */}
+            <div className="flex items-center justify-between px-5 h-20">
               <div className="flex items-center gap-3">
-                <div className="bg-primary/10 p-2 rounded-xl border border-primary/20"><Heart className="w-5 h-5 text-primary fill-primary" /></div>
+                <div className="bg-primary/10 p-2 rounded-xl border border-primary/20">
+                  <Heart className="w-5 h-5 text-primary fill-primary" />
+                </div>
                 <div>
                   <p className="text-[12px] font-black uppercase tracking-wider text-white">Chuva de Emojis</p>
                   <p className="text-[10px] text-white/40 font-medium">Ativar emojis caindo</p>
@@ -372,8 +375,9 @@ export function StepCustomizeBackground({
               <Switch checked={isEmojiRainEnabled} onCheckedChange={onEmojiRainToggle} />
             </div>
 
+            {/* Opções Expandidas */}
             {isEmojiRainEnabled && (
-              <div className="space-y-5 pt-4 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="px-5 pb-6 space-y-5 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500 pt-5">
                 <div className="space-y-4">
                   <Label className="text-[10px] font-black uppercase tracking-wider text-white/60 flex items-center gap-2">
                     <Heart className="w-3 h-3" /> Escolha os emojis (Até 3)
