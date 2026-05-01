@@ -24,7 +24,8 @@ import {
   Grid as GridIcon,
   Bell,
   UserPlus,
-  UserSquare2
+  UserSquare2,
+  Check
 } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay, EffectCreative } from 'swiper/modules';
@@ -563,23 +564,25 @@ export function DeviceMockup({
         </div>
       )}
 
+      {/* Título de prévia e barra de URL falsa são exibidos apenas quando NÃO estiver em tela cheia (site final) */}
       {!isFullscreen && (
-        <div className="mb-6 text-center"><p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p></div>
+        <>
+          <div className="mb-6 text-center">
+            <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Prévia em tempo real</p>
+          </div>
+          
+          <div className="bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center shrink-0 rounded-t-2xl">
+            <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200 max-w-[400px]">
+              <Lock className="w-3 h-3 text-neutral-400" />
+              <div className="text-[11px] text-neutral-600 font-medium truncate">eternize.com/{slugifiedTitle || 'seu-nome'}</div>
+            </div>
+          </div>
+        </>
       )}
-      
-      <div className={cn(
-        "bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center shrink-0",
-        isFullscreen ? "rounded-none border-none" : "rounded-t-2xl"
-      )}>
-        <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200 max-w-[400px]">
-          <Lock className="w-3 h-3 text-neutral-400" />
-          <div className="text-[11px] text-neutral-600 font-medium truncate">eternize.com/{slugifiedTitle || 'seu-nome'}</div>
-        </div>
-      </div>
 
       <div className={cn(
-        "relative bg-black border-x border-b border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar flex flex-col",
-        isFullscreen ? "rounded-none border-none" : "rounded-b-[2.5rem] aspect-[9/19]"
+        "relative bg-black border-white/10 shadow-2xl flex-1 overflow-hidden no-scrollbar flex flex-col",
+        isFullscreen ? "rounded-none border-none" : "rounded-b-[2.5rem] aspect-[9/19] border-x border-b"
       )}>
         <div className="absolute inset-0 transition-colors duration-500" style={{ backgroundColor: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? (selectedTheme === 'instagram' ? '#000000' : '#121212') : selectedBgColor }}>
           
