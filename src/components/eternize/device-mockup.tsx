@@ -328,14 +328,14 @@ export function DeviceMockup({
   const dateStyle: React.CSSProperties = {
     color: selectedTheme === 'netflix' ? '#e50914' : dateColor,
     fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : getFontFamily(dateFont || 'inter'),
-    fontWeight: selectedTheme === 'netflix' ? '700' : (dateIsBold ? '700' : '400'),
+    fontWeight: selectedTheme === 'netflix' ? '400' : (dateIsBold ? '700' : '400'),
     textShadow: selectedTheme === 'netflix' ? 'none' : (dateHasNeon ? `0 0 ${dateNeonStrength!/2}px ${dateColor}, 0 0 ${dateNeonStrength!}px ${dateColor}` : 'none')
   };
 
   const titleStyle: React.CSSProperties = { 
     color: selectedTheme === 'netflix' ? '#ffffff' : titleColor,
     fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : (selectedTheme === 'spotify' || selectedTheme === 'instagram') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
-    fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? '900' : (titleIsBold ? '700' : '400'),
+    fontWeight: selectedTheme === 'netflix' ? '400' : (selectedTheme === 'spotify' || selectedTheme === 'instagram') ? '900' : (titleIsBold ? '700' : '400'),
     textShadow: selectedTheme === 'netflix' ? 'none' : (titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none'),
   };
 
