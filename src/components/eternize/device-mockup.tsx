@@ -264,6 +264,10 @@ export function DeviceMockup({
 
   const startNetflixExperience = () => {
     if (uploadedPhotos.length === 0) return;
+    
+    // Inicia a música ao clicar em reproduzir
+    setIsAudioPlaying(true);
+    
     setExperienceAutoPlay(true);
     setIsStoryPaused(false);
     setIsIntroActive(true);
@@ -830,6 +834,15 @@ export function DeviceMockup({
                       <div className="space-y-4 text-[13px]"><div className="flex gap-2"><span className="text-neutral-500 min-w-[100px]">Data:</span><span className="text-neutral-200">{date ? format(date, "dd/MM/yyyy") : '07/04/2017'}</span></div></div>
                     )}
                   </div>
+
+                  {musicData && (
+                    <MusicPlayer 
+                      musicData={musicData} 
+                      isAutoPlay={isAudioPlaying} 
+                      hideUI 
+                      onStateChange={(playing) => setIsAudioPlaying(playing)}
+                    />
+                  )}
                 </div>
               ) : selectedTheme === 'spotify' ? (
                 <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar overflow-hidden">
