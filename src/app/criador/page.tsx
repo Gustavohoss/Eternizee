@@ -27,6 +27,39 @@ import { StepPlans } from '@/components/eternize/creator-steps/step-plans';
 import { StepOrderBump } from '@/components/eternize/creator-steps/step-order-bump';
 import { StepSubdomainConfig } from '@/components/eternize/creator-steps/step-subdomain-config';
 
+// Helper to compress image client-side
+const compressImage = (base64Str: string): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = base64Str;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 800; // Resolução suficiente para mobile
+      const MAX_HEIGHT = 800;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+      // Converte para JPEG com 60% de qualidade para economizar MUITO espaço
+      resolve(canvas.toDataURL('image/jpeg', 0.6));
+    };
+  });
+};
+
 export default function CriadorApp() {
   const isMobile = useIsMobile();
   const firestore = useFirestore();
@@ -145,6 +178,14 @@ export default function CriadorApp() {
         isMusicAutoPlay, locationQuery
       };
 
+      const jsonContent = JSON.stringify(contentData);
+      
+      // Verifica se o tamanho do JSON excede o limite do Firestore (aprox. 1MB)
+      // Fotos Base64 comprimidas dificilmente passarão de 800KB (8 fotos x 100KB)
+      if (jsonContent.length > 1000000) {
+        throw new Error("O conteúdo da página está muito grande. Tente remover algumas fotos.");
+      }
+
       const publishedRef = doc(firestore, 'published_sites', finalSlug);
       const docData = {
         id: finalSlug,
@@ -153,14 +194,19 @@ export default function CriadorApp() {
         status: 'published',
         subdomainName: finalSlug,
         pageUrl: `${window.location.origin}/site/${finalSlug}`,
-        contentJson: JSON.stringify(contentData),
+        contentJson: jsonContent,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         publishedAt: serverTimestamp(),
       };
 
-      // Inicia a escrita no Firestore sem aguardar (non-blocking)
-      setDoc(publishedRef, docData).catch(async (error) => {
+      // Inicia a escrita no Firestore
+      setDoc(publishedRef, docData).then(() => {
+        // Só muda de tela após o Firestore aceitar o documento no cache local
+        setSavedUrl(`${window.location.origin}/site/${finalSlug}`);
+        setIsSaving(false);
+      }).catch(async (error) => {
+        console.error("Erro no setDoc:", error);
         setIsSaving(false);
         const permissionError = new FirestorePermissionError({
           path: publishedRef.path,
@@ -168,19 +214,13 @@ export default function CriadorApp() {
           requestResourceData: docData,
         });
         errorEmitter.emit('permission-error', permissionError);
+        alert("Erro ao salvar. Verifique se as fotos não são pesadas demais.");
       });
 
-      // Prossegue imediatamente para a tela de sucesso para melhor UX (feedback instantâneo)
-      // Adicionamos um pequeno delay artificial para a animação de "eternizando"
-      setTimeout(() => {
-        setSavedUrl(`${window.location.origin}/site/${finalSlug}`);
-        setIsSaving(false);
-      }, 1800);
-
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao salvar projeto:", error);
       setIsSaving(false);
-      alert("Ocorreu um erro ao salvar sua página. Por favor, tente novamente.");
+      alert(error.message || "Ocorreu um erro ao salvar sua página. Por favor, tente novamente.");
     }
   };
 
@@ -197,7 +237,11 @@ export default function CriadorApp() {
     if (!files) return;
     Array.from(files).forEach(file => {
       const reader = new FileReader();
-      reader.onloadend = () => setUploadedPhotos(prev => [...prev, reader.result as string].slice(0, 8));
+      reader.onloadend = async () => {
+        // Comprime a imagem antes de salvar no estado
+        const compressed = await compressImage(reader.result as string);
+        setUploadedPhotos(prev => [...prev, compressed].slice(0, 8));
+      };
       reader.readAsDataURL(file);
     });
   };
@@ -248,7 +292,7 @@ export default function CriadorApp() {
 
   if (savedUrl) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in-95 duration-700">
+      <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in-95 duration-700">
         <div className="bg-primary/10 p-5 rounded-full mb-6 border border-primary/20 shadow-[0_0_50px_rgba(225,29,72,0.2)]">
           <CheckCircle2 className="w-12 h-12 text-primary" />
         </div>
