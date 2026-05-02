@@ -170,6 +170,11 @@ export function DeviceMockup({
   const [dynamicSpotifyColor, setDynamicSpotifyColor] = useState('#1a0a0a');
   const [spotifyHeaderOpacity, setSpotifyHeaderOpacity] = useState(0);
 
+  // Sincroniza o estado de áudio com a configuração de AutoPlay
+  useEffect(() => {
+    setIsAudioPlaying(isAutoPlay);
+  }, [isAutoPlay]);
+
   useEffect(() => {
     if (selectedTheme === 'spotify') {
       setActiveTab('músicas');
@@ -376,12 +381,12 @@ export function DeviceMockup({
       "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full" : "max-w-[380px]"
     )}>
-      {/* Player Global Unificado - Renderizado fora de qualquer scroll para máxima estabilidade */}
-      {musicData && (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') && (
+      {/* Player Global Unificado - Sempre montado se houver música para estar pronto para os temas especiais */}
+      {musicData && (
         <MusicPlayer 
           musicData={musicData} 
           isAutoPlay={isAudioPlaying} 
-          hideUI 
+          hideUI={selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram'}
           onStateChange={(playing) => setIsAudioPlaying(playing)}
         />
       )}
@@ -1005,7 +1010,7 @@ export function DeviceMockup({
                           <div className="bg-[#181818] rounded-[24px] overflow-hidden flex flex-col shadow-2xl border border-white/5 transition-transform duration-500 hover:scale-[1.01]">
                             <div className="relative aspect-square md:aspect-video w-full">
                               {uploadedPhotos.length > 0 ? (
-                                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
+                                Image.src && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
                               ) : (
                                 <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
                                   <ImageIcon className="w-10 h-10 text-white/10" />
@@ -1291,7 +1296,20 @@ export function DeviceMockup({
                     </div>
                   )}
                   
-                  {musicData && <div className="w-full px-1 mt-4"><MusicPlayer musicData={musicData} musicBoxColor={musicBoxColor} musicTextColor={musicTextColor} musicHasNeon={musicHasNeon} musicNeonStrength={musicNeonStrength} isAutoPlay={isAutoPlay} /></div>}
+                  {/* Player no tema Classic é o inline padrão */}
+                  {musicData && selectedTheme === 'classic' && (
+                    <div className="w-full px-1 mt-4">
+                      <MusicPlayer 
+                        musicData={musicData} 
+                        musicBoxColor={musicBoxColor} 
+                        musicTextColor={musicTextColor} 
+                        musicHasNeon={musicHasNeon} 
+                        musicNeonStrength={musicNeonStrength} 
+                        isAutoPlay={isAudioPlaying}
+                        onStateChange={(playing) => setIsAudioPlaying(playing)}
+                      />
+                    </div>
+                  )}
                   <div className="h-20 shrink-0" />
                 </div>
               )}

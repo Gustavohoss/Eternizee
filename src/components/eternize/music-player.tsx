@@ -83,15 +83,15 @@ export function MusicPlayer({
             fs: 0,
             rel: 0,
             enablejsapi: 1,
-            origin: window.location.origin,
-            mute: isAutoPlay ? 0 : 1 
+            origin: typeof window !== 'undefined' ? window.location.origin : '',
+            mute: 1 // Começa mutado para garantir que o autoplay não seja bloqueado
           },
           events: {
             onReady: (event: any) => {
               setIsReady(true);
               setDuration(event.target.getDuration());
               
-              // Se havia um play pendente (clique antes de carregar), executa agora
+              // Se havia um play pendente ou autoplay está ativo, inicia imediatamente
               if (pendingPlay.current || isAutoPlay) {
                 event.target.unMute();
                 event.target.setVolume(100);
@@ -101,11 +101,10 @@ export function MusicPlayer({
             },
             onStateChange: (event: any) => {
               const playing = event.data === 1;
+              setIsPlaying(playing);
               if (playing) {
-                setIsPlaying(true);
                 startTimer();
               } else {
-                setIsPlaying(false);
                 stopTimer();
               }
               if (onStateChange) onStateChange(playing);
@@ -144,9 +143,13 @@ export function MusicPlayer({
       
       if (isAutoPlay) {
         if (isReady) {
-          if (typeof playerRef.current.unMute === 'function') playerRef.current.unMute();
-          if (typeof playerRef.current.setVolume === 'function') playerRef.current.setVolume(100);
-          if (typeof playerRef.current.playVideo === 'function') playerRef.current.playVideo();
+          try {
+            playerRef.current.unMute();
+            playerRef.current.setVolume(100);
+            playerRef.current.playVideo();
+          } catch (e) {
+            console.warn("Retrying play command...");
+          }
         } else {
           pendingPlay.current = true;
         }
@@ -252,7 +255,7 @@ export function MusicPlayer({
         </div>
 
         <div className={cn("transition-transform duration-500 opacity-50", isExpanded ? "rotate-180" : "")} style={{ color: musicTextColor }}>
-          <ChevronDown size={20} />
+          <ChevronDown size(20) />
         </div>
       </div>
 
@@ -275,7 +278,7 @@ export function MusicPlayer({
         </div>
 
         <div className="player-controls flex items-center justify-between mt-[15px] px-[5px]">
-          <Volume2 size={18} className="opacity-50" style={{ color: musicTextColor }} />
+          <Volume2 size(18) className="opacity-50" style={{ color: musicTextColor }} />
           <button 
             type="button"
             disabled={!isReady}
@@ -286,9 +289,9 @@ export function MusicPlayer({
             {!isReady ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : isPlaying ? (
-              <Pause size={22} fill="white" />
+              <Pause size(22) fill="white" />
             ) : (
-              <Play size={22} fill="white" className="ml-[3px]" />
+              <Play size(22) fill="white" className="ml-[3px]" />
             )}
           </button>
           <div style={{ width: '18px' }} />
