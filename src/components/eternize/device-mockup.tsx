@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -166,8 +165,8 @@ export function DeviceMockup({
   const [isLiked, setIsLiked] = useState(false);
   const [isInList, setIsInList] = useState(false);
   
-  // Spotify Specific State
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  // Spotify/Netflix Specific State
+  const [isAudioPlaying, setIsAudioPlaying] = useState(isAutoPlay);
   const [dynamicSpotifyColor, setDynamicSpotifyColor] = useState('#1a0a0a');
   const [spotifyHeaderOpacity, setSpotifyHeaderOpacity] = useState(0);
 
@@ -265,7 +264,7 @@ export function DeviceMockup({
   const startNetflixExperience = () => {
     if (uploadedPhotos.length === 0) return;
     
-    // Inicia a música ao clicar em reproduzir (interação do usuário)
+    // Inicia a música IMEDIATAMENTE (o MusicPlayer está observando este estado)
     setIsAudioPlaying(true);
     
     setExperienceAutoPlay(true);
@@ -326,7 +325,6 @@ export function DeviceMockup({
 
   const togglePause = () => {
     setIsStoryPaused(!isStoryPaused);
-    // Não alteramos isAudioPlaying aqui para a música continuar tocando se pausar o visual
   };
 
   const dateStyle: React.CSSProperties = {
@@ -378,6 +376,16 @@ export function DeviceMockup({
       "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full" : "max-w-[380px]"
     )}>
+      {/* Player Global Unificado - Renderizado fora de qualquer scroll para máxima estabilidade */}
+      {musicData && (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') && (
+        <MusicPlayer 
+          musicData={musicData} 
+          isAutoPlay={isAudioPlaying} 
+          hideUI 
+          onStateChange={(playing) => setIsAudioPlaying(playing)}
+        />
+      )}
+
       {isIntroActive && (
         <div className="absolute inset-0 z-[1000] overflow-hidden bg-black flex items-center justify-center">
           <div className="absolute inset-0 flex z-10 pointer-events-none">
@@ -1286,16 +1294,6 @@ export function DeviceMockup({
                   {musicData && <div className="w-full px-1 mt-4"><MusicPlayer musicData={musicData} musicBoxColor={musicBoxColor} musicTextColor={musicTextColor} musicHasNeon={musicHasNeon} musicNeonStrength={musicNeonStrength} isAutoPlay={isAutoPlay} /></div>}
                   <div className="h-20 shrink-0" />
                 </div>
-              )}
-
-              {/* Player Global Unificado para Temas Especiais (Netflix/Spotify/Instagram) */}
-              {musicData && (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') && (
-                <MusicPlayer 
-                  musicData={musicData} 
-                  isAutoPlay={isAudioPlaying} 
-                  hideUI 
-                  onStateChange={(playing) => setIsAudioPlaying(playing)}
-                />
               )}
             </div>
           </div>

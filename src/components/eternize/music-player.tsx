@@ -44,6 +44,7 @@ export function MusicPlayer({
   const playerRef = useRef<any>(null);
   const containerId = useRef(`yt-player-${Math.random().toString(36).substring(2, 11)}`);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingPlay = useRef(false);
 
   useEffect(() => {
     const loadYoutubeApi = () => {
@@ -89,6 +90,14 @@ export function MusicPlayer({
             onReady: (event: any) => {
               setIsReady(true);
               setDuration(event.target.getDuration());
+              
+              // Se havia um play pendente (clique antes de carregar), executa agora
+              if (pendingPlay.current || isAutoPlay) {
+                event.target.unMute();
+                event.target.setVolume(100);
+                event.target.playVideo();
+                pendingPlay.current = false;
+              }
             },
             onStateChange: (event: any) => {
               const playing = event.data === 1;
@@ -119,12 +128,14 @@ export function MusicPlayer({
     };
   }, []);
 
+  // Monitora mudanças no estado isAutoPlay (usado como trigger de play/pause externo)
   useEffect(() => {
-    if (!isReady || !playerRef.current) return;
+    if (!playerRef.current) return;
 
     if (musicData?.id) {
+      // Verifica se o vídeo mudou
       const currentPlayerId = typeof playerRef.current.getVideoData === 'function' ? playerRef.current.getVideoData().video_id : null;
-      if (currentPlayerId !== musicData.id) {
+      if (currentPlayerId && currentPlayerId !== musicData.id) {
         if (typeof playerRef.current.loadVideoById === 'function') {
           playerRef.current.loadVideoById(musicData.id);
           setCurrentTime(0);
@@ -132,11 +143,17 @@ export function MusicPlayer({
       }
       
       if (isAutoPlay) {
-        if (typeof playerRef.current.unMute === 'function') playerRef.current.unMute();
-        if (typeof playerRef.current.setVolume === 'function') playerRef.current.setVolume(100);
-        if (typeof playerRef.current.playVideo === 'function') playerRef.current.playVideo();
+        if (isReady) {
+          if (typeof playerRef.current.unMute === 'function') playerRef.current.unMute();
+          if (typeof playerRef.current.setVolume === 'function') playerRef.current.setVolume(100);
+          if (typeof playerRef.current.playVideo === 'function') playerRef.current.playVideo();
+        } else {
+          pendingPlay.current = true;
+        }
       } else {
-        if (typeof playerRef.current.pauseVideo === 'function') playerRef.current.pauseVideo();
+        if (isReady && typeof playerRef.current.pauseVideo === 'function') {
+          playerRef.current.pauseVideo();
+        }
       }
     }
   }, [musicData?.id, isReady, isAutoPlay]);
