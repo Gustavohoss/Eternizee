@@ -84,14 +84,13 @@ export function MusicPlayer({
             rel: 0,
             enablejsapi: 1,
             origin: typeof window !== 'undefined' ? window.location.origin : '',
-            mute: 1 // Começa mutado para garantir que o autoplay não seja bloqueado
+            mute: 1 
           },
           events: {
             onReady: (event: any) => {
               setIsReady(true);
               setDuration(event.target.getDuration());
               
-              // Se havia um play pendente ou autoplay está ativo, inicia imediatamente
               if (pendingPlay.current || isAutoPlay) {
                 event.target.unMute();
                 event.target.setVolume(100);
@@ -127,12 +126,10 @@ export function MusicPlayer({
     };
   }, []);
 
-  // Monitora mudanças no estado isAutoPlay (usado como trigger de play/pause externo)
   useEffect(() => {
     if (!playerRef.current) return;
 
     if (musicData?.id) {
-      // Verifica se o vídeo mudou
       const currentPlayerId = typeof playerRef.current.getVideoData === 'function' ? playerRef.current.getVideoData().video_id : null;
       if (currentPlayerId && currentPlayerId !== musicData.id) {
         if (typeof playerRef.current.loadVideoById === 'function') {
@@ -208,7 +205,7 @@ export function MusicPlayer({
 
   const accentColor = '#7a1a1a';
   const neonShadow = musicHasNeon 
-    ? `0 0 ${musicNeonStrength/2}px ${accentColor}, 0 0 ${musicNeonStrength}px ${accentColor}` 
+    ? `0 0 ${musicNeonStrength! / 2}px ${accentColor}, 0 0 ${musicNeonStrength}px ${accentColor}` 
     : 'none';
 
   if (hideUI) {
