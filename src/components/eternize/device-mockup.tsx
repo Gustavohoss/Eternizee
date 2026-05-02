@@ -333,7 +333,7 @@ export function DeviceMockup({
   };
 
   const titleStyle: React.CSSProperties = { 
-    color: selectedTheme === 'netflix' ? '#e50914' : titleColor,
+    color: selectedTheme === 'netflix' ? '#ffffff' : titleColor,
     fontFamily: selectedTheme === 'netflix' ? "'Bebas Neue', cursive" : (selectedTheme === 'spotify' || selectedTheme === 'instagram') ? "'DM Sans', sans-serif" : getFontFamily(titleFont || 'dancing-script'),
     fontWeight: (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') ? '900' : (titleIsBold ? '700' : '400'),
     textShadow: selectedTheme === 'netflix' ? 'none' : (titleHasNeon ? `0 0 ${titleNeonStrength!/2}px ${titleColor}, 0 0 ${titleNeonStrength!}px ${titleColor}` : 'none'),
