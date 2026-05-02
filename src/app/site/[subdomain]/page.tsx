@@ -19,7 +19,9 @@ export default function PublishedSitePage() {
 
   const { data: siteData, isLoading, error } = useDoc(siteRef as any);
 
-  if (isLoading) {
+  // Se estiver carregando OU se a conexão com o banco ainda não foi estabelecida (!siteRef),
+  // mostramos o loader para evitar o flash da tela de "não encontrado".
+  if (isLoading || !siteRef) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white">
         <div className="relative">
