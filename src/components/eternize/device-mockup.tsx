@@ -265,7 +265,7 @@ export function DeviceMockup({
   const startNetflixExperience = () => {
     if (uploadedPhotos.length === 0) return;
     
-    // Inicia a música ao clicar em reproduzir
+    // Inicia a música ao clicar em reproduzir (interação do usuário)
     setIsAudioPlaying(true);
     
     setExperienceAutoPlay(true);
@@ -326,7 +326,7 @@ export function DeviceMockup({
 
   const togglePause = () => {
     setIsStoryPaused(!isStoryPaused);
-    setExperienceAutoPlay(!isStoryPaused ? false : true);
+    // Não alteramos isAudioPlaying aqui para a música continuar tocando se pausar o visual
   };
 
   const dateStyle: React.CSSProperties = {
@@ -407,8 +407,9 @@ export function DeviceMockup({
       )}
 
       {showStories && uploadedPhotos.length > 0 && selectedTheme === 'netflix' && (
-        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700">
-          <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1">
+        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700 overflow-hidden">
+          {/* Static UI Layer (No Fade) */}
+          <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1 pointer-events-none">
             {uploadedPhotos.map((_, i) => (
               <div key={i} className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
                 <div 
@@ -427,16 +428,26 @@ export function DeviceMockup({
           >
             <X className="w-5 h-5" />
           </button>
+
+          {/* Navigation Controls (Invisible but clickable) */}
           <div className="absolute inset-0 z-[505] flex">
             <div className="flex-1 h-full cursor-pointer" onClick={prevStory} />
             <div className="flex-1 h-full cursor-pointer" onClick={nextStory} />
           </div>
-          <div className={cn(
-            "flex-1 relative transition-all duration-[1200ms] ease-in-out bg-black",
-            isFading ? "opacity-0 scale-95" : "opacity-100 scale-100"
-          )}>
-            <Image src={uploadedPhotos[currentStoryIndex]} fill className="object-cover" alt={`Story ${currentStoryIndex}`} priority />
-            <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black via-black/90 to-transparent">
+
+          {/* Content Container */}
+          <div className="flex-1 relative flex flex-col">
+            {/* Fading Photo Layer */}
+            <div className={cn(
+              "absolute inset-0 transition-all duration-[1200ms] ease-in-out bg-black",
+              isFading ? "opacity-0 scale-95" : "opacity-100 scale-100"
+            )}>
+              <Image src={uploadedPhotos[currentStoryIndex]} fill className="object-cover" alt={`Story ${currentStoryIndex}`} priority />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
+            </div>
+
+            {/* Static UI Layer (Bottom) */}
+            <div className="mt-auto relative z-[515] p-8 pb-12 flex flex-col pointer-events-none">
               <div className="flex justify-center gap-1.5 mb-6">
                 {uploadedPhotos.map((_, i) => (
                   <div key={i} className={cn(
@@ -447,7 +458,10 @@ export function DeviceMockup({
               </div>
               <p className="text-white/55 text-[10px] font-bold uppercase tracking-wider mb-1">MEMÓRIA {currentStoryIndex + 1} / {uploadedPhotos.length}</p>
               <h2 style={titleStyle} className="text-3xl font-bebas text-white tracking-tight leading-none mb-8">{pageTitle || 'ETERNIZE'}</h2>
-              <button onClick={togglePause} className="w-full bg-white text-black py-4 rounded-lg flex items-center justify-center gap-3 text-sm font-black active:scale-95 transition-transform shadow-2xl">
+              <button 
+                onClick={(e) => { e.stopPropagation(); togglePause(); }} 
+                className="w-full bg-white text-black py-4 rounded-lg flex items-center justify-center gap-3 text-sm font-black active:scale-95 transition-transform shadow-2xl pointer-events-auto"
+              >
                 {isStoryPaused ? <><Play className="w-4 h-4 fill-current" /> Retomar</> : <><Pause className="w-4 h-4 fill-current" /> Pausar</>}
               </button>
             </div>
@@ -754,15 +768,6 @@ export function DeviceMockup({
                       </div>
                     </div>
                   )}
-
-                  {musicData && (
-                    <MusicPlayer 
-                      musicData={musicData} 
-                      isAutoPlay={isAudioPlaying} 
-                      hideUI 
-                      onStateChange={(playing) => setIsAudioPlaying(playing)}
-                    />
-                  )}
                 </div>
               ) : selectedTheme === 'netflix' ? (
                 <div className="w-full h-full bg-[#141414] text-white font-inter relative flex flex-col no-scrollbar overflow-y-auto">
@@ -834,15 +839,6 @@ export function DeviceMockup({
                       <div className="space-y-4 text-[13px]"><div className="flex gap-2"><span className="text-neutral-500 min-w-[100px]">Data:</span><span className="text-neutral-200">{date ? format(date, "dd/MM/yyyy") : '07/04/2017'}</span></div></div>
                     )}
                   </div>
-
-                  {musicData && (
-                    <MusicPlayer 
-                      musicData={musicData} 
-                      isAutoPlay={isAudioPlaying} 
-                      hideUI 
-                      onStateChange={(playing) => setIsAudioPlaying(playing)}
-                    />
-                  )}
                 </div>
               ) : selectedTheme === 'spotify' ? (
                 <div className="w-full h-full bg-[#121212] text-white font-inter relative flex flex-col no-scrollbar overflow-hidden">
@@ -1090,15 +1086,6 @@ export function DeviceMockup({
                       </div>
                     </div>
                   )}
-
-                  {musicData && (
-                    <MusicPlayer 
-                      musicData={musicData} 
-                      isAutoPlay={isAudioPlaying} 
-                      hideUI 
-                      onStateChange={(playing) => setIsAudioPlaying(playing)}
-                    />
-                  )}
                 </div>
               ) : (
                 <div className="w-full min-h-full flex flex-col items-center pt-8 px-5 gap-6">
@@ -1299,6 +1286,16 @@ export function DeviceMockup({
                   {musicData && <div className="w-full px-1 mt-4"><MusicPlayer musicData={musicData} musicBoxColor={musicBoxColor} musicTextColor={musicTextColor} musicHasNeon={musicHasNeon} musicNeonStrength={musicNeonStrength} isAutoPlay={isAutoPlay} /></div>}
                   <div className="h-20 shrink-0" />
                 </div>
+              )}
+
+              {/* Player Global Unificado para Temas Especiais (Netflix/Spotify/Instagram) */}
+              {musicData && (selectedTheme === 'netflix' || selectedTheme === 'spotify' || selectedTheme === 'instagram') && (
+                <MusicPlayer 
+                  musicData={musicData} 
+                  isAutoPlay={isAudioPlaying} 
+                  hideUI 
+                  onStateChange={(playing) => setIsAudioPlaying(playing)}
+                />
               )}
             </div>
           </div>
