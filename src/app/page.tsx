@@ -156,7 +156,7 @@ export default function LandingPage() {
         {/* Visual Carousel (Same as Theme Selection) */}
         <div className="flex-1 flex flex-col items-center justify-center w-full lg:w-auto relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
           <div className="relative w-full max-w-[400px] flex flex-col items-center">
-            {/* Carousel Container */}
+            {/* Carousel Container - Peeking enabled */}
             <div className="w-full overflow-visible" ref={emblaRef}>
               <div className="flex">
                 {THEME_OPTIONS.map((theme, i) => {
@@ -272,6 +272,69 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Steps Section */}
+      <section className="py-24 md:py-32 flex flex-col items-center px-[5%] border-t border-white/5 bg-[#050505]">
+        <div className="w-full max-w-[1100px] text-center">
+          {/* Numbers Line */}
+          <div className="hidden md:flex justify-between items-center relative mb-12 px-[10%]">
+            <div className="absolute top-1/2 left-[12%] right-[12%] h-0 border-t-2 border-dotted border-white/10 -z-0" />
+            
+            <div className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10 bg-[#ff4d6d] shadow-[0_0_30px_rgba(255,77,109,0.4)]">1</div>
+            <div className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10 bg-[#ef476f] shadow-[0_0_30px_rgba(239,71,111,0.4)]">2</div>
+            <div className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10 bg-[#bc47ef] shadow-[0_0_30px_rgba(188,71,239,0.4)]">3</div>
+            <div className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10 bg-[#8a47ef] shadow-[0_0_30px_rgba(138,71,239,0.4)]">4</div>
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-20">
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+              <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+              </div>
+              <h3 className="text-[18px] font-bold mb-4">Personalize</h3>
+              <p className="text-[13.5px] text-[#888] leading-relaxed">Personalize sua página com fotos, mensagens, efeitos especiais e muito mais.</p>
+            </div>
+
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+              <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.39 2.1-1.39 1.47 0 2.01.59 2.06 1.47h1.73c-.05-1.55-1.02-2.55-2.56-2.87V5h-2.34v1.63c-1.52.31-2.73 1.23-2.73 2.76 0 1.79 1.5 2.69 3.69 3.26 2.19.57 2.62 1.23 2.62 1.98 0 .83-.69 1.48-2.1 1.48-1.74 0-2.39-.73-2.48-1.72h-1.73c.12 1.83 1.2 2.74 2.71 3.06V19h2.34v-1.61c1.54-.33 2.85-1.23 2.85-2.8 0-2.15-1.76-3.05-4.14-3.65z"/></svg>
+              </div>
+              <h3 className="text-[18px] font-bold mb-4">Faça o pagamento</h3>
+              <p className="text-[13.5px] text-[#888] leading-relaxed">Escolha seu plano preferido e faça o pagamento de forma rápida e segura.</p>
+            </div>
+
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+              <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M3 3v6h6V3H3zm4.5 4.5h-3v-3h3v3zM3 15v6h6v-6H3zm4.5 4.5h-3v-3h3v3zM15 3v6h6V3h-6zm4.5 4.5h-3v-3h3v3zM19 19v2h2v-2h-2zm-2-2h2v-2h-2v2zm-2 2h2v-2h-2v2zm2-2h2v-2h-2v2z"/></svg>
+              </div>
+              <h3 className="text-[18px] font-bold mb-4">Receba seu acesso</h3>
+              <p className="text-[13.5px] text-[#888] leading-relaxed">Você receberá por email um QR code e link para acessar sua página.</p>
+            </div>
+
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+              <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              </div>
+              <h3 className="text-[18px] font-bold mb-4">Compartilhe o amor</h3>
+              <p className="text-[13.5px] text-[#888] leading-relaxed">Compartilhe a página com a pessoa amada e surpreenda-a de forma especial.</p>
+            </div>
+          </div>
+
+          {/* Final Call */}
+          <div className="flex flex-col items-center gap-8 mt-12">
+            <div className="w-[120px] h-[1px] bg-gradient-to-r from-transparent via-[#ff4d6d] to-transparent shadow-[0_0_8px_#ff4d6d] opacity-80" />
+            <h2 className="text-[32px] md:text-[42px] font-extrabold leading-tight text-white">
+              Uma <span className="text-[#ff4d6d]">declaração de amor</span> que<br className="hidden md:block" /> ficará para sempre.
+            </h2>
+            
+            <NextLink href="/criador" className="bg-gradient-to-r from-[#ff4d6d] to-[#c9184a] text-white px-10 py-5 rounded-full text-[18px] font-bold inline-flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_15px_35px_rgba(255,77,109,0.5)] shadow-[0_10px_25px_rgba(255,77,109,0.3)] group">
+              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              Criar minha página agora →
+            </NextLink>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-8 px-[8%] border-t border-[#1a1a1a] flex flex-col md:flex-row justify-between items-center gap-4 text-[#555] text-[12px] font-medium">
         <p>© 2025 Eternize - Presentes Digitais Eternos.</p>
@@ -284,3 +347,4 @@ export default function LandingPage() {
     </div>
   );
 }
+
