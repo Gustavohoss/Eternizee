@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -155,17 +156,36 @@ export default function LandingPage() {
                 },
               }}
               modules={[Autoplay, EffectCreative]}
-              className="w-full h-full rounded-[24px] shadow-2xl"
+              className="w-full h-full rounded-[24px] overflow-visible"
             >
-              <SwiperSlide className="rounded-[24px] overflow-hidden bg-[#111] border border-white/5">
-                <img src="https://picsum.photos/id/101/600/800" className="w-full h-full object-cover" alt="exemplo de página 1" />
-              </SwiperSlide>
-              <SwiperSlide className="rounded-[24px] overflow-hidden bg-[#111] border border-white/5">
-                <img src="https://picsum.photos/id/102/600/800" className="w-full h-full object-cover" alt="exemplo de página 2" />
-              </SwiperSlide>
-              <SwiperSlide className="rounded-[24px] overflow-hidden bg-[#111] border border-white/5">
-                <img src="https://picsum.photos/id/103/600/800" className="w-full h-full object-cover" alt="exemplo de página 3" />
-              </SwiperSlide>
+              {[101, 102, 103].map((id) => (
+                <SwiperSlide key={id} className="rounded-[24px] overflow-hidden bg-[#141414] border-2 border-[#ff4d6d] shadow-[0_0_40px_rgba(255,77,109,0.3),0_0_80px_rgba(255,77,109,0.1)] relative">
+                  {/* Top Glow Line */}
+                  <div 
+                    className="absolute top-0 left-0 right-0 h-[3px] z-30" 
+                    style={{ background: `linear-gradient(90deg, transparent, #ff4d6d, transparent)` }}
+                  />
+                  
+                  <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#1f1f1f] to-[#141414]">
+                    <img src={`https://picsum.photos/id/${id}/600/800`} className="w-full h-full object-cover" alt="exemplo de página" />
+                    {/* Gradient Overlay for Text */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
+                  </div>
+
+                  {/* Card Body Overlay - Identical to theme selection */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
+                    <div className="flex justify-between items-center mb-1">
+                      <h2 className="text-white text-lg font-black m-0 font-inter">Eternize</h2>
+                      <span className="px-2.5 py-0.5 rounded-full text-[0.6rem] font-black uppercase tracking-wider border border-[#ff4d6d]/40 bg-[#ff4d6d]/20 text-[#ff4d6d]">
+                        Premium
+                      </span>
+                    </div>
+                    <p className="text-[#b3b3b3] text-[10px] leading-snug font-medium line-clamp-2">
+                      Transforme suas memórias em um presente digital inesquecível.
+                    </p>
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>
