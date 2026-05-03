@@ -16,7 +16,7 @@ export default function LandingPage() {
   const [cIndex, setCIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Embla Carousel Logic (Same as creator)
+  // Embla Carousel Logic (Same as theme selection)
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     align: 'center', 
@@ -119,7 +119,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh-120px)] px-[5%] md:px-[8%] gap-12 lg:gap-20 py-12 lg:py-0">
         <div className="flex-1 max-w-[550px] text-center lg:text-left flex flex-col items-center lg:items-start animate-in fade-in slide-in-from-left-8 duration-1000">
-          <div className="bg-[#ff4d6d]/10 text-[#ff4d6d] px-4 py-1.5 rounded-full text-[11px] border border-[#ff4d6d]/20 mb-6 inline-block font-bold tracking-wide uppercase italic">
+          <div className="bg-[#ff4d6d]/10 text-[#ff4d6d] px-4 py-1.5 rounded-full text-[11px] border border-[#ff4d6d]/20 mb-6 font-bold tracking-wide uppercase italic">
             ✨ Nós te ajudamos a criar em 5 minutos
           </div>
           
@@ -153,7 +153,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Visual Carousel (Same as Theme Selection) */}
+        {/* Visual Carousel (Replica of Theme Selection) */}
         <div className="flex-1 flex flex-col items-center justify-center w-full lg:w-auto relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
           <div className="relative w-full max-w-[400px] flex flex-col items-center">
             {/* Carousel Container - Peeking enabled */}
@@ -273,7 +273,7 @@ export default function LandingPage() {
       </section>
 
       {/* Steps Section */}
-      <section className="py-24 md:py-32 flex flex-col items-center px-[5%] border-t border-white/5 bg-[#050505]">
+      <section className="py-24 md:py-32 flex flex-col items-center px-[5%] border-t border-white/5 bg-[#0a0a0a]">
         <div className="w-full max-w-[1100px] text-center">
           {/* Numbers Line */}
           <div className="hidden md:flex justify-between items-center relative mb-12 px-[10%]">
@@ -287,7 +287,7 @@ export default function LandingPage() {
 
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-20">
-            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
               <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
               </div>
@@ -295,7 +295,7 @@ export default function LandingPage() {
               <p className="text-[13.5px] text-[#888] leading-relaxed">Personalize sua página com fotos, mensagens, efeitos especiais e muito mais.</p>
             </div>
 
-            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
               <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.39 2.1-1.39 1.47 0 2.01.59 2.06 1.47h1.73c-.05-1.55-1.02-2.55-2.56-2.87V5h-2.34v1.63c-1.52.31-2.73 1.23-2.73 2.76 0 1.79 1.5 2.69 3.69 3.26 2.19.57 2.62 1.23 2.62 1.98 0 .83-.69 1.48-2.1 1.48-1.74 0-2.39-.73-2.48-1.72h-1.73c.12 1.83 1.2 2.74 2.71 3.06V19h2.34v-1.61c1.54-.33 2.85-1.23 2.85-2.8 0-2.15-1.76-3.05-4.14-3.65z"/></svg>
               </div>
@@ -303,7 +303,7 @@ export default function LandingPage() {
               <p className="text-[13.5px] text-[#888] leading-relaxed">Escolha seu plano preferido e faça o pagamento de forma rápida e segura.</p>
             </div>
 
-            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
               <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M3 3v6h6V3H3zm4.5 4.5h-3v-3h3v3zM3 15v6h6v-6H3zm4.5 4.5h-3v-3h3v3zM15 3v6h6V3h-6zm4.5 4.5h-3v-3h3v3zM19 19v2h2v-2h-2zm-2-2h2v-2h-2v2zm-2 2h2v-2h-2v2zm2-2h2v-2h-2v2z"/></svg>
               </div>
@@ -311,7 +311,7 @@ export default function LandingPage() {
               <p className="text-[13.5px] text-[#888] leading-relaxed">Você receberá por email um QR code e link para acessar sua página.</p>
             </div>
 
-            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] padding-[40px_20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
+            <div className="bg-[#0d0d0d] border border-white/5 rounded-[20px] p-10 flex flex-col items-center transition-all duration-300 hover:border-white/15 hover:-translate-y-1">
               <div className="w-[55px] h-[55px] bg-white/5 border border-white/5 rounded-[14px] flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
               </div>
