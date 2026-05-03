@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/image';
 import NextLink from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCreative } from 'swiper/modules';
@@ -67,10 +66,6 @@ export default function LandingPage() {
           background: linear-gradient(90deg, #ff4d6d, #c9184a);
           box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2);
         }
-
-        .italic-shadow {
-          text-shadow: 2px 2px 0px rgba(255, 77, 109, 0.3);
-        }
       `}</style>
 
       {/* Top Bar de Promoção */}
@@ -81,7 +76,7 @@ export default function LandingPage() {
       {/* Header */}
       <header className="flex justify-between items-center px-[5%] md:px-[8%] py-4 bg-[#0a0a0a]/95 border-b border-[#1a1a1a] sticky top-0 z-[100] backdrop-blur-md">
         <div className="logo text-white font-bold text-[22px] flex items-center tracking-tight">
-          Heartzzu.
+          Eternize.
         </div>
         <nav className="hidden lg:flex">
           <NextLink href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Início</NextLink>
@@ -178,7 +173,7 @@ export default function LandingPage() {
 
       {/* Rodapé Simples */}
       <footer className="py-8 px-[8%] border-t border-[#1a1a1a] flex flex-col md:flex-row justify-between items-center gap-4 text-[#555] text-[12px] font-medium">
-        <p>© 2025 Heartzzu - Presentes Digitais Eternos.</p>
+        <p>© 2025 Eternize - Presentes Digitais Eternos.</p>
         <div className="flex gap-6">
           <NextLink href="#" className="hover:text-white transition-colors">Termos de Uso</NextLink>
           <NextLink href="#" className="hover:text-white transition-colors">Privacidade</NextLink>

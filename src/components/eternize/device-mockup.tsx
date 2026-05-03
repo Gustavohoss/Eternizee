@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -1000,11 +999,11 @@ export function DeviceMockup({
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-neutral-500 text-[13px] min-w-[100px]">Referências:</span>
-                            <span className="text-neutral-200 text-[13px]">({pageTitle || 'TITULO DA PAGINA'})</span>
+                            <span className="text-neutral-200 text-[13px]">({pageTitle || 'Eternize'})</span>
                           </div>
                           <div className="flex items-baseline gap-2">
                             <span className="text-neutral-500 text-[13px] min-w-[100px]">Direção:</span>
-                            <span className="text-neutral-200 text-[13px]">Heartzzu</span>
+                            <span className="text-neutral-200 text-[13px]">Eternize</span>
                           </div>
                         </div>
 
@@ -1031,7 +1030,7 @@ export function DeviceMockup({
                       <path d="M9 21 Q20 15.5 32 19" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
                       <path d="M8 15 Q20 8 33 13" stroke="black" strokeWidth="2.5" strokeLinecap="round" fill="none"></path>
                     </svg>
-                    <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">HZ</div>
+                    <div className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center text-[10px] font-black text-black">EZ</div>
                   </div>
 
                   <div 
@@ -1150,7 +1149,7 @@ export function DeviceMockup({
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <h3 className="text-white text-sm font-bold truncate font-['DM_Sans'] tracking-tight">Memória {i + 1}</h3>
-                                    <p className="text-neutral-500 text-[11px] font-bold font-['DM_Sans'] truncate">{pageTitle || 'Gustavo e Luisa'}</p>
+                                    <p className="text-neutral-500 text-[11px] font-bold font-['DM_Sans'] truncate">{pageTitle || 'Eternize'}</p>
                                   </div>
                                   <span className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">2:47</span>
                                 </div>
@@ -1164,7 +1163,7 @@ export function DeviceMockup({
                                 <div className="w-10 h-10 bg-neutral-800 rounded shadow-lg shrink-0"></div>
                                 <div className="flex-1">
                                   <h3 className="text-white text-sm font-bold font-['DM_Sans'] tracking-tight">Nossa Primeira Música</h3>
-                                  <p className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">{pageTitle || 'Gustavo e Luisa'}</p>
+                                  <p className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
                                 </div>
                                 <span className="text-neutral-500 text-[11px] font-bold font-['DM_Sans']">2:47</span>
                               </div>
@@ -1224,7 +1223,7 @@ export function DeviceMockup({
                                   {activeHeroIndex >= 0 && uploadedPhotos[activeHeroIndex] ? `Memória ${activeHeroIndex + 1}` : musicData.title}
                               </h4>
                               <p className="text-[#b3b3b3] text-[12px] font-medium truncate mt-0.5 font-['DM_Sans']">
-                                  {pageTitle || 'Gustavo e Luisa'}
+                                  {pageTitle || 'Eternize'}
                               </p>
                           </div>
 
