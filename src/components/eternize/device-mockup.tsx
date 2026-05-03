@@ -988,7 +988,34 @@ export function DeviceMockup({
                         </div>
                       ))}</div>
                     ) : (
-                      <div className="space-y-4 text-[13px]"><div className="flex gap-2"><span className="text-neutral-500 min-w-[100px]">Data:</span><span className="text-neutral-200">{date ? format(date, "dd/MM/yyyy") : '07/04/2017'}</span></div></div>
+                      <div className="space-y-4 pt-2 animate-in fade-in duration-500">
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-neutral-500 text-[13px] min-w-[100px]">Data de estreia:</span>
+                            <span className="text-neutral-200 text-[13px]">{date ? format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) : '10 de maio de 2019'}</span>
+                          </div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-neutral-500 text-[13px] min-w-[100px]">Gêneros:</span>
+                            <span className="text-neutral-200 text-[13px]">Romance • Drama • Comédia</span>
+                          </div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-neutral-500 text-[13px] min-w-[100px]">Referências:</span>
+                            <span className="text-neutral-200 text-[13px]">({pageTitle || 'TITULO DA PAGINA'})</span>
+                          </div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-neutral-500 text-[13px] min-w-[100px]">Direção:</span>
+                            <span className="text-neutral-200 text-[13px]">Heartzzu</span>
+                          </div>
+                        </div>
+
+                        <div className="pt-8 flex items-center gap-3">
+                           <div className="bg-[#E50914] text-white text-[9px] font-black px-1.5 py-0.5 rounded-sm flex flex-col items-center justify-center leading-none h-9 w-9 shrink-0">
+                              <span className="text-[7px] mb-0.5">TOP</span>
+                              <span className="text-lg">10</span>
+                           </div>
+                           <span className="text-white text-sm font-black tracking-tight leading-tight uppercase italic italic-shadow">Em alta nos nossos corações</span>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
