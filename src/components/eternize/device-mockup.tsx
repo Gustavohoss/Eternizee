@@ -27,7 +27,10 @@ import {
   UserPlus,
   UserSquare2,
   Check,
-  CheckCircle2
+  CheckCircle2,
+  MessageCircle,
+  Send,
+  Bookmark
 } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay, EffectCreative } from 'swiper/modules';
@@ -170,6 +173,8 @@ export function DeviceMockup({
   // Instagram Specific States
   const [isFollowing, setIsFollowing] = useState(false);
   const [hasMessaged, setHasMessaged] = useState(false);
+  const [showInstagramPost, setShowInstagramPost] = useState(false);
+  const [selectedPostIndex, setSelectedPostIndex] = useState(0);
   
   // Spotify/Netflix Specific State
   const [isAudioPlaying, setIsAudioPlaying] = useState(isAutoPlay);
@@ -598,6 +603,59 @@ export function DeviceMockup({
         </div>
       )}
 
+      {showInstagramPost && (
+        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-300 no-scrollbar overflow-y-auto">
+          {/* Header do Post */}
+          <header className="flex items-center justify-between px-4 py-3 sticky top-0 bg-black z-50 border-b border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full border border-white/10 overflow-hidden relative bg-neutral-900">
+                {uploadedPhotos.length > 0 ? (
+                  <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Profile" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center"><UserSquare2 className="w-4 h-4 text-white/20" /></div>
+                )}
+              </div>
+              <div className="flex flex-col -space-y-0.5">
+                <div className="flex items-center gap-1">
+                   <span className="font-bold text-sm tracking-tight">{pageTitle || 'Usuario'}</span>
+                   <svg width="10" height="10" viewBox="0 0 24 24" fill="#0095F6"><circle cx="12" cy="12" r="11"/><path d="M7 12l3.5 3.5L17 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <span className="text-[10px] text-neutral-400 font-medium">{date ? format(date, 'dd/MM/yyyy') : '01/05/2026'}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <MoreHorizontal className="w-5 h-5 text-white" />
+              <button onClick={() => setShowInstagramPost(false)} className="text-white"><X className="w-6 h-6" /></button>
+            </div>
+          </header>
+
+          {/* Imagem Principal */}
+          <div className="relative aspect-square w-full bg-neutral-900">
+            <Image src={uploadedPhotos[selectedPostIndex]} fill className="object-cover" alt="Post" />
+          </div>
+
+          {/* Ações e Comentários */}
+          <div className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Heart className="w-6 h-6 text-white" />
+                <MessageCircle className="w-6 h-6 text-white" />
+                <Send className="w-6 h-6 text-white" />
+              </div>
+              <Bookmark className="w-6 h-6 text-white" />
+            </div>
+
+            <div className="space-y-1.5">
+               <p className="text-sm font-bold text-white">{totalDays.toLocaleString('pt-BR')} curtidas</p>
+               <div className="text-sm">
+                  <span className="font-bold mr-2">{pageTitle || 'Usuario'}</span>
+                  <span className="text-neutral-200">Juntos desde {date ? format(date, 'dd/MM/yyyy') : '01/05/2026'} ❤️</span>
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!isFullscreen && (
         <>
           <div className="mb-6 text-center">
@@ -756,7 +814,14 @@ export function DeviceMockup({
                     <div className="grid grid-cols-3 gap-[1.5px] bg-black">
                       {uploadedPhotos.length > 0 ? (
                         uploadedPhotos.map((photo, i) => (
-                          <div key={i} className="aspect-square relative group cursor-pointer active:opacity-80">
+                          <div 
+                            key={i} 
+                            className="aspect-square relative group cursor-pointer active:opacity-80"
+                            onClick={() => {
+                              setSelectedPostIndex(i);
+                              setShowInstagramPost(true);
+                            }}
+                          >
                             <Image src={photo} fill className="object-cover" alt="" />
                           </div>
                         ))
