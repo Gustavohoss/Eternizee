@@ -175,6 +175,8 @@ export function DeviceMockup({
   const [hasMessaged, setHasMessaged] = useState(false);
   const [showInstagramPost, setShowInstagramPost] = useState(false);
   const [selectedPostIndex, setSelectedPostIndex] = useState(0);
+  const [likedPosts, setLikedPosts] = useState<Record<number, boolean>>({});
+  const [savedPosts, setSavedPosts] = useState<Record<number, boolean>>({});
   
   // Spotify/Netflix Specific State
   const [isAudioPlaying, setIsAudioPlaying] = useState(isAutoPlay);
@@ -341,6 +343,20 @@ export function DeviceMockup({
 
   const togglePause = () => {
     setIsStoryPaused(!isStoryPaused);
+  };
+
+  const toggleLikePost = (index: number) => {
+    setLikedPosts(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const toggleSavePost = (index: number) => {
+    setSavedPosts(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
   };
 
   const dateStyle: React.CSSProperties = {
@@ -638,15 +654,27 @@ export function DeviceMockup({
           <div className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Heart className="w-6 h-6 text-white" />
+                <button 
+                  onClick={() => toggleLikePost(selectedPostIndex)}
+                  className="active:scale-125 transition-transform"
+                >
+                  <Heart className={cn("w-6 h-6", likedPosts[selectedPostIndex] ? "text-red-500 fill-current" : "text-white")} />
+                </button>
                 <MessageCircle className="w-6 h-6 text-white" />
                 <Send className="w-6 h-6 text-white" />
               </div>
-              <Bookmark className="w-6 h-6 text-white" />
+              <button 
+                onClick={() => toggleSavePost(selectedPostIndex)}
+                className="active:scale-125 transition-transform"
+              >
+                <Bookmark className={cn("w-6 h-6", savedPosts[selectedPostIndex] ? "text-white fill-current" : "text-white")} />
+              </button>
             </div>
 
             <div className="space-y-1.5">
-               <p className="text-sm font-bold text-white">{totalDays.toLocaleString('pt-BR')} curtidas</p>
+               <p className="text-sm font-bold text-white">
+                 {(totalDays + (likedPosts[selectedPostIndex] ? 1 : 0)).toLocaleString('pt-BR')} curtidas
+               </p>
                <div className="text-sm">
                   <span className="font-bold mr-2">{pageTitle || 'Usuario'}</span>
                   <span className="text-neutral-200">Juntos desde {date ? format(date, 'dd/MM/yyyy') : '01/05/2026'} ❤️</span>
