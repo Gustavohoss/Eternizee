@@ -3,8 +3,11 @@
 
 import React, { useState, useEffect } from 'react';
 import NextLink from 'next/link';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCreative } from 'swiper/modules';
+import { ExternalLink } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -42,6 +45,8 @@ export default function LandingPage() {
 
     return () => clearTimeout(timeout);
   }, [cIndex, isDeleting, pIndex]);
+
+  const THEME_COLOR = '#ff4d6d';
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#ff4d6d] overflow-x-hidden">
@@ -158,31 +163,62 @@ export default function LandingPage() {
               modules={[Autoplay, EffectCreative]}
               className="w-full h-full rounded-[24px] overflow-visible"
             >
-              {[101, 102, 103].map((id) => (
-                <SwiperSlide key={id} className="rounded-[24px] overflow-hidden bg-[#141414] border-2 border-[#ff4d6d] shadow-[0_0_40px_rgba(255,77,109,0.3),0_0_80px_rgba(255,77,109,0.1)] relative">
-                  {/* Top Glow Line */}
+              {[
+                { id: 101, name: 'Clássico', badge: 'Eterno', desc: 'O estilo romântico e atemporal para surpreender.', img: 'https://picsum.photos/seed/classic-theme/400/600' },
+                { id: 102, name: 'Netflix', badge: 'Cinema', desc: 'Transforme sua história em uma série épica.', img: 'https://picsum.photos/seed/netflix-theme/400/600' },
+                { id: 103, name: 'Spotify', badge: 'Música', desc: 'A trilha sonora perfeita para o seu amor.', img: 'https://picsum.photos/seed/spotify-theme/400/600' }
+              ].map((theme) => (
+                <SwiperSlide key={theme.id} className="rounded-[24px] overflow-visible">
                   <div 
-                    className="absolute top-0 left-0 right-0 h-[3px] z-30" 
-                    style={{ background: `linear-gradient(90deg, transparent, #ff4d6d, transparent)` }}
-                  />
-                  
-                  <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#1f1f1f] to-[#141414]">
-                    <img src={`https://picsum.photos/id/${id}/600/800`} className="w-full h-full object-cover" alt="exemplo de página" />
-                    {/* Gradient Overlay for Text */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
-                  </div>
+                    className="relative bg-[#141414] rounded-[24px] overflow-hidden transition-all duration-500 w-full h-full border-2"
+                    style={{ 
+                      borderColor: THEME_COLOR,
+                      boxShadow: `0 0 40px ${THEME_COLOR}66, 0 0 80px ${THEME_COLOR}33`
+                    }}
+                  >
+                    {/* Top Glow Line */}
+                    <div className="absolute top-0 left-0 right-0 h-[3px] z-30 transition-opacity duration-500" 
+                      style={{ background: `linear-gradient(90deg, transparent, ${THEME_COLOR}, transparent)` }}
+                    />
 
-                  {/* Card Body Overlay - Identical to theme selection */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
-                    <div className="flex justify-between items-center mb-1">
-                      <h2 className="text-white text-lg font-black m-0 font-inter">Eternize</h2>
-                      <span className="px-2.5 py-0.5 rounded-full text-[0.6rem] font-black uppercase tracking-wider border border-[#ff4d6d]/40 bg-[#ff4d6d]/20 text-[#ff4d6d]">
-                        Premium
-                      </span>
+                    {/* Media Area */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
+                      <Image 
+                        src={theme.img} 
+                        fill 
+                        className="object-cover" 
+                        alt={theme.name} 
+                        data-ai-hint="theme preview"
+                      />
+                      {/* Gradient Overlay for Text */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
                     </div>
-                    <p className="text-[#b3b3b3] text-[10px] leading-snug font-medium line-clamp-2">
-                      Transforme suas memórias em um presente digital inesquecível.
-                    </p>
+
+                    {/* Card Body Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
+                      <div className="flex justify-between items-center mb-1">
+                        <h2 className="text-white text-lg font-black m-0 font-inter">{theme.name}</h2>
+                        <span 
+                          className="px-2.5 py-0.5 rounded-full text-[0.6rem] font-black uppercase tracking-wider border"
+                          style={{ 
+                            backgroundColor: `${THEME_COLOR}22`, 
+                            color: THEME_COLOR, 
+                            borderColor: `${THEME_COLOR}44` 
+                          }}
+                        >
+                          {theme.badge}
+                        </span>
+                      </div>
+
+                      <p className="text-[#b3b3b3] text-[10px] leading-snug mb-4 font-medium line-clamp-2">
+                        {theme.desc}
+                      </p>
+
+                      <button className="w-full bg-white/5 border border-white/10 text-white py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all hover:bg-white/10 active:scale-95">
+                        <ExternalLink className="w-3 h-3" />
+                        Ver demo
+                      </button>
+                    </div>
                   </div>
                 </SwiperSlide>
               ))}
