@@ -1,17 +1,13 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectCreative } from 'swiper/modules';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { THEME_OPTIONS } from '@/app/criador/constants';
 import { cn } from '@/lib/utils';
-
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/effect-creative';
 
 export default function LandingPage() {
   const [text, setText] = useState('');
@@ -20,7 +16,31 @@ export default function LandingPage() {
   const [cIndex, setCIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Efeito de Digitação (Typewriter)
+  // Embla Carousel Logic (Same as creator)
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'center', 
+    skipSnaps: false,
+    duration: 30
+  });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
+
+  // Typewriter Effect
   useEffect(() => {
     const current = phrases[pIndex];
     const timeout = setTimeout(() => {
@@ -29,7 +49,6 @@ export default function LandingPage() {
           setText(current.substring(0, cIndex + 1));
           setCIndex(cIndex + 1);
         } else {
-          // Pausa no final da frase
           setTimeout(() => setIsDeleting(true), 2000);
         }
       } else {
@@ -46,11 +65,10 @@ export default function LandingPage() {
     return () => clearTimeout(timeout);
   }, [cIndex, isDeleting, pIndex]);
 
-  const THEME_COLOR = '#ff4d6d';
+  const currentTheme = THEME_OPTIONS[selectedIndex];
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#ff4d6d] overflow-x-hidden">
-      {/* Estilos Globais Customizados */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         
@@ -74,7 +92,7 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* Top Bar de Promoção */}
+      {/* Top Bar */}
       <div className="bg-gradient-to-r from-[#5c1421] to-[#1a0a0d] text-[12px] text-center py-2 text-[#ffb3c1] font-medium">
         ⚡ Apenas hoje — Todos os planos com <strong>50% OFF</strong> de desconto, aproveite! <u className="cursor-pointer ml-1">Ver planos</u>
       </div>
@@ -135,99 +153,126 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Galeria Visual (Lado Direito) */}
-        <div className="flex-1 flex justify-center w-full lg:w-auto animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
-          <div className="w-[300px] h-[420px] md:w-[320px] md:h-[450px] relative">
-            {/* Glow decorativo atrás do carrossel */}
-            <div className="absolute inset-0 bg-[#ff4d6d]/20 blur-[80px] rounded-full -z-10 scale-110 opacity-50" />
-            
-            <Swiper
-              effect={'creative'}
-              grabCursor={true}
-              loop={true}
-              autoplay={{ 
-                delay: 2500,
-                disableOnInteraction: false 
-              }}
-              creativeEffect={{
-                prev: { 
-                  translate: ["-120%", 0, -500], 
-                  opacity: 0 
-                },
-                next: { 
-                  translate: ["0%", 0, -50], 
-                  scale: 0.9, 
-                  opacity: 0.6 
-                },
-              }}
-              modules={[Autoplay, EffectCreative]}
-              className="w-full h-full rounded-[24px] overflow-visible"
-            >
-              {[
-                { id: 101, name: 'Clássico', badge: 'Eterno', desc: 'O estilo romântico e atemporal para surpreender.', img: 'https://picsum.photos/seed/classic-theme/400/600' },
-                { id: 102, name: 'Netflix', badge: 'Cinema', desc: 'Transforme sua história em uma série épica.', img: 'https://picsum.photos/seed/netflix-theme/400/600' },
-                { id: 103, name: 'Spotify', badge: 'Música', desc: 'A trilha sonora perfeita para o seu amor.', img: 'https://picsum.photos/seed/spotify-theme/400/600' }
-              ].map((theme) => (
-                <SwiperSlide key={theme.id} className="rounded-[24px] overflow-visible">
-                  <div 
-                    className="relative bg-[#141414] rounded-[24px] overflow-hidden transition-all duration-500 w-full h-full border-2"
-                    style={{ 
-                      borderColor: THEME_COLOR,
-                      boxShadow: `0 0 40px ${THEME_COLOR}66, 0 0 80px ${THEME_COLOR}33`
-                    }}
-                  >
-                    {/* Top Glow Line */}
-                    <div className="absolute top-0 left-0 right-0 h-[3px] z-30 transition-opacity duration-500" 
-                      style={{ background: `linear-gradient(90deg, transparent, ${THEME_COLOR}, transparent)` }}
-                    />
+        {/* Visual Carousel (Same as Theme Selection) */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full lg:w-auto relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
+          <div className="relative w-full max-w-[400px] flex flex-col items-center">
+            {/* Carousel Container */}
+            <div className="w-full overflow-visible" ref={emblaRef}>
+              <div className="flex">
+                {THEME_OPTIONS.map((theme, i) => {
+                  const isSelected = selectedIndex === i;
+                  return (
+                    <div 
+                      key={theme.id} 
+                      className="flex-[0_0_75%] sm:flex-[0_0_100%] min-w-0 px-4 flex items-center justify-center transition-opacity duration-500"
+                      style={{ 
+                        opacity: isSelected ? 1 : 0.2,
+                        zIndex: isSelected ? 50 : 10
+                      }}
+                    >
+                      <div 
+                        className={cn(
+                          "relative bg-[#141414] rounded-[24px] overflow-hidden transition-all duration-500 w-full max-w-[280px] aspect-[3/4] border-2",
+                          isSelected 
+                            ? "scale-100 opacity-100" 
+                            : "scale-85 opacity-50 border-transparent grayscale-[0.3]"
+                        )}
+                        style={isSelected ? { 
+                          borderColor: theme.color,
+                          boxShadow: `0 0 40px ${theme.color}66, 0 0 80px ${theme.color}33`
+                        } : {}}
+                      >
+                        {/* Top Glow Line */}
+                        <div className={cn(
+                          "absolute top-0 left-0 right-0 h-[3px] z-30 transition-opacity duration-500",
+                          isSelected ? "opacity-100" : "opacity-0"
+                        )} 
+                        style={{ background: `linear-gradient(90deg, transparent, ${theme.color}, transparent)` }}
+                        />
 
-                    {/* Media Area */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
-                      <Image 
-                        src={theme.img} 
-                        fill 
-                        className="object-cover" 
-                        alt={theme.name} 
-                        data-ai-hint="theme preview"
-                      />
-                      {/* Gradient Overlay for Text */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
-                    </div>
+                        {/* Media Area */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
+                          <Image 
+                            src={theme.image} 
+                            fill 
+                            className="object-cover" 
+                            alt={theme.name} 
+                            priority
+                            data-ai-hint="theme preview"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
+                        </div>
 
-                    {/* Card Body Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
-                      <div className="flex justify-between items-center mb-1">
-                        <h2 className="text-white text-lg font-black m-0 font-inter">{theme.name}</h2>
-                        <span 
-                          className="px-2.5 py-0.5 rounded-full text-[0.6rem] font-black uppercase tracking-wider border"
-                          style={{ 
-                            backgroundColor: `${THEME_COLOR}22`, 
-                            color: THEME_COLOR, 
-                            borderColor: `${THEME_COLOR}44` 
-                          }}
-                        >
-                          {theme.badge}
-                        </span>
+                        {/* Card Body Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
+                          <div className="flex justify-between items-center mb-1">
+                            <h2 className="text-white text-lg font-black m-0 font-inter">{theme.name}</h2>
+                            <span 
+                              className="px-2.5 py-0.5 rounded-full text-[0.6rem] font-black uppercase tracking-wider border"
+                              style={{ 
+                                backgroundColor: `${theme.color}22`, 
+                                color: theme.color, 
+                                borderColor: `${theme.color}44` 
+                              }}
+                            >
+                              {theme.badge}
+                            </span>
+                          </div>
+
+                          <p className="text-[#b3b3b3] text-[10px] leading-snug mb-4 font-medium line-clamp-2">
+                            {theme.description}
+                          </p>
+
+                          <button className="w-full bg-white/5 border border-white/10 text-white py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all hover:bg-white/10 active:scale-95">
+                            <ExternalLink className="w-3 h-3" />
+                            Ver demo
+                          </button>
+                        </div>
                       </div>
-
-                      <p className="text-[#b3b3b3] text-[10px] leading-snug mb-4 font-medium line-clamp-2">
-                        {theme.desc}
-                      </p>
-
-                      <button className="w-full bg-white/5 border border-white/10 text-white py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all hover:bg-white/10 active:scale-95">
-                        <ExternalLink className="w-3 h-3" />
-                        Ver demo
-                      </button>
                     </div>
-                  </div>
-                </SwiperSlide>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Navigation Arrows */}
+            <button 
+              onClick={scrollPrev}
+              className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 z-20"
+            >
+              <ChevronLeft className="w-5 h-5 text-white" />
+            </button>
+            <button 
+              onClick={scrollNext}
+              className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 z-20"
+            >
+              <ChevronRight className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Pagination Dots */}
+            <div className="flex gap-2.5 mt-8 shrink-0 z-20">
+              {THEME_OPTIONS.map((theme, i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "h-1.5 rounded-full transition-all duration-500",
+                    i === selectedIndex ? "w-7" : "w-1.5 bg-white/10"
+                  )} 
+                  style={i === selectedIndex ? { backgroundColor: theme.color } : {}}
+                />
               ))}
-            </Swiper>
+            </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                Selecionado: <span className="text-white" style={{ color: currentTheme.color }}>{currentTheme.name}</span>
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Rodapé Simples */}
+      {/* Footer */}
       <footer className="py-8 px-[8%] border-t border-[#1a1a1a] flex flex-col md:flex-row justify-between items-center gap-4 text-[#555] text-[12px] font-medium">
         <p>© 2025 Eternize - Presentes Digitais Eternos.</p>
         <div className="flex gap-6">
