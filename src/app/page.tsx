@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import Link from 'next/image';
+import NextLink from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCreative } from 'swiper/modules';
 
@@ -44,7 +45,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#ff4d6d] overflow-x-hidden">
-      {/* Importação da fonte Great Vibes para o efeito de digitação */}
+      {/* Estilos Globais Customizados */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         
@@ -67,9 +68,8 @@ export default function LandingPage() {
           box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2);
         }
 
-        /* Ajuste para o Swiper transbordar levemente e criar profundidade */
-        .swiper-creative {
-          overflow: visible !important;
+        .italic-shadow {
+          text-shadow: 2px 2px 0px rgba(255, 77, 109, 0.3);
         }
       `}</style>
 
@@ -80,20 +80,20 @@ export default function LandingPage() {
 
       {/* Header */}
       <header className="flex justify-between items-center px-[5%] md:px-[8%] py-4 bg-[#0a0a0a]/95 border-b border-[#1a1a1a] sticky top-0 z-[100] backdrop-blur-md">
-        <div className="font-bold text-[22px] flex items-center tracking-tight">
-          <span className="text-[#ff4d6d] mr-1.5 text-2xl">❤️</span> Heartzzu.
+        <div className="logo text-white font-bold text-[22px] flex items-center tracking-tight">
+          Heartzzu.
         </div>
         <nav className="hidden lg:flex">
-          <Link href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Início</Link>
-          <Link href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Como funciona?</Link>
-          <Link href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Planos</Link>
-          <Link href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">F.A.Q</Link>
+          <NextLink href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Início</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Como funciona?</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Planos</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">F.A.Q</NextLink>
         </nav>
         <div className="flex items-center gap-4 md:gap-6">
-          <Link href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-[#ff4d6d] transition-colors">Fazer Login</Link>
-          <Link href="/criador" className="bg-[#ff4d6d] px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-[#ff4d6d]/90 transition-all active:scale-95 shadow-lg shadow-[#ff4d6d]/20">
+          <NextLink href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-[#ff4d6d] transition-colors">Fazer Login</NextLink>
+          <NextLink href="/criador" className="bg-[#ff4d6d] px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-[#ff4d6d]/90 transition-all active:scale-95 shadow-lg shadow-[#ff4d6d]/20">
             Criar minha página
-          </Link>
+          </NextLink>
         </div>
       </header>
 
@@ -117,9 +117,9 @@ export default function LandingPage() {
             Crie um presente digital com fotos, música e textos personalizados, para quem você ama e surpreenda a pessoa. Pronto em 5 minutos.
           </p>
 
-          <Link href="/criador" className="cta-button text-white px-8 py-4 md:px-10 md:py-5 rounded-xl text-[18px] md:text-[20px] font-black inline-flex items-center gap-3 transition-all hover:brightness-110 active:scale-95 w-full sm:w-auto justify-center group uppercase italic tracking-tight">
-            ♡ Quero criar agora! ♡ <span className="text-2xl transition-transform group-hover:translate-x-1">›</span>
-          </Link>
+          <NextLink href="/criador" className="cta-button text-white px-8 py-4 md:px-10 md:py-5 rounded-xl text-[18px] md:text-[20px] font-black inline-flex items-center gap-3 transition-all hover:brightness-110 active:scale-95 w-full sm:w-auto justify-center group uppercase italic tracking-tight">
+            Quero criar agora! <span className="text-2xl transition-transform group-hover:translate-x-1">›</span>
+          </NextLink>
 
           <div className="flex items-center mt-10 gap-4 social-proof">
             <div className="flex -space-x-3">
@@ -136,7 +136,7 @@ export default function LandingPage() {
 
         {/* Galeria Visual (Lado Direito) */}
         <div className="flex-1 flex justify-center w-full lg:w-auto animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
-          <div className="w-[320px] h-[450px] md:w-[340px] md:h-[480px] relative">
+          <div className="w-[300px] h-[420px] md:w-[320px] md:h-[450px] relative">
             {/* Glow decorativo atrás do carrossel */}
             <div className="absolute inset-0 bg-[#ff4d6d]/20 blur-[80px] rounded-full -z-10 scale-110 opacity-50" />
             
@@ -180,9 +180,9 @@ export default function LandingPage() {
       <footer className="py-8 px-[8%] border-t border-[#1a1a1a] flex flex-col md:flex-row justify-between items-center gap-4 text-[#555] text-[12px] font-medium">
         <p>© 2025 Heartzzu - Presentes Digitais Eternos.</p>
         <div className="flex gap-6">
-          <Link href="#" className="hover:text-white transition-colors">Termos de Uso</Link>
-          <Link href="#" className="hover:text-white transition-colors">Privacidade</Link>
-          <Link href="#" className="hover:text-white transition-colors">Suporte</Link>
+          <NextLink href="#" className="hover:text-white transition-colors">Termos de Uso</NextLink>
+          <NextLink href="#" className="hover:text-white transition-colors">Privacidade</NextLink>
+          <NextLink href="#" className="hover:text-white transition-colors">Suporte</NextLink>
         </div>
       </footer>
     </div>
