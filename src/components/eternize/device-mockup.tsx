@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -188,9 +189,11 @@ export function DeviceMockup({
   useEffect(() => {
     if (uploadedPhotos.length === 0) return;
     
+    // Pega a cor predominante da foto ativa (ou da primeira) para o fundo do Spotify
+    const photoToAnalize = uploadedPhotos[activeHeroIndex] || uploadedPhotos[0];
     const img = new window.Image();
     img.crossOrigin = "Anonymous";
-    img.src = uploadedPhotos[0];
+    img.src = photoToAnalize;
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -212,7 +215,7 @@ export function DeviceMockup({
       
       setDynamicSpotifyColor(`rgb(${darkenedR}, ${darkenedG}, ${darkenedB})`);
     };
-  }, [uploadedPhotos, selectedTheme]);
+  }, [uploadedPhotos, selectedTheme, activeHeroIndex]);
 
   useEffect(() => {
     if (!date) {
@@ -269,9 +272,7 @@ export function DeviceMockup({
   const startNetflixExperience = () => {
     if (uploadedPhotos.length === 0) return;
     
-    // Inicia a música IMEDIATAMENTE (o MusicPlayer está observando este estado)
     setIsAudioPlaying(true);
-    
     setExperienceAutoPlay(true);
     setIsStoryPaused(false);
     setIsIntroActive(true);
@@ -381,7 +382,7 @@ export function DeviceMockup({
       "w-full transition-all duration-500 flex flex-col relative", 
       isFullscreen ? "h-full" : "max-w-[400px] mx-auto"
     )}>
-      {/* Player Global Unificado - Sempre montado se houver música para estar pronto para os temas especiais */}
+      {/* Player Global Unificado */}
       {musicData && (
         <MusicPlayer 
           musicData={musicData} 
@@ -421,7 +422,6 @@ export function DeviceMockup({
 
       {showStories && uploadedPhotos.length > 0 && selectedTheme === 'netflix' && (
         <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700 overflow-hidden">
-          {/* Static UI Layer (No Fade) */}
           <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1 pointer-events-none">
             {uploadedPhotos.map((_, i) => (
               <div key={i} className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
@@ -442,15 +442,12 @@ export function DeviceMockup({
             <X className="w-5 h-5" />
           </button>
 
-          {/* Navigation Controls (Invisible but clickable) */}
           <div className="absolute inset-0 z-[505] flex">
             <div className="flex-1 h-full cursor-pointer" onClick={prevStory} />
             <div className="flex-1 h-full cursor-pointer" onClick={nextStory} />
           </div>
 
-          {/* Content Container */}
           <div className="flex-1 relative flex flex-col">
-            {/* Fading Photo Layer */}
             <div className={cn(
               "absolute inset-0 transition-all duration-[1200ms] ease-in-out bg-black",
               isFading ? "opacity-0 scale-95" : "opacity-100 scale-100"
@@ -459,7 +456,6 @@ export function DeviceMockup({
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
             </div>
 
-            {/* Static UI Layer (Bottom) */}
             <div className="mt-auto relative z-[515] p-8 pb-12 flex flex-col pointer-events-none">
               <div className="flex justify-center gap-1.5 mb-6">
                 {uploadedPhotos.map((_, i) => (
@@ -486,7 +482,7 @@ export function DeviceMockup({
         <div className="absolute inset-0 z-[500] bg-[#121212] flex flex-col animate-in fade-in duration-500 overflow-hidden no-scrollbar">
           <div className="absolute inset-0 z-0 scale-125 brightness-[0.4] blur-[60px] transition-all duration-1000">
              {uploadedPhotos.length > 0 ? (
-               <Image src={uploadedPhotos[0]} fill className="object-cover" alt="blur-bg" />
+               <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="blur-bg" />
              ) : (
                <div className="w-full h-full bg-[#121212]" />
              )}
@@ -509,7 +505,7 @@ export function DeviceMockup({
             <div className="relative aspect-square w-full mb-12 shrink-0 group">
               <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
                 {uploadedPhotos.length > 0 ? (
-                  <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Album Cover" />
+                  <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="Album Cover" />
                 ) : (
                   <div className="w-full h-full bg-neutral-800 flex items-center justify-center"><ImageIcon className="w-12 h-12 text-white/10" /></div>
                 )}
@@ -519,7 +515,7 @@ export function DeviceMockup({
 
             <div className="flex items-center justify-between mb-8 shrink-0">
                <div className="min-w-0 pr-4">
-                  <h2 className="text-[28px] font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{pageTitle || 'Nossa História'}</h2>
+                  <h2 className="text-[28px] font-black text-white leading-tight tracking-tight truncate font-['DM_Sans']">{activeHeroIndex >= 0 && uploadedPhotos[activeHeroIndex] ? `Memória ${activeHeroIndex + 1}` : (pageTitle || 'Nossa História')}</h2>
                   <p className="text-base font-bold text-white/60 truncate font-['DM_Sans']">{pageTitle || 'Eternize'}</p>
                </div>
                <button onClick={() => setIsLiked(!isLiked)} className={cn("transition-all duration-300", isLiked ? "text-[#1DB954]" : "text-white/80")}>
@@ -578,7 +574,7 @@ export function DeviceMockup({
                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x">
                   {uploadedPhotos.length > 0 ? (
                     uploadedPhotos.map((photo, i) => (
-                      <div key={i} className="w-[150px] h-[200px] flex-shrink-0 bg-neutral-800 rounded-xl overflow-hidden relative shadow-xl snap-start">
+                      <div key={i} className="w-[150px] h-[200px] flex-shrink-0 bg-neutral-800 rounded-xl overflow-hidden relative shadow-xl snap-start" onClick={() => setActiveHeroIndex(i)}>
                          <Image src={photo} fill className="object-cover" alt="" />
                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                          <p className="absolute bottom-4 left-4 text-[11px] font-black text-white">{pageTitle || 'Nós'}</p>
@@ -597,7 +593,6 @@ export function DeviceMockup({
         </div>
       )}
 
-      {/* Título de prévia e barra de URL falsa são exibidos apenas quando NÃO estiver em tela cheia (site final) */}
       {!isFullscreen && (
         <>
           <div className="mb-6 text-center">
@@ -903,7 +898,7 @@ export function DeviceMockup({
 
                     <div className="px-6 py-4 flex items-center gap-4">
                       <div className="w-10 h-10 rounded overflow-hidden relative bg-black shrink-0">
-                          {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[0]} fill className="object-cover" alt="" />}
+                          {uploadedPhotos.length > 0 && <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="" />}
                       </div>
                       <button onClick={() => setIsLiked(!isLiked)} className="border border-neutral-500 rounded-full px-4 py-1.5 text-xs font-bold text-white hover:border-white transition-colors">
                         {isLiked ? 'Seguindo' : 'Seguir'}
@@ -1010,7 +1005,7 @@ export function DeviceMockup({
                           <div className="bg-[#181818] rounded-[24px] overflow-hidden flex flex-col shadow-2xl border border-white/5 transition-transform duration-500 hover:scale-[1.01]">
                             <div className="relative aspect-square md:aspect-video w-full">
                               {uploadedPhotos.length > 0 ? (
-                                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
+                                <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
                               ) : (
                                 <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
                                   <ImageIcon className="w-10 h-10 text-white/10" />
@@ -1045,7 +1040,7 @@ export function DeviceMockup({
                         <div className="flex items-center relative z-10">
                           <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-lg mr-3 relative">
                               {uploadedPhotos.length > 0 ? (
-                                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Capa" />
+                                <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="Capa" />
                               ) : musicData.thumb ? (
                                 <img src={musicData.thumb} alt="Capa" className="w-full h-full object-cover" />
                               ) : (
@@ -1055,7 +1050,7 @@ export function DeviceMockup({
 
                           <div className="flex-1 min-w-0 mr-4">
                               <h4 className="text-white text-[13px] font-bold truncate leading-tight font-['DM_Sans']">
-                                  {musicData.title}
+                                  {activeHeroIndex >= 0 && uploadedPhotos[activeHeroIndex] ? `Memória ${activeHeroIndex + 1}` : musicData.title}
                               </h4>
                               <p className="text-[#b3b3b3] text-[12px] font-medium truncate mt-0.5 font-['DM_Sans']">
                                   {pageTitle || 'Gustavo e Luisa'}
@@ -1111,7 +1106,7 @@ export function DeviceMockup({
                     <div className="w-full aspect-square relative shadow-[inset_0_0_15px_rgba(0,0,0,0.2)] rounded-[4px] overflow-hidden">
                       {uploadedPhotos.length > 0 ? (
                         <Swiper
-                          key={photoEffect} // FORÇA A REINICIALIZAÇÃO DO SWIPER AO TROCAR O EFEITO (CORRIGE BUG DE ARRASTE)
+                          key={photoEffect} 
                           effect={photoEffect === 'slide' ? 'slide' : photoEffect === 'coverflow' ? 'coverflow' : 'creative'}
                           grabCursor={true}
                           centeredSlides={true}
@@ -1296,7 +1291,6 @@ export function DeviceMockup({
                     </div>
                   )}
                   
-                  {/* Player no tema Classic é o inline padrão */}
                   {musicData && selectedTheme === 'classic' && (
                     <div className="w-full px-1 mt-4">
                       <MusicPlayer 
