@@ -26,7 +26,8 @@ import {
   Bell,
   UserPlus,
   UserSquare2,
-  Check
+  Check,
+  CheckCircle2
 } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay, EffectCreative } from 'swiper/modules';
@@ -165,6 +166,10 @@ export function DeviceMockup({
   const [showSpotifyFullscreen, setShowSpotifyFullscreen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isInList, setIsInList] = useState(false);
+  
+  // Instagram Specific States
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [hasMessaged, setHasMessaged] = useState(false);
   
   // Spotify/Netflix Specific State
   const [isAudioPlaying, setIsAudioPlaying] = useState(isAutoPlay);
@@ -691,9 +696,24 @@ export function DeviceMockup({
                       </div>
 
                       <div className="flex gap-2 mb-6">
-                        <button className="flex-1 bg-[#0095F6] hover:bg-blue-600 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95">Seguir</button>
-                        <button className="flex-1 bg-neutral-800 hover:bg-neutral-700 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95">Mensagem</button>
-                        <button className="px-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition active:scale-95"><UserPlus className="w-4.5 h-4.5" /></button>
+                        <button 
+                          onClick={() => setIsFollowing(!isFollowing)}
+                          className={cn(
+                            "flex-1 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95",
+                            isFollowing 
+                              ? "bg-neutral-800 text-white hover:bg-neutral-700" 
+                              : "bg-[#0095F6] text-white hover:bg-blue-600"
+                          )}
+                        >
+                          {isFollowing ? 'Seguindo' : 'Seguir'}
+                        </button>
+                        <button 
+                          onClick={() => setHasMessaged(true)}
+                          className="flex-1 bg-neutral-800 hover:bg-neutral-700 py-1.5 rounded-lg text-sm font-semibold transition active:scale-95 text-white flex items-center justify-center gap-1.5"
+                        >
+                          {hasMessaged ? <><CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Enviada</> : 'Mensagem'}
+                        </button>
+                        <button className="px-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition active:scale-95 text-white"><UserPlus className="w-4.5 h-4.5" /></button>
                       </div>
                     </section>
 
