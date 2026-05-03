@@ -305,31 +305,31 @@ export default function LandingPage() {
       <section className="py-24 md:py-32 flex flex-col items-center px-[5%] border-t border-white/5 bg-[#0a0a0a]">
         <div className="w-full max-w-[1100px] text-center">
           
-          {/* Layout Mobile (Timeline Vertical) */}
-          <div className="flex md:hidden flex-col items-start relative pl-4 text-left gap-12">
-            {/* Vertical Line */}
-            <div className="absolute left-[34px] top-8 bottom-8 w-px bg-white/10 z-0" />
+          {/* Layout Mobile (Timeline Vertical - Exactly as designed) */}
+          <div className="flex md:hidden flex-col items-start relative px-6 text-left gap-16">
+            {/* Vertical Connecting Line */}
+            <div className="absolute left-[52px] top-10 bottom-10 w-px bg-white/10 z-0" />
 
             {STEPS.map((step) => (
-              <div key={step.id} className="flex gap-6 relative z-10 w-full items-start">
-                {/* Circle Number */}
+              <div key={step.id} className="flex gap-8 relative z-10 w-full items-start">
+                {/* Large Circle Number */}
                 <div 
-                  className="w-[42px] h-[42px] rounded-full flex items-center justify-center font-black text-lg shrink-0"
+                  className="w-14 h-14 rounded-full flex items-center justify-center font-black text-xl shrink-0 transition-transform active:scale-95"
                   style={{ 
                     backgroundColor: step.color,
-                    boxShadow: `0 0 20px ${step.glow}`
+                    boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
                   {step.id}
                 </div>
                 
-                {/* Content */}
-                <div className="flex-1 pt-1">
-                  <div className="flex items-center gap-2 mb-2">
+                {/* Content Area */}
+                <div className="flex-1 pt-2">
+                  <div className="flex items-center gap-2.5 mb-2">
                     <step.icon className="w-4 h-4 text-white/60" style={{ color: step.color }} />
-                    <h3 className="text-lg font-bold text-white tracking-tight">{step.title}</h3>
+                    <h3 className="text-lg font-extrabold text-white tracking-tight">{step.title}</h3>
                   </div>
-                  <p className="text-[13px] text-white/40 leading-relaxed font-medium">
+                  <p className="text-[13.5px] text-white/40 leading-relaxed font-medium">
                     {step.description}
                   </p>
                 </div>
@@ -379,7 +379,6 @@ export default function LandingPage() {
             </h2>
             
             <NextLink href="/criador" className="bg-gradient-to-r from-[#ff4d6d] to-[#c9184a] text-white px-10 py-5 rounded-full text-[18px] font-bold inline-flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_15px_35px_rgba(255,77,109,0.5)] shadow-[0_10px_25px_rgba(255,77,109,0.3)] group">
-              <Heart className="w-5 h-5 fill-current" />
               Criar minha página agora →
             </NextLink>
           </div>
