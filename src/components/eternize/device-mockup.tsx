@@ -300,6 +300,15 @@ export function DeviceMockup({
     }, 4500); 
   };
 
+  const startInstagramStories = () => {
+    if (uploadedPhotos.length === 0) return;
+    setShowStories(true);
+    setCurrentStoryIndex(0);
+    setStoryProgress(0);
+    setIsStoryPaused(false);
+    setIsAudioPlaying(true);
+  };
+
   const triggerFade = useCallback((callback: () => void) => {
     setIsFading(true);
     setTimeout(() => {
@@ -310,19 +319,25 @@ export function DeviceMockup({
 
   const nextStory = useCallback(() => {
     if (isFading) return;
-    triggerFade(() => {
-      setCurrentStoryIndex(prev => (prev < uploadedPhotos.length - 1 ? prev + 1 : 0));
-      setStoryProgress(0);
-    });
-  }, [uploadedPhotos.length, triggerFade, isFading]);
+    if (currentStoryIndex < uploadedPhotos.length - 1) {
+      triggerFade(() => {
+        setCurrentStoryIndex(prev => prev + 1);
+        setStoryProgress(0);
+      });
+    } else {
+      setShowStories(false);
+    }
+  }, [uploadedPhotos.length, currentStoryIndex, triggerFade, isFading]);
 
   const prevStory = useCallback(() => {
     if (isFading) return;
-    triggerFade(() => {
-      setCurrentStoryIndex(prev => (prev > 0 ? prev - 1 : uploadedPhotos.length - 1));
-      setStoryProgress(0);
-    });
-  }, [uploadedPhotos.length, triggerFade, isFading]);
+    if (currentStoryIndex > 0) {
+      triggerFade(() => {
+        setCurrentStoryIndex(prev => prev - 1);
+        setStoryProgress(0);
+      });
+    }
+  }, [currentStoryIndex, triggerFade, isFading]);
 
   useEffect(() => {
     if (!showStories || uploadedPhotos.length === 0 || isStoryPaused || isFading) return;
@@ -446,9 +461,10 @@ export function DeviceMockup({
         </div>
       )}
 
-      {showStories && uploadedPhotos.length > 0 && selectedTheme === 'netflix' && (
-        <div className="absolute inset-0 z-[500] bg-black flex flex-col animate-in fade-in duration-700 overflow-hidden">
-          <div className="absolute top-4 left-0 right-0 z-[510] px-3 flex gap-1 pointer-events-none">
+      {showStories && uploadedPhotos.length > 0 && (
+        <div className="absolute inset-0 z-[600] bg-black flex flex-col animate-in fade-in duration-500 overflow-hidden">
+          {/* Progress Bars */}
+          <div className="absolute top-4 left-0 right-0 z-[610] px-3 flex gap-1.5 pointer-events-none">
             {uploadedPhotos.map((_, i) => (
               <div key={i} className="flex-1 h-0.5 bg-white/20 rounded-full overflow-hidden">
                 <div 
@@ -461,45 +477,54 @@ export function DeviceMockup({
               </div>
             ))}
           </div>
-          <button 
-            onClick={() => { setShowStories(false); setExperienceAutoPlay(false); setIsStoryPaused(false); }}
-            className="absolute top-8 right-4 z-[520] p-2 bg-black/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all border border-white/10 shadow-2xl"
-          >
-            <X className="w-5 h-5" />
-          </button>
 
-          <div className="absolute inset-0 z-[505] flex">
+          {/* Header */}
+          <div className="absolute top-8 left-0 right-0 z-[620] px-4 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full border border-white/20 overflow-hidden relative bg-neutral-900">
+                <Image src={uploadedPhotos[0]} fill className="object-cover" alt="Profile" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-white text-xs font-bold leading-tight">{pageTitle || 'Eternize'}</span>
+                <span className="text-white/60 text-[10px] font-medium leading-tight">Juntos há {formattedTotalDays} dias</span>
+              </div>
+            </div>
+            <button 
+              onClick={() => { setShowStories(false); setIsStoryPaused(false); }}
+              className="p-1 text-white hover:opacity-70 transition-opacity"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Touch Interaction Areas */}
+          <div className="absolute inset-0 z-[605] flex">
             <div className="flex-1 h-full cursor-pointer" onClick={prevStory} />
+            <div className="flex-1 h-full cursor-pointer" onMouseDown={() => setIsStoryPaused(true)} onMouseUp={() => setIsStoryPaused(false)} onTouchStart={() => setIsStoryPaused(true)} onTouchEnd={() => setIsStoryPaused(false)} />
             <div className="flex-1 h-full cursor-pointer" onClick={nextStory} />
           </div>
 
-          <div className="flex-1 relative flex flex-col">
+          {/* Content */}
+          <div className="flex-1 relative flex flex-col items-center justify-center bg-black">
             <div className={cn(
-              "absolute inset-0 transition-all duration-[1200ms] ease-in-out bg-black",
+              "absolute inset-0 transition-all duration-[800ms] ease-in-out",
               isFading ? "opacity-0 scale-95" : "opacity-100 scale-100"
             )}>
               <Image src={uploadedPhotos[currentStoryIndex]} fill className="object-cover" alt={`Story ${currentStoryIndex}`} priority />
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
             </div>
+            
+            {/* Dark Overlays for UI readability */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+          </div>
 
-            <div className="mt-auto relative z-[515] p-8 pb-12 flex flex-col pointer-events-none">
-              <div className="flex justify-center gap-1.5 mb-6">
-                {uploadedPhotos.map((_, i) => (
-                  <div key={i} className={cn(
-                    "h-1 rounded-full transition-all duration-300",
-                    i === currentStoryIndex ? "w-6 bg-[#E50914]" : "w-2 bg-white/30"
-                  )} />
-                ))}
-              </div>
-              <p className="text-white/55 text-[10px] font-bold uppercase tracking-wider mb-1">MEMÓRIA {currentStoryIndex + 1} / {uploadedPhotos.length}</p>
-              <h2 style={titleStyle} className="text-3xl font-bebas text-white tracking-tight leading-none mb-8">{pageTitle || 'ETERNIZE'}</h2>
-              <button 
-                onClick={(e) => { e.stopPropagation(); togglePause(); }} 
-                className="w-full bg-white text-black py-4 rounded-lg flex items-center justify-center gap-3 text-sm font-black active:scale-95 transition-transform shadow-2xl pointer-events-auto"
-              >
-                {isStoryPaused ? <><Play className="w-4 h-4 fill-current" /> Retomar</> : <><Pause className="w-4 h-4 fill-current" /> Pausar</>}
-              </button>
-            </div>
+          {/* Bottom Interaction (Optional/Visual Only) */}
+          <div className="absolute bottom-6 left-0 right-0 z-[620] px-4 flex items-center gap-3">
+             <div className="flex-1 bg-transparent border border-white/30 rounded-full h-10 px-4 flex items-center">
+                <span className="text-white/60 text-xs">Enviar mensagem</span>
+             </div>
+             <Heart className="w-6 h-6 text-white" />
+             <Send className="w-6 h-6 text-white" />
           </div>
         </div>
       )}
@@ -744,7 +769,10 @@ export function DeviceMockup({
                   <div className="flex-1 overflow-y-auto no-scrollbar pb-20">
                     <section className="px-4 pt-2 pb-4">
                       <div className="flex items-center gap-6 mb-4">
-                        <div className="p-[2.5px] rounded-full ig-gradient">
+                        <div 
+                          className="p-[2.5px] rounded-full ig-gradient cursor-pointer active:scale-95 transition-transform"
+                          onClick={startInstagramStories}
+                        >
                           <div className="p-[2px] bg-black rounded-full">
                             <div className="w-20 h-20 rounded-full border-2 border-black overflow-hidden relative bg-neutral-900">
                               {uploadedPhotos.length > 0 ? (
@@ -769,7 +797,7 @@ export function DeviceMockup({
                           className="text-sm text-neutral-200 leading-tight" 
                           dangerouslySetInnerHTML={{ __html: message || 'Te amo meu amor e quero sempre ficar junto com você' }} 
                         />
-                        <p className="text-sm text-neutral-500 pt-1">💑 Juntos desde {date ? format(date, 'dd/MM/yyyy') : '07/04/2017'}</p>
+                        <p className="text-sm text-neutral-500 pt-1"> Juntos desde {date ? format(date, 'dd/MM/yyyy') : '07/04/2017'}</p>
                         
                         {musicData && (
                           <div className="flex items-center gap-1 py-1 mt-1">
@@ -804,7 +832,10 @@ export function DeviceMockup({
                     </section>
 
                     <section className="px-4 pb-6 overflow-x-auto no-scrollbar flex gap-4">
-                      <div className="flex flex-col items-center gap-1 shrink-0">
+                      <div 
+                        className="flex flex-col items-center gap-1 shrink-0 cursor-pointer"
+                        onClick={startInstagramStories}
+                      >
                         <div className="w-16 h-16 rounded-full border border-neutral-800 flex items-center justify-center active:scale-95 transition-transform">
                           <span className="text-3xl font-light text-neutral-400">+</span>
                         </div>
@@ -1173,7 +1204,7 @@ export function DeviceMockup({
                           <div className="flex items-center gap-5 pr-2">
                               <button className="text-white/70 hover:text-white transition-colors" onClick={(e) => e.stopPropagation()}>
                                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                      <path d="M5 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path>
+                                      <path d="M5 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path>
                                       <path d="M2 19a1 1 0 0 1 0-1"></path>
                                       <path d="M2 15a4 4 0 0 1 4 4"></path>
                                       <path d="M2 11a8 8 0 0 1 8 8"></path>
