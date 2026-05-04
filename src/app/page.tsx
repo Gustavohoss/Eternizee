@@ -72,44 +72,134 @@ const STEPS = [
   }
 ];
 
-const TESTIMONIALS = [
+const REVIEWS_1 = [
   {
-    names: "Camila & Felipe",
-    text: "Super fácil de fazer e o resultado é lindo! Coloquei nossas fotos favoritas e a nossa música e ele ficou com o coração quentinho ❤️ Amei demais!",
-    time: "4 meses atrás",
-    avatar: "https://i.pravatar.cc/100?u=camila"
+    stars: 5,
+    text: '"Gente, fiz isso pro meu mozão e ele CHOROU 😭 Nunca vi ele assim. As fotos, a música, o texto... tudo ficou perfeito. Ele ainda abre o link até hoje!"',
+    name: 'Mariana & João',
+    time: '1 mês atrás',
+    initials: 'MJ',
+    color: 'linear-gradient(135deg,#e11d48,#ff6b6b)'
   },
   {
-    names: "Bia & Henrique",
-    text: "Ele não esperava nada e eu apareci com esse presente... gente, os olhos encheram d'água na hora 🥹 A página ficou tão bonita, parecia um site profissional.",
-    time: "1 ano atrás",
-    avatar: "https://i.pravatar.cc/100?u=bia"
+    stars: 5,
+    text: '"Fiz em menos de 10 minutos e o resultado parece coisa de designer profissional. Ele ficou sem palavras 🤩 ❤️ Melhor presente que já dei na vida."',
+    name: 'Ana & Pedro',
+    time: '2 dias atrás',
+    initials: 'AP',
+    color: 'linear-gradient(135deg,#667eea,#764ba2)'
   },
   {
-    names: "Mariana & João",
-    text: "Gente, fiz isso pro meu mozão e ele CHOROU! Nunca vi ele assim. As fotos, a música, o texto... ficou perfeito. Ele ainda abre o link até hoje!",
-    time: "1 mês atrás",
-    avatar: "https://i.pravatar.cc/100?u=mariana"
+    stars: 5,
+    text: '"Montei uma surpresa pra Carol com nossas fotos de viagem e a música do nosso primeiro beijo. Ela ficou emocionada demais!! Com certeza vou fazer de novo."',
+    name: 'Lucas & Carol',
+    time: '3 meses atrás',
+    initials: 'LC',
+    color: 'linear-gradient(135deg,#f093fb,#f5576c)'
   },
   {
-    names: "Vanessa & Ricardo",
-    text: "Criei pro meu mozão de surpresa e ele ficou sem acreditar que eu fiz isso. Ele disse que foi o presente mais lindo que já recebeu ❤️ Recomendo 10/10!",
-    time: "1 semana atrás",
-    avatar: "https://i.pravatar.cc/100?u=vanessa"
+    stars: 5,
+    text: '"Ele ficou completamente surpreso! Eu mesma me emocionei montando, de tanto que ficou bonito 💜 Já recomendei pra todas as minhas amigas."',
+    name: 'Larissa & Tiago',
+    time: '9 meses atrás',
+    initials: 'LT',
+    color: 'linear-gradient(135deg,#4facfe,#00f2fe)'
   },
   {
-    names: "Carla & Bruno",
-    text: "Comemoramos 1 ano juntos com isso e foi demais! A página personalizada foi o presente mais especial que já demos um pro outro 🥂✨",
-    time: "4 meses atrás",
-    avatar: "https://i.pravatar.cc/100?u=carla"
+    stars: 5,
+    text: '"Achei que ia ser difícil mas foi o contrário — rapidinho e ficou INCRÍVEL. Colocamos as músicas que marcaram nossa relação e foi muito emocionante 🎵"',
+    name: 'Clara & Rafael',
+    time: '2 meses atrás',
+    initials: 'CR',
+    color: 'linear-gradient(135deg,#43e97b,#38f9d7)'
   },
-  {
-    names: "Larissa & Tiago",
-    text: "Ele ficou completamente surpreso! Eu me emocionei montando, de tanto que ficou a nossa cara. Já recomendei pra todas as minhas amigas!",
-    time: "9 meses atrás",
-    avatar: "https://i.pravatar.cc/100?u=larissa"
-  }
 ];
+
+const REVIEWS_2 = [
+  {
+    stars: 5,
+    text: '"Criei pro meu mozão de surpresa e ele ficou sem acreditar que eu fiz isso. Ele disse que foi o presente mais lindo que já recebeu ❤️ Recomendo 10/10!"',
+    name: 'Vanessa & Ricardo',
+    time: '1 semana atrás',
+    initials: 'VR',
+    color: 'linear-gradient(135deg,#fa709a,#fee140)'
+  },
+  {
+    stars: 5,
+    text: '"Nossa página ficou tão linda que até eu fiquei sem acreditar. Meu namorado abriu na frente dos amigos dele e todo mundo quis fazer também! 😍"',
+    name: 'Isabela & Bruno',
+    time: '5 dias atrás',
+    initials: 'IB',
+    color: 'linear-gradient(135deg,#a8edea,#fed6e3)'
+  },
+  {
+    stars: 5,
+    text: '"Fiz de aniversário de namoro e mandei o link pelo WhatsApp. Ela ficou chorando de emoção e me ligou na hora. Nunca vi ela assim tão feliz 🥹"',
+    name: 'Felipe & Júlia',
+    time: '2 semanas atrás',
+    initials: 'FJ',
+    color: 'linear-gradient(135deg,#ffecd2,#fcb69f)'
+  },
+  {
+    stars: 5,
+    text: '"Simplesmente perfeito. Coloquei nossas fotos favoritas, a música que tocou no nosso primeiro encontro e escrevi um texto do coração. Ela salvou pra sempre!"',
+    name: 'Gabriel & Sofia',
+    time: '4 meses atrás',
+    initials: 'GS',
+    color: 'linear-gradient(135deg,#d299c2,#fef9d7)'
+  },
+  {
+    stars: 5,
+    text: '"Presente mais original que já fiz na vida. Não custou quase nada mas pareceu que custou uma fortuna de tão especial que ficou. Ela ficou sem palavras 💕"',
+    name: 'Camila & André',
+    time: '3 semanas atrás',
+    initials: 'CA',
+    color: 'linear-gradient(135deg,#89f7fe,#66a6ff)'
+  },
+];
+
+const AVATAR_DATA = [
+  {initials:'MJ', color:'linear-gradient(135deg,#e11d48,#ff6b6b)'},
+  {initials:'AP', color:'linear-gradient(135deg,#667eea,#764ba2)'},
+  {initials:'LC', color:'linear-gradient(135deg,#f093fb,#f5576c)'},
+  {initials:'LT', color:'linear-gradient(135deg,#4facfe,#00f2fe)'},
+  {initials:'CR', color:'linear-gradient(135deg,#43e97b,#38f9d7)'},
+  {initials:'VR', color:'linear-gradient(135deg,#fa709a,#fee140)'},
+];
+
+function ReviewCard({ review }: { review: any }) {
+  return (
+    <div className="bg-[#111] border border-white/5 rounded-2xl p-6 w-[300px] shrink-0 text-left transition-all hover:border-white/10 group relative">
+      <div className="flex gap-0.5 mb-3">
+        {[...Array(review.stars)].map((_, i) => (
+          <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
+        ))}
+      </div>
+      <div className="absolute top-4 right-6 text-3xl font-serif text-white/5 opacity-40 group-hover:text-primary/10 transition-colors pointer-events-none">"</div>
+      <p className="text-white/80 text-sm leading-relaxed mb-6 min-h-[80px] italic">
+        {review.text}
+      </p>
+      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+        <div className="flex items-center gap-3">
+          <div 
+            className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0 shadow-lg"
+            style={{ background: review.color }}
+          >
+            {review.initials}
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs font-black text-white uppercase tracking-tight">{review.name}</span>
+            <span className="text-[10px] font-bold text-white/20">{review.time}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full shrink-0">
+          <Check className="w-2.5 h-2.5 text-green-500" strokeWidth={4} />
+          <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function LandingPage() {
   const [text, setText] = useState('');
@@ -147,30 +237,6 @@ export default function LandingPage() {
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
-
-  // Embla Carousel Logic for Reviews
-  const [emblaReviewsRef, emblaReviewsApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: 'start',
-    skipSnaps: false,
-    dragFree: true
-  });
-  const [reviewsSelectedIndex, setReviewsSelectedIndex] = useState(0);
-
-  const scrollReviewsPrev = useCallback(() => emblaReviewsApi && emblaReviewsApi.scrollPrev(), [emblaReviewsApi]);
-  const scrollReviewsNext = useCallback(() => emblaReviewsApi && emblaReviewsApi.scrollNext(), [emblaReviewsApi]);
-
-  const onReviewsSelect = useCallback(() => {
-    if (!emblaReviewsApi) return;
-    setReviewsSelectedIndex(emblaReviewsApi.selectedScrollSnap());
-  }, [emblaReviewsApi]);
-
-  useEffect(() => {
-    if (!emblaReviewsApi) return;
-    onReviewsSelect();
-    emblaReviewsApi.on('select', onReviewsSelect);
-    emblaReviewsApi.on('reInit', onReviewsSelect);
-  }, [emblaReviewsApi, onReviewsSelect]);
 
   // Typewriter Effect
   useEffect(() => {
@@ -237,7 +303,7 @@ export default function LandingPage() {
   const currentTheme = THEME_OPTIONS[selectedIndex];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-body selection:bg-[#e11d48] overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white font-body selection:bg-primary overflow-x-hidden">
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         
@@ -304,14 +370,14 @@ export default function LandingPage() {
           Eternize.
         </div>
         <nav className="hidden lg:flex">
-          <NextLink href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">Início</NextLink>
-          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">Como funciona?</NextLink>
-          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">Planos</NextLink>
-          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">F.A.Q</NextLink>
+          <NextLink href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-primary transition-all">Início</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-primary transition-all">Como funciona?</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-primary transition-all">Planos</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-primary transition-all">F.A.Q</NextLink>
         </nav>
         <div className="flex items-center gap-4 md:gap-6">
-          <NextLink href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-[#e11d48] transition-colors">Fazer Login</NextLink>
-          <NextLink href="/criador" className="bg-[#e11d48] px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-[#e11d48]/90 transition-all active:scale-95 shadow-lg shadow-[#e11d48]/20">
+          <NextLink href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-primary transition-colors">Fazer Login</NextLink>
+          <NextLink href="/criador" className="bg-primary px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20">
             Criar minha página
           </NextLink>
         </div>
@@ -320,7 +386,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="flex flex-col lg:grid lg:grid-cols-[1fr_420px] items-center justify-center min-h-[calc(100vh-120px)] px-[5%] md:px-[8%] gap-12 lg:gap-20 py-12 lg:py-0">
         <div className="max-w-[550px] text-center lg:text-left flex flex-col items-center lg:items-start animate-in fade-in slide-in-from-left-8 duration-1000">
-          <div className="bg-[#e11d48]/10 text-[#e11d48] px-4 py-1.5 rounded-full text-[11px] border border-[#e11d48]/20 mb-6 font-bold tracking-wide uppercase italic">
+          <div className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[11px] border border-primary/20 mb-6 font-bold tracking-wide uppercase italic">
             ✨ Nós te ajudamos a criar em 5 minutos
           </div>
           
@@ -328,7 +394,7 @@ export default function LandingPage() {
             Declare seu amor
           </h1>
           
-          <div className="typing-container text-[36px] md:text-[48px] text-[#e11d48] h-[60px] md:h-[70px] mb-4 flex items-center justify-center lg:justify-start">
+          <div className="typing-container text-[36px] md:text-[48px] text-primary h-[60px] md:h-[70px] mb-4 flex items-center justify-center lg:justify-start">
             <span>{text}</span>
             <span className="cursor" />
           </div>
@@ -354,7 +420,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Visual Carousel */}
+        {/* Visual Carousel - Identical to creator */}
         <div className="flex flex-col items-center justify-center w-full relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
           <div className="relative w-full max-w-[400px] flex flex-col items-center">
             <div className="w-full overflow-visible" ref={emblaRef}>
@@ -533,12 +599,12 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col items-center gap-8 mt-12 md:mt-20">
-            <div className="w-[120px] h-[1px] bg-gradient-to-r from-transparent via-[#e11d48] to-transparent shadow-[0_0_8px_#e11d48] opacity-80" />
+            <div className="w-[120px] h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_8px_#e11d48] opacity-80" />
             <h2 className="text-[32px] md:text-[42px] font-extrabold leading-tight text-white">
-              Uma <span className="text-[#e11d48]">declaração de amor</span> que<br className="hidden md:block" /> ficará para sempre.
+              Uma <span className="text-primary">declaração de amor</span> que<br className="hidden md:block" /> ficará para sempre.
             </h2>
             
-            <NextLink href="/criador" className="bg-gradient-to-r from-[#e11d48] to-[#9f1239] text-white px-10 py-5 rounded-full text-[18px] font-bold inline-flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_15px_35px_rgba(225,29,72,0.5)] shadow-[0_10px_25px_rgba(225,29,72,0.3)] group">
+            <NextLink href="/criador" className="bg-gradient-to-r from-primary to-red-800 text-white px-10 py-5 rounded-full text-[18px] font-bold inline-flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_15px_35px_rgba(225,29,72,0.5)] shadow-[0_10px_25px_rgba(225,29,72,0.3)] group">
               Criar minha página agora →
             </NextLink>
           </div>
@@ -565,7 +631,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-[#1a1a1a] rounded-[14px] p-6 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
-                <Star className="w-3.5 h-3.5 text-[#e11d48]" /> TEMAS
+                <Star className="w-3.5 h-3.5 text-primary" /> TEMAS
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Temas Exclusivos</h3>
               <p className="text-[12px] text-[#666] mb-4">4 estilos únicos para contar a história de vocês do jeito certo</p>
@@ -582,7 +648,7 @@ export default function LandingPage() {
                     onClick={() => setDashboardTheme(t.id)}
                     className={cn(
                       "bg-[#111] rounded-xl p-3 cursor-pointer border transition-all duration-200 hover:-translate-y-0.5",
-                      dashboardTheme === t.id ? "border-[#e11d48]" : "border-[#222] hover:border-[#444]"
+                      dashboardTheme === t.id ? "border-primary" : "border-[#222] hover:border-[#444]"
                     )}
                   >
                     <div 
@@ -661,7 +727,7 @@ export default function LandingPage() {
               
               <div className="flex items-center justify-between bg-[#111] rounded-lg p-2.5 mb-3">
                 <div className="flex items-center gap-2 text-xs font-bold">
-                  <div className="w-2 h-2 rounded-full bg-[#e11d48] animate-pulse-heart" />
+                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse-heart" />
                   Ana & João
                 </div>
                 <div className="text-[10px] font-bold text-[#555]">14 fev 2022</div>
@@ -682,7 +748,7 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-center justify-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-[#555]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#e11d48] animate-blink-dot" />
+                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-blink-dot" />
                 atualizado em tempo real
               </div>
             </div>
@@ -693,10 +759,10 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Módulos Interativos</h3>
               
-              <div className="bg-[#111] rounded-xl p-3.5 border border-white/5 mb-3 hover:border-[#e11d4844] transition-colors group">
+              <div className="bg-[#111] rounded-xl p-3.5 border border-white/5 mb-3 hover:border-primary/20 transition-colors group">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#e11d4822] flex items-center justify-center shrink-0">
-                    <Heart className="w-4 h-4 text-[#e11d48] fill-[#e11d48]" />
+                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Heart className="w-4 h-4 text-primary fill-primary" />
                   </div>
                   <div className="text-[13px] font-bold">Memórias</div>
                 </div>
@@ -705,14 +771,14 @@ export default function LandingPage() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#e11d48]" style={{ width: '18px', borderRadius: '4px' }} />
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" style={{ width: '18px', borderRadius: '4px' }} />
                   <div className="w-1.5 h-1.5 rounded-full bg-[#333]" />
                   <div className="w-1.5 h-1.5 rounded-full bg-[#333]" />
                   <div className="w-1.5 h-1.5 rounded-full bg-[#333]" />
                 </div>
                 <div className="flex gap-1.5">
-                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"><ChevronLeft className="w-4 h-4" /></button>
-                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"><ChevronRight className="w-4 h-4" /></button>
+                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-primary hover:text-primary transition-all"><ChevronLeft className="w-4 h-4" /></button>
+                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-primary hover:text-primary transition-all"><ChevronRight className="w-4 h-4" /></button>
                 </div>
               </div>
             </div>
@@ -776,7 +842,7 @@ export default function LandingPage() {
 
               <div className="bg-[#111] rounded-xl p-3 border border-[#222]">
                 <div className="text-[9px] font-black text-[#555] uppercase tracking-wider mb-0.5">Link da página</div>
-                <div className="text-[13px] font-bold text-[#e11d48] truncate">eternize.com/seu-amor</div>
+                <div className="text-[13px] font-bold text-primary truncate">eternize.com/seu-amor</div>
               </div>
             </div>
           </div>
@@ -785,7 +851,7 @@ export default function LandingPage() {
             <div className="absolute top-[-50%] left-[-20%] w-[60%] h-[150%] bg-[radial-gradient(ellipse,_rgba(225,29,72,0.05)_0%,_transparent_70%)] pointer-events-none" />
             
             <div className="flex items-center justify-between mb-6 relative z-10">
-              <div className="flex items-center gap-1.5 bg-[#2a0010] border border-[#4a0020] rounded-full px-3 py-1.5 text-[11px] font-bold text-[#e11d48]">
+              <div className="flex items-center gap-1.5 bg-[#2a0010] border border-[#4a0020] rounded-full px-3 py-1.5 text-[11px] font-bold text-primary">
                 <Star className="w-3 h-3 fill-current" /> Tema {THEME_OPTIONS[previewThemeIndex].name}
               </div>
               <div className="text-[12px] font-bold text-[#555] tabular-nums">0{previewThemeIndex + 1} / 04</div>
@@ -794,16 +860,16 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start relative z-10">
               <div className="flex flex-col">
                 <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#888] mb-3">
-                  <Heart className="w-3 h-3 text-[#e11d48] fill-[#e11d48]" /> Tema
+                  <Heart className="w-3 h-3 text-primary fill-primary" /> Tema
                 </div>
-                <h2 className="text-5xl font-black text-[#e11d48] mb-4 tracking-tighter transition-all duration-500" style={{ textShadow: '0 0 40px rgba(225,29,72,0.3)', color: THEME_OPTIONS[previewThemeIndex].color }}>
+                <h2 className="text-5xl font-black text-primary mb-4 tracking-tighter transition-all duration-500" style={{ textShadow: '0 0 40px rgba(225,29,72,0.3)', color: THEME_OPTIONS[previewThemeIndex].color }}>
                   {THEME_OPTIONS[previewThemeIndex].name}
                 </h2>
                 <p className="text-[13.5px] text-[#666] leading-relaxed mb-8 max-w-[320px] font-medium">
                   {THEME_OPTIONS[previewThemeIndex].description}
                 </p>
                 <NextLink href="/criador">
-                  <button className="bg-[#e11d48] hover:bg-[#ef4444] text-white px-5 py-3 rounded-lg text-sm font-bold flex items-center gap-2 w-fit transition-all hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95" style={{ backgroundColor: THEME_OPTIONS[previewThemeIndex].color }}>
+                  <button className="bg-primary hover:bg-red-700 text-white px-5 py-3 rounded-lg text-sm font-bold flex items-center gap-2 w-fit transition-all hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95" style={{ backgroundColor: THEME_OPTIONS[previewThemeIndex].color }}>
                     <ExternalLink className="w-4 h-4" /> Ver demo ao vivo
                   </button>
                 </NextLink>
@@ -817,7 +883,7 @@ export default function LandingPage() {
                    alt="Theme preview" 
                  />
                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,_rgba(225,29,72,0.05)_0%,_transparent_70%)]" />
-                 <Heart className="w-12 h-12 text-[#e11d48] opacity-20 group-hover:opacity-40 transition-opacity" />
+                 <Heart className="w-12 h-12 text-primary opacity-20 group-hover:opacity-40 transition-opacity" />
               </div>
             </div>
 
@@ -829,7 +895,7 @@ export default function LandingPage() {
                     onClick={() => setPreviewThemeIndex(idx)}
                     className={cn(
                       "h-1.5 rounded-full cursor-pointer transition-all duration-300",
-                      previewThemeIndex === idx ? "w-6 bg-[#e11d48]" : "w-1.5 bg-[#333]"
+                      previewThemeIndex === idx ? "w-6 bg-primary" : "w-1.5 bg-[#333]"
                     )} 
                     style={{ backgroundColor: previewThemeIndex === idx ? THEME_OPTIONS[idx].color : undefined }}
                   />
@@ -838,13 +904,13 @@ export default function LandingPage() {
               <div className="flex gap-2">
                 <button 
                   onClick={() => setPreviewThemeIndex((prev) => (prev - 1 + 4) % 4)}
-                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"
+                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-primary hover:text-primary transition-all"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={() => setPreviewThemeIndex((prev) => (prev + 1) % 4)}
-                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"
+                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-primary hover:text-primary transition-all"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -854,110 +920,61 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Reviews Section */}
+      {/* Reviews Section - Infinite Scrolling Tracks */}
       <section className="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-2">
-               <Star className="w-3 h-3 text-primary fill-primary" />
-               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">Avaliações reais</span>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white leading-tight">
-              70.000 casais não podem<br /> <span className="text-primary">estar errados.</span>
-            </h2>
-            <p className="text-white/40 text-sm md:text-lg max-w-xl font-medium leading-relaxed">
-              Histórias reais de quem criou algo especial e fez alguém chorar de emoção — do jeito bom.
-            </p>
-
-            <div className="mt-8 flex flex-col items-center gap-3 bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-md">
-                <div className="flex items-center gap-6">
-                    <div className="text-center">
-                        <span className="text-4xl font-black text-white block leading-none mb-1">4.9</span>
-                        <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />)}
-                        </div>
-                    </div>
-                    <div className="w-px h-12 bg-white/10" />
-                    <div className="flex flex-col items-start gap-2">
-                        <div className="flex -space-x-2">
-                            {[1, 2, 3, 4, 5].map(i => (
-                                <img key={i} src={`https://i.pravatar.cc/100?u=${i + 40}`} className="w-8 h-8 rounded-full border-2 border-black" alt="" />
-                            ))}
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-white/40">+70.000 avaliações</p>
-                    </div>
-                </div>
-            </div>
+        <div className="max-w-6xl mx-auto px-6 relative z-10 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 text-white/40 text-[12px] mb-6 relative group">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-primary rounded-full"></div>
+            <Star className="w-3.5 h-3.5" />
+            Avaliações reais
           </div>
 
-          <div className="relative w-full">
-            <div className="overflow-hidden" ref={emblaReviewsRef}>
-              <div className="flex -ml-6">
-                {TESTIMONIALS.map((review, i) => (
-                  <div key={i} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-6">
-                    <div className="h-full bg-[#0c0c0c] border border-white/5 p-8 rounded-[2rem] flex flex-col gap-6 relative group hover:border-primary/30 transition-all duration-500">
-                      <div className="absolute top-6 right-8 text-white/5 group-hover:text-primary/10 transition-colors">
-                          <Quote className="w-12 h-12 fill-current" />
-                      </div>
+          <h2 className="text-4xl md:text-6xl font-black text-center leading-tight tracking-tight mb-4">
+            70.000 casais não podem<br /> <span className="text-primary">estar errados.</span>
+          </h2>
+          
+          <p className="text-white/40 text-center text-sm md:text-lg max-w-md mb-12 font-medium">
+            Histórias reais de quem criou algo especial e fez alguém chorar de emoção — do jeito bom.
+          </p>
 
-                      <div className="flex gap-0.5">
-                          {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />)}
-                      </div>
-
-                      <p className="text-white/70 text-[13.5px] leading-relaxed font-medium relative z-10 italic">
-                        "{review.text}"
-                      </p>
-
-                      <div className="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
-                          <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
-                                  <img src={review.avatar} className="object-cover" alt={review.names} />
-                              </div>
-                              <div className="flex flex-col">
-                                  <span className="text-xs font-black text-white uppercase tracking-tight">{review.names}</span>
-                                  <span className="text-[10px] font-bold text-white/20">{review.time}</span>
-                              </div>
-                          </div>
-                          <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full shrink-0">
-                              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                              <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
-                          </div>
-                      </div>
-                    </div>
+          <div className="bg-[#111] border border-white/10 rounded-2xl flex items-center mb-16 overflow-hidden shadow-2xl">
+            <div className="px-6 py-4 border-r border-white/5 text-center">
+              <div className="text-3xl font-black text-white leading-none mb-1">4.9</div>
+              <div className="flex gap-0.5 justify-center">
+                {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />)}
+              </div>
+            </div>
+            <div className="px-6 py-4 flex items-center gap-3">
+              <div className="flex -space-x-2">
+                {AVATAR_DATA.map((a, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-[#111] flex items-center justify-center text-[9px] font-black text-white shadow-md" style={{ background: a.color }}>
+                    {a.initials}
                   </div>
                 ))}
               </div>
+              <div className="flex flex-col">
+                <strong className="text-xs font-black text-white">+70.000</strong>
+                <span className="text-[10px] text-white/30 font-bold uppercase tracking-wider">avaliações</span>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* Navigation Controls */}
-            <div className="flex items-center justify-between mt-10">
-              <div className="flex gap-2.5">
-                {TESTIMONIALS.map((_, i) => (
-                  <button 
-                    key={i} 
-                    onClick={() => emblaReviewsApi?.scrollTo(i)}
-                    className={cn(
-                      "h-1.5 rounded-full transition-all duration-500",
-                      i === reviewsSelectedIndex ? "w-8 bg-primary" : "w-1.5 bg-white/10"
-                    )} 
-                  />
-                ))}
-              </div>
-              <div className="flex gap-3">
-                <button 
-                  onClick={scrollReviewsPrev}
-                  className="w-11 h-11 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={scrollReviewsNext}
-                  className="w-11 h-11 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
+        {/* Row 1 - Scroll Left */}
+        <div className="relative w-full overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-32 before:bg-gradient-to-r before:from-black before:to-transparent before:z-10 after:absolute after:right-0 after:top-0 after:bottom-0 after:w-32 after:bg-gradient-to-l after:from-black after:to-transparent after:z-10">
+          <div className="flex gap-4 w-max animate-scroll-left px-4">
+            {[...REVIEWS_1, ...REVIEWS_1].map((review, i) => (
+              <ReviewCard key={i} review={review} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 - Scroll Right */}
+        <div className="relative w-full overflow-hidden mt-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-32 before:bg-gradient-to-r before:from-black before:to-transparent before:z-10 after:absolute after:right-0 after:top-0 after:bottom-0 after:w-32 after:bg-gradient-to-l after:from-black after:to-transparent after:z-10">
+          <div className="flex gap-4 w-max animate-scroll-right px-4">
+            {[...REVIEWS_2, ...REVIEWS_2].map((review, i) => (
+              <ReviewCard key={i} review={review} />
+            ))}
           </div>
         </div>
       </section>
@@ -1030,7 +1047,7 @@ export default function LandingPage() {
             </div>
 
             <div className="relative bg-[#0c0c0c] border-2 border-primary/30 rounded-[2rem] p-7 flex flex-col transition-all duration-500 shadow-[0_0_80px_rgba(225,29,72,0.15)] group scale-[1.02] z-10">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-red-700 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-2xl shadow-primary/40 animate-pulse">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-red-800 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-2xl shadow-primary/40 animate-pulse">
                 <Star className="w-2.5 h-2.5 fill-current" /> MAIS POPULAR
               </div>
 
@@ -1073,7 +1090,7 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-3">
-                <NextLink href="/criador" className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-red-800 flex items-center justify-center font-black uppercase tracking-widest text-[10px] shadow-[0_15px_30px_rgba(225,29,72,0.4)] hover:brightness-110 transition-all active:scale-95 gap-2">
+                <NextLink href="/criador" className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-red-900 flex items-center justify-center font-black uppercase tracking-widest text-[10px] shadow-[0_15px_30px_rgba(225,29,72,0.4)] hover:brightness-110 transition-all active:scale-95 gap-2">
                   Criar minha página <ChevronRight className="w-3.5 h-3.5" />
                 </NextLink>
                 <p className="text-[9px] text-center text-white/20 font-bold uppercase tracking-widest">Sem mensalidades. Pague uma vez, guarde para sempre.</p>

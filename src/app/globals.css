@@ -10,19 +10,19 @@
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 3%;
     --popover-foreground: 0 0% 100%;
-    --primary: 0 84% 50%;
+    --primary: 348 83% 47%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 9%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 9%;
     --muted-foreground: 0 0% 60%;
-    --accent: 0 84% 50%;
+    --accent: 348 83% 47%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 0 84% 50%;
+    --ring: 348 83% 47%;
     --radius: 0.75rem;
   }
 }
@@ -42,8 +42,8 @@
 
 .bg-hero-glow {
   background: 
-    radial-gradient(circle at 10% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 90% 80%, rgba(220, 38, 38, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 10% 30%, rgba(225, 29, 72, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 90% 80%, rgba(225, 29, 72, 0.05) 0%, transparent 50%);
 }
 
 .text-gradient-primary {
@@ -59,6 +59,29 @@
 
 .animate-fall {
   animation: fall linear infinite;
+}
+
+/* Animações de Scroll Infinito */
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 45s linear infinite;
+}
+
+.animate-scroll-left:hover, .animate-scroll-right:hover {
+  animation-play-state: paused;
 }
 
 /* Animações do Calendário Customizado */
@@ -98,34 +121,6 @@
   animation: fadeOutBars 0.5s forwards;
 }
 
-/* Color Picker Hue Slider Thumb Fix */
-.hue-slider {
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.hue-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: white;
-  border: 4px solid #141414;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  cursor: pointer;
-}
-
-.hue-slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: white;
-  border: 4px solid #141414;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  cursor: pointer;
-}
-
 /* Utilitário para esconder scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;
@@ -144,24 +139,6 @@
 .custom-scroll::-webkit-scrollbar-thumb {
     background: #333;
     border-radius: 10px;
-}
-
-/* Efeito Leque Swiper */
-.fan-swiper {
-  perspective: 1500px;
-}
-
-.fan-swiper .swiper-wrapper {
-  -webkit-box-reflect: below 20px linear-gradient(transparent, rgba(255,255,255,0.05));
-}
-
-.fan-swiper .swiper-slide {
-  transition: filter 0.4s ease;
-  transform-style: preserve-3d;
-}
-
-.fan-swiper .swiper-slide:not(.swiper-slide-active) {
-  filter: blur(4px) brightness(0.6);
 }
 
 /* --- ESTILOS MÓDULO CURIOSIDADES --- */
