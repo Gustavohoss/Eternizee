@@ -40,32 +40,32 @@ const STEPS = [
     title: 'Personalize',
     description: 'Personalize sua página com fotos, mensagens, efeitos especiais e muito mais.',
     icon: ListOrdered,
-    color: '#ff4d6d',
-    glow: 'rgba(255, 77, 109, 0.4)'
+    color: '#e11d48',
+    glow: 'rgba(225, 29, 72, 0.4)'
   },
   {
     id: 2,
     title: 'Faça o pagamento',
     description: 'Escolha seu plano preferido e faça o pagamento de forma rápida e segura.',
     icon: CircleDollarSign,
-    color: '#ef476f',
-    glow: 'rgba(239, 71, 111, 0.4)'
+    color: '#be123c',
+    glow: 'rgba(190, 18, 60, 0.4)'
   },
   {
     id: 3,
     title: 'Receba seu acesso',
     description: 'Você receberá por email um QR code e link para acessar sua página.',
     icon: QrCode,
-    color: '#bc47ef',
-    glow: 'rgba(188, 71, 239, 0.4)'
+    color: '#9f1239',
+    glow: 'rgba(159, 18, 57, 0.4)'
   },
   {
     id: 4,
     title: 'Compartilhe o amor',
     description: 'Compartilhe a página com a pessoa amada e surpreenda-a de forma especial.',
     icon: Heart,
-    color: '#8a47ef',
-    glow: 'rgba(138, 71, 239, 0.4)'
+    color: '#881337',
+    glow: 'rgba(136, 19, 55, 0.4)'
   }
 ];
 
@@ -171,7 +171,7 @@ export default function LandingPage() {
   const currentTheme = THEME_OPTIONS[selectedIndex];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#ff4d6d] overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#e11d48] overflow-x-hidden">
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         
@@ -182,7 +182,7 @@ export default function LandingPage() {
         .cursor {
           width: 2px;
           height: 35px;
-          background-color: #ff4d6d;
+          background-color: #e11d48;
           margin-left: 5px;
           animation: blink 0.8s infinite;
         }
@@ -190,8 +190,8 @@ export default function LandingPage() {
         @keyframes blink { 50% { opacity: 0; } }
 
         .cta-button {
-          background: linear-gradient(90deg, #ff4d6d, #c9184a);
-          box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2);
+          background: linear-gradient(90deg, #e11d48, #9f1239);
+          box-shadow: 0 8px 20px rgba(225, 29, 72, 0.2);
         }
 
         @keyframes progress-ani {
@@ -211,7 +211,7 @@ export default function LandingPage() {
         }
 
         @keyframes pulse-heart {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(232, 51, 90, 0.4); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
           50% { box-shadow: 0 0 0 5px transparent; }
         }
         .animate-pulse-heart {
@@ -228,7 +228,7 @@ export default function LandingPage() {
       `}</style>
 
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-[#5c1421] to-[#1a0a0d] text-[12px] text-center py-2 text-[#ffb3c1] font-medium">
+      <div className="bg-gradient-to-r from-[#7f1d1d] to-[#1a0a0d] text-[12px] text-center py-2 text-[#fecaca] font-medium">
         ⚡ Apenas hoje — Todos os planos com <strong>50% OFF</strong> de desconto, aproveite! <u className="cursor-pointer ml-1">Ver planos</u>
       </div>
 
@@ -238,14 +238,14 @@ export default function LandingPage() {
           Eternize.
         </div>
         <nav className="hidden lg:flex">
-          <NextLink href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Início</NextLink>
-          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Como funciona?</NextLink>
-          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">Planos</NextLink>
-          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#ff4d6d] transition-all">F.A.Q</NextLink>
+          <NextLink href="/" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">Início</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">Como funciona?</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">Planos</NextLink>
+          <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-[#e11d48] transition-all">F.A.Q</NextLink>
         </nav>
         <div className="flex items-center gap-4 md:gap-6">
-          <NextLink href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-[#ff4d6d] transition-colors">Fazer Login</NextLink>
-          <NextLink href="/criador" className="bg-[#ff4d6d] px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-[#ff4d6d]/90 transition-all active:scale-95 shadow-lg shadow-[#ff4d6d]/20">
+          <NextLink href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-[#e11d48] transition-colors">Fazer Login</NextLink>
+          <NextLink href="/criador" className="bg-[#e11d48] px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-[#e11d48]/90 transition-all active:scale-95 shadow-lg shadow-[#e11d48]/20">
             Criar minha página
           </NextLink>
         </div>
@@ -254,7 +254,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh-120px)] px-[5%] md:px-[8%] gap-12 lg:gap-20 py-12 lg:py-0">
         <div className="flex-1 max-w-[550px] text-center lg:text-left flex flex-col items-center lg:items-start animate-in fade-in slide-in-from-left-8 duration-1000">
-          <div className="bg-[#ff4d6d]/10 text-[#ff4d6d] px-4 py-1.5 rounded-full text-[11px] border border-[#ff4d6d]/20 mb-6 font-bold tracking-wide uppercase italic">
+          <div className="bg-[#e11d48]/10 text-[#e11d48] px-4 py-1.5 rounded-full text-[11px] border border-[#e11d48]/20 mb-6 font-bold tracking-wide uppercase italic">
             ✨ Nós te ajudamos a criar em 5 minutos
           </div>
           
@@ -262,7 +262,7 @@ export default function LandingPage() {
             Declare seu amor
           </h1>
           
-          <div className="typing-container text-[36px] md:text-[48px] text-[#ff4d6d] h-[60px] md:h-[70px] mb-4 flex items-center justify-center lg:justify-start">
+          <div className="typing-container text-[36px] md:text-[48px] text-[#e11d48] h-[60px] md:h-[70px] mb-4 flex items-center justify-center lg:justify-start">
             <span>{text}</span>
             <span className="cursor" />
           </div>
@@ -467,12 +467,12 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col items-center gap-8 mt-12 md:mt-20">
-            <div className="w-[120px] h-[1px] bg-gradient-to-r from-transparent via-[#ff4d6d] to-transparent shadow-[0_0_8px_#ff4d6d] opacity-80" />
+            <div className="w-[120px] h-[1px] bg-gradient-to-r from-transparent via-[#e11d48] to-transparent shadow-[0_0_8px_#e11d48] opacity-80" />
             <h2 className="text-[32px] md:text-[42px] font-extrabold leading-tight text-white">
-              Uma <span className="text-[#ff4d6d]">declaração de amor</span> que<br className="hidden md:block" /> ficará para sempre.
+              Uma <span className="text-[#e11d48]">declaração de amor</span> que<br className="hidden md:block" /> ficará para sempre.
             </h2>
             
-            <NextLink href="/criador" className="bg-gradient-to-r from-[#ff4d6d] to-[#c9184a] text-white px-10 py-5 rounded-full text-[18px] font-bold inline-flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_15px_35px_rgba(255,77,109,0.5)] shadow-[0_10px_25px_rgba(255,77,109,0.3)] group">
+            <NextLink href="/criador" className="bg-gradient-to-r from-[#e11d48] to-[#9f1239] text-white px-10 py-5 rounded-full text-[18px] font-bold inline-flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_15px_35px_rgba(225,29,72,0.5)] shadow-[0_10px_25px_rgba(225,29,72,0.3)] group">
               Criar minha página agora →
             </NextLink>
           </div>
@@ -489,14 +489,14 @@ export default function LandingPage() {
             {/* Themes Card */}
             <div className="bg-[#1a1a1a] rounded-[14px] p-6 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
-                <Star className="w-3.5 h-3.5 text-[#e8335a]" /> TEMAS
+                <Star className="w-3.5 h-3.5 text-[#e11d48]" /> TEMAS
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Temas Exclusivos</h3>
               <p className="text-[12px] text-[#666] mb-4">4 estilos únicos para contar a história de vocês do jeito certo</p>
               
               <div className="grid grid-cols-4 gap-2">
                 {[
-                  { id: 'classic', label: 'Default', color: '#e8335a', icon: '❤️' },
+                  { id: 'classic', label: 'Default', color: '#e11d48', icon: '❤️' },
                   { id: 'netflix', label: 'Netflix', color: '#e50914', icon: '▶' },
                   { id: 'spotify', label: 'Spotify', color: '#1db954', icon: '♫' },
                   { id: 'instagram', label: 'Insta', color: '#fd1d1d', icon: '✦', isGradient: true }
@@ -506,11 +506,11 @@ export default function LandingPage() {
                     onClick={() => setDashboardTheme(t.id)}
                     className={cn(
                       "bg-[#111] rounded-xl p-3 cursor-pointer border transition-all duration-200 hover:-translate-y-0.5",
-                      dashboardTheme === t.id ? "border-[#e8335a]" : "border-[#222] hover:border-[#444]"
+                      dashboardTheme === t.id ? "border-[#e11d48]" : "border-[#222] hover:border-[#444]"
                     )}
                   >
                     <div 
-                      className="w-6 h-6 rounded-full mb-2.5 shadow-[0_0_10px_rgba(232,51,90,0.2)]" 
+                      className="w-6 h-6 rounded-full mb-2.5 shadow-[0_0_10px_rgba(225,29,72,0.2)]" 
                       style={{ 
                         background: t.isGradient ? 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)' : t.color,
                         boxShadow: !t.isGradient ? `0 0 10px ${t.color}66` : 'none'
@@ -588,7 +588,7 @@ export default function LandingPage() {
               
               <div className="flex items-center justify-between bg-[#111] rounded-lg p-2.5 mb-3">
                 <div className="flex items-center gap-2 text-xs font-bold">
-                  <div className="w-2 h-2 rounded-full bg-[#e8335a] animate-pulse-heart" />
+                  <div className="w-2 h-2 rounded-full bg-[#e11d48] animate-pulse-heart" />
                   Ana & João
                 </div>
                 <div className="text-[10px] font-bold text-[#555]">14 fev 2022</div>
@@ -609,7 +609,7 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-center justify-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-[#555]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#e8335a] animate-blink-dot" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#e11d48] animate-blink-dot" />
                 atualizado em tempo real
               </div>
             </div>
@@ -621,10 +621,10 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Módulos Interativos</h3>
               
-              <div className="bg-[#111] rounded-xl p-3.5 border border-white/5 mb-3 hover:border-[#e8335a44] transition-colors group">
+              <div className="bg-[#111] rounded-xl p-3.5 border border-white/5 mb-3 hover:border-[#e11d4844] transition-colors group">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#e8335a22] flex items-center justify-center shrink-0">
-                    <Heart className="w-4 h-4 text-[#e8335a] fill-[#e8335a]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#e11d4822] flex items-center justify-center shrink-0">
+                    <Heart className="w-4 h-4 text-[#e11d48] fill-[#e11d48]" />
                   </div>
                   <div className="text-[13px] font-bold">Memórias</div>
                 </div>
@@ -633,14 +633,14 @@ export default function LandingPage() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#e8335a]" style={{ width: '18px', borderRadius: '4px' }} />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#e11d48]" style={{ width: '18px', borderRadius: '4px' }} />
                   <div className="w-1.5 h-1.5 rounded-full bg-[#333]" />
                   <div className="w-1.5 h-1.5 rounded-full bg-[#333]" />
                   <div className="w-1.5 h-1.5 rounded-full bg-[#333]" />
                 </div>
                 <div className="flex gap-1.5">
-                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e8335a] hover:text-[#e8335a] transition-all"><ChevronLeft className="w-4 h-4" /></button>
-                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e8335a] hover:text-[#e8335a] transition-all"><ChevronRight className="w-4 h-4" /></button>
+                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"><ChevronLeft className="w-4 h-4" /></button>
+                  <button className="w-7 h-7 rounded-md border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"><ChevronRight className="w-4 h-4" /></button>
                 </div>
               </div>
             </div>
@@ -656,43 +656,43 @@ export default function LandingPage() {
                 <div className="bg-[#111] rounded-xl p-2 border border-[#222] shrink-0">
                   <svg width="60" height="60" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
                     <rect width="70" height="70" fill="#111"/>
-                    <rect x="5" y="5" width="20" height="20" rx="2" fill="#e8335a"/>
+                    <rect x="5" y="5" width="20" height="20" rx="2" fill="#e11d48"/>
                     <rect x="8" y="8" width="14" height="14" rx="1" fill="#111"/>
-                    <rect x="10" y="10" width="10" height="10" rx="1" fill="#e8335a"/>
-                    <rect x="45" y="5" width="20" height="20" rx="2" fill="#e8335a"/>
+                    <rect x="10" y="10" width="10" height="10" rx="1" fill="#e11d48"/>
+                    <rect x="45" y="5" width="20" height="20" rx="2" fill="#e11d48"/>
                     <rect x="48" y="8" width="14" height="14" rx="1" fill="#111"/>
-                    <rect x="50" y="10" width="10" height="10" rx="1" fill="#e8335a"/>
-                    <rect x="5" y="45" width="20" height="20" rx="2" fill="#e8335a"/>
+                    <rect x="50" y="10" width="10" height="10" rx="1" fill="#e11d48"/>
+                    <rect x="5" y="45" width="20" height="20" rx="2" fill="#e11d48"/>
                     <rect x="8" y="48" width="14" height="14" rx="1" fill="#111"/>
-                    <rect x="10" y="50" width="10" height="10" rx="1" fill="#e8335a"/>
-                    <rect x="30" y="5" width="4" height="4" fill="#e8335a"/>
-                    <rect x="37" y="5" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="11" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="17" width="4" height="4" fill="#e8335a"/>
-                    <rect x="37" y="17" width="4" height="4" fill="#e8335a"/>
-                    <rect x="5" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="11" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="17" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="5" y="37" width="4" height="4" fill="#e8335a"/>
-                    <rect x="17" y="37" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="37" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="44" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="51" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="58" y="30" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="37" width="4" height="4" fill="#e8335a"/>
-                    <rect x="44" y="37" width="4" height="4" fill="#e8335a"/>
-                    <rect x="58" y="37" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="44" width="4" height="4" fill="#e8335a"/>
-                    <rect x="37" y="44" width="4" height="4" fill="#e8335a"/>
-                    <rect x="51" y="44" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="51" width="4" height="4" fill="#e8335a"/>
-                    <rect x="44" y="51" width="4" height="4" fill="#e8335a"/>
-                    <rect x="58" y="51" width="4" height="4" fill="#e8335a"/>
-                    <rect x="30" y="58" width="4" height="4" fill="#e8335a"/>
-                    <rect x="37" y="58" width="4" height="4" fill="#e8335a"/>
-                    <rect x="51" y="58" width="4" height="4" fill="#e8335a"/>
-                    <text x="35" y="25" textAnchor="middle" fontSize="10" fill="#e8335a">♥</text>
+                    <rect x="10" y="50" width="10" height="10" rx="1" fill="#e11d48"/>
+                    <rect x="30" y="5" width="4" height="4" fill="#e11d48"/>
+                    <rect x="37" y="5" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="11" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="17" width="4" height="4" fill="#e11d48"/>
+                    <rect x="37" y="17" width="4" height="4" fill="#e11d48"/>
+                    <rect x="5" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="11" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="17" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="5" y="37" width="4" height="4" fill="#e11d48"/>
+                    <rect x="17" y="37" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="37" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="44" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="51" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="58" y="30" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="37" width="4" height="4" fill="#e11d48"/>
+                    <rect x="44" y="37" width="4" height="4" fill="#e11d48"/>
+                    <rect x="58" y="37" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="44" width="4" height="4" fill="#e11d48"/>
+                    <rect x="37" y="44" width="4" height="4" fill="#e11d48"/>
+                    <rect x="51" y="44" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="51" width="4" height="4" fill="#e11d48"/>
+                    <rect x="44" y="51" width="4" height="4" fill="#e11d48"/>
+                    <rect x="58" y="51" width="4" height="4" fill="#e11d48"/>
+                    <rect x="30" y="58" width="4" height="4" fill="#e11d48"/>
+                    <rect x="37" y="58" width="4" height="4" fill="#e11d48"/>
+                    <rect x="51" y="58" width="4" height="4" fill="#e11d48"/>
+                    <text x="35" y="25" textAnchor="middle" fontSize="10" fill="#e11d48">♥</text>
                   </svg>
                 </div>
                 <div className="flex flex-col justify-center">
@@ -705,17 +705,17 @@ export default function LandingPage() {
 
               <div className="bg-[#111] rounded-xl p-3 border border-[#222]">
                 <div className="text-[9px] font-black text-[#555] uppercase tracking-wider mb-0.5">Link da página</div>
-                <div className="text-[13px] font-bold text-[#e8335a] truncate">eternize.com/seu-amor</div>
+                <div className="text-[13px] font-bold text-[#e11d48] truncate">eternize.com/seu-amor</div>
               </div>
             </div>
           </div>
 
           {/* Bottom Preview Section */}
           <div className="mt-4 bg-gradient-to-br from-[#1a0008] to-[#0d0005] rounded-[14px] p-8 border border-[#2a0010] relative overflow-hidden group">
-            <div className="absolute top-[-50%] left-[-20%] w-[60%] h-[150%] bg-[radial-gradient(ellipse,_rgba(232,51,90,0.05)_0%,_transparent_70%)] pointer-events-none" />
+            <div className="absolute top-[-50%] left-[-20%] w-[60%] h-[150%] bg-[radial-gradient(ellipse,_rgba(225,29,72,0.05)_0%,_transparent_70%)] pointer-events-none" />
             
             <div className="flex items-center justify-between mb-6 relative z-10">
-              <div className="flex items-center gap-1.5 bg-[#2a0010] border border-[#4a0020] rounded-full px-3 py-1.5 text-[11px] font-bold text-[#e8335a]">
+              <div className="flex items-center gap-1.5 bg-[#2a0010] border border-[#4a0020] rounded-full px-3 py-1.5 text-[11px] font-bold text-[#e11d48]">
                 <Star className="w-3 h-3 fill-current" /> Tema {THEME_OPTIONS[previewThemeIndex].name}
               </div>
               <div className="text-[12px] font-bold text-[#555] tabular-nums">0{previewThemeIndex + 1} / 04</div>
@@ -724,16 +724,16 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start relative z-10">
               <div className="flex flex-col">
                 <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#888] mb-3">
-                  <Heart className="w-3 h-3 text-[#e8335a] fill-[#e8335a]" /> Tema
+                  <Heart className="w-3 h-3 text-[#e11d48] fill-[#e11d48]" /> Tema
                 </div>
-                <h2 className="text-5xl font-black text-[#e8335a] mb-4 tracking-tighter transition-all duration-500" style={{ textShadow: '0 0 40px rgba(232,51,90,0.3)', color: THEME_OPTIONS[previewThemeIndex].color }}>
+                <h2 className="text-5xl font-black text-[#e11d48] mb-4 tracking-tighter transition-all duration-500" style={{ textShadow: '0 0 40px rgba(225,29,72,0.3)', color: THEME_OPTIONS[previewThemeIndex].color }}>
                   {THEME_OPTIONS[previewThemeIndex].name}
                 </h2>
                 <p className="text-[13.5px] text-[#666] leading-relaxed mb-8 max-w-[320px] font-medium">
                   {THEME_OPTIONS[previewThemeIndex].description}
                 </p>
                 <NextLink href="/criador">
-                  <button className="bg-[#e8335a] hover:bg-[#ff4d70] text-white px-5 py-3 rounded-lg text-sm font-bold flex items-center gap-2 w-fit transition-all hover:shadow-[0_8px_20px_rgba(232,51,90,0.3)] hover:-translate-y-0.5 active:scale-95" style={{ backgroundColor: THEME_OPTIONS[previewThemeIndex].color }}>
+                  <button className="bg-[#e11d48] hover:bg-[#ef4444] text-white px-5 py-3 rounded-lg text-sm font-bold flex items-center gap-2 w-fit transition-all hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95" style={{ backgroundColor: THEME_OPTIONS[previewThemeIndex].color }}>
                     <ExternalLink className="w-4 h-4" /> Ver demo ao vivo
                   </button>
                 </NextLink>
@@ -746,8 +746,8 @@ export default function LandingPage() {
                    className="object-cover opacity-20 grayscale-[0.5] group-hover:opacity-30 group-hover:scale-105 transition-all duration-700" 
                    alt="Theme preview" 
                  />
-                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,_rgba(232,51,90,0.05)_0%,_transparent_70%)]" />
-                 <Heart className="w-12 h-12 text-[#e8335a] opacity-20 group-hover:opacity-40 transition-opacity" />
+                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,_rgba(225,29,72,0.05)_0%,_transparent_70%)]" />
+                 <Heart className="w-12 h-12 text-[#e11d48] opacity-20 group-hover:opacity-40 transition-opacity" />
               </div>
             </div>
 
@@ -759,7 +759,7 @@ export default function LandingPage() {
                     onClick={() => setPreviewThemeIndex(idx)}
                     className={cn(
                       "h-1.5 rounded-full cursor-pointer transition-all duration-300",
-                      previewThemeIndex === idx ? "w-6 bg-[#e8335a]" : "w-1.5 bg-[#333]"
+                      previewThemeIndex === idx ? "w-6 bg-[#e11d48]" : "w-1.5 bg-[#333]"
                     )} 
                     style={{ backgroundColor: previewThemeIndex === idx ? THEME_OPTIONS[idx].color : undefined }}
                   />
@@ -768,13 +768,13 @@ export default function LandingPage() {
               <div className="flex gap-2">
                 <button 
                   onClick={() => setPreviewThemeIndex((prev) => (prev - 1 + 4) % 4)}
-                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e8335a] hover:text-[#e8335a] transition-all"
+                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={() => setPreviewThemeIndex((prev) => (prev + 1) % 4)}
-                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e8335a] hover:text-[#e8335a] transition-all"
+                  className="w-8 h-8 rounded-lg border border-[#2a2a2a] bg-[#111] flex items-center justify-center text-[#888] hover:border-[#e11d48] hover:text-[#e11d48] transition-all"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -855,7 +855,7 @@ export default function LandingPage() {
 
             {/* Plan: Forever */}
             <div className="relative bg-[#0c0c0c] border-2 border-primary/30 rounded-[2rem] p-7 flex flex-col transition-all duration-500 shadow-[0_0_80px_rgba(225,29,72,0.15)] group scale-[1.02] z-10">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-rose-500 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-2xl shadow-primary/40 animate-pulse">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-red-700 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-2xl shadow-primary/40 animate-pulse">
                 <Star className="w-2.5 h-2.5 fill-current" /> MAIS POPULAR
               </div>
 
@@ -898,7 +898,7 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-3">
-                <NextLink href="/criador" className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-rose-600 flex items-center justify-center font-black uppercase tracking-widest text-[10px] shadow-[0_15px_30px_rgba(225,29,72,0.4)] hover:brightness-110 transition-all active:scale-95 gap-2">
+                <NextLink href="/criador" className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-red-800 flex items-center justify-center font-black uppercase tracking-widest text-[10px] shadow-[0_15px_30px_rgba(225,29,72,0.4)] hover:brightness-110 transition-all active:scale-95 gap-2">
                   Criar minha página <ChevronRight className="w-3.5 h-3.5" />
                 </NextLink>
                 <p className="text-[9px] text-center text-white/20 font-bold uppercase tracking-widest">Sem mensalidades. Pague uma vez, guarde para sempre.</p>

@@ -10,19 +10,19 @@
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 3%;
     --popover-foreground: 0 0% 100%;
-    --primary: 346 84% 50%;
+    --primary: 0 84% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 9%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 9%;
     --muted-foreground: 0 0% 60%;
-    --accent: 346 84% 50%;
+    --accent: 0 84% 50%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 346 84% 50%;
+    --ring: 0 84% 50%;
     --radius: 0.75rem;
   }
 }
@@ -42,12 +42,12 @@
 
 .bg-hero-glow {
   background: 
-    radial-gradient(circle at 10% 30%, rgba(225, 29, 72, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 90% 80%, rgba(225, 29, 72, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 10% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 90% 80%, rgba(220, 38, 38, 0.05) 0%, transparent 50%);
 }
 
 .text-gradient-primary {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-rose-400;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400;
 }
 
 @keyframes fall {

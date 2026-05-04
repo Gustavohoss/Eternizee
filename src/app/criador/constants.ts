@@ -1,4 +1,3 @@
-
 export const MOCK_CITIES = [
   "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", 
   "Curitiba, PR", "Florianópolis, SC", "Salvador, BA", 
