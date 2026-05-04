@@ -72,6 +72,7 @@ export default function LandingPage() {
   const [dashboardTheme, setDashboardTheme] = useState('classic');
   const [previewThemeIndex, setPreviewThemeIndex] = useState(0);
   const [counter, setCounter] = useState({ years: '00', months: '00', days: '00', hours: '00' });
+  const [waveformBars, setWaveformBars] = useState<{ height: string; duration: string }[]>([]);
 
   // Embla Carousel Logic
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
@@ -147,6 +148,16 @@ export default function LandingPage() {
     updateCounter();
     const interval = setInterval(updateCounter, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Pre-calculate waveform bars to avoid hydration errors
+  useEffect(() => {
+    setWaveformBars(
+      Array.from({ length: 28 }).map(() => ({
+        height: `${Math.random() * 80 + 20}%`,
+        duration: `${0.8 + Math.random() * 0.8}s`,
+      }))
+    );
   }, []);
 
   const currentTheme = THEME_OPTIONS[selectedIndex];
@@ -542,14 +553,14 @@ export default function LandingPage() {
                 </div>
 
                 <div className="flex items-end justify-center gap-0.5 h-7">
-                  {[...Array(28)].map((_, i) => (
+                  {waveformBars.map((bar, i) => (
                     <div 
                       key={i} 
                       className="w-[3px] bg-[#1db954] rounded-full animate-wave-bar opacity-70"
                       style={{ 
-                        height: `${Math.random() * 80 + 20}%`,
+                        height: bar.height,
                         animationDelay: `${i * 0.06}s`,
-                        animationDuration: `${0.8 + Math.random() * 0.8}s`
+                        animationDuration: bar.duration
                       }}
                     />
                   ))}
@@ -580,7 +591,7 @@ export default function LandingPage() {
                   { val: counter.years, label: 'Anos' },
                   { val: counter.months, label: 'Meses' },
                   { val: counter.days, label: 'Dias' },
-                  { val: counter.hours, label: 'Horas' }
+                  { val: counter.hours, label: 'Hours' }
                 ].map((item, i) => (
                   <div key={i} className="bg-[#111] rounded-lg py-2.5 px-1 text-center border border-[#222]">
                     <div className="text-[20px] font-bold text-white leading-none mb-1 tabular-nums">{item.val}</div>
