@@ -12,7 +12,7 @@ import { Step, MOCK_CITIES, ThemeId } from './constants';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useFirestore, useAuth, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { signInAnonymously } from 'firebase/auth';
+import { signInAnonymously, createUserWithEmailAndPassword } from 'firebase/auth';
 
 // Step Components
 import { StepThemeSelection } from '@/components/eternize/creator-steps/step-theme-selection';
@@ -146,14 +146,36 @@ export default function CriadorApp() {
     setIsSaving(true);
 
     try {
-      let currentUser = auth.currentUser;
-      if (!currentUser) {
-        const credential = await signInAnonymously(auth);
-        currentUser = credential.user;
-      }
-      if (!currentUser) throw new Error("Falha na autenticação silenciosa.");
+      let currentUserId: string | null = null;
 
-      const userId = currentUser.uid;
+      // Se for teste, tenta criar a conta imediatamente para que o usuário possa logar no painel
+      if (isTest && customerEmail) {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, customerEmail, 'Eternize123');
+          currentUserId = userCredential.user.uid;
+          console.log("Conta de teste criada com sucesso!");
+        } catch (authError: any) {
+          // Se o e-mail já existe, tentamos apenas o login anônimo ou mantemos o usuário atual se houver
+          if (authError.code === 'auth/email-already-in-use') {
+            console.log("Usuário de teste já existe. Procedendo com a publicação.");
+          } else {
+            console.error("Erro ao criar conta de teste:", authError);
+          }
+        }
+      }
+
+      // Se ainda não temos um ID de usuário (venda real ou erro na criação do teste), usamos o anônimo
+      if (!currentUserId) {
+        let currentUser = auth.currentUser;
+        if (!currentUser) {
+          const credential = await signInAnonymously(auth);
+          currentUser = credential.user;
+        }
+        currentUserId = currentUser?.uid || null;
+      }
+
+      if (!currentUserId) throw new Error("Falha na identificação do usuário.");
+
       const contentData = {
         selectedTheme, selectedBgColor, selectedEffect, isEmojiRainEnabled, selectedEmojis,
         emojiSize, emojiRainPosition, selectedCountStyle, photoEffect, date: date?.toISOString(),
@@ -173,7 +195,7 @@ export default function CriadorApp() {
       const publishedRef = doc(firestore, 'published_sites', finalSlug);
       const docData = {
         id: finalSlug,
-        userId,
+        userId: currentUserId,
         customerEmail, 
         name: pageTitle || 'Meu Presente',
         status: isTest ? 'published' : 'pending',
@@ -199,7 +221,6 @@ export default function CriadorApp() {
           requestResourceData: docData,
         });
         errorEmitter.emit('permission-error', permissionError);
-        alert("Erro ao salvar. Verifique se as fotos não são pesadas demais.");
       });
 
     } catch (error: any) {
