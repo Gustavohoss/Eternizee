@@ -1,7 +1,8 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Link2, ChevronLeft, ChevronRight, Lock, Info, CheckCircle2 } from 'lucide-react';
+import { Link2, ChevronLeft, ChevronRight, Lock, Info, CheckCircle2, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -10,9 +11,11 @@ interface StepSubdomainConfigProps {
   onBack: () => void;
   onFinish: (subdomain: string) => void;
   initialValue: string;
+  email: string;
+  onEmailChange: (email: string) => void;
 }
 
-export function StepSubdomainConfig({ onBack, onFinish, initialValue }: StepSubdomainConfigProps) {
+export function StepSubdomainConfig({ onBack, onFinish, initialValue, email, onEmailChange }: StepSubdomainConfigProps) {
   const [subdomain, setSubdomain] = useState('');
   const [randomId] = useState(() => Math.random().toString(36).substring(2, 6));
 
@@ -37,7 +40,16 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue }: StepSubd
     setSubdomain(value);
   };
 
+  const validateEmail = (email: string) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
   const finalSlug = `${subdomain}-${randomId}`;
+  const isFormValid = subdomain.length >= 2 && validateEmail(email);
 
   return (
     <div className="space-y-8 md:space-y-10 flex flex-col items-center md:items-start w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -46,16 +58,30 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue }: StepSubd
           <div className="bg-white/5 p-2 rounded-2xl border border-white/10">
             <Link2 className="w-5 h-5 md:w-6 md:h-6 text-white/80" />
           </div>
-          <h2 className="text-2xl md:text-4xl font-black tracking-tight">Escolha o seu link</h2>
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight">Finalizar Presente</h2>
         </div>
         <p className="text-xs md:text-base text-white/40 font-medium max-w-xl">
-          Este será o endereço que você vai enviar para a pessoa especial. Escolha um nome curto e fácil de lembrar.
+          Escolha seu link e informe seu e-mail para receber o acesso após o pagamento.
         </p>
       </div>
 
       <div className="w-full space-y-6">
         <div className="bg-[#0c0c0c] border border-white/5 rounded-3xl p-6 md:p-8 space-y-6">
           <div className="space-y-4">
+            <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1 flex items-center gap-2">
+              <Mail className="w-3 h-3" /> Seu melhor E-mail
+            </label>
+            <Input 
+              type="email"
+              value={email}
+              onChange={(e) => onEmailChange(e.target.value)}
+              placeholder="ex: voce@email.com"
+              className="bg-white/5 border-white/10 h-14 md:h-16 pl-6 rounded-xl text-sm md:text-base font-medium focus:border-primary/50 transition-all shadow-inner"
+            />
+            <p className="text-[9px] text-white/20 italic ml-1">Criaremos uma conta para você com este e-mail.</p>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-white/5">
             <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">
               Nome do link desejado
             </label>
@@ -88,9 +114,9 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue }: StepSubd
         <div className="bg-primary/5 border border-primary/20 rounded-2xl p-5 flex items-start gap-4">
           <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <p className="text-[11px] font-black uppercase text-primary tracking-widest">Privacidade Garantida</p>
+            <p className="text-[11px] font-black uppercase text-primary tracking-widest">Acesso Imediato</p>
             <p className="text-[11px] font-medium text-white/50 leading-relaxed">
-              O código <span className="text-white/80 font-bold">-{randomId}</span> no final do link serve para que pessoas aleatórias não consigam adivinhar o seu endereço. Somente quem tiver o link completo poderá acessar.
+              Após a confirmação do pagamento, sua conta será criada automaticamente com a senha <span className="text-white font-bold">Eternize123</span>. Você poderá alterá-la depois.
             </p>
           </div>
         </div>
@@ -106,10 +132,10 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue }: StepSubd
         </Button>
         <Button 
           onClick={() => onFinish(finalSlug)}
-          disabled={!subdomain || subdomain.length < 2}
+          disabled={!isFormValid}
           className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm transition-all flex items-center justify-center gap-3 shadow-2xl active:scale-95 group disabled:opacity-50 disabled:grayscale"
         >
-          Finalizar e Publicar <CheckCircle2 className="w-4 h-4 transition-transform group-hover:scale-110" />
+          Ir para Pagamento <CheckCircle2 className="w-4 h-4 transition-transform group-hover:scale-110" />
         </Button>
       </div>
     </div>

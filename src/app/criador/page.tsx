@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -27,7 +28,6 @@ import { StepOrderBump } from '@/components/eternize/creator-steps/step-order-bu
 import { StepSubdomainConfig } from '@/components/eternize/creator-steps/step-subdomain-config';
 
 // LINK DO SEU PRODUTO NA PERFECTPAY
-// Troque o código abaixo pelo seu link de checkout real
 const PERFECTPAY_CHECKOUT_URL = "https://checkout.perfectpay.com.br/PPU38CQ9JAI";
 
 const compressImage = (base64Str: string): Promise<string> => {
@@ -58,7 +58,6 @@ export default function CriadorApp() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>('theme-selection');
   const [isSaving, setIsSaving] = useState(false);
-  const [savedUrl, setSavedUrl] = useState<string | null>(null);
 
   // States
   const [selectedTheme, setSelectedTheme] = useState<ThemeId>('classic');
@@ -77,6 +76,7 @@ export default function CriadorApp() {
   const [musicData, setMusicData] = useState<{id: string, title: string, thumb: string} | undefined>(undefined);
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState('');
   
   const [sparklesDensity, setSparklesDensity] = useState<number>(100);
   const [sparklesSpeed, setSparklesSpeed] = useState<number>(0.5);
@@ -174,19 +174,18 @@ export default function CriadorApp() {
       const docData = {
         id: finalSlug,
         userId,
+        customerEmail, // Salva o email para ser usado no webhook
         name: pageTitle || 'Meu Presente',
-        status: 'pending', // <--- Importante: inicia como pendente até o pagamento
+        status: 'pending',
         subdomainName: finalSlug,
-        pageUrl: `${window.location.origin}/site/${finalSlug}`,
+        pageUrl: `https://eternizee.shop/site/${finalSlug}`,
         contentJson: jsonContent,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
 
       setDoc(publishedRef, docData).then(() => {
-        // Redireciona o usuário para o checkout da PerfectPay
-        // Passamos o finalSlug no parâmetro 'src' para o webhook saber qual site ativar
-        const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}`;
+        const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}&email=${customerEmail}`;
         window.location.href = checkoutUrlWithMetadata;
       }).catch(async (error) => {
         setIsSaving(false);
@@ -299,7 +298,7 @@ export default function CriadorApp() {
               {step === 'data-location' && <StepDataLocation {...{selectedTheme, date, onDateSelect: setDate, locationQuery, onLocationQueryChange: setLocationQuery, showSuggestions, onShowSuggestionsChange: setShowSuggestions, filteredCities, selectedCountStyle, onCountStyleChange: setSelectedCountStyle, dateFont, onDateFontChange: setDateFont, dateIsBold, onDateIsBoldChange: setDateIsBold, dateHasNeon, onDateHasNeonChange: setDateHasNeon, dateNeonStrength, onDateNeonStrengthChange: setDateNeonStrength, dateColor, onDateColorChange: (c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }, dateBoxBgColor, onDateBoxBgColorChange: setDateBoxBgColor, dateBoxBorderColor, onDateBoxBorderColorChange: setDateBoxBorderColor, onBack: handleBack, onNext: handleNext}} />}
               {step === 'plans' && <StepPlans onBack={handleBack} onFinish={handleNext} />}
               {step === 'order-bump' && <StepOrderBump onBack={handleBack} onFinish={handleNext} date={date} />}
-              {step === 'subdomain-config' && <StepSubdomainConfig onBack={handleBack} onFinish={handleFinalize} initialValue={pageTitle} />}
+              {step === 'subdomain-config' && <StepSubdomainConfig onBack={handleBack} onFinish={handleFinalize} initialValue={pageTitle} email={customerEmail} onEmailChange={setCustomerEmail} />}
 
               <div className="lg:hidden flex flex-col items-center mt-12 w-full gap-4">
                  <Dialog>
