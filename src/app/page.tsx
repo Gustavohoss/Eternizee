@@ -1189,16 +1189,16 @@ export default function LandingPage() {
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">F.A.Q</span>
               </div>
 
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white leading-tight">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white leading-tight">
                 Perguntas Frequentes
               </h2>
               
-              <p className="text-white/40 text-sm md:text-lg max-w-sm font-medium leading-relaxed">
+              <p className="text-white/40 text-xs md:text-base max-w-sm font-medium leading-relaxed">
                 Tudo o que você precisa saber antes de criar sua página. Se ainda restar alguma dúvida, é só chamar — adoramos ajudar!
               </p>
             </div>
 
-            <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-8 space-y-8 relative group overflow-hidden">
+            <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-6 space-y-8 relative group overflow-hidden">
               <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
               
               <div className="flex items-start gap-5 relative z-10">
@@ -1216,7 +1216,7 @@ export default function LandingPage() {
               <a 
                 href="https://instagram.com" 
                 target="_blank" 
-                className="w-full h-16 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10"
+                className="w-full h-14 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10"
               >
                 <Instagram className="w-5 h-5" /> Ainda tem dúvidas? Fale com a gente aqui
               </a>
@@ -1232,17 +1232,17 @@ export default function LandingPage() {
                   value={item.id} 
                   className="border-white/5 bg-transparent px-0 group"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline py-6 md:py-8">
-                    <div className="flex items-center gap-6">
-                      <span className="text-2xl md:text-3xl font-black text-white/10 group-data-[state=open]:text-primary transition-colors italic">
+                  <AccordionTrigger className="text-left hover:no-underline py-4 md:py-5">
+                    <div className="flex items-center gap-4">
+                      <span className="text-lg md:text-xl font-black text-white/10 group-data-[state=open]:text-primary transition-colors italic">
                         {item.id}
                       </span>
-                      <span className="text-sm md:text-lg font-black text-white/80 group-data-[state=open]:text-white transition-all tracking-tight">
+                      <span className="text-xs md:text-sm font-black text-white/80 group-data-[state=open]:text-white transition-all tracking-tight">
                         {item.question}
                       </span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pb-8 pl-16 md:pl-20 text-white/40 text-sm md:text-base font-medium leading-relaxed max-w-xl">
+                  <AccordionContent className="pb-8 pl-12 md:pl-14 text-white/40 text-[11px] md:text-[13px] font-medium leading-relaxed max-w-xl">
                     {item.answer}
                   </AccordionContent>
                 </AccordionItem>
