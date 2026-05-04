@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 import { initializeFirebase } from '@/firebase';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
+// O seu token de segurança fornecido pela PerfectPay
+const PERFECTPAY_SECURITY_TOKEN = "a57340234e6d72b4ceebbda5bf09f4be";
+
 /**
  * Endpoint de Webhook para a PerfectPay.
  * Lida com múltiplos status de venda para garantir a integridade do acesso ao site.
@@ -12,8 +15,15 @@ export async function POST(request: Request) {
     const data = await request.json();
     console.log('PerfectPay Webhook Received:', data);
 
-    const { sale_status_enum, metadata } = data;
+    const { token, sale_status_enum, metadata } = data;
     
+    // VALIDAÇÃO DE SEGURANÇA
+    // Verifica se o token recebido é o mesmo da sua conta para evitar fraudes
+    if (token !== PERFECTPAY_SECURITY_TOKEN) {
+      console.error('Tentativa de acesso não autorizado ao Webhook. Token inválido.');
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    }
+
     // O 'src' é enviado no checkout como o ID do subdomínio/site
     const subdomainName = metadata?.src;
 
@@ -28,8 +38,8 @@ export async function POST(request: Request) {
     const status = Number(sale_status_enum);
 
     // STATUS DE LIBERAÇÃO
-    // 2 = Aprovada
-    // 10 = Completada (30 dias após aprovada)
+    // 2 = Aprovada (Boleto pago ou Cartão aprovado)
+    // 10 = Completada (30 dias após aprovada, fim do prazo de garantia)
     if (status === 2 || status === 10) {
       await updateDoc(siteRef, {
         status: 'published',
@@ -40,9 +50,9 @@ export async function POST(request: Request) {
     }
 
     // STATUS DE BLOQUEIO
-    // 6 = Cancelado
-    // 7 = Devolvido (Reembolsado)
-    // 9 = Chargeback
+    // 6 = Cancelado (Estorno do cartão)
+    // 7 = Devolvido (Reembolso solicitado pelo cliente)
+    // 9 = Chargeback (Disputa no banco)
     if ([6, 7, 9].includes(status)) {
       await updateDoc(siteRef, {
         status: 'pending', // Volta para pendente para bloquear o acesso público
@@ -52,6 +62,7 @@ export async function POST(request: Request) {
     }
 
     // Outros status (1 = Boleto Pendente, 12 = Abandono, etc)
+    // Retornamos 200 para a PerfectPay não ficar tentando reenviar o mesmo evento
     return NextResponse.json({ message: `Evento ${status} recebido. Nenhuma ação necessária.` });
 
   } catch (error) {
