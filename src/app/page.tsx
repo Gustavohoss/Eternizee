@@ -1216,9 +1216,10 @@ export default function LandingPage() {
               <a 
                 href="https://instagram.com" 
                 target="_blank" 
-                className="w-full h-14 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10"
+                className="w-full h-14 bg-primary text-white rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10 px-6 text-center"
               >
-                <Instagram className="w-5 h-5" /> Ainda tem dúvidas? Fale com a gente aqui
+                <Instagram className="w-5 h-5 shrink-0" />
+                <span className="leading-tight">Ainda tem dúvidas? Fale com a gente aqui</span>
               </a>
             </div>
           </div>
