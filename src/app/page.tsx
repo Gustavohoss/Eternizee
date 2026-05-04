@@ -83,7 +83,7 @@ export default function LandingPage() {
   const [counter, setCounter] = useState({ years: '00', months: '00', days: '00', hours: '00' });
   const [waveformBars, setWaveformBars] = useState<{ height: string; duration: string }[]>([]);
 
-  // Embla Carousel Logic
+  // Embla Carousel Logic for Hero
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     align: 'center', 
@@ -172,7 +172,7 @@ export default function LandingPage() {
   const currentTheme = THEME_OPTIONS[selectedIndex];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#e11d48] overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white font-body selection:bg-[#e11d48] overflow-x-hidden">
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         
@@ -253,8 +253,8 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh-120px)] px-[5%] md:px-[8%] gap-12 lg:gap-20 py-12 lg:py-0">
-        <div className="flex-1 max-w-[550px] text-center lg:text-left flex flex-col items-center lg:items-start animate-in fade-in slide-in-from-left-8 duration-1000">
+      <section className="flex flex-col lg:grid lg:grid-cols-[1fr_420px] items-center justify-center min-h-[calc(100vh-120px)] px-[5%] md:px-[8%] gap-12 lg:gap-20 py-12 lg:py-0">
+        <div className="max-w-[550px] text-center lg:text-left flex flex-col items-center lg:items-start animate-in fade-in slide-in-from-left-8 duration-1000">
           <div className="bg-[#e11d48]/10 text-[#e11d48] px-4 py-1.5 rounded-full text-[11px] border border-[#e11d48]/20 mb-6 font-bold tracking-wide uppercase italic">
             ✨ Nós te ajudamos a criar em 5 minutos
           </div>
@@ -289,8 +289,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Visual Carousel (Replica of Theme Selection) */}
-        <div className="flex-1 flex flex-col items-center justify-center w-full lg:w-auto relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
+        {/* Visual Carousel (Literal copy of Theme Selection style) */}
+        <div className="flex flex-col items-center justify-center w-full relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
           <div className="relative w-full max-w-[400px] flex flex-col items-center">
             <div className="w-full overflow-visible" ref={emblaRef}>
               <div className="flex">
@@ -299,7 +299,7 @@ export default function LandingPage() {
                   return (
                     <div 
                       key={theme.id} 
-                      className="flex-[0_0_75%] sm:flex-[0_0_100%] min-w-0 px-4 flex items-center justify-center transition-opacity duration-500"
+                      className="flex-[0_0_72%] sm:flex-[0_0_100%] min-w-0 px-3 sm:px-10 flex items-center justify-center transition-opacity duration-500"
                       style={{ 
                         opacity: isSelected ? 1 : 0.2,
                         zIndex: isSelected ? 50 : 10
@@ -317,6 +317,7 @@ export default function LandingPage() {
                           boxShadow: `0 0 40px ${theme.color}66, 0 0 80px ${theme.color}33`
                         } : {}}
                       >
+                        {/* Top Glow Line */}
                         <div className={cn(
                           "absolute top-0 left-0 right-0 h-[3px] z-30 transition-opacity duration-500",
                           isSelected ? "opacity-100" : "opacity-0"
@@ -324,6 +325,7 @@ export default function LandingPage() {
                         style={{ background: `linear-gradient(90deg, transparent, ${theme.color}, transparent)` }}
                         />
 
+                        {/* Media Area */}
                         <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
                           <Image 
                             src={theme.image} 
@@ -333,9 +335,11 @@ export default function LandingPage() {
                             priority
                             data-ai-hint="theme preview"
                           />
+                          {/* Gradient Overlay for Text */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
                         </div>
 
+                        {/* Card Body Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
                           <div className="flex justify-between items-center mb-1">
                             <h2 className="text-white text-lg font-black m-0 font-inter">{theme.name}</h2>
@@ -415,7 +419,7 @@ export default function LandingPage() {
                 <div 
                   className="w-14 h-14 rounded-full flex items-center justify-center font-black text-xl shrink-0 transition-transform active:scale-95"
                   style={{ 
-                    backgroundColor: step.color,
+                    backgroundColor: step.id === 1 ? '#e11d48' : step.id === 2 ? '#be123c' : step.id === 3 ? '#9f1239' : '#881337',
                     boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
@@ -445,7 +449,7 @@ export default function LandingPage() {
                   key={step.id}
                   className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10"
                   style={{ 
-                    backgroundColor: step.color,
+                    backgroundColor: step.id === 1 ? '#e11d48' : step.id === 2 ? '#be123c' : step.id === 3 ? '#9f1239' : '#881337',
                     boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
@@ -485,16 +489,16 @@ export default function LandingPage() {
         <div className="max-w-[900px] mx-auto px-6 flex flex-col gap-4">
           
           {/* Dashboard Header */}
-          <div className="text-center mb-16 flex flex-col items-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="inline-flex items-center gap-2 bg-black/40 border border-white/10 px-4 py-2 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-               <Zap className="w-3.5 h-3.5 text-primary fill-primary" />
-               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Recursos Poderosos</span>
+          <div className="text-center mb-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-2">
+               <Zap className="w-3 h-3 text-primary fill-primary" />
+               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">Recursos Poderosos</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-[0.9]">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white leading-tight">
               Tudo que sua página precisa
             </h2>
-            <p className="text-white/40 text-sm md:text-base max-w-md font-medium leading-relaxed">
-              Contador ao vivo, música, temas exclusivos e muito mais — para fazer alguém chorar de emoção.
+            <p className="text-white/40 text-sm md:text-lg max-w-xl font-medium leading-relaxed">
+              Contador ao vivo, música, temas exclusivos e muito mais — para fazer<br className="hidden md:block" /> alguém chorar de emoção.
             </p>
           </div>
 
