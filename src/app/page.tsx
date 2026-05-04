@@ -1178,77 +1178,80 @@ export default function LandingPage() {
 
       {/* FAQ Section */}
       <section className="py-24 bg-[#0a0a0a] border-t border-white/5 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-[1fr_1.5fr] gap-16 md:gap-24 items-start">
-          
-          {/* Left Column: Info & Support */}
-          <div className="space-y-12">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full relative group">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-primary rounded-full" />
-                <HelpCircle className="w-3.5 h-3.5 text-primary" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">F.A.Q</span>
-              </div>
-
-              <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white leading-tight">
-                Perguntas Frequentes
-              </h2>
-              
-              <p className="text-white/40 text-xs md:text-base max-w-sm font-medium leading-relaxed">
-                Tudo o que você precisa saber antes de criar sua página. Se ainda restar alguma dúvida, é só chamar — adoramos ajudar!
-              </p>
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Centered Header */}
+          <div className="flex flex-col items-center text-center space-y-6 mb-16 md:mb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full relative group">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-primary rounded-full" />
+              <HelpCircle className="w-3.5 h-3.5 text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">F.A.Q</span>
             </div>
 
-            <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-6 space-y-8 relative group overflow-hidden">
-              <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
-              
-              <div className="flex items-start gap-5 relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                  <MessageCircle className="w-6 h-6 text-primary" />
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-lg font-black text-white uppercase tracking-tight">Ainda tem dúvidas?</h4>
-                  <p className="text-xs font-medium text-white/30 leading-relaxed">
-                    Fale com a gente pelo Instagram — respondemos em minutos.
-                  </p>
-                </div>
-              </div>
-
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                className="w-full h-14 bg-primary text-white rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10 px-6 text-center"
-              >
-                <Instagram className="w-5 h-5 shrink-0" />
-                <span className="leading-tight">Ainda tem dúvidas? Fale com a gente aqui</span>
-              </a>
-            </div>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white leading-tight">
+              Perguntas Frequentes
+            </h2>
+            
+            <p className="text-white/40 text-xs md:text-base max-w-sm font-medium leading-relaxed">
+              Tudo o que você precisa saber antes de criar sua página. Se ainda restar alguma dúvida, é só chamar — adoramos ajudar!
+            </p>
           </div>
 
-          {/* Right Column: Accordion */}
-          <div className="w-full">
-            <Accordion type="single" collapsible className="w-full space-y-2">
-              {FAQ_ITEMS.map((item) => (
-                <AccordionItem 
-                  key={item.id} 
-                  value={item.id} 
-                  className="border-white/5 bg-transparent px-0 group"
+          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 md:gap-24 items-start">
+            
+            {/* Left Column: Support */}
+            <div className="space-y-12">
+              <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-6 space-y-8 relative group overflow-hidden">
+                <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
+                
+                <div className="flex items-start gap-5 relative z-10">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                    <MessageCircle className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-black text-white uppercase tracking-tight">Ainda tem dúvidas?</h4>
+                    <p className="text-xs font-medium text-white/30 leading-relaxed">
+                      Fale com a gente pelo Instagram — respondemos em minutos.
+                    </p>
+                  </div>
+                </div>
+
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  className="w-full h-14 bg-primary text-white rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10 px-6 text-center"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline py-4 md:py-5">
-                    <div className="flex items-center gap-4">
-                      <span className="text-lg md:text-xl font-black text-white/10 group-data-[state=open]:text-primary transition-colors italic">
-                        {item.id}
-                      </span>
-                      <span className="text-xs md:text-sm font-black text-white/80 group-data-[state=open]:text-white transition-all tracking-tight">
-                        {item.question}
-                      </span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8 pl-12 md:pl-14 text-white/40 text-[11px] md:text-[13px] font-medium leading-relaxed max-w-xl">
-                    {item.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+                  <Instagram className="w-5 h-5 shrink-0" />
+                  <span className="leading-tight">Ainda tem dúvidas? Fale com a gente aqui</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column: Accordion */}
+            <div className="w-full">
+              <Accordion type="single" collapsible className="w-full space-y-2">
+                {FAQ_ITEMS.map((item) => (
+                  <AccordionItem 
+                    key={item.id} 
+                    value={item.id} 
+                    className="border-white/5 bg-transparent px-0 group"
+                  >
+                    <AccordionTrigger className="text-left hover:no-underline py-4 md:py-5">
+                      <div className="flex items-center gap-4">
+                        <span className="text-lg md:text-xl font-black text-white/10 group-data-[state=open]:text-primary transition-colors italic">
+                          {item.id}
+                        </span>
+                        <span className="text-xs md:text-sm font-black text-white/80 group-data-[state=open]:text-white transition-all tracking-tight">
+                          {item.question}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-8 pl-12 md:pl-14 text-white/40 text-[11px] md:text-[13px] font-medium leading-relaxed max-w-xl">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
           </div>
         </div>
       </section>
