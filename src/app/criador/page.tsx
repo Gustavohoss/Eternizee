@@ -28,7 +28,7 @@ import { StepOrderBump } from '@/components/eternize/creator-steps/step-order-bu
 import { StepSubdomainConfig } from '@/components/eternize/creator-steps/step-subdomain-config';
 
 // LINK DO SEU PRODUTO NA PERFECTPAY
-const PERFECTPAY_CHECKOUT_URL = "https://checkout.perfectpay.com.br/PPU38CQ9JAI";
+const PERFECTPAY_CHECKOUT_URL = "https://go.perfectpay.com.br/PPU38CQBEQN";
 
 const compressImage = (base64Str: string): Promise<string> => {
   return new Promise((resolve) => {
@@ -148,23 +148,22 @@ export default function CriadorApp() {
     try {
       let currentUserId: string | null = null;
 
-      // Se for teste, tenta criar a conta imediatamente para que o usuário possa logar no painel
-      if (isTest && customerEmail) {
+      // Tenta criar ou recuperar conta para o usuário
+      if (customerEmail) {
         try {
           const userCredential = await createUserWithEmailAndPassword(auth, customerEmail, 'Eternize123');
           currentUserId = userCredential.user.uid;
-          console.log("Conta de teste criada com sucesso!");
+          console.log("Conta criada com sucesso!");
         } catch (authError: any) {
-          // Se o e-mail já existe, tentamos apenas o login anônimo ou mantemos o usuário atual se houver
           if (authError.code === 'auth/email-already-in-use') {
-            console.log("Usuário de teste já existe. Procedendo com a publicação.");
+            console.log("Usuário já existe. Vinculando site ao e-mail.");
           } else {
-            console.error("Erro ao criar conta de teste:", authError);
+            console.error("Erro ao criar conta:", authError);
           }
         }
       }
 
-      // Se ainda não temos um ID de usuário (venda real ou erro na criação do teste), usamos o anônimo
+      // Se ainda não temos um ID de usuário, usamos o anônimo ou atual
       if (!currentUserId) {
         let currentUser = auth.currentUser;
         if (!currentUser) {
@@ -206,22 +205,15 @@ export default function CriadorApp() {
         updatedAt: serverTimestamp(),
       };
 
-      setDoc(publishedRef, docData).then(() => {
-        if (isTest) {
-          window.location.href = `/site/${finalSlug}`;
-        } else {
-          const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}&email=${customerEmail}`;
-          window.location.href = checkoutUrlWithMetadata;
-        }
-      }).catch(async (error) => {
-        setIsSaving(false);
-        const permissionError = new FirestorePermissionError({
-          path: publishedRef.path,
-          operation: 'create',
-          requestResourceData: docData,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
+      await setDoc(publishedRef, docData);
+
+      if (isTest) {
+        window.location.href = `/site/${finalSlug}`;
+      } else {
+        // Redireciona para o checkout com o parâmetro 'src' que a PerfectPay usará no Webhook
+        const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}&email=${customerEmail}`;
+        window.location.href = checkoutUrlWithMetadata;
+      }
 
     } catch (error: any) {
       console.error("Erro ao salvar projeto:", error);
