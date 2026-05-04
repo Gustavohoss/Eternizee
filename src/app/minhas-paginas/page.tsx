@@ -1,20 +1,22 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { collection, query, where, orderBy } from 'firebase/firestore';
-import { useFirestore, useUser, useCollection } from '@/firebase';
-import { Heart, ExternalLink, Calendar, Loader2, Plus, ArrowLeft } from 'lucide-react';
+import { useFirestore, useUser, useCollection, useAuth, useMemoFirebase } from '@/firebase';
+import { Heart, ExternalLink, Calendar, Loader2, Plus, ArrowLeft, LogOut, Layout, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { signOut } from 'firebase/auth';
 
 export default function MyPages() {
   const firestore = useFirestore();
+  const auth = useAuth();
   const { user, isUserLoading } = useUser();
 
   // Query memoizada para buscar apenas as páginas do usuário logado
-  const mySitesQuery = useMemo(() => {
+  const mySitesQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(
       collection(firestore, 'published_sites'),
@@ -25,11 +27,42 @@ export default function MyPages() {
 
   const { data: sites, isLoading, error } = useCollection(mySitesQuery as any);
 
-  if (isUserLoading || isLoading) {
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
+  if (isUserLoading) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white">
         <Loader2 className="w-10 h-10 text-primary animate-spin" />
-        <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Buscando suas histórias...</p>
+        <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Verificando acesso...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center text-white">
+        <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
+        <div className="relative z-10 space-y-6">
+          <div className="bg-white/5 p-6 rounded-3xl border border-white/10 w-fit mx-auto mb-4">
+             <Layout className="w-10 h-10 text-white/20" />
+          </div>
+          <h1 className="text-3xl font-black italic uppercase tracking-tighter">Área Restrita</h1>
+          <p className="text-white/40 text-sm max-w-xs mx-auto font-medium leading-relaxed">Você precisa estar logado para ver seus presentes eternizados.</p>
+          <div className="flex flex-col gap-3 max-w-[240px] mx-auto pt-4">
+            <Link href="/login" className="w-full">
+              <Button className="w-full bg-primary hover:bg-primary/90 h-12 rounded-xl font-black text-xs uppercase tracking-widest">
+                Fazer Login
+              </Button>
+            </Link>
+            <Link href="/" className="w-full">
+              <Button variant="ghost" className="w-full text-white/30 hover:text-white text-xs font-bold uppercase tracking-widest">
+                Voltar ao início
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -41,21 +74,37 @@ export default function MyPages() {
       <div className="max-w-4xl mx-auto relative z-10">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 animate-in slide-in-from-top-4 duration-700">
           <div className="space-y-2">
-            <Link href="/" className="group flex items-center gap-2 text-white/30 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest mb-4">
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Voltar
-            </Link>
+            <div className="flex items-center gap-4 mb-4">
+              <Link href="/" className="group flex items-center gap-2 text-white/30 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest">
+                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Voltar
+              </Link>
+              <div className="h-3 w-px bg-white/10" />
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
+                <User className="w-3 h-3" /> {user.email?.split('@')[0]}
+              </div>
+            </div>
             <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase">Minhas Páginas<span className="text-primary">.</span></h1>
-            <p className="text-white/40 text-sm font-medium">Aqui estão todos os seus presentes eternizados.</p>
+            <p className="text-white/40 text-sm font-medium">Gerencie seus presentes e histórias eternizadas.</p>
           </div>
           
-          <Link href="/criador">
-            <Button className="bg-primary hover:bg-primary/90 h-12 rounded-xl font-black text-xs uppercase tracking-widest gap-2 shadow-2xl shadow-primary/20">
-              <Plus className="w-4 h-4" /> Criar nova
+          <div className="flex items-center gap-3">
+            <Link href="/criador">
+              <Button className="bg-primary hover:bg-primary/90 h-12 rounded-xl font-black text-xs uppercase tracking-widest gap-2 shadow-2xl shadow-primary/20">
+                <Plus className="w-4 h-4" /> Criar nova
+              </Button>
+            </Link>
+            <Button onClick={handleLogout} variant="outline" className="border-white/10 bg-white/5 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 h-12 rounded-xl px-4">
+              <LogOut className="w-4 h-4" />
             </Button>
-          </Link>
+          </div>
         </header>
 
-        {(!sites || sites.length === 0) ? (
+        {isLoading ? (
+          <div className="py-20 flex flex-col items-center justify-center gap-4">
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Buscando documentos...</p>
+          </div>
+        ) : (!sites || sites.length === 0) ? (
           <div className="bg-white/5 border border-white/10 rounded-[2rem] p-12 text-center flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-700">
             <div className="bg-white/5 p-5 rounded-full mb-6 border border-white/10">
               <Heart className="w-10 h-10 text-white/10" />

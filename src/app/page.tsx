@@ -425,7 +425,7 @@ export default function LandingPage() {
           <NextLink href="#" className="mx-4 text-[13px] opacity-80 hover:opacity-100 hover:text-primary transition-all">F.A.Q</NextLink>
         </nav>
         <div className="flex items-center gap-4 md:gap-6">
-          <NextLink href="/minhas-paginas" className="hidden md:block text-[13px] font-semibold hover:text-primary transition-colors">Fazer Login</NextLink>
+          <NextLink href="/login" className="hidden md:block text-[13px] font-semibold hover:text-primary transition-colors">Fazer Login</NextLink>
           <NextLink href="/criador" className="bg-primary px-5 py-2.5 rounded-full text-white font-bold text-[13px] hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20">
             Criar minha página
           </NextLink>
