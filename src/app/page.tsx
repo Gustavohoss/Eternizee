@@ -17,6 +17,7 @@ import {
   Layers,
   Zap,
   Play,
+  Pause,
   Star,
   Lock,
   MessageCircle,
@@ -483,6 +484,20 @@ export default function LandingPage() {
       <section className="py-24 bg-[#0a0a0a] border-t border-white/5">
         <div className="max-w-[900px] mx-auto px-6 flex flex-col gap-4">
           
+          {/* Dashboard Header */}
+          <div className="text-center mb-16 flex flex-col items-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center gap-2 bg-black/40 border border-white/10 px-4 py-2 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+               <Zap className="w-3.5 h-3.5 text-primary fill-primary" />
+               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Recursos Poderosos</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-[0.9]">
+              Tudo que sua página precisa
+            </h2>
+            <p className="text-white/40 text-sm md:text-base max-w-md font-medium leading-relaxed">
+              Contador ao vivo, música, temas exclusivos e muito mais — para fazer alguém chorar de emoção.
+            </p>
+          </div>
+
           {/* Dashboard Top Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
