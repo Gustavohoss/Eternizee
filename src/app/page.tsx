@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import NextLink from 'next/link';
-import Image from 'next/link'; // Using next/image is better, but existing code used next/link mistakenly or needs fix. Actually checking previous code, it used NextLink and then Image from next/image.
 import NextImage from 'next/image';
 import { 
   ExternalLink, 
@@ -148,6 +147,30 @@ export default function LandingPage() {
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
+
+  // Embla Carousel Logic for Reviews
+  const [emblaReviewsRef, emblaReviewsApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'start',
+    skipSnaps: false,
+    dragFree: true
+  });
+  const [reviewsSelectedIndex, setReviewsSelectedIndex] = useState(0);
+
+  const scrollReviewsPrev = useCallback(() => emblaReviewsApi && emblaReviewsApi.scrollPrev(), [emblaReviewsApi]);
+  const scrollReviewsNext = useCallback(() => emblaReviewsApi && emblaReviewsApi.scrollNext(), [emblaReviewsApi]);
+
+  const onReviewsSelect = useCallback(() => {
+    if (!emblaReviewsApi) return;
+    setReviewsSelectedIndex(emblaReviewsApi.selectedScrollSnap());
+  }, [emblaReviewsApi]);
+
+  useEffect(() => {
+    if (!emblaReviewsApi) return;
+    onReviewsSelect();
+    emblaReviewsApi.on('select', onReviewsSelect);
+    emblaReviewsApi.on('reInit', onReviewsSelect);
+  }, [emblaReviewsApi, onReviewsSelect]);
 
   // Typewriter Effect
   useEffect(() => {
@@ -331,7 +354,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Visual Carousel (Literal copy of Theme Selection style) */}
+        {/* Visual Carousel */}
         <div className="flex flex-col items-center justify-center w-full relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200 py-10">
           <div className="relative w-full max-w-[400px] flex flex-col items-center">
             <div className="w-full overflow-visible" ref={emblaRef}>
@@ -359,7 +382,6 @@ export default function LandingPage() {
                           boxShadow: `0 0 40px ${theme.color}66, 0 0 80px ${theme.color}33`
                         } : {}}
                       >
-                        {/* Top Glow Line */}
                         <div className={cn(
                           "absolute top-0 left-0 right-0 h-[3px] z-30 transition-opacity duration-500",
                           isSelected ? "opacity-100" : "opacity-0"
@@ -367,7 +389,6 @@ export default function LandingPage() {
                         style={{ background: `linear-gradient(90deg, transparent, ${theme.color}, transparent)` }}
                         />
 
-                        {/* Media Area */}
                         <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
                           <NextImage 
                             src={theme.image} 
@@ -377,11 +398,9 @@ export default function LandingPage() {
                             priority
                             data-ai-hint="theme preview"
                           />
-                          {/* Gradient Overlay for Text */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-20" />
                         </div>
 
-                        {/* Card Body Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-5 z-30">
                           <div className="flex justify-between items-center mb-1">
                             <h2 className="text-white text-lg font-black m-0 font-inter">{theme.name}</h2>
@@ -530,7 +549,6 @@ export default function LandingPage() {
       <section className="py-24 bg-[#0a0a0a] border-t border-white/5">
         <div className="max-w-[900px] mx-auto px-6 flex flex-col gap-4">
           
-          {/* Dashboard Header */}
           <div className="text-center mb-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-2">
                <Zap className="w-3 h-3 text-primary fill-primary" />
@@ -544,10 +562,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Dashboard Top Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            {/* Themes Card */}
             <div className="bg-[#1a1a1a] rounded-[14px] p-6 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
                 <Star className="w-3.5 h-3.5 text-[#e11d48]" /> TEMAS
@@ -590,7 +605,6 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Music Card */}
             <div className="bg-[#1a1a1a] rounded-[14px] p-6 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
                 <Music className="w-3.5 h-3.5 text-[#1db954]" /> MÚSICA
@@ -638,9 +652,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Dashboard Middle Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Counter Card */}
             <div className="bg-[#1a1a1a] rounded-[14px] p-5 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
                 <Clock className="w-3.5 h-3.5 text-[#888]" /> CONTADOR
@@ -675,7 +687,6 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Modules Card */}
             <div className="bg-[#1a1a1a] rounded-[14px] p-5 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
                 <Layout className="w-3.5 h-3.5 text-[#888]" /> MÓDULOS EXTRAS
@@ -706,7 +717,6 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* QR Card */}
             <div className="bg-[#1a1a1a] rounded-[14px] p-5 border border-[#2a2a2a]">
               <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-[#888] mb-2.5">
                 <QrCode className="w-3.5 h-3.5 text-[#888]" /> QR CODE
@@ -771,7 +781,6 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Bottom Preview Section */}
           <div className="mt-4 bg-gradient-to-br from-[#1a0008] to-[#0d0005] rounded-[14px] p-8 border border-[#2a0010] relative overflow-hidden group">
             <div className="absolute top-[-50%] left-[-20%] w-[60%] h-[150%] bg-[radial-gradient(ellipse,_rgba(225,29,72,0.05)_0%,_transparent_70%)] pointer-events-none" />
             
@@ -881,48 +890,80 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((review, i) => (
-              <div 
-                key={i} 
-                className="bg-[#0c0c0c] border border-white/5 p-8 rounded-[2rem] flex flex-col gap-6 relative group hover:border-primary/30 transition-all duration-500"
-              >
-                <div className="absolute top-6 right-8 text-white/5 group-hover:text-primary/10 transition-colors">
-                    <Quote className="w-12 h-12 fill-current" />
-                </div>
+          <div className="relative w-full">
+            <div className="overflow-hidden" ref={emblaReviewsRef}>
+              <div className="flex -ml-6">
+                {TESTIMONIALS.map((review, i) => (
+                  <div key={i} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-6">
+                    <div className="h-full bg-[#0c0c0c] border border-white/5 p-8 rounded-[2rem] flex flex-col gap-6 relative group hover:border-primary/30 transition-all duration-500">
+                      <div className="absolute top-6 right-8 text-white/5 group-hover:text-primary/10 transition-colors">
+                          <Quote className="w-12 h-12 fill-current" />
+                      </div>
 
-                <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-500 text-yellow-500" />)}
-                </div>
+                      <div className="flex gap-0.5">
+                          {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />)}
+                      </div>
 
-                <p className="text-white/70 text-[13.5px] leading-relaxed font-medium relative z-10 italic">
-                  "{review.text}"
-                </p>
+                      <p className="text-white/70 text-[13.5px] leading-relaxed font-medium relative z-10 italic">
+                        "{review.text}"
+                      </p>
 
-                <div className="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
-                            <img src={review.avatar} className="object-cover" alt={review.names} />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xs font-black text-white uppercase tracking-tight">{review.names}</span>
-                            <span className="text-[10px] font-bold text-white/20">{review.time}</span>
-                        </div>
+                      <div className="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
+                          <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
+                                  <img src={review.avatar} className="object-cover" alt={review.names} />
+                              </div>
+                              <div className="flex flex-col">
+                                  <span className="text-xs font-black text-white uppercase tracking-tight">{review.names}</span>
+                                  <span className="text-[10px] font-bold text-white/20">{review.time}</span>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full shrink-0">
+                              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                              <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
+                          </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-green-500 fill-current" />
-                        <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
-                    </div>
-                </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Navigation Controls */}
+            <div className="flex items-center justify-between mt-10">
+              <div className="flex gap-2.5">
+                {TESTIMONIALS.map((_, i) => (
+                  <button 
+                    key={i} 
+                    onClick={() => emblaReviewsApi?.scrollTo(i)}
+                    className={cn(
+                      "h-1.5 rounded-full transition-all duration-500",
+                      i === reviewsSelectedIndex ? "w-8 bg-primary" : "w-1.5 bg-white/10"
+                    )} 
+                  />
+                ))}
+              </div>
+              <div className="flex gap-3">
+                <button 
+                  onClick={scrollReviewsPrev}
+                  className="w-11 h-11 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={scrollReviewsNext}
+                  className="w-11 h-11 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section - Compacted for better visibility */}
+      {/* Pricing Section */}
       <section className="py-16 md:py-20 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
-        {/* Sutil background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
         
         <div className="max-w-4xl mx-auto px-6 relative z-10">
@@ -947,7 +988,6 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-            {/* Plan: 24 Hours */}
             <div className="bg-[#0c0c0c] border border-white/5 rounded-[2rem] p-7 flex flex-col transition-all duration-500 hover:border-white/10 group">
               <div className="flex justify-between items-start mb-4">
                 <div className="space-y-1">
@@ -989,7 +1029,6 @@ export default function LandingPage() {
               </NextLink>
             </div>
 
-            {/* Plan: Forever */}
             <div className="relative bg-[#0c0c0c] border-2 border-primary/30 rounded-[2rem] p-7 flex flex-col transition-all duration-500 shadow-[0_0_80px_rgba(225,29,72,0.15)] group scale-[1.02] z-10">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-red-700 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-2xl shadow-primary/40 animate-pulse">
                 <Star className="w-2.5 h-2.5 fill-current" /> MAIS POPULAR
