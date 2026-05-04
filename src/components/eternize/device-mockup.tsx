@@ -1175,7 +1175,7 @@ export function DeviceMockup({
                           <div className="bg-[#181818] rounded-[24px] overflow-hidden flex flex-col shadow-2xl border border-white/5 transition-transform duration-500 hover:scale-[1.01]">
                             <div className="relative aspect-square md:aspect-video w-full">
                               {uploadedPhotos.length > 0 ? (
-                                Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
+                                <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
                               ) : (
                                 <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
                                   <ImageIcon className="w-10 h-10 text-white/10" />
