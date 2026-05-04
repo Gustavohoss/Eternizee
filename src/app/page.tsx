@@ -30,12 +30,18 @@ import {
   Headphones,
   Crown,
   Infinity,
-  Quote,
-  CheckCircle2
+  HelpCircle,
+  Instagram
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { THEME_OPTIONS } from '@/app/criador/constants';
 import { cn } from '@/lib/utils';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const STEPS = [
   {
@@ -43,32 +49,32 @@ const STEPS = [
     title: 'Personalize',
     description: 'Personalize sua página com fotos, mensagens, efeitos especiais e muito mais.',
     icon: ListOrdered,
-    color: '#ff4d6d',
-    glow: 'rgba(255, 77, 109, 0.4)'
+    color: '#e11d48',
+    glow: 'rgba(225, 29, 72, 0.4)'
   },
   {
     id: 2,
     title: 'Faça o pagamento',
     description: 'Escolha seu plano preferido e faça o pagamento de forma rápida e segura.',
     icon: CircleDollarSign,
-    color: '#ef476f',
-    glow: 'rgba(239, 71, 111, 0.4)'
+    color: '#be123c',
+    glow: 'rgba(190, 18, 60, 0.4)'
   },
   {
     id: 3,
     title: 'Receba seu acesso',
     description: 'Você receberá por email um QR code e link para acessar sua página.',
     icon: QrCode,
-    color: '#be123c',
-    glow: 'rgba(190, 18, 60, 0.4)'
+    color: '#9f1239',
+    glow: 'rgba(159, 18, 57, 0.4)'
   },
   {
     id: 4,
     title: 'Compartilhe o amor',
     description: 'Compartilhe a página com a pessoa amada e surpreenda-a de forma especial.',
     icon: Heart,
-    color: '#9f1239',
-    glow: 'rgba(159, 18, 57, 0.4)'
+    color: '#881337',
+    glow: 'rgba(136, 19, 55, 0.4)'
   }
 ];
 
@@ -165,6 +171,49 @@ const AVATAR_DATA = [
   {initials:'LT', color:'linear-gradient(135deg,#4facfe,#00f2fe)'},
   {initials:'CR', color:'linear-gradient(135deg,#43e97b,#38f9d7)'},
   {initials:'VR', color:'linear-gradient(135deg,#fa709a,#fee140)'},
+];
+
+const FAQ_ITEMS = [
+  {
+    id: "01",
+    question: "O que é a Eternize?",
+    answer: "A Eternize é uma plataforma que permite criar presentes digitais personalizados e inesquecíveis. Você pode montar uma página exclusiva com fotos, música, contador de tempo e mensagens especiais para surpreender quem você ama."
+  },
+  {
+    id: "02",
+    question: "Como crio minha página personalizada?",
+    answer: "É muito simples! Basta acessar nosso criador, escolher um tema, subir suas fotos, selecionar a trilha sonora e escrever sua mensagem. Após o pagamento, sua página é publicada instantaneamente."
+  },
+  {
+    id: "03",
+    question: "O que posso incluir na minha página?",
+    answer: "Você pode incluir até 8 fotos (dependendo do plano), uma música do YouTube que toca automaticamente, um contador em tempo real, textos formatados, e módulos extras como linha do tempo de memórias e curiosidades astronômicas."
+  },
+  {
+    id: "04",
+    question: "Como acesso minha página após o pagamento?",
+    answer: "Assim que o pagamento for confirmado, você receberá o link exclusivo e um QR Code por e-mail e também verá na tela de confirmação. O acesso é imediato."
+  },
+  {
+    id: "05",
+    question: "Posso editar minha página depois de criá-la?",
+    answer: "Sim! Todos os nossos planos permitem edições posteriores. Você receberá uma chave de acesso para entrar no painel de edição e alterar fotos, textos ou músicas quando quiser."
+  },
+  {
+    id: "06",
+    question: "Por quanto tempo minha página ficará disponível?",
+    answer: "No plano de 24 horas, o acesso expira após um dia. No plano 'Para Sempre', sua página fica guardada em nossos servidores por tempo indeterminado, sem cobranças extras ou mensalidades."
+  },
+  {
+    id: "07",
+    question: "Quais formas de pagamento são aceitas?",
+    answer: "Aceitamos Pix (aprovação instantânea) e Cartão de Crédito (com parcelamento disponível). Todos os pagamentos são processados em ambiente seguro e criptografado."
+  },
+  {
+    id: "08",
+    question: "Como entro em contato com o suporte?",
+    answer: "Nosso suporte funciona 24 horas por dia. Você pode nos chamar pelo Instagram clicando no botão ao lado ou através do e-mail de suporte enviado após a compra."
+  }
 ];
 
 function ReviewCard({ review }: { review: any }) {
@@ -546,7 +595,7 @@ export default function LandingPage() {
                 <div 
                   className="w-14 h-14 rounded-full flex items-center justify-center font-black text-xl shrink-0 transition-transform active:scale-95"
                   style={{ 
-                    backgroundColor: step.id === 1 ? '#ff4d6d' : step.id === 2 ? '#ef476f' : step.id === 3 ? '#be123c' : '#9f1239',
+                    backgroundColor: step.id === 1 ? '#e11d48' : step.id === 2 ? '#be123c' : step.id === 3 ? '#9f1239' : '#881337',
                     boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
@@ -576,7 +625,7 @@ export default function LandingPage() {
                   key={step.id}
                   className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10"
                   style={{ 
-                    backgroundColor: step.id === 1 ? '#ff4d6d' : step.id === 2 ? '#ef476f' : step.id === 3 ? '#be123c' : '#9f1239',
+                    backgroundColor: step.id === 1 ? '#e11d48' : step.id === 2 ? '#be123c' : step.id === 3 ? '#9f1239' : '#881337',
                     boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
@@ -1123,6 +1172,82 @@ export default function LandingPage() {
               </div>
               <span className="text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white/60">Suporte 24 horas</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-[#0a0a0a] border-t border-white/5 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-[1fr_1.5fr] gap-16 md:gap-24 items-start">
+          
+          {/* Left Column: Info & Support */}
+          <div className="space-y-12">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full relative group">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-primary rounded-full" />
+                <HelpCircle className="w-3.5 h-3.5 text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">F.A.Q</span>
+              </div>
+
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white leading-tight">
+                Perguntas Frequentes
+              </h2>
+              
+              <p className="text-white/40 text-sm md:text-lg max-w-sm font-medium leading-relaxed">
+                Tudo o que você precisa saber antes de criar sua página. Se ainda restar alguma dúvida, é só chamar — adoramos ajudar!
+              </p>
+            </div>
+
+            <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-8 space-y-8 relative group overflow-hidden">
+              <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
+              
+              <div className="flex items-start gap-5 relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-6 h-6 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-lg font-black text-white uppercase tracking-tight">Ainda tem dúvidas?</h4>
+                  <p className="text-xs font-medium text-white/30 leading-relaxed">
+                    Fale com a gente pelo Instagram — respondemos em minutos.
+                  </p>
+                </div>
+              </div>
+
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                className="w-full h-16 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_15px_30px_rgba(225,29,72,0.3)] relative z-10"
+              >
+                <Instagram className="w-5 h-5" /> Ainda tem dúvidas? Fale com a gente aqui
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Accordion */}
+          <div className="w-full">
+            <Accordion type="single" collapsible className="w-full space-y-2">
+              {FAQ_ITEMS.map((item) => (
+                <AccordionItem 
+                  key={item.id} 
+                  value={item.id} 
+                  className="border-white/5 bg-transparent px-0 group"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-6 md:py-8">
+                    <div className="flex items-center gap-6">
+                      <span className="text-2xl md:text-3xl font-black text-white/10 group-data-[state=open]:text-primary transition-colors italic">
+                        {item.id}
+                      </span>
+                      <span className="text-sm md:text-lg font-black text-white/80 group-data-[state=open]:text-white transition-all tracking-tight">
+                        {item.question}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-8 pl-16 md:pl-20 text-white/40 text-sm md:text-base font-medium leading-relaxed max-w-xl">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
       </section>
