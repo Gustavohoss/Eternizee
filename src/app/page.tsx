@@ -43,32 +43,32 @@ const STEPS = [
     title: 'Personalize',
     description: 'Personalize sua página com fotos, mensagens, efeitos especiais e muito mais.',
     icon: ListOrdered,
-    color: '#e11d48',
-    glow: 'rgba(225, 29, 72, 0.4)'
+    color: '#ff4d6d',
+    glow: 'rgba(255, 77, 109, 0.4)'
   },
   {
     id: 2,
     title: 'Faça o pagamento',
     description: 'Escolha seu plano preferido e faça o pagamento de forma rápida e segura.',
     icon: CircleDollarSign,
-    color: '#be123c',
-    glow: 'rgba(190, 18, 60, 0.4)'
+    color: '#ef476f',
+    glow: 'rgba(239, 71, 111, 0.4)'
   },
   {
     id: 3,
     title: 'Receba seu acesso',
     description: 'Você receberá por email um QR code e link para acessar sua página.',
     icon: QrCode,
-    color: '#9f1239',
-    glow: 'rgba(159, 18, 57, 0.4)'
+    color: '#be123c',
+    glow: 'rgba(190, 18, 60, 0.4)'
   },
   {
     id: 4,
     title: 'Compartilhe o amor',
     description: 'Compartilhe a página com a pessoa amada e surpreenda-a de forma especial.',
     icon: Heart,
-    color: '#881337',
-    glow: 'rgba(136, 19, 55, 0.4)'
+    color: '#9f1239',
+    glow: 'rgba(159, 18, 57, 0.4)'
   }
 ];
 
@@ -169,32 +169,32 @@ const AVATAR_DATA = [
 
 function ReviewCard({ review }: { review: any }) {
   return (
-    <div className="bg-[#111] border border-white/5 rounded-2xl p-6 w-[300px] shrink-0 text-left transition-all hover:border-white/10 group relative">
+    <div className="bg-[#0c0c0c] border border-white/5 rounded-2xl p-4 w-[250px] md:w-[280px] shrink-0 text-left transition-all hover:border-white/10 group relative">
       <div className="flex gap-0.5 mb-3">
         {[...Array(review.stars)].map((_, i) => (
-          <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
+          <Star key={i} className="w-3 h-3 fill-yellow-500 text-yellow-500" />
         ))}
       </div>
-      <div className="absolute top-4 right-6 text-3xl font-serif text-white/5 opacity-40 group-hover:text-primary/10 transition-colors pointer-events-none">"</div>
-      <p className="text-white/80 text-sm leading-relaxed mb-6 min-h-[80px] italic">
+      <div className="absolute top-4 right-4 text-2xl font-serif text-white/5 opacity-40 group-hover:text-primary/10 transition-colors pointer-events-none">"</div>
+      <p className="text-white/80 text-[11px] md:text-[12px] leading-relaxed mb-4 min-h-[60px] italic">
         {review.text}
       </p>
-      <div className="flex items-center justify-between pt-4 border-t border-white/5">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between pt-3 border-t border-white/5">
+        <div className="flex items-center gap-2">
           <div 
-            className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0 shadow-lg"
+            className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black text-white shrink-0 shadow-lg"
             style={{ background: review.color }}
           >
             {review.initials}
           </div>
-          <div className="flex flex-col">
-            <span className="text-xs font-black text-white uppercase tracking-tight">{review.name}</span>
-            <span className="text-[10px] font-bold text-white/20">{review.time}</span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[10px] font-black text-white uppercase tracking-tight truncate">{review.name}</span>
+            <span className="text-[8px] font-bold text-white/20">{review.time}</span>
           </div>
         </div>
-        <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full shrink-0">
-          <Check className="w-2.5 h-2.5 text-green-500" strokeWidth={4} />
-          <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
+        <div className="flex items-center gap-1 bg-green-500/5 border border-green-500/10 px-2 py-0.5 rounded-full shrink-0">
+          <Check className="w-2 h-2 text-green-500" strokeWidth={4} />
+          <span className="text-[7px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
         </div>
       </div>
     </div>
@@ -546,7 +546,7 @@ export default function LandingPage() {
                 <div 
                   className="w-14 h-14 rounded-full flex items-center justify-center font-black text-xl shrink-0 transition-transform active:scale-95"
                   style={{ 
-                    backgroundColor: step.id === 1 ? '#e11d48' : step.id === 2 ? '#be123c' : step.id === 3 ? '#9f1239' : '#881337',
+                    backgroundColor: step.id === 1 ? '#ff4d6d' : step.id === 2 ? '#ef476f' : step.id === 3 ? '#be123c' : '#9f1239',
                     boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
@@ -576,7 +576,7 @@ export default function LandingPage() {
                   key={step.id}
                   className="w-[60px] h-[60px] rounded-full flex items-center justify-center font-black text-[22px] z-10"
                   style={{ 
-                    backgroundColor: step.id === 1 ? '#e11d48' : step.id === 2 ? '#be123c' : step.id === 3 ? '#9f1239' : '#881337',
+                    backgroundColor: step.id === 1 ? '#ff4d6d' : step.id === 2 ? '#ef476f' : step.id === 3 ? '#be123c' : '#9f1239',
                     boxShadow: `0 0 30px ${step.glow}`
                   }}
                 >
@@ -921,40 +921,40 @@ export default function LandingPage() {
       </section>
 
       {/* Reviews Section - Infinite Scrolling Tracks */}
-      <section className="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 relative z-10 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 text-white/40 text-[12px] mb-6 relative group">
+          <div className="inline-flex items-center gap-2 text-white/40 text-[12px] mb-4 relative group">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-primary rounded-full"></div>
             <Star className="w-3.5 h-3.5" />
             Avaliações reais
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-black text-center leading-tight tracking-tight mb-4">
+          <h2 className="text-3xl md:text-6xl font-black text-center leading-tight tracking-tight mb-4">
             70.000 casais não podem<br /> <span className="text-primary">estar errados.</span>
           </h2>
           
-          <p className="text-white/40 text-center text-sm md:text-lg max-w-md mb-12 font-medium">
+          <p className="text-white/40 text-center text-sm md:text-lg max-w-md mb-8 font-medium">
             Histórias reais de quem criou algo especial e fez alguém chorar de emoção — do jeito bom.
           </p>
 
-          <div className="bg-[#111] border border-white/10 rounded-2xl flex items-center mb-16 overflow-hidden shadow-2xl">
-            <div className="px-6 py-4 border-r border-white/5 text-center">
-              <div className="text-3xl font-black text-white leading-none mb-1">4.9</div>
+          <div className="bg-[#111] border border-white/10 rounded-2xl flex items-center mb-10 overflow-hidden shadow-2xl">
+            <div className="px-5 py-3 border-r border-white/5 text-center">
+              <div className="text-2xl font-black text-white leading-none mb-1">4.9</div>
               <div className="flex gap-0.5 justify-center">
-                {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />)}
+                {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-500 text-yellow-500" />)}
               </div>
             </div>
-            <div className="px-6 py-4 flex items-center gap-3">
+            <div className="px-5 py-3 flex items-center gap-3">
               <div className="flex -space-x-2">
                 {AVATAR_DATA.map((a, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-[#111] flex items-center justify-center text-[9px] font-black text-white shadow-md" style={{ background: a.color }}>
+                  <div key={i} className="w-7 h-7 rounded-full border-2 border-[#111] flex items-center justify-center text-[8px] font-black text-white shadow-md" style={{ background: a.color }}>
                     {a.initials}
                   </div>
                 ))}
               </div>
               <div className="flex flex-col">
                 <strong className="text-xs font-black text-white">+70.000</strong>
-                <span className="text-[10px] text-white/30 font-bold uppercase tracking-wider">avaliações</span>
+                <span className="text-[9px] text-white/30 font-bold uppercase tracking-wider">avaliações</span>
               </div>
             </div>
           </div>
