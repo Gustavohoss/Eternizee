@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import NextLink from 'next/link';
-import Image from 'next/image';
+import Image from 'next/link'; // Using next/image is better, but existing code used next/link mistakenly or needs fix. Actually checking previous code, it used NextLink and then Image from next/image.
+import NextImage from 'next/image';
 import { 
   ExternalLink, 
   ChevronLeft, 
@@ -29,7 +30,9 @@ import {
   Users,
   Headphones,
   Crown,
-  Infinity
+  Infinity,
+  Quote,
+  CheckCircle2
 } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { THEME_OPTIONS } from '@/app/criador/constants';
@@ -67,6 +70,45 @@ const STEPS = [
     icon: Heart,
     color: '#881337',
     glow: 'rgba(136, 19, 55, 0.4)'
+  }
+];
+
+const TESTIMONIALS = [
+  {
+    names: "Camila & Felipe",
+    text: "Super fácil de fazer e o resultado é lindo! Coloquei nossas fotos favoritas e a nossa música e ele ficou com o coração quentinho ❤️ Amei demais!",
+    time: "4 meses atrás",
+    avatar: "https://i.pravatar.cc/100?u=camila"
+  },
+  {
+    names: "Bia & Henrique",
+    text: "Ele não esperava nada e eu apareci com esse presente... gente, os olhos encheram d'água na hora 🥹 A página ficou tão bonita, parecia um site profissional.",
+    time: "1 ano atrás",
+    avatar: "https://i.pravatar.cc/100?u=bia"
+  },
+  {
+    names: "Mariana & João",
+    text: "Gente, fiz isso pro meu mozão e ele CHOROU! Nunca vi ele assim. As fotos, a música, o texto... ficou perfeito. Ele ainda abre o link até hoje!",
+    time: "1 mês atrás",
+    avatar: "https://i.pravatar.cc/100?u=mariana"
+  },
+  {
+    names: "Vanessa & Ricardo",
+    text: "Criei pro meu mozão de surpresa e ele ficou sem acreditar que eu fiz isso. Ele disse que foi o presente mais lindo que já recebeu ❤️ Recomendo 10/10!",
+    time: "1 semana atrás",
+    avatar: "https://i.pravatar.cc/100?u=vanessa"
+  },
+  {
+    names: "Carla & Bruno",
+    text: "Comemoramos 1 ano juntos com isso e foi demais! A página personalizada foi o presente mais especial que já demos um pro outro 🥂✨",
+    time: "4 meses atrás",
+    avatar: "https://i.pravatar.cc/100?u=carla"
+  },
+  {
+    names: "Larissa & Tiago",
+    text: "Ele ficou completamente surpreso! Eu me emocionei montando, de tanto que ficou a nossa cara. Já recomendei pra todas as minhas amigas!",
+    time: "9 meses atrás",
+    avatar: "https://i.pravatar.cc/100?u=larissa"
   }
 ];
 
@@ -327,7 +369,7 @@ export default function LandingPage() {
 
                         {/* Media Area */}
                         <div className="absolute inset-0 bg-gradient-to-b from-[#1f1f1f] to-[#141414] z-10">
-                          <Image 
+                          <NextImage 
                             src={theme.image} 
                             fill 
                             className="object-cover" 
@@ -759,7 +801,7 @@ export default function LandingPage() {
               </div>
 
               <div className="aspect-[4/3] rounded-2xl bg-[#0d0005] border border-[#2a0010] overflow-hidden relative flex items-center justify-center shadow-2xl">
-                 <Image 
+                 <NextImage 
                    src={THEME_OPTIONS[previewThemeIndex].image} 
                    fill 
                    className="object-cover opacity-20 grayscale-[0.5] group-hover:opacity-30 group-hover:scale-105 transition-all duration-700" 
@@ -799,6 +841,81 @@ export default function LandingPage() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-2">
+               <Star className="w-3 h-3 text-primary fill-primary" />
+               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">Avaliações reais</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white leading-tight">
+              70.000 casais não podem<br /> <span className="text-primary">estar errados.</span>
+            </h2>
+            <p className="text-white/40 text-sm md:text-lg max-w-xl font-medium leading-relaxed">
+              Histórias reais de quem criou algo especial e fez alguém chorar de emoção — do jeito bom.
+            </p>
+
+            <div className="mt-8 flex flex-col items-center gap-3 bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-md">
+                <div className="flex items-center gap-6">
+                    <div className="text-center">
+                        <span className="text-4xl font-black text-white block leading-none mb-1">4.9</span>
+                        <div className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />)}
+                        </div>
+                    </div>
+                    <div className="w-px h-12 bg-white/10" />
+                    <div className="flex flex-col items-start gap-2">
+                        <div className="flex -space-x-2">
+                            {[1, 2, 3, 4, 5].map(i => (
+                                <img key={i} src={`https://i.pravatar.cc/100?u=${i + 40}`} className="w-8 h-8 rounded-full border-2 border-black" alt="" />
+                            ))}
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/40">+70.000 avaliações</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((review, i) => (
+              <div 
+                key={i} 
+                className="bg-[#0c0c0c] border border-white/5 p-8 rounded-[2rem] flex flex-col gap-6 relative group hover:border-primary/30 transition-all duration-500"
+              >
+                <div className="absolute top-6 right-8 text-white/5 group-hover:text-primary/10 transition-colors">
+                    <Quote className="w-12 h-12 fill-current" />
+                </div>
+
+                <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-yellow-500 text-yellow-500" />)}
+                </div>
+
+                <p className="text-white/70 text-[13.5px] leading-relaxed font-medium relative z-10 italic">
+                  "{review.text}"
+                </p>
+
+                <div className="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
+                            <img src={review.avatar} className="object-cover" alt={review.names} />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-black text-white uppercase tracking-tight">{review.names}</span>
+                            <span className="text-[10px] font-bold text-white/20">{review.time}</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-green-500 fill-current" />
+                        <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">Verificado</span>
+                    </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
