@@ -1,10 +1,11 @@
+
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { collection, query, where } from 'firebase/firestore';
 import { useFirestore, useUser, useCollection, useAuth, useMemoFirebase } from '@/firebase';
-import { Heart, ExternalLink, Calendar, Loader2, Plus, ArrowLeft, LogOut, Layout, User } from 'lucide-react';
+import { Heart, ExternalLink, Calendar, Loader2, Plus, ArrowLeft, LogOut, Layout, User, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -16,7 +17,6 @@ export default function MyPages() {
   const { user, isUserLoading } = useUser();
 
   // Query memoizada para buscar apenas as páginas do usuário logado
-  // Simplificamos removendo o orderBy para evitar erros de índice/permissão iniciais
   const mySitesQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(
@@ -80,7 +80,7 @@ export default function MyPages() {
               </Link>
               <div className="h-3 w-px bg-white/10" />
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
-                <User className="w-3 h-3" /> {user.email?.split('@')[0] || 'Usuário'}
+                <User className="w-3 h-3" /> {user.email || 'Usuário'}
               </div>
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase">Minhas Páginas<span className="text-primary">.</span></h1>
@@ -142,13 +142,21 @@ export default function MyPages() {
                     </div>
                   </div>
 
-                  <div className="bg-black/50 border border-white/5 rounded-xl p-3 flex items-center justify-between">
-                    <div className="text-[10px] font-mono text-white/30 truncate max-w-[180px]">
-                      site/{site.id}
+                  <div className="flex flex-col gap-2">
+                    <div className="bg-black/50 border border-white/5 rounded-xl p-3 flex items-center justify-between">
+                      <div className="text-[10px] font-mono text-white/30 truncate max-w-[180px]">
+                        site/{site.id}
+                      </div>
+                      <Link href={`/site/${site.id}`} target="_blank">
+                        <Button size="sm" variant="ghost" className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary hover:bg-primary/10 gap-1.5 px-3">
+                          Acessar <ExternalLink className="w-3 h-3" />
+                        </Button>
+                      </Link>
                     </div>
-                    <Link href={`/site/${site.id}`} target="_blank">
-                      <Button size="sm" variant="ghost" className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary hover:bg-primary/10 gap-1.5 px-3">
-                        Acessar <ExternalLink className="w-3 h-3" />
+                    
+                    <Link href={`/editar/${site.id}`}>
+                      <Button variant="outline" className="w-full border-white/5 bg-white/5 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest gap-2 hover:bg-white/10">
+                        <Pencil className="w-3 h-3" /> Editar Site
                       </Button>
                     </Link>
                   </div>
