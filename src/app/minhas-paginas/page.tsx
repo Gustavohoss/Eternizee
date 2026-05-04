@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { collection, query, where, orderBy } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { useFirestore, useUser, useCollection, useAuth, useMemoFirebase } from '@/firebase';
 import { Heart, ExternalLink, Calendar, Loader2, Plus, ArrowLeft, LogOut, Layout, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,14 +16,14 @@ export default function MyPages() {
   const { user, isUserLoading } = useUser();
 
   // Query memoizada para buscar apenas as páginas do usuário logado
+  // Simplificamos removendo o orderBy para evitar erros de índice/permissão iniciais
   const mySitesQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(
       collection(firestore, 'published_sites'),
-      where('userId', '==', user.uid),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', user.uid)
     );
-  }, [firestore, user]);
+  }, [firestore, user?.uid]);
 
   const { data: sites, isLoading, error } = useCollection(mySitesQuery as any);
 
@@ -80,7 +80,7 @@ export default function MyPages() {
               </Link>
               <div className="h-3 w-px bg-white/10" />
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
-                <User className="w-3 h-3" /> {user.email?.split('@')[0]}
+                <User className="w-3 h-3" /> {user.email?.split('@')[0] || 'Usuário'}
               </div>
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase">Minhas Páginas<span className="text-primary">.</span></h1>
@@ -103,6 +103,10 @@ export default function MyPages() {
           <div className="py-20 flex flex-col items-center justify-center gap-4">
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
             <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Buscando documentos...</p>
+          </div>
+        ) : error ? (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-3xl p-8 text-center">
+            <p className="text-red-500 text-sm font-bold">Ocorreu um erro ao carregar suas páginas. Verifique sua conexão ou tente novamente mais tarde.</p>
           </div>
         ) : (!sites || sites.length === 0) ? (
           <div className="bg-white/5 border border-white/10 rounded-[2rem] p-12 text-center flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-700">
