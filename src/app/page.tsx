@@ -319,12 +319,12 @@ export default function LandingPage() {
       const now = new Date();
       const diff = now.getTime() - start.getTime();
       
-      const totalHours = Math.floor(diff / (1000 * 60 * 60));
-      const totalDays = Math.floor(totalHours / 24);
+      const totalHours = Math.floor(diff / (1000 * 60 * 60 * 24 * 365)); // Simplified
+      const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
       const years = Math.floor(totalDays / 365);
       const months = Math.floor((totalDays % 365) / 30);
       const days = totalDays % 30;
-      const hours = totalHours % 24;
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
 
       setCounter({
         years: String(years).padStart(2, '0'),
@@ -891,7 +891,7 @@ export default function LandingPage() {
 
               <div className="bg-[#111] rounded-xl p-3 border border-[#222]">
                 <div className="text-[9px] font-black text-[#555] uppercase tracking-wider mb-0.5">Link da página</div>
-                <div className="text-[13px] font-bold text-primary truncate">eternize.com/seu-amor</div>
+                <div className="text-[13px] font-bold text-primary truncate">eternizee.shop/seu-amor</div>
               </div>
             </div>
           </div>

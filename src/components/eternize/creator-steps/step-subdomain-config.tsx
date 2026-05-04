@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -80,7 +79,7 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue }: StepSubd
             <div className="bg-black rounded-2xl p-5 border border-white/5 flex items-center gap-3">
               <Lock className="w-4 h-4 text-primary" />
               <p className="text-xs md:text-sm font-mono font-bold text-white/60 truncate">
-                eternize.com/site/<span className="text-white">{subdomain}</span><span className="text-white/30">-{randomId}</span>
+                eternizee.shop/site/<span className="text-white">{subdomain}</span><span className="text-white/30">-{randomId}</span>
               </p>
             </div>
           </div>

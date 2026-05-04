@@ -717,7 +717,7 @@ export function DeviceMockup({
           <div className="bg-white border-x border-t border-neutral-200 p-2.5 flex items-center justify-center shrink-0 rounded-t-2xl">
             <div className="bg-neutral-100 rounded-full h-8 w-full flex items-center px-4 gap-2 border border-neutral-200 max-w-[400px]">
               <Lock className="w-3 h-3 text-neutral-400" />
-              <div className="text-[11px] text-neutral-600 font-medium truncate">eternize.com/{slugifiedTitle || 'seu-nome'}</div>
+              <div className="text-[11px] text-neutral-600 font-medium truncate">eternizee.shop/{slugifiedTitle || 'seu-nome'}</div>
             </div>
           </div>
         </>
@@ -1175,7 +1175,7 @@ export function DeviceMockup({
                           <div className="bg-[#181818] rounded-[24px] overflow-hidden flex flex-col shadow-2xl border border-white/5 transition-transform duration-500 hover:scale-[1.01]">
                             <div className="relative aspect-square md:aspect-video w-full">
                               {uploadedPhotos.length > 0 ? (
-                                <Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
+                                Image src={uploadedPhotos[activeHeroIndex] || uploadedPhotos[0]} fill className="object-cover" alt="About our history" />
                               ) : (
                                 <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
                                   <ImageIcon className="w-10 h-10 text-white/10" />
