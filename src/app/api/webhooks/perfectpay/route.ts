@@ -1,95 +1,108 @@
 
 import { NextResponse } from 'next/server';
 import { initializeFirebase } from '@/firebase';
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-// O seu token de segurança fornecido pela PerfectPay
 const PERFECTPAY_SECURITY_TOKEN = "a57340234e6d72b4ceebbda5bf09f4be";
 
 /**
- * Endpoint de Webhook para a PerfectPay.
- * Lida com múltiplos status de venda e cria conta para o usuário se aprovado.
+ * Webhook da PerfectPay
+ * Processa pagamentos e libera sites automaticamente.
  */
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
-    console.log('PerfectPay Webhook Received:', JSON.stringify(data, null, 2));
+    const contentType = request.headers.get('content-type') || '';
+    let data: any = {};
+
+    if (contentType.includes('application/json')) {
+      data = await request.json();
+    } else {
+      const formData = await request.formData();
+      data = Object.fromEntries(formData.entries());
+    }
+
+    console.log('PerfectPay Webhook Body:', JSON.stringify(data, null, 2));
 
     const { token, sale_status_enum, customer } = data;
     
-    // VALIDAÇÃO DE SEGURANÇA
+    // Validação de segurança
     if (token !== PERFECTPAY_SECURITY_TOKEN) {
-      console.error('Tentativa de acesso não autorizado ao Webhook. Token inválido.');
+      console.error('Webhook: Token de segurança inválido.');
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
-    // A PerfectPay envia o parâmetro 'src' da URL diretamente na raiz ou em tracking_parameters
-    const subdomainName = data.src || data.metadata?.src || data.tracking_parameters?.src;
+    // Tenta encontrar o identificador do site (src) em vários locais possíveis
+    const subdomainName = 
+      data.src || 
+      data.tracking_parameters?.src || 
+      data.metadata?.src || 
+      data.subscription?.src ||
+      data.request_params?.src;
 
     if (!subdomainName) {
-      console.warn('Webhook ignorado: Identificador do site (src) não encontrado nos dados enviados.');
+      console.warn('Webhook: Parâmetro "src" não encontrado nos dados.');
       return NextResponse.json({ message: 'Identificador do site não encontrado.' }, { status: 200 });
     }
 
     const { firestore, auth } = initializeFirebase();
     const siteRef = doc(firestore, 'published_sites', subdomainName);
     
+    // Verifica se o documento existe antes de tentar atualizar
+    const siteSnap = await getDoc(siteRef);
+    if (!siteSnap.exists()) {
+      console.error(`Webhook: Site ${subdomainName} não encontrado no Firestore.`);
+      return NextResponse.json({ message: 'Site não encontrado.' }, { status: 200 });
+    }
+
     const status = Number(sale_status_enum);
 
-    // STATUS DE LIBERAÇÃO (2 = Aprovada, 10 = Completada)
-    if (status === 2 || status === 10) {
+    // STATUS DE LIBERAÇÃO (2 = Aprovada, 7 = Faturada, 10 = Completada)
+    if ([2, 7, 10].includes(status)) {
       let finalUserId: string | null = null;
 
-      // CRIAÇÃO DE CONTA AUTOMÁTICA
+      // Criação/Vinculação de conta
       if (customer?.email) {
         try {
-          // Tenta criar o usuário com a senha padrão
           const userCredential = await createUserWithEmailAndPassword(auth, customer.email, 'Eternize123');
           finalUserId = userCredential.user.uid;
-          console.log(`Conta criada com sucesso para: ${customer.email}`);
+          console.log(`Webhook: Nova conta criada para ${customer.email}`);
         } catch (authError: any) {
-          // Se o erro for 'auth/email-already-in-use', prosseguimos normalmente
-          if (authError.code === 'auth/email-already-in-use' || authError.code === 'auth/operation-not-allowed') {
-            console.log('Usuário já possui conta ou operação restrita. Prosseguindo com a liberação.');
-          } else {
-            console.error('Erro ao tentar processar conta no Firebase Auth:', authError.message);
-          }
+          // Erro esperado se o usuário já existir
+          console.log(`Webhook: Usuário ${customer.email} já possui conta ou erro de auth ignorado.`);
         }
       }
 
-      // Prepara os dados de atualização para liberar o site
       const updateData: any = {
         status: 'published',
-        customerEmail: customer?.email || '',
+        customerEmail: customer?.email || siteSnap.data().customerEmail || '',
         publishedAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       };
 
-      // Se conseguimos criar um usuário novo ou temos o UID, vinculamos
       if (finalUserId) {
         updateData.userId = finalUserId;
       }
 
       await updateDoc(siteRef, updateData);
-      console.log(`Site ${subdomainName} liberado com sucesso!`);
-      return NextResponse.json({ message: 'Site liberado e conta processada com sucesso!' });
+      console.log(`Webhook: Site ${subdomainName} LIBERADO com sucesso!`);
+      return NextResponse.json({ message: 'Site liberado com sucesso.' });
     }
 
-    // STATUS DE BLOQUEIO (6 = Cancelado, 7 = Devolvido, 9 = Chargeback)
-    if ([6, 7, 9].includes(status)) {
+    // STATUS DE BLOQUEIO (6 = Cancelado, 4 = Devolvido, 11 = Estornado)
+    if ([3, 4, 6, 11].includes(status)) {
       await updateDoc(siteRef, {
         status: 'pending',
         updatedAt: serverTimestamp()
       });
-      console.log(`Site ${subdomainName} bloqueado devido ao status ${status}`);
-      return NextResponse.json({ message: 'Acesso ao site revogado devido ao status do pagamento.' });
+      console.log(`Webhook: Site ${subdomainName} BLOQUEADO devido ao status ${status}.`);
+      return NextResponse.json({ message: 'Acesso revogado.' });
     }
 
-    return NextResponse.json({ message: `Evento ${status} recebido. Nenhuma ação necessária.` });
+    return NextResponse.json({ message: `Evento ${status} ignorado.` });
 
   } catch (error: any) {
-    console.error('Erro no processamento do Webhook:', error);
-    return NextResponse.json({ error: 'Erro interno ao processar webhook', details: error.message }, { status: 500 });
+    console.error('Webhook Error:', error);
+    return NextResponse.json({ error: 'Erro interno', details: error.message }, { status: 500 });
   }
 }
