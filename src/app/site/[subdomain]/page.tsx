@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useMemo } from 'react';
@@ -19,8 +20,6 @@ export default function PublishedSitePage() {
 
   const { data: siteData, isLoading, error } = useDoc(siteRef as any);
 
-  // Se estiver carregando OU se a conexão com o banco ainda não foi estabelecida (!siteRef),
-  // mostramos o loader para evitar o flash da tela de "não encontrado".
   if (isLoading || !siteRef) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white">
@@ -46,7 +45,36 @@ export default function PublishedSitePage() {
     );
   }
 
-  // Parse the content data
+  // Se o site ainda estiver pendente, mostramos uma tela de espera
+  // Como o useDoc é um listener em tempo real, assim que o webhook mudar para 'published',
+  // a página irá carregar o site automaticamente.
+  if (siteData.status === 'pending') {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center text-white">
+        <div className="bg-primary/10 p-6 rounded-full mb-8 border border-primary/20 shadow-[0_0_50px_rgba(225,29,72,0.2)] animate-pulse">
+          <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        </div>
+        <h1 className="text-3xl font-black mb-4 uppercase italic tracking-tighter">Quase pronto!</h1>
+        <p className="text-white/60 text-base max-w-md mb-10 font-medium leading-relaxed">
+          Estamos aguardando a confirmação do seu pagamento pela <span className="text-white font-bold">PerfectPay</span>. 
+          Assim que for aprovado, seu presente será liberado automaticamente nesta tela.
+        </p>
+        <div className="flex flex-col items-center gap-2 opacity-30">
+          <p className="text-[10px] font-black uppercase tracking-widest">Sincronizando com o banco de dados...</p>
+          <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-full bg-primary w-1/3 animate-[progress-waiting_2s_infinite_linear]" />
+          </div>
+        </div>
+        <style jsx>{`
+          @keyframes progress-waiting {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   let config = {};
   try {
     config = JSON.parse(siteData.contentJson);
@@ -54,7 +82,6 @@ export default function PublishedSitePage() {
     console.error("Error parsing site config", e);
   }
 
-  // Convert string date back to Date object if it exists
   const processedConfig = {
     ...config,
     date: (config as any).date ? new Date((config as any).date) : undefined

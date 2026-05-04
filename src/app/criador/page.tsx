@@ -27,34 +27,25 @@ import { StepPlans } from '@/components/eternize/creator-steps/step-plans';
 import { StepOrderBump } from '@/components/eternize/creator-steps/step-order-bump';
 import { StepSubdomainConfig } from '@/components/eternize/creator-steps/step-subdomain-config';
 
-// Helper to compress image client-side
+// LINK DO SEU PRODUTO NA PERFECTPAY
+// Troque o código abaixo pelo seu link de checkout real
+const PERFECTPAY_CHECKOUT_URL = "https://checkout.perfectpay.com.br/PPU38CQ9JAI";
+
 const compressImage = (base64Str: string): Promise<string> => {
   return new Promise((resolve) => {
     const img = new Image();
     img.src = base64Str;
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 800; // Resolução suficiente para mobile
+      const MAX_WIDTH = 800;
       const MAX_HEIGHT = 800;
       let width = img.width;
       let height = img.height;
-
-      if (width > height) {
-        if (width > MAX_WIDTH) {
-          height *= MAX_WIDTH / width;
-          width = MAX_WIDTH;
-        }
-      } else {
-        if (height > MAX_HEIGHT) {
-          width *= MAX_HEIGHT / height;
-          height = MAX_HEIGHT;
-        }
-      }
-      canvas.width = width;
-      canvas.height = height;
+      if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
+      else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+      canvas.width = width; canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx?.drawImage(img, 0, 0, width, height);
-      // Converte para JPEG com 60% de qualidade para economizar MUITO espaço
       resolve(canvas.toDataURL('image/jpeg', 0.6));
     };
   });
@@ -88,7 +79,6 @@ export default function CriadorApp() {
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   
-  // Customization states
   const [sparklesDensity, setSparklesDensity] = useState<number>(100);
   const [sparklesSpeed, setSparklesSpeed] = useState<number>(0.5);
   const [sparklesColor, setSparklesColor] = useState<string>('#ffffff');
@@ -157,13 +147,11 @@ export default function CriadorApp() {
     setIsSaving(true);
 
     try {
-      // Garante que o usuário está autenticado
       let currentUser = auth.currentUser;
       if (!currentUser) {
         const credential = await signInAnonymously(auth);
         currentUser = credential.user;
       }
-      
       if (!currentUser) throw new Error("Falha na autenticação silenciosa.");
 
       const userId = currentUser.uid;
@@ -179,9 +167,6 @@ export default function CriadorApp() {
       };
 
       const jsonContent = JSON.stringify(contentData);
-      
-      // Verifica se o tamanho do JSON excede o limite do Firestore (aprox. 1MB)
-      // Fotos Base64 comprimidas dificilmente passarão de 800KB (8 fotos x 100KB)
       if (jsonContent.length > 1000000) {
         throw new Error("O conteúdo da página está muito grande. Tente remover algumas fotos.");
       }
@@ -191,22 +176,20 @@ export default function CriadorApp() {
         id: finalSlug,
         userId,
         name: pageTitle || 'Meu Presente',
-        status: 'published',
+        status: 'pending', // <--- Importante: inicia como pendente até o pagamento
         subdomainName: finalSlug,
         pageUrl: `${window.location.origin}/site/${finalSlug}`,
         contentJson: jsonContent,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        publishedAt: serverTimestamp(),
       };
 
-      // Inicia a escrita no Firestore
       setDoc(publishedRef, docData).then(() => {
-        // Só muda de tela após o Firestore aceitar o documento no cache local
-        setSavedUrl(`${window.location.origin}/site/${finalSlug}`);
-        setIsSaving(false);
+        // Redireciona o usuário para o checkout da PerfectPay
+        // Passamos o finalSlug no parâmetro 'src' para o webhook saber qual site ativar
+        const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}`;
+        window.location.href = checkoutUrlWithMetadata;
       }).catch(async (error) => {
-        console.error("Erro no setDoc:", error);
         setIsSaving(false);
         const permissionError = new FirestorePermissionError({
           path: publishedRef.path,
@@ -238,7 +221,6 @@ export default function CriadorApp() {
     Array.from(files).forEach(file => {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        // Comprime a imagem antes de salvar no estado
         const compressed = await compressImage(reader.result as string);
         setUploadedPhotos(prev => [...prev, compressed].slice(0, 8));
       };
@@ -290,36 +272,6 @@ export default function CriadorApp() {
     patternDensity, patternColor
   };
 
-  if (savedUrl) {
-    return (
-      <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in-95 duration-700">
-        <div className="bg-primary/10 p-5 rounded-full mb-6 border border-primary/20 shadow-[0_0_50px_rgba(225,29,72,0.2)]">
-          <CheckCircle2 className="w-12 h-12 text-primary" />
-        </div>
-        <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">Presente Eternizado!</h1>
-        <p className="text-white/50 text-sm md:text-base max-w-md mb-10 font-medium leading-relaxed">Sua página exclusiva está pronta. Compartilhe o link abaixo com a pessoa especial para surpreendê-la.</p>
-        
-        <div className="w-full max-w-md bg-white/5 border border-white/10 p-2 rounded-2xl flex items-center gap-2 mb-10">
-          <div className="flex-1 px-4 text-xs font-mono font-bold truncate opacity-60">{savedUrl}</div>
-          <Button 
-            onClick={() => { navigator.clipboard.writeText(savedUrl); }}
-            size="sm" 
-            className="bg-white text-black hover:bg-neutral-200 h-10 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2"
-          >
-            <Copy className="w-3 h-3" /> Copiar
-          </Button>
-        </div>
-
-        <div className="flex flex-col gap-4 w-full max-w-xs">
-          <a href={savedUrl} target="_blank" className="w-full h-14 bg-primary text-white rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-2xl shadow-primary/20">
-            <ExternalLink className="w-4 h-4" /> Ver minha página
-          </a>
-          <Button onClick={() => setSavedUrl(null)} variant="ghost" className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em] hover:text-white">Criar outra página</Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-white relative font-body overflow-x-hidden">
       <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" />
@@ -346,7 +298,7 @@ export default function CriadorApp() {
               {step === 'message' && <StepMessage {...{selectedTheme, message, onMessageChange: setMessage, messageFont, onMessageFontChange: setMessageFont, messageColor, onMessageColorChange: (c) => { setMessageColor(c); setUserHasManuallyChangedMessageColor(true); }, onBack: handleBack, onNext: handleNext}} />}
               {step === 'music' && <StepMusic {...{selectedTheme, musicData, onMusicSelect: setMusicData, musicBoxColor, onMusicBoxColorChange: setMusicBoxColor, musicTextColor, onMusicTextColorChange: setMusicTextColor, musicHasNeon, onMusicHasNeonChange: setMusicHasNeon, musicNeonStrength, onMusicNeonStrengthChange: setMusicNeonStrength, isAutoPlay: isMusicAutoPlay, onAutoPlayChange: setIsMusicAutoPlay, onBack: handleBack, onNext: handleNext}} />}
               {step === 'data-location' && <StepDataLocation {...{selectedTheme, date, onDateSelect: setDate, locationQuery, onLocationQueryChange: setLocationQuery, showSuggestions, onShowSuggestionsChange: setShowSuggestions, filteredCities, selectedCountStyle, onCountStyleChange: setSelectedCountStyle, dateFont, onDateFontChange: setDateFont, dateIsBold, onDateIsBoldChange: setDateIsBold, dateHasNeon, onDateHasNeonChange: setDateHasNeon, dateNeonStrength, onDateNeonStrengthChange: setDateNeonStrength, dateColor, onDateColorChange: (c) => { setDateColor(c); setUserHasManuallyChangedDateColor(true); }, dateBoxBgColor, onDateBoxBgColorChange: setDateBoxBgColor, dateBoxBorderColor, onDateBoxBorderColorChange: setDateBoxBorderColor, onBack: handleBack, onNext: handleNext}} />}
-              {step === 'plans' && <StepPlans onBack={handleBack} onFinish={handleNext} />}
+              {step === 'plans' && <StepPlans onBack: handleBack onFinish: handleNext />}
               {step === 'order-bump' && <StepOrderBump onBack={handleBack} onFinish={handleNext} date={date} />}
               {step === 'subdomain-config' && <StepSubdomainConfig onBack={handleBack} onFinish={handleFinalize} initialValue={pageTitle} />}
 
@@ -400,8 +352,8 @@ export default function CriadorApp() {
             <Loader2 className="w-16 h-16 text-primary animate-spin" />
             <Heart className="w-6 h-6 text-primary absolute inset-0 m-auto animate-pulse" />
           </div>
-          <h2 className="text-2xl font-black italic uppercase tracking-tighter mb-2">Eternizando sua história...</h2>
-          <p className="text-white/40 text-sm font-medium animate-pulse">Aguarde um momento enquanto preparamos seu link exclusivo.</p>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter mb-2">Redirecionando para o pagamento...</h2>
+          <p className="text-white/40 text-sm font-medium animate-pulse">Aguarde um momento enquanto preparamos seu checkout seguro.</p>
         </div>
       )}
     </div>
