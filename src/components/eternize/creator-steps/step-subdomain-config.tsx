@@ -2,14 +2,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Link2, ChevronLeft, ChevronRight, Lock, Info, CheckCircle2, Mail } from 'lucide-react';
+import { Link2, ChevronLeft, ChevronRight, Lock, Info, CheckCircle2, Mail, TestTube2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 interface StepSubdomainConfigProps {
   onBack: () => void;
-  onFinish: (subdomain: string) => void;
+  onFinish: (subdomain: string, isTest?: boolean) => void;
   initialValue: string;
   email: string;
   onEmailChange: (email: string) => void;
@@ -122,7 +122,7 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue, email, onE
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 w-full pt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pt-6">
         <Button 
           onClick={onBack} 
           variant="outline" 
@@ -130,13 +130,23 @@ export function StepSubdomainConfig({ onBack, onFinish, initialValue, email, onE
         >
           <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Voltar
         </Button>
-        <Button 
-          onClick={() => onFinish(finalSlug)}
-          disabled={!isFormValid}
-          className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm transition-all flex items-center justify-center gap-3 shadow-2xl active:scale-95 group disabled:opacity-50 disabled:grayscale"
-        >
-          Ir para Pagamento <CheckCircle2 className="w-4 h-4 transition-transform group-hover:scale-110" />
-        </Button>
+        <div className="flex flex-col gap-3">
+          <Button 
+            onClick={() => onFinish(finalSlug)}
+            disabled={!isFormValid}
+            className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm transition-all flex items-center justify-center gap-3 shadow-2xl active:scale-95 group disabled:opacity-50 disabled:grayscale"
+          >
+            Ir para Pagamento <CheckCircle2 className="w-4 h-4 transition-transform group-hover:scale-110" />
+          </Button>
+          <Button 
+            onClick={() => onFinish(finalSlug, true)}
+            disabled={!isFormValid}
+            variant="outline"
+            className="h-10 rounded-xl border-white/10 bg-white/5 text-white/40 font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 hover:bg-white/10 hover:text-white disabled:opacity-30"
+          >
+            <TestTube2 className="w-3.5 h-3.5" /> Simular Teste (Liberar Agora)
+          </Button>
+        </div>
       </div>
     </div>
   );

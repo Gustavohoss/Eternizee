@@ -141,7 +141,7 @@ export default function CriadorApp() {
     }
   };
 
-  const handleFinalize = async (finalSlug: string) => {
+  const handleFinalize = async (finalSlug: string, isTest = false) => {
     if (!firestore || !auth) return;
     setIsSaving(true);
 
@@ -174,9 +174,9 @@ export default function CriadorApp() {
       const docData = {
         id: finalSlug,
         userId,
-        customerEmail, // Salva o email para ser usado no webhook
+        customerEmail, 
         name: pageTitle || 'Meu Presente',
-        status: 'pending',
+        status: isTest ? 'published' : 'pending',
         subdomainName: finalSlug,
         pageUrl: `https://eternizee.shop/site/${finalSlug}`,
         contentJson: jsonContent,
@@ -185,8 +185,12 @@ export default function CriadorApp() {
       };
 
       setDoc(publishedRef, docData).then(() => {
-        const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}&email=${customerEmail}`;
-        window.location.href = checkoutUrlWithMetadata;
+        if (isTest) {
+          window.location.href = `/site/${finalSlug}`;
+        } else {
+          const checkoutUrlWithMetadata = `${PERFECTPAY_CHECKOUT_URL}?src=${finalSlug}&email=${customerEmail}`;
+          window.location.href = checkoutUrlWithMetadata;
+        }
       }).catch(async (error) => {
         setIsSaving(false);
         const permissionError = new FirestorePermissionError({
@@ -350,8 +354,8 @@ export default function CriadorApp() {
             <Loader2 className="w-16 h-16 text-primary animate-spin" />
             <Heart className="w-6 h-6 text-primary absolute inset-0 m-auto animate-pulse" />
           </div>
-          <h2 className="text-2xl font-black italic uppercase tracking-tighter mb-2">Redirecionando para o pagamento...</h2>
-          <p className="text-white/40 text-sm font-medium animate-pulse">Aguarde um momento enquanto preparamos seu checkout seguro.</p>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter mb-2">Processando...</h2>
+          <p className="text-white/40 text-sm font-medium animate-pulse">Aguarde um momento enquanto preparamos seu acesso.</p>
         </div>
       )}
     </div>
